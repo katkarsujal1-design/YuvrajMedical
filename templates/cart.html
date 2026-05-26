@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f9f9f9;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c7be5;
+            color: white;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+        }
+
+        .left {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-link {
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .home-btn { background: green; }
+        .logout-btn { background: red; }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            background: #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .total {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .checkout-btn {
+    background: green;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+
+    <div class="left">🛒 Cart</div>
+
+    <div class="right">
+        <a href="/profile" class="btn-link home-btn" style="background:purple;">👤 Profile</a>
+        <a href="/" class="btn-link home-btn">🏠 Home</a>
+        <a href="/logout" class="btn-link logout-btn">🚪 Logout</a>
+    </div>
+
+</div>
+
+<div class="container">
+
+{% if items %}
+
+    {% for item in items %}
+    <div class="card">
+        <div class="row">
+            <div>
+                <h3>{{ item.name }}</h3>
+                <p>₹{{ item.price }}</p>
+                <p>Subtotal: ₹{{ item.subtotal }}</p>
+            </div>
+
+            <div>
+                <a href="/decrease/{{item.id}}" class="btn">➖</a>
+                {{ item.qty }}
+                <a href="/increase/{{item.id}}" class="btn">➕</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="total">
+        <h2>Total: ₹{{ total }}</h2>
+
+      <a href="/checkout" class="checkout-btn">
+    🧾 Proceed to Checkout
+      </a>
+    </div>
+
+{% else %}
+    <p style="text-align:center;">🛒 Cart is empty</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>

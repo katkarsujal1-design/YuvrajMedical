@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuvraj Medical - Staff Dashboard</title>
+
+<style>
+
+:root{
+    --primary:#6366f1;
+    --secondary:#8b5cf6;
+    --accent:#06b6d4;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --warning:#f59e0b;
+    --dark:#0f172a;
+    --card:#ffffff;
+    --text:#1e293b;
+    --muted:#64748b;
+    --border:#e2e8f0;
+}
+
+/* RESET */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:
+    radial-gradient(circle at top left,#dbeafe 0%,transparent 25%),
+    radial-gradient(circle at bottom right,#e9d5ff 0%,transparent 25%),
+    #f8fafc;
+
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* CUSTOM SCROLLBAR */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:#e2e8f0;
+}
+
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(var(--primary),var(--accent));
+    border-radius:20px;
+}
+
+/* LAYOUT */
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:270px;
+    background:linear-gradient(180deg,#0f172a,#1e293b,#111827);
+    color:white;
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    padding:25px 18px;
+    overflow-y:auto;
+    z-index:1000;
+    box-shadow:10px 0 30px rgba(0,0,0,0.15);
+}
+
+/* LOGO */
+
+.logo{
+    text-align:center;
+    margin-bottom:35px;
+    position:relative;
+}
+
+.logo-circle{
+    width:90px;
+    height:90px;
+    margin:auto;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    box-shadow:
+    0 0 30px rgba(99,102,241,0.4),
+    inset 0 0 15px rgba(255,255,255,0.3);
+
+    animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(-6px);
+    }
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+.logo h2{
+    margin-top:15px;
+    font-size:26px;
+    font-weight:700;
+}
+
+.logo p{
+    color:#cbd5e1;
+    margin-top:5px;
+    font-size:14px;
+}
+
+/* MENU */
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.menu a{
+    position:relative;
+    overflow:hidden;
+
+    text-decoration:none;
+    color:white;
+    padding:15px 18px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    transition:0.35s ease;
+    font-weight:600;
+}
+
+.menu a::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.18),
+        transparent
+    );
+    transition:0.7s;
+}
+
+.menu a:hover::before{
+    left:100%;
+}
+
+.menu a:hover{
+    background:rgba(255,255,255,0.08);
+    transform:translateX(6px);
+}
+
+.menu .active{
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    box-shadow:0 10px 25px rgba(99,102,241,0.35);
+}
+
+/* MAIN */
+
+.main{
+    margin-left:270px;
+    width:calc(100% - 270px);
+    padding:28px;
+}
+
+/* TOPBAR */
+
+.topbar{
+    background:rgba(255,255,255,0.9);
+    backdrop-filter:blur(14px);
+
+    border:1px solid rgba(255,255,255,0.4);
+
+    padding:24px;
+    border-radius:24px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.topbar h1{
+    font-size:34px;
+    font-weight:800;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.topbar p{
+    color:var(--muted);
+    margin-top:6px;
+}
+
+/* PROFILE AREA */
+
+.profile-area{
+    display:flex;
+    gap:14px;
+}
+
+/* BUTTONS */
+
+.button{
+    position:relative;
+    overflow:hidden;
+
+    text-decoration:none;
+    padding:13px 20px;
+    border-radius:14px;
+    font-weight:700;
+
+    transition:0.35s ease;
+}
+
+.button::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+    );
+
+    transition:0.7s;
+}
+
+.button:hover::before{
+    left:100%;
+}
+
+.profile-btn{
+    background:linear-gradient(135deg,#ede9fe,#dbeafe);
+    color:var(--primary);
+    box-shadow:0 8px 20px rgba(99,102,241,0.18);
+}
+
+.logout-btn{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:white;
+    box-shadow:0 8px 20px rgba(220,38,38,0.3);
+}
+
+.button:hover{
+    transform:translateY(-3px) scale(1.03);
+}
+
+/* ALERT */
+
+.alert{
+    margin-top:22px;
+    padding:16px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:white;
+    font-weight:700;
+    text-align:center;
+
+    box-shadow:0 12px 24px rgba(34,197,94,0.25);
+
+    animation:fadeSlide 0.5s ease;
+}
+
+@keyframes fadeSlide{
+    from{
+        opacity:0;
+        transform:translateY(-15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* STATS */
+
+.stats{
+    margin-top:28px;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.stat{
+    position:relative;
+    overflow:hidden;
+
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(10px);
+
+    border-radius:24px;
+    padding:24px;
+
+    border:1px solid rgba(255,255,255,0.5);
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+
+    transition:0.35s ease;
+}
+
+.stat::after{
+    content:"";
+    position:absolute;
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    background:rgba(99,102,241,0.08);
+    top:-40px;
+    right:-40px;
+}
+
+.stat:hover{
+    transform:translateY(-8px) scale(1.02);
+}
+
+.stat h3{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.stat p{
+    margin-top:10px;
+    font-size:34px;
+    font-weight:800;
+    color:var(--dark);
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:24px;
+    margin-top:28px;
+}
+
+/* PANEL */
+
+.panel{
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(12px);
+
+    border-radius:26px;
+    padding:26px;
+
+    border:1px solid rgba(255,255,255,0.5);
+
+    box-shadow:
+    0 12px 35px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+
+    transition:0.35s ease;
+}
+
+.panel:hover{
+    transform:translateY(-5px);
+}
+
+.panel h2{
+    margin-bottom:20px;
+    font-size:24px;
+    color:var(--dark);
+}
+
+/* FORM */
+
+.form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form input{
+    padding:15px;
+    border-radius:16px;
+    border:1px solid var(--border);
+
+    background:rgba(255,255,255,0.8);
+
+    font-size:14px;
+    outline:none;
+
+    transition:0.25s;
+}
+
+.form input:focus{
+    border-color:var(--accent);
+
+    box-shadow:
+    0 0 0 4px rgba(6,182,212,0.12),
+    0 10px 20px rgba(6,182,212,0.08);
+
+    transform:scale(1.01);
+}
+
+.form input[name="name"],
+.form button{
+    grid-column:span 2;
+}
+
+/* MAIN BUTTON */
+
+.btn{
+    position:relative;
+    overflow:hidden;
+
+    border:none;
+    cursor:pointer;
+
+    padding:16px;
+    border-radius:18px;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary),
+        var(--accent)
+    );
+
+    background-size:200% 200%;
+
+    color:white;
+    font-size:15px;
+    font-weight:700;
+
+    transition:0.35s ease;
+
+    animation:gradientMove 5s ease infinite;
+
+    box-shadow:
+    0 12px 25px rgba(99,102,241,0.3);
+}
+
+@keyframes gradientMove{
+    0%{
+        background-position:0% 50%;
+    }
+    50%{
+        background-position:100% 50%;
+    }
+    100%{
+        background-position:0% 50%;
+    }
+}
+
+.btn::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+    );
+
+    transition:0.7s;
+}
+
+.btn:hover::before{
+    left:100%;
+}
+
+.btn:hover{
+    transform:translateY(-4px) scale(1.02);
+
+    box-shadow:
+    0 18px 35px rgba(99,102,241,0.35);
+}
+
+/* BULK UPLOAD */
+
+.upload-box{
+    position:relative;
+    overflow:hidden;
+
+    border:2px dashed #cbd5e1;
+    border-radius:24px;
+
+    background:linear-gradient(135deg,#f8fafc,#ffffff);
+
+    padding:45px 25px;
+
+    text-align:center;
+
+    transition:0.35s ease;
+    cursor:pointer;
+}
+
+.upload-box:hover{
+    border-color:var(--accent);
+
+    transform:translateY(-5px);
+
+    box-shadow:
+    0 18px 40px rgba(6,182,212,0.15);
+}
+
+.upload-box input{
+    display:none;
+}
+
+.upload-icon{
+    font-size:52px;
+}
+
+.upload-title{
+    font-size:20px;
+    font-weight:800;
+    margin-top:12px;
+}
+
+.upload-sub{
+    margin-top:8px;
+    color:var(--muted);
+}
+
+/* TABLE PANEL */
+
+.table-panel{
+    margin-top:28px;
+}
+
+/* TABLE */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:18px;
+}
+
+th{
+    background:#f8fafc;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+th,td{
+    padding:16px;
+    text-align:center;
+    border-bottom:1px solid #e2e8f0;
+}
+
+tr{
+    transition:0.25s ease;
+}
+
+tr:hover{
+    background:#f8fafc;
+    transform:scale(1.005);
+}
+
+/* IMAGE */
+
+.medicine-img{
+    width:80px;
+    height:80px;
+    object-fit:contain;
+
+    background:white;
+
+    border-radius:18px;
+    border:1px solid #ddd;
+
+    padding:5px;
+
+    transition:0.35s ease;
+}
+
+.medicine-img:hover{
+    transform:scale(1.12) rotate(2deg);
+}
+
+/* STATUS */
+
+.pending,
+.delivered,
+.cancelled{
+    padding:7px 14px;
+    border-radius:50px;
+    color:white;
+    font-size:13px;
+    font-weight:700;
+}
+
+.pending{
+    background:linear-gradient(135deg,#f59e0b,#fbbf24);
+}
+
+.delivered{
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+}
+
+.cancelled{
+    background:linear-gradient(135deg,#dc2626,#ef4444);
+}
+
+/* ACTION BUTTON */
+
+.action-btn{
+    text-decoration:none;
+
+    padding:10px 16px;
+    border-radius:14px;
+
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+
+    color:white;
+    font-size:13px;
+    font-weight:700;
+
+    transition:0.3s ease;
+
+    box-shadow:0 10px 20px rgba(34,197,94,0.2);
+}
+
+.action-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:850px){
+
+    .layout{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+    }
+
+}
+
+@media(max-width:650px){
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:18px;
+    }
+
+    .form{
+        grid-template-columns:1fr;
+    }
+
+    .form input[name="name"],
+    .form button{
+        grid-column:span 1;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+
+            <div class="logo-circle">
+                💊
+            </div>
+
+            <h2>Yuvraj Medical</h2>
+
+            <p>Professional Staff Panel</p>
+
+        </div>
+
+        <div class="menu">
+
+            <a href="#" class="active">
+                📊 Dashboard
+            </a>
+
+            <a href="#addmedicine">
+                ➕ Add Medicine
+            </a>
+
+            <a href="#inventory">
+                💊 Inventory
+            </a>
+
+            <a href="#orders">
+                📦 Orders
+            </a>
+
+            <a href="/profile">
+                👤 Profile
+            </a>
+
+            <a href="/owner_dashboard">
+                🧑‍💼 Owner Dashboard
+            </a>
+
+            <a href="/logout">
+                🚪 Logout
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>💊 Staff Dashboard</h1>
+
+                <p>
+                    Smart Pharmacy Management System
+                </p>
+
+            </div>
+
+            <div class="profile-area">
+
+                <a href="/profile" class="button profile-btn">
+                    👤 Profile
+                </a>
+
+                <a href="/logout" class="button logout-btn">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- ALERT -->
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+        <div class="alert">
+            {{ messages[0] }}
+        </div>
+
+        {% endif %}
+        {% endwith %}
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="stat">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+            </div>
+
+            <div class="stat">
+                <h3>Pending Orders</h3>
+                <p>{{ pending_orders }}</p>
+            </div>
+
+            <div class="stat">
+                <h3>Delivered Orders</h3>
+                <p>{{ delivered_orders }}</p>
+            </div>
+
+            <div class="stat">
+                <h3>Total Medicines</h3>
+                <p>{{ total_medicines }}</p>
+            </div>
+
+        </div>
+
+        <!-- GRID -->
+
+        <div class="grid">
+
+            <!-- ADD MEDICINE -->
+
+            <div class="panel" id="addmedicine">
+
+                <h2>➕ Add New Medicine</h2>
+
+                <form
+                    class="form"
+                    method="POST"
+                    action="/add_medicine"
+                >
+
+                    <input
+                        name="name"
+                        placeholder="Medicine Name"
+                        required
+                    >
+
+                    <input
+                        name="category"
+                        placeholder="Category"
+                    >
+
+                    <input
+                        type="number"
+                        name="price"
+                        placeholder="Price"
+                    >
+
+                    <input
+                        type="number"
+                        name="stock"
+                        placeholder="Stock"
+                    >
+
+                    <input
+                        type="date"
+                        name="expiry"
+                    >
+
+                    <button class="btn">
+                        ➕ Add Medicine
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- BULK -->
+
+            <div class="panel">
+
+                <h2>📂 Bulk Upload</h2>
+
+                <form
+                    method="POST"
+                    action="/bulk_upload"
+                    enctype="multipart/form-data"
+                >
+
+                    <label class="upload-box">
+
+                        <div class="upload-icon">
+                            📤
+                        </div>
+
+                        <div class="upload-title">
+                            Upload Excel File
+                        </div>
+
+                        <div class="upload-sub">
+                            Drag & Drop or Click Here
+                        </div>
+
+                        <input
+                            type="file"
+                            name="file"
+                            required
+                        >
+
+                    </label>
+
+                    <br>
+
+                    <button
+                        class="btn"
+                        style="width:100%;"
+                    >
+                        Upload Medicines
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <!-- INVENTORY -->
+
+        <div class="panel table-panel" id="inventory">
+
+            <h2>💊 Medicine Inventory</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Expiry</th>
+                    </tr>
+
+                    {% for m in medicines %}
+
+                    <tr>
+
+                        <td>{{ m["id"] }}</td>
+
+                        <td>
+
+                            <img
+                                src="{{ url_for('static', filename='images/' + m['name'] + '.JPG') }}"
+                                class="medicine-img"
+
+                                onerror="this.onerror=null;this.src='/static/images/default.png';"
+                            >
+
+                        </td>
+
+                        <td>{{ m["name"] }}</td>
+
+                        <td>{{ m["category"] }}</td>
+
+                        <td>₹{{ m["price"] }}</td>
+
+                        <td>{{ m["stock"] }}</td>
+
+                        <td>{{ m["expiry_date"] }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- ORDERS -->
+
+        <div class="panel table-panel" id="orders">
+
+            <h2>📦 Recent Orders</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+
+                    {% for o in orders %}
+
+                    <tr>
+
+                        <td>{{ o["id"] }}</td>
+
+                        <td>{{ o["customer_name"] }}</td>
+
+                        <td>₹{{ o["total"] }}</td>
+
+                        <td>{{ o["date"] }}</td>
+
+                        <td>
+
+                            {% if o["status"]=="Pending" %}
+
+                            <span class="pending">
+                                Pending
+                            </span>
+
+                            {% elif o["status"]=="Delivered" %}
+
+                            <span class="delivered">
+                                Delivered
+                            </span>
+
+                            {% else %}
+
+                            <span class="cancelled">
+                                Cancelled
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if o["status"]=="Pending" %}
+
+                            <a
+                                href="/deliver_order/{{ o['id'] }}"
+                                class="action-btn"
+                            >
+                                ✔ Deliver
+                            </a>
+
+                            {% else %}
+
+                            <span style="color:gray;">
+                                Done
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yuvraj Medical</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f9f9f9;
+        }
+        img{
+            image-rendering:auto;
+        }
+        html{
+             scroll-behavior:smooth;
+        }
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c7be5;
+            color: white;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index:1000;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.2);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .cart-btn {
+            background: green;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            contain:layout;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            will-change:transform;
+        }
+
+        .qty-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            background: #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            color: black;
+        }
+
+        .add-btn {
+            background: #28a745;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .out-btn {
+            background: gray;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>💊 Yuvraj Medical</h2>
+
+    <div class="nav-links">
+
+        <!-- PROFILE -->
+        <a href="{{ url_for('profile') }}" style="background:purple;">
+            👤 Profile
+        </a>
+
+        <!-- ORDERS -->
+        <a href="{{ url_for('my_orders') }}">
+            📦 My Orders
+        </a>
+
+        <!-- CART -->
+        <a href="{{ url_for('cart') }}" class="cart-btn">
+            🛒 Cart ({{ cart_count }})
+        </a>
+
+        <!-- LOGOUT -->
+        <a href="{{ url_for('logout') }}" style="background:red;">
+            🚪 Logout
+        </a>
+
+    </div>
+</div>
+<!-- 🔍 SEARCH & FILTER -->
+<div style="padding: 15px; background: #ffffff; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+
+    <form method="GET" action="/" style="display:flex; gap:10px; flex-wrap:wrap;">
+
+        <!-- SEARCH BOX -->
+        <input type="text" name="search" placeholder="Search medicine..."
+               value="{{ search }}"
+               autocomplete="off"
+               style="padding:8px; width:200px;">
+
+        <!-- SORT DROPDOWN -->
+        <select name="sort" style="padding:8px;">
+            <option value="">Sort By</option>
+            <option value="low" {% if sort == "low" %}selected{% endif %}>
+                Price: Low to High
+            </option>
+            <option value="high" {% if sort == "high" %}selected{% endif %}>
+                Price: High to Low
+            </option>
+        </select>
+
+        <!-- SUBMIT -->
+        <button type="submit" style="padding:8px 15px; background:#2c7be5; color:white; border:none;">
+            Search
+        </button>
+
+    </form>
+
+</div>
+<!-- MEDICINE GRID -->
+<div class="grid">
+
+{% if medicines %}
+
+    {% for med in medicines %}
+    <div class="card">
+    <img
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    width="120"
+    height="120"
+    src="/static/images/{{ med['name']
+        .replace('/', '-')
+        .replace('%', '')
+        .replace('.', '')
+    }}.JPG"
+
+    alt="{{ med['name'] }}"
+
+    style="
+        width:120px;
+        height:120px;
+        object-fit:contain;
+        background:white;
+        border-radius:12px;
+        border:1px solid #ddd;
+        padding:5px;
+    "
+
+    onerror="
+        if(this.src.endsWith('.JPG')){
+            this.src=this.src.replace('.JPG','.jpg');
+        }
+        else if(this.src.endsWith('.jpg')){
+            this.src=this.src.replace('.jpg','.jpeg');
+        }
+        else if(this.src.endsWith('.jpeg')){
+            this.src=this.src.replace('.jpeg','.png');
+        }
+        else{
+            this.onerror=null;
+            this.src='/static/images/default.png';
+        }
+    "
+>
+    <h3>{{ med["name"] }}</h3>
+
+<p>
+    <strong>₹{{ med["price"] }}</strong>
+</p>
+
+{% if med["stock"] > 0 %}
+
+    <p>
+        Stock: {{ med["stock"] }}
+    </p>
+
+{% else %}
+
+    <p style="color:red;">
+        Out of Stock
+    </p>
+
+{% endif %}
+
+<p>
+    Expiry: {{ med["expiry_date"] }}
+</p>
+
+<div class="qty-box">
+
+    <a href="{{ url_for('decrease', id=med['id']) }}"
+       class="btn">
+       ➖
+    </a>
+
+    <span>
+        {{ cart.get(med['id']|string, 0) }}
+    </span>
+
+    <a href="{{ url_for('increase', id=med['id']) }}"
+       class="btn">
+       ➕
+    </a>
+
+</div>
+
+{% if med["stock"] > 0 %}
+
+<a href="{{ url_for('add_to_cart', id=med['id']) }}"
+   class="add-btn">
+
+    Add to Cart
+
+</a>
+
+{% else %}
+
+<button class="out-btn" disabled>
+    Out of Stock
+</button>
+
+{% endif %}
+    </div>
+    {% endfor %}
+
+{% else %}
+
+    <!-- ❌ NO RESULT MESSAGE -->
+    <div style="grid-column: 1/-1; text-align:center; padding:40px;">
+
+        <h2 style="color:red;">❌ No medicines found</h2>
+
+        {% if search %}
+            <p>
+                No results for <strong>"{{ search }}"</strong>
+            </p>
+        {% endif %}
+
+        <p style="color:gray;">
+            💡 Try searching with a different name or check spelling
+        </p>
+
+        <!-- 🔄 BACK BUTTON -->
+        <a href="/" style="
+            display:inline-block;
+            margin-top:15px;
+            padding:10px 15px;
+            background:#2c7be5;
+            color:white;
+            text-decoration:none;
+            border-radius:5px;">
+            🔄 View All Medicines
+        </a>
+
+    </div>
+
+{% endif %}
+
+</div>
+
+<!-- SCROLL FIX -->
+<script>
+    window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollPosition", window.scrollY);
+    });
+
+    window.addEventListener("load", function () {
+        const scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    });
+</script>
+
+</body>
+</html>

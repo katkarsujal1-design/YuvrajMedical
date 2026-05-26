@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Orders</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            margin: 0;
+        }
+
+        .header {
+            background: #2c7be5;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-buttons a {
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .home-btn {
+            background: white;
+            color: #2c7be5;
+        }
+
+        .logout-btn {
+            background: red;
+            color: white;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .order-card {
+            background: white;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .pending { background: orange; }
+        .delivered { background: green; }
+        .cancelled { background: red; }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .cancel-btn {
+            background: red;
+            color: white;
+            padding: 6px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 20px;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>📦 My Orders</h2>
+
+    <div class="nav-buttons">
+        <a href="/profile" class="home-btn" style="background:purple;">👤 Profile</a>
+        <a href="/" class="home-btn">🏠 Home</a>
+        <a href="/logout" class="logout-btn">🚪 Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    {% if orders and orders|length > 0 %}
+
+        {% for o in orders %}
+
+        <!-- ✅ FIX: anchor added here -->
+        <div class="order-card" id="order-{{ o['order_id'] }}">
+
+            <div class="order-header">
+                <div>
+                    <h3>Order ID: {{ o['order_id'] }}</h3>
+                    <p>Total: ₹{{ o['total'] }}</p>
+                    <p>Date: {{ o['date'] }}</p>
+                </div>
+
+                <div>
+                    {% if o['status'] == 'Delivered' %}
+                        <span class="status delivered">Delivered</span>
+                    {% elif o['status'] == 'Cancelled' %}
+                        <span class="status cancelled">Cancelled</span>
+                    {% else %}
+                        <span class="status pending">Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <h4>Items:</h4>
+            <ul>
+                {% for i in o['items'] %}
+                    <li>{{ i[0] }} | Qty: {{ i[1] }} | ₹{{ i[2] }}</li>
+                {% endfor %}
+            </ul>
+
+            {% if o['status'] == 'Pending' %}
+                <a href="/cancel_order/{{ o['order_id'] }}#order-{{ o['order_id'] }}"
+                   class="cancel-btn">
+                    ❌ Cancel Order
+                </a>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+        <div class="no-orders">
+            No orders found 🛒
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

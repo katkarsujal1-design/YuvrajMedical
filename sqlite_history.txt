@@ -1,0 +1,17 @@
+DELETE FROM medicines
+WHERE id NOT IN (
+    SELECT MIN(id)
+    FROM medicines
+    GROUP BY LOWER(name)
+);
+SELECT name, COUNT(*)
+FROM medicines
+GROUP BY LOWER(name)
+HAVING COUNT(*) > 1;
+.quit
+CREATE TABLE medicine_images (
+    name TEXT PRIMARY KEY,
+    image_url TEXT
+);
+.tables
+.exit

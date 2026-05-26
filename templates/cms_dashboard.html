@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pharmacy CMS</title>
+    <link rel="stylesheet" href="/static/css/cms.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Yuvraj CMS</h2>
+
+    <a href="/cms">Dashboard</a>
+    <a href="/staff">Medicines</a>
+    <a href="/owner_dashboard">Orders</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="main">
+
+    <h1>Pharmacy CMS Dashboard</h1>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Medicines</h3>
+            <p>{{ total_medicines }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Orders</h3>
+            <p>{{ total_orders }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Low Stock</h3>
+            <p>{{ low_stock }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

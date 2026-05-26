@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Medicine Scanner</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#f3f4f6;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .box{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+            width:380px;
+            text-align:center;
+        }
+
+        video{
+            width:100%;
+            border-radius:10px;
+            margin-top:10px;
+            border:2px solid #ddd;
+        }
+
+        input{
+            margin-top:10px;
+            width:100%;
+        }
+
+        button{
+            background:#2563eb;
+            color:white;
+            border:none;
+            padding:12px;
+            border-radius:8px;
+            margin-top:12px;
+            cursor:pointer;
+            width:100%;
+            font-weight:bold;
+        }
+
+        .secondary{
+            background:#10b981;
+        }
+
+        .info{
+            margin-top:10px;
+            font-size:14px;
+            color:#555;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>📷 Smart Medicine Scanner</h2>
+
+    <!-- LIVE CAMERA -->
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <button onclick="captureImage()">📸 Capture from Camera</button>
+
+    <div class="info">OR</div>
+
+    <!-- GALLERY UPLOAD -->
+    <input type="file" id="gallery" accept="image/*">
+
+    <button class="secondary" onclick="uploadGallery()">🖼 Upload from Gallery</button>
+
+    <form id="uploadForm" method="POST" action="/scan_barcode" enctype="multipart/form-data">
+        <input type="file" name="barcode_image" id="hiddenInput" style="display:none;">
+    </form>
+
+</div>
+<div id="loading" style="display:none;color:#f59e0b;font-weight:bold;margin-top:10px;">
+    ⏳ Scanning medicine...
+</div>
+<script>
+
+let video = document.getElementById("camera");
+let canvas = document.getElementById("canvas");
+let isUploading = false;
+
+// ================= CAMERA START =================
+window.addEventListener("load", startCamera);
+
+function startCamera(){
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        video.srcObject = stream;
+    })
+    .catch(err => {
+        alert("Camera permission denied or not supported");
+        console.log(err);
+    });
+}
+
+
+// ================= CAPTURE IMAGE =================
+function captureImage(){
+
+    if(isUploading) return;
+
+    if(video.videoWidth === 0){
+        alert("Camera still loading...");
+        return;
+    }
+
+    isUploading = true;
+    document.getElementById("loading").style.display = "block";
+
+    let ctx = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(video, 0, 0);
+
+    canvas.toBlob(function(blob){
+
+        let file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+
+        let dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+
+        document.getElementById("hiddenInput").files = dataTransfer.files;
+
+        document.getElementById("uploadForm").submit();
+
+    });
+
+}
+
+
+// ================= GALLERY UPLOAD =================
+function uploadGallery(){
+
+    if(isUploading) return;
+
+    let fileInput = document.getElementById("gallery");
+
+    if(fileInput.files.length === 0){
+        alert("Select an image first");
+        return;
+    }
+
+    isUploading = true;
+    document.getElementById("loading").style.display = "block";
+
+    let dataTransfer = new DataTransfer();
+    dataTransfer.items.add(fileInput.files[0]);
+
+    document.getElementById("hiddenInput").files = dataTransfer.files;
+
+    document.getElementById("uploadForm").submit();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<h2>📸 Smart Medicine Scanner</h2>
+
+<input type="file" id="img" accept="image/*" capture="environment">
+
+<button onclick="scan()">🚀 Scan & Auto Add</button>
+
+<p id="status"></p>
+
+<script>
+function scan(){
+
+    let file = document.getElementById("img").files[0];
+
+    if(!file){
+        alert("Select image first");
+        return;
+    }
+
+    document.getElementById("status").innerText = "Scanning...";
+
+    let formData = new FormData();
+    formData.append("image", file);
+
+    fetch("/auto_add_medicine", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        document.getElementById("status").innerHTML =
+        "✅ Added: <b>" + data.name + "</b>";
+
+    })
+    .catch(err => {
+        document.getElementById("status").innerText = "Error scanning";
+    });
+
+}
+</script>

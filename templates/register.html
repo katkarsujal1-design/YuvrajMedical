@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup - Yuvraj Medical</title>
+
+    <meta charset="UTF-8"> <!-- ✅ FIXED -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #2c7be5, #00c6ff);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c7be5;
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            background: #eee;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: #2c7be5;
+            color: white;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+    </style>
+
+    <script>
+        function showTab(tab) {
+            document.getElementById("customerForm").style.display = tab === "customer" ? "block" : "none";
+            document.getElementById("staffForm").style.display = tab === "staff" ? "block" : "none";
+
+            document.getElementById("tabCustomer").classList.toggle("active", tab === "customer");
+            document.getElementById("tabStaff").classList.toggle("active", tab === "staff");
+        }
+    </script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">💊 Yuvraj Medical</div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <div id="tabCustomer" class="tab active" onclick="showTab('customer')">
+            Customer
+        </div>
+        <div id="tabStaff" class="tab" onclick="showTab('staff')">
+            Staff
+        </div>
+    </div>
+
+    <!-- ================= CUSTOMER FORM ================= -->
+    <form id="customerForm" method="POST" action="/register">
+
+        <input name="name" placeholder="👤 Full Name" required>
+        <input name="email" type="email" placeholder="📧 Email" required>
+        <input name="password" type="password" placeholder="🔒 Password" required>
+
+        <!-- ✅ FIXED -->
+        <input name="phone" placeholder="📞 Contact Number" required>
+
+        <input name="address" placeholder="🏠 Address" required>
+
+        <input type="hidden" name="role" value="customer">
+
+        <button type="submit">Create Customer Account</button>
+    </form>
+
+    <!-- ================= STAFF FORM ================= -->
+    <form id="staffForm" method="POST" action="/register" style="display:none;">
+
+        <input name="name" placeholder="👤 Staff Name" required>
+        <input name="email" type="email" placeholder="📧 Email" required>
+        <input name="password" type="password" placeholder="🔒 Password" required>
+
+        <!-- ✅ FIXED -->
+        <input name="phone" placeholder="📞 Contact Number" required>
+
+        <input name="age" placeholder="🎂 Age" required>
+        <input name="gender" placeholder="⚧ Gender" required>
+        <input name="religion" placeholder="🕉 Religion" required>
+
+        <textarea name="address" placeholder="🏠 Address" required></textarea>
+
+        <input name="education" placeholder="🎓 Education" required>
+        <input name="aadhar" placeholder="🆔 Aadhar ID" required>
+        <input name="pan" placeholder="💳 PAN ID" required>
+
+        <input type="hidden" name="role" value="staff">
+
+        <button type="submit">Create Staff Account</button>
+    </form>
+
+</div>
+
+</body>
+</html>

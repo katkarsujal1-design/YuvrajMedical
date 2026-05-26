@@ -1,0 +1,57 @@
+from werkzeug.security import generate_password_hash
+import sqlite3
+conn = sqlite3.connect("database.db")
+password = generate_password_hash("admin123")
+conn.execute("""
+UPDATE users
+SET hashed_password=?, role='owner'
+WHERE email='owner@gmail.com'
+""", (password,))
+conn.commit()
+print("Owner account updated successfully")
+exit()
+import sqlite3
+conn = sqlite3.connect("database.db")
+rows = conn.execute("SELECT id,name,email,role FROM users").fetchall()
+print(rows)
+from werkzeug.security import generate_password_hash
+import sqlite3
+conn = sqlite3.connect("database.db")
+conn.execute("DELETE FROM users WHERE email='owner@gmail.com'")
+conn.execute("""
+INSERT INTO users
+(name,email,phone,address,role,hashed_password,password)
+VALUES (?,?,?,?,?,?,?)
+""", (
+"Admin",
+"owner@gmail.com",
+"9999999999",
+"Virar",
+"owner",
+generate_password_hash("admin123"),
+"admin123"
+))
+conn.commit()
+print("NEW OWNER CREATED SUCCESSFULLY")
+exit()
+import mysql.connector
+db = mysql.connector.connect(
+host="localhost",
+    user="root",
+    password="YOUR_PASSWORD",
+    database="medical_store"
+)
+db = mysql.connector.connect(
+host="localhost",
+    user="root",
+    password="YOUR_PASSWORD",
+    database="medical_store"
+)
+import mysql.connector
+db = mysql.connector.connect(
+host="localhost",
+    user="root",
+    password="YOUR_PASSWORD",
+    database="medical_store"
+)
+exit()
