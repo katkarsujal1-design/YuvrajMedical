@@ -60,9 +60,19 @@ services:
 
     networks:
       - medical-network
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: always
+    command: tunnel --no-autoupdate --url http://nginx:80
+    depends_on:
+      - nginx
+    networks:
+      - medical-network
 networks:
   medical-network:
 
 volumes:
   mysql-data:
+
 
