@@ -30,12 +30,11 @@ def close_db(error):
 db_pool = pooling.MySQLConnectionPool(
     pool_name="mypool",
     pool_size=10,
-    host="localhost",
-    user="root",
+    host=os.environ.get("DB_HOST"),
+    user=os.environ.get("DB_USER"),
     password=os.environ.get("DB_PASSWORD"),
-    database="medical_store"
+    database=os.environ.get("DB_NAME")
 )
-
 
 
 def get_db():

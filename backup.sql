@@ -21,7 +21,6 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '75615ff8-56a1-11f1-a94c-6c9466159e38:1-35';
 
 --
 -- Table structure for table `cart`
