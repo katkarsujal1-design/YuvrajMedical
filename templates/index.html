@@ -88,6 +88,29 @@
             display: block;
             flex-shrink: 0;
         }
+        .img-box {
+ 	   width: 132px;
+    	   height: 132px;
+     	   min-width: 132px;
+           min-height: 132px;
+   	   display: flex;
+   	   align-items: center;
+           justify-content: center;
+    	   flex-shrink: 0;
+	   margin-bottom: 10px;
+	}
+
+        .img-box img {
+   	   width: 120px;
+    	   height: 120px;
+   	   object-fit: contain;
+  	   display: block;
+ 	   background: white;
+ 	   border-radius: 12px;
+ 	   border: 1px solid #ddd;
+ 	   padding: 5px;
+ 	   box-sizing: border-box;
+	}
 
         .qty-box {
             display: flex;
@@ -193,46 +216,39 @@
 
     {% for med in medicines %}
     <div class="card">
+    <div class="img-box">
     <img
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    width="120"
-    height="120"
-    src="/static/images/{{ med['name']
-        .replace('/', '-')
-        .replace('%', '')
-        .replace('.', '')
-    }}.JPG"
+        loading="lazy"
+        decoding="async"
+        fetchpriority="low"
+        width="120"
+        height="120"
+        src="/static/images/{{ med['name']
+            .replace('/', '-')
+            .replace('%', '')
+            .replace('.', '')
+        }}.JPG"
+        alt="{{ med['name'] }}"
+        data-base="/static/images/{{ med['name']
+            .replace('/', '-')
+            .replace('%', '')
+            .replace('.', '')
+        }}"
+        data-step="0"
+        onerror="
+            const exts = ['.jpg', '.jpeg', '.png', '/default.png'];
+            const step = Number(this.dataset.step || 0);
 
-    alt="{{ med['name'] }}"
-
-    style="
-        width:120px;
-        height:120px;
-        object-fit:contain;
-        background:white;
-        border-radius:12px;
-        border:1px solid #ddd;
-        padding:5px;
-    "
-
-    onerror="
-        if(this.src.endsWith('.JPG')){
-            this.src=this.src.replace('.JPG','.jpg');
-        }
-        else if(this.src.endsWith('.jpg')){
-            this.src=this.src.replace('.jpg','.jpeg');
-        }
-        else if(this.src.endsWith('.jpeg')){
-            this.src=this.src.replace('.jpeg','.png');
-        }
-        else{
-            this.onerror=null;
-            this.src='/static/images/default.png';
-        }
-    "
->
+            if (step < 3) {
+                this.dataset.step = step + 1;
+                this.src = this.dataset.base + exts[step];
+            } else {
+                this.onerror = null;
+                this.src = '/static/images/default.png';
+            }
+        "
+    >
+</div>
     <h3>{{ med["name"] }}</h3>
 
 <p>
