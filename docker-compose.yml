@@ -64,11 +64,10 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: always
-    command: tunnel --no-autoupdate --url http://nginx:80
-    depends_on:
-      - nginx
+    command: tunnel --no-autoupdate run --token eyJhIjoiMWZmNDFmYzFhNDhhNGUxYTY4MjI0MDBhM2M2M2JjYTMiLCJ0IjoiZjRlNDc5N2MtMzIzNi00OGY1LWI1OWItYTM4YjY3ZjE5ZGI4IiwicyI6Ik1EQm1NREE0TW1JdFpUaGlZUzAwTmpVM0xXRXlOVFl0Wm1JME5EQmhObUpoWTJZME5qRmtOakEzWWpZdFpEUmtNUzAwWXpOakxUZzVZVGN0WWpZNE9XTXdNR1U1T0RKaCJ9
     networks:
       - medical-network
+
 networks:
   medical-network:
 
