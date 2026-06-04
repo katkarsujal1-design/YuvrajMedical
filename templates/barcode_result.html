@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barcode Result</title>
+
+    <style>
+        body{
+            font-family:Arial;
+            background:linear-gradient(135deg,#dbeafe,#f8fafc,#ede9fe);
+            min-height:100vh;
+            margin:0;
+            padding:30px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .card{
+            width:100%;
+            max-width:520px;
+            background:white;
+            padding:28px;
+            border-radius:26px;
+            box-shadow:0 20px 45px rgba(0,0,0,0.12);
+        }
+
+        h2{
+            color:#16a34a;
+            text-align:center;
+            margin-bottom:20px;
+        }
+
+        .row{
+            background:#f8fafc;
+            padding:14px;
+            border-radius:16px;
+            margin-bottom:12px;
+            border:1px solid #e2e8f0;
+        }
+
+        .row span{
+            display:block;
+            font-size:13px;
+            color:#64748b;
+            font-weight:700;
+        }
+
+        .row b{
+            display:block;
+            margin-top:5px;
+            font-size:18px;
+            color:#0f172a;
+        }
+
+        .actions{
+            display:flex;
+            gap:12px;
+            margin-top:20px;
+        }
+
+        a{
+            flex:1;
+            text-align:center;
+            text-decoration:none;
+            padding:13px;
+            border-radius:16px;
+            font-weight:800;
+        }
+
+        .scan{
+            background:linear-gradient(135deg,#6366f1,#06b6d4);
+            color:white;
+        }
+
+        .back{
+            background:#f1f5f9;
+            color:#334155;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>✅ Medicine Found</h2>
+
+    <div class="row">
+        <span>Name</span>
+        <b>{{ medicine.get("name", "N/A") }}</b>
+    </div>
+
+    <div class="row">
+        <span>Category</span>
+        <b>{{ medicine.get("category", "N/A") }}</b>
+    </div>
+
+    <div class="row">
+        <span>Price</span>
+        <b>₹{{ medicine.get("price", "N/A") }}</b>
+    </div>
+
+    <div class="row">
+        <span>Stock</span>
+        <b>{{ medicine.get("stock", "N/A") }}</b>
+    </div>
+
+    <div class="row">
+        <span>Expiry Date</span>
+        <b>{{ medicine.get("expiry_date", "N/A") }}</b>
+    </div>
+
+    <div class="row">
+        <span>Barcode</span>
+        <b>{{ medicine.get("barcode", "N/A") }}</b>
+    </div>
+
+    <div class="actions">
+        <a href="/scan_barcode" class="scan">🔄 Scan Again</a>
+        <a href="/staff" class="back">⬅ Staff</a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,5 +1,10 @@
 from flask import Flask, render_template, request, redirect, session, g
 #import pymysql
+import re
+import pytesseract
+from PIL import Image
+import barcode
+from barcode.writer import ImageWriter
 from flask import flash
 import pandas as pd
 import mysql.connector
@@ -44,8 +49,64 @@ def get_db():
         g.db = db_pool.get_connection()
 
     return g.db
-# ================= LOCAL IMAGE SAVE =================
 
+# ================= Prescription upload ===============
+PRESCRIPTION_FOLDER = "static/prescriptions"
+
+def read_prescription_text(image_path):
+    try:
+        import cv2
+        import pytesseract
+        from PIL import Image
+        import numpy as np
+
+        # Read image
+        img = cv2.imread(image_path)
+
+        if img is None:
+            return ""
+
+        # Resize image bigger for OCR
+        img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+
+        # Convert to grayscale
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        # Remove noise
+        gray = cv2.medianBlur(gray, 3)
+
+        # Improve contrast
+        gray = cv2.convertScaleAbs(gray, alpha=1.6, beta=20)
+
+        # Threshold image
+        thresh = cv2.adaptiveThreshold(
+            gray,
+            255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY,
+            31,
+            15
+        )
+
+        # Try multiple OCR modes
+        configs = [
+            "--oem 3 --psm 6",
+            "--oem 3 --psm 11",
+            "--oem 3 --psm 12"
+        ]
+
+        best_text = ""
+
+        for config in configs:
+            text = pytesseract.image_to_string(thresh, config=config)
+            if len(text.strip()) > len(best_text.strip()):
+                best_text = text
+
+        return best_text.strip()
+
+    except Exception as e:
+        print("OCR Error:", e)
+        return ""
 def save_image(file):
 
     upload_folder = os.path.join("static", "images")
@@ -59,7 +120,17 @@ def save_image(file):
     file.save(filepath)
 
     return "/" + filepath.replace("\\", "/")
+#===================barcode image==========================
+def generate_barcode_image(barcode_number):
+    folder = "static/barcodes"
+    os.makedirs(folder, exist_ok=True)
 
+    filename = f"{folder}/{barcode_number}"
+
+    code128 = barcode.get("code128", barcode_number, writer=ImageWriter())
+    saved_path = code128.save(filename)
+
+    return saved_path
 # ================= HOME (SEARCH + FILTER) =================
 @app.route("/")
 def home():
@@ -1233,6 +1304,7 @@ def staff_dashboard():
         delivered_orders=delivered_orders,
         total_medicines=total_medicines
     )
+
 #---------- ADD MEDICINE -------------
 #----------medicine function-------------
 @app.route("/add_medicine", methods=["POST"])
@@ -1250,6 +1322,7 @@ def add_medicine():
         price = request.form.get("price")
         stock = request.form.get("stock")
         expiry = request.form.get("expiry")
+        barcode_number = request.form.get("barcode")
 
         image_url = None
 
@@ -1264,6 +1337,11 @@ def add_medicine():
             if not image_url:
                 flash("Image upload failed")
 
+        # ================= BARCODE IMAGE GENERATE =================
+
+        if barcode_number:
+            generate_barcode_image(barcode_number)
+
         # ================= INSERT =================
 
         cursor = db.cursor(dictionary=True)
@@ -1276,10 +1354,11 @@ def add_medicine():
                 price,
                 stock,
                 expiry_date,
-                image
+                image,
+                barcode
             )
 
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
 
         """, (
 
@@ -1288,7 +1367,8 @@ def add_medicine():
             price,
             stock,
             expiry,
-            image_url
+            image_url,
+            barcode_number
 
         ))
 
@@ -1405,7 +1485,7 @@ def edit_medicine(id):
     db.commit()
     cursor.close()
     return redirect("/staff")
-
+upload_prescription
 #------------del medicine fuc---------
 @app.route("/delete_medicine/<int:id>")
 def delete_medicine(id):
@@ -1457,6 +1537,297 @@ def remove_staff(id):
         cursor.close()
 
     return redirect("/owner_dashboard")
+# ================= BARCODE SCANNER =================
+@app.route("/scan_barcode")
+def scan_barcode():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] not in ["owner", "staff"]:
+        return redirect("/")
+
+    return render_template("scan_barcode.html")
+
+
+@app.route("/barcode_result/<barcode>")
+def barcode_result(barcode):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] not in ["owner", "staff"]:
+        return redirect("/")
+
+    db = get_db()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT * FROM medicines
+        WHERE barcode=%s
+    """, (barcode,))
+    medicine = cursor.fetchone()
+    cursor.close()
+
+    if medicine:
+        return render_template("barcode_result.html", medicine=medicine)
+
+    return redirect(f"/add_scanned_medicine/{barcode}")
+
+
+@app.route("/add_scanned_medicine/<barcode>", methods=["GET", "POST"])
+def add_scanned_medicine(barcode):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] not in ["owner", "staff"]:
+        return redirect("/")
+
+    db = get_db()
+
+    if request.method == "POST":
+
+        try:
+            name = request.form.get("name")
+            category = request.form.get("category")
+            price = request.form.get("price")
+            stock = request.form.get("stock")
+            expiry = request.form.get("expiry")
+            barcode_number = request.form.get("barcode")
+
+            if barcode_number:
+                generate_barcode_image(barcode_number)
+
+            cursor = db.cursor(dictionary=True)
+            cursor.execute("""
+                INSERT INTO medicines
+                (
+                    name,
+                    category,
+                    price,
+                    stock,
+                    expiry_date,
+                    barcode
+                )
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (
+                name,
+                category,
+                price,
+                stock,
+                expiry,
+                barcode_number
+            ))
+
+            db.commit()
+            cursor.close()
+
+            flash("New scanned medicine added successfully")
+            return redirect("/staff")
+
+        except Exception as e:
+            db.rollback()
+            flash(f"Error: {e}")
+            return redirect(f"/add_scanned_medicine/{barcode}")
+
+    return render_template("add_scanned_medicine.html", barcode=barcode)
+# ================= GENERATE BARCODES FOR EXISTING MEDICINES =================
+@app.route("/generate_all_barcodes")
+def generate_all_barcodes():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] not in ["owner", "staff"]:
+        return redirect("/")
+
+    db = get_db()
+
+    try:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT id, barcode
+            FROM medicines
+            WHERE barcode IS NULL OR barcode=''
+        """)
+        medicines = cursor.fetchall()
+        cursor.close()
+
+        updated = 0
+
+        for med in medicines:
+            barcode_number = f"YM{str(med['id']).zfill(6)}"
+
+            generate_barcode_image(barcode_number)
+
+            cursor = db.cursor(dictionary=True)
+            cursor.execute("""
+                UPDATE medicines
+                SET barcode=%s
+                WHERE id=%s
+            """, (
+                barcode_number,
+                med["id"]
+            ))
+
+            updated += 1
+
+        db.commit()
+        cursor.close()
+
+        flash(f"{updated} barcodes generated successfully")
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Barcode generation failed: {e}")
+
+    return redirect("/staff#inventory")
+# ================== Upload Priscription route =====================
+@app.route("/upload_prescription", methods=["GET", "POST"])
+def upload_prescription():
+    if "user" not in session:
+        return redirect("/login")
+
+    user_id = session["user"]["id"]
+
+    if request.method == "POST":
+        prescription = request.files.get("prescription")
+
+        if not prescription or prescription.filename == "":
+            flash("Please upload a prescription image", "error")
+            return redirect("/upload_prescription")
+
+        allowed_extensions = {"png", "jpg", "jpeg", "webp"}
+
+        filename = secure_filename(prescription.filename)
+        ext = filename.rsplit(".", 1)[-1].lower()
+
+        if ext not in allowed_extensions:
+            flash("Only PNG, JPG, JPEG, and WEBP files are allowed", "error")
+            return redirect("/upload_prescription")
+
+        os.makedirs(PRESCRIPTION_FOLDER, exist_ok=True)
+
+        new_filename = f"user_{user_id}_{datetime.now().timestamp()}_{filename}"
+        save_path = os.path.join(PRESCRIPTION_FOLDER, new_filename)
+
+        prescription.save(save_path)
+
+        ocr_text = read_prescription_text(save_path)
+
+        if not ocr_text or len(ocr_text.strip()) < 5:
+            ocr_text = "OCR could not clearly read this prescription. Manual staff review required."
+
+        detected_medicines = detect_medicines_from_text(ocr_text)
+        detected_text = ", ".join(detected_medicines)
+
+        db = get_db()
+        cursor = db.cursor()
+
+        cursor.execute("""
+            INSERT INTO prescription_requests
+            (user_id, prescription_image, ocr_text, detected_medicines, status)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (
+            user_id,
+            new_filename,
+            ocr_text,
+            detected_text,
+            "Pending Review"
+        ))
+
+        db.commit()
+        cursor.close()
+
+        flash("Prescription uploaded successfully. Staff will review it shortly.", "success")
+        return redirect("/my_prescriptions")
+
+    return render_template("upload_prescription.html")
+# ====================== customer prescription status =======================
+@app.route("/my_prescriptions")
+def my_prescriptions():
+    if "user" not in session:
+        return redirect("/login")
+
+    user_id = session["user"]["id"]
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT *
+        FROM prescription_requests
+        WHERE user_id = %s
+        ORDER BY created_at DESC
+    """, (user_id,))
+
+    requests_data = cursor.fetchall()
+    cursor.close()
+
+    return render_template("my_prescriptions.html", requests_data=requests_data)
+# ========================== staff priscription request =============================
+@app.route("/staff_prescriptions")
+def staff_prescriptions():
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] not in ["staff", "owner"]:
+        return redirect("/")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT pr.*,
+               u.name AS customer_name,
+               u.email AS customer_email,
+               u.phone AS customer_phone
+        FROM prescription_requests pr
+        JOIN users u ON pr.user_id = u.id
+        ORDER BY pr.created_at DESC
+    """)
+
+    requests_data = cursor.fetchall()
+    cursor.close()
+
+    return render_template("staff_prescriptions.html", requests_data=requests_data)
+# ================================== approve/reject route ==============================
+@app.route("/review_prescription/<int:request_id>", methods=["POST"])
+def review_prescription(request_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] not in ["staff", "owner"]:
+        return redirect("/")
+
+    action = request.form.get("action")
+    staff_note = request.form.get("staff_note")
+
+    if action not in ["Approved", "Rejected"]:
+        flash("Invalid action", "error")
+        return redirect("/staff_prescriptions")
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        UPDATE prescription_requests
+        SET status = %s,
+            staff_note = %s,
+            reviewed_at = NOW()
+        WHERE id = %s
+    """, (
+        action,
+        staff_note,
+        request_id
+    ))
+
+    db.commit()
+    cursor.close()
+
+    flash(f"Prescription request {action.lower()} successfully", "success")
+    return redirect("/staff_prescriptions")
 #==========testing================
 
 # ================= RUN =================

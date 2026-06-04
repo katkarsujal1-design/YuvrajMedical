@@ -135,11 +135,11 @@
             </div>
 
             <h4>Items:</h4>
-            <ul>
-                {% for i in o['items'] %}
-                    <li>{{ i[0] }} | Qty: {{ i[1] }} | ₹{{ i[2] }}</li>
-                {% endfor %}
-            </ul>
+	    <ul>
+    		    {% for i in o['items'] %}
+        	<li>{{ i['name'] }} | Qty: {{ i['quantity'] }} | ₹{{ i['price'] }}</li>
+   		    {% endfor %}
+             </ul>
 
             {% if o['status'] == 'Pending' %}
                 <a href="/cancel_order/{{ o['order_id'] }}#order-{{ o['order_id'] }}"

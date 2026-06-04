@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Prescriptions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #2563eb;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 30px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        img {
+            max-width: 220px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        pre {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>My Prescription Requests</h2>
+
+{% if requests_data %}
+    {% for req in requests_data %}
+    <div class="card">
+        <p>
+            <b>Status:</b>
+            <span class="status
+                {% if req.status == 'Approved' %}approved{% endif %}
+                {% if req.status == 'Rejected' %}rejected{% endif %}
+            ">
+                {{ req.status }}
+            </span>
+        </p>
+
+        <p><b>Uploaded On:</b> {{ req.created_at }}</p>
+
+        <p><b>Prescription:</b></p>
+        <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}">
+
+        <p><b>OCR Detected Medicines:</b></p>
+        <pre>{{ req.detected_medicines if req.detected_medicines else "No clear medicine detected" }}</pre>
+
+        <p><b>OCR Full Text:</b></p>
+        <pre>{{ req.ocr_text if req.ocr_text else "No readable text found" }}</pre>
+
+        <p><b>Staff Note:</b></p>
+        <pre>{{ req.staff_note if req.staff_note else "Waiting for staff review" }}</pre>
+    </div>
+    {% endfor %}
+{% else %}
+    <p style="text-align:center;">No prescription request found.</p>
+{% endif %}
+
+<div class="links">
+    <a href="/upload_prescription">Upload New Prescription</a> |
+    <a href="/">Back to Home</a>
+</div>
+
+</body>
+</html>

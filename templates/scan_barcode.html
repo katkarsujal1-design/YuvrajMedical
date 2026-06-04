@@ -1,170 +1,178 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Smart Medicine Scanner</title>
+    <title>Scan Medicine Barcode</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
         body{
-            font-family: Arial;
-            background:#f3f4f6;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-        }
-
-        .box{
-            background:white;
+            font-family:Arial;
+            background:linear-gradient(135deg,#dbeafe,#f8fafc,#ede9fe);
+            min-height:100vh;
+            margin:0;
             padding:25px;
-            border-radius:15px;
-            box-shadow:0 10px 25px rgba(0,0,0,0.1);
-            width:380px;
             text-align:center;
         }
 
-        video{
+        .card{
+            max-width:520px;
+            margin:auto;
+            background:white;
+            padding:25px;
+            border-radius:24px;
+            box-shadow:0 20px 45px rgba(0,0,0,0.12);
+        }
+
+        h2{
+            color:#0f172a;
+        }
+
+        #reader{
             width:100%;
-            border-radius:10px;
+            max-width:420px;
+            margin:20px auto;
+            border-radius:18px;
+            overflow:hidden;
+        }
+
+        .hint{
+            color:#64748b;
+            font-size:14px;
             margin-top:10px;
-            border:2px solid #ddd;
+        }
+
+        .manual-box{
+            margin-top:22px;
+            padding-top:18px;
+            border-top:1px solid #e2e8f0;
         }
 
         input{
-            margin-top:10px;
             width:100%;
+            padding:14px;
+            border-radius:14px;
+            border:1px solid #cbd5e1;
+            font-size:16px;
+            margin-top:10px;
         }
 
         button{
-            background:#2563eb;
-            color:white;
-            border:none;
-            padding:12px;
-            border-radius:8px;
-            margin-top:12px;
-            cursor:pointer;
             width:100%;
-            font-weight:bold;
+            margin-top:12px;
+            padding:14px;
+            border:none;
+            border-radius:16px;
+            background:linear-gradient(135deg,#6366f1,#06b6d4);
+            color:white;
+            font-weight:800;
+            font-size:15px;
+            cursor:pointer;
         }
 
-        .secondary{
-            background:#10b981;
+        a{
+            display:block;
+            margin-top:18px;
+            text-decoration:none;
+            color:#6366f1;
+            font-weight:700;
         }
 
-        .info{
-            margin-top:10px;
-            font-size:14px;
-            color:#555;
+        #result{
+            font-weight:800;
+            color:#16a34a;
         }
     </style>
 </head>
-
 <body>
 
-<div class="box">
+<div class="card">
 
-    <h2>📷 Smart Medicine Scanner</h2>
+    <h2>📷 Scan Medicine Barcode</h2>
 
-    <!-- LIVE CAMERA -->
-    <video id="camera" autoplay playsinline></video>
-    <canvas id="canvas" style="display:none;"></canvas>
+    <p class="hint">
+        Point camera clearly at barcode. Use good light and keep barcode inside box.
+    </p>
 
-    <button onclick="captureImage()">📸 Capture from Camera</button>
+    <div id="reader"></div>
 
-    <div class="info">OR</div>
+    <p id="result">Waiting for barcode...</p>
 
-    <!-- GALLERY UPLOAD -->
-    <input type="file" id="gallery" accept="image/*">
+    <div class="manual-box">
+        <h3>⌨️ Or Enter Barcode Manually</h3>
 
-    <button class="secondary" onclick="uploadGallery()">🖼 Upload from Gallery</button>
+        <input
+            type="text"
+            id="manualBarcode"
+            placeholder="Enter barcode number"
+        >
 
-    <form id="uploadForm" method="POST" action="/scan_barcode" enctype="multipart/form-data">
-        <input type="file" name="barcode_image" id="hiddenInput" style="display:none;">
-    </form>
+        <button onclick="goManual()">
+            Search / Add Barcode
+        </button>
+    </div>
+
+    <a href="/staff">⬅ Back to Staff</a>
 
 </div>
-<div id="loading" style="display:none;color:#f59e0b;font-weight:bold;margin-top:10px;">
-    ⏳ Scanning medicine...
-</div>
+
 <script>
+    let alreadyScanned = false;
 
-let video = document.getElementById("camera");
-let canvas = document.getElementById("canvas");
-let isUploading = false;
+    function onScanSuccess(decodedText, decodedResult) {
+        if (alreadyScanned) return;
 
-// ================= CAMERA START =================
-window.addEventListener("load", startCamera);
+        alreadyScanned = true;
 
-function startCamera(){
-    navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-        video.srcObject = stream;
-    })
-    .catch(err => {
-        alert("Camera permission denied or not supported");
-        console.log(err);
-    });
-}
+        document.getElementById("result").innerHTML =
+            "Barcode scanned: " + decodedText;
 
-
-// ================= CAPTURE IMAGE =================
-function captureImage(){
-
-    if(isUploading) return;
-
-    if(video.videoWidth === 0){
-        alert("Camera still loading...");
-        return;
+        window.location.href =
+            "/barcode_result/" + encodeURIComponent(decodedText);
     }
 
-    isUploading = true;
-    document.getElementById("loading").style.display = "block";
-
-    let ctx = canvas.getContext("2d");
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    ctx.drawImage(video, 0, 0);
-
-    canvas.toBlob(function(blob){
-
-        let file = new File([blob], "capture.jpg", { type: "image/jpeg" });
-
-        let dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-
-        document.getElementById("hiddenInput").files = dataTransfer.files;
-
-        document.getElementById("uploadForm").submit();
-
-    });
-
-}
-
-
-// ================= GALLERY UPLOAD =================
-function uploadGallery(){
-
-    if(isUploading) return;
-
-    let fileInput = document.getElementById("gallery");
-
-    if(fileInput.files.length === 0){
-        alert("Select an image first");
-        return;
+    function onScanFailure(error) {
+        // ignore scanning errors
     }
 
-    isUploading = true;
-    document.getElementById("loading").style.display = "block";
+    const formatsToSupport = [
+        Html5QrcodeSupportedFormats.QR_CODE,
+        Html5QrcodeSupportedFormats.EAN_13,
+        Html5QrcodeSupportedFormats.EAN_8,
+        Html5QrcodeSupportedFormats.CODE_128,
+        Html5QrcodeSupportedFormats.UPC_A,
+        Html5QrcodeSupportedFormats.UPC_E,
+        Html5QrcodeSupportedFormats.CODE_39,
+        Html5QrcodeSupportedFormats.ITF
+    ];
 
-    let dataTransfer = new DataTransfer();
-    dataTransfer.items.add(fileInput.files[0]);
+    let scanner = new Html5QrcodeScanner(
+        "reader",
+        {
+            fps: 15,
+            qrbox: {
+                width: 320,
+                height: 160
+            },
+            aspectRatio: 1.777,
+            formatsToSupport: formatsToSupport
+        },
+        false
+    );
 
-    document.getElementById("hiddenInput").files = dataTransfer.files;
+    scanner.render(onScanSuccess, onScanFailure);
 
-    document.getElementById("uploadForm").submit();
-}
+    function goManual(){
+        let code = document.getElementById("manualBarcode").value.trim();
 
+        if(code === ""){
+            alert("Please enter barcode number");
+            return;
+        }
+
+        window.location.href =
+            "/barcode_result/" + encodeURIComponent(code);
+    }
 </script>
+
 </body>
 </html>
