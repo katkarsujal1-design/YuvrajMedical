@@ -643,7 +643,13 @@ img{
 <body>
 
 <div class="header">
-    <h2>💊 Yuvraj Medical</h2>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}"
+             alt="Yuvraj Medical Logo"
+             style="height:50px; width:auto;">
+
+        <h2 style="margin:0;">Yuvraj Medical</h2>
+    </div>
 
     <div class="nav-links">
         <a href="{{ url_for('profile') }}" style="background:purple;">👤 Profile</a>
