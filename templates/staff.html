@@ -663,9 +663,22 @@ tr:hover{
 
                 <form class="form" method="POST" action="/add_medicine">
                     <input name="name" placeholder="Medicine Name" required>
-
-                    <input name="category" placeholder="Category">
-
+                    <select name="category" required style="
+    			padding:15px;
+		        border-radius:16px;
+    			border:1px solid #e2e8f0;
+	            ">
+    			<option value="">Select Type</option>
+    			<option value="Tablet">Tablet</option>
+    			<option value="Capsule">Capsule</option>
+    			<option value="Syrup">Syrup</option>
+    			<option value="Injection">Injection</option>
+    			<option value="Drops">Drops</option>
+    			<option value="Cream">Cream</option>
+    			<option value="Gel">Gel</option>
+    			<option value="Ointment">Ointment</option>
+    			<option value="Powder">Powder</option>
+		    </select> 
                     <input type="number" name="price" placeholder="Price">
 
                     <input type="number" name="stock" placeholder="Stock">

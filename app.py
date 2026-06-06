@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, g
 #import pymysql
 import re
+from rapidfuzz import fuzz
 import pytesseract
 from PIL import Image
 import barcode
@@ -65,7 +66,6 @@ def read_prescription_text(image_path):
 
         if img is None:
             return ""
-
         # Resize image bigger for OCR
         img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
@@ -138,14 +138,13 @@ def home():
     if "user" not in session:
         return redirect("/login")
 
-    # 🔥 ROLE BASED REDIRECT
+    # ROLE BASED REDIRECT
     if session["user"]["role"] == "owner":
         return redirect("/owner_dashboard")
 
     elif session["user"]["role"] == "staff":
         return redirect("/staff")
 
-    # CUSTOMER CONTINUES NORMAL HOME
     db = get_db()
 
     search = request.args.get("search", "")
@@ -154,7 +153,6 @@ def home():
 
     query = "SELECT * FROM medicines WHERE 1=1"
     params = []
-
 
     if search:
         query += " AND name LIKE %s"
@@ -170,15 +168,11 @@ def home():
         query += " ORDER BY price DESC"
 
     cursor = db.cursor(dictionary=True)
-
     cursor.execute(query, params)
-
     medicines = cursor.fetchall()
-
     cursor.close()
 
     user_id = session["user"]["id"]
-
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -186,22 +180,101 @@ def home():
         FROM cart
         WHERE user_id=%s
     """, (user_id,))
-    cart_rows=cursor.fetchall()
+    cart_rows = cursor.fetchall()
     cursor.close()
 
     cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
     cart_count = sum(cart.values())
 
+    def clean_name(value):
+        if not value:
+            return "General"
+
+        value = value.strip().lower()
+
+        mapping = {
+            "tab": "Tablet",
+            "tabs": "Tablet",
+            "tablet": "Tablet",
+            "tablets": "Tablet",
+
+            "cap": "Capsule",
+            "caps": "Capsule",
+            "capsule": "Capsule",
+            "capsules": "Capsule",
+
+            "syp": "Syrup",
+            "syrup": "Syrup",
+            "syrups": "Syrup",
+
+            "inj": "Injection",
+            "injection": "Injection",
+            "injections": "Injection",
+
+            "cream": "Cream",
+            "creams": "Cream",
+            "drop": "Drops",
+            "drops": "Drops",
+            "gel": "Gel",
+            "ointment": "Ointment",
+            "powder": "Powder",
+
+            "vitamin": "Vitamins",
+            "vitamins": "Vitamins",
+            "diabetes": "Diabetes",
+            "cardiac": "Cardiac",
+            "heart": "Cardiac",
+            "liver": "Liver",
+            "antibiotic": "Antibiotics",
+            "antibiotics": "Antibiotics",
+            "pain": "Pain Relief",
+            "pain relief": "Pain Relief",
+            "cold": "Cold & Cough",
+            "cough": "Cold & Cough",
+            "skin": "Skin Care",
+            "derma": "Skin Care",
+            "general": "General"
+        }
+
+        return mapping.get(value, value.title())
+
+    departments = {}
+
+    for med in medicines:
+        dept = clean_name(med.get("category") or med.get("department") or "General")
+        if dept not in departments:
+            departments[dept] = []
+
+        departments[dept].append(med)
+
+    department_icons = {
+        "Vitamins": "🌿",
+        "Diabetes": "🩸",
+        "Cardiac": "❤️",
+        "Liver": "🫀",
+        "Antibiotics": "🦠",
+        "Pain Relief": "💊",
+        "Cold & Cough": "🤧",
+        "Skin Care": "🧴",
+        "Tablet": "💊",
+        "Capsule": "💊",
+        "Syrup": "🧴",
+        "Injection": "💉",
+        "Drops": "💧",
+        "General": "🏥"
+    }
+
     return render_template(
         "index.html",
         medicines=medicines,
+        departments=departments,
+        department_icons=department_icons,
         cart=cart,
         cart_count=cart_count,
         search=search,
         sort=sort,
         category=category
     )
-
 # ================= LOGIN =================
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -1309,7 +1382,8 @@ def staff_dashboard():
 #----------medicine function-------------
 @app.route("/add_medicine", methods=["POST"])
 def add_medicine():
-
+    
+    department = request.form.get("department") or "General"
     if "user" not in session:
         return redirect("/login")
 
@@ -1323,7 +1397,7 @@ def add_medicine():
         stock = request.form.get("stock")
         expiry = request.form.get("expiry")
         barcode_number = request.form.get("barcode")
-
+ 
         image_url = None
 
         # ================= IMAGE UPLOAD =================
@@ -1351,6 +1425,7 @@ def add_medicine():
             (
                 name,
                 category,
+                department,
                 price,
                 stock,
                 expiry_date,
@@ -1358,12 +1433,13 @@ def add_medicine():
                 barcode
             )
 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
 
         """, (
 
             name,
             category,
+            department,
             price,
             stock,
             expiry,
@@ -1485,7 +1561,6 @@ def edit_medicine(id):
     db.commit()
     cursor.close()
     return redirect("/staff")
-upload_prescription
 #------------del medicine fuc---------
 @app.route("/delete_medicine/<int:id>")
 def delete_medicine(id):
@@ -1683,7 +1758,53 @@ def generate_all_barcodes():
         flash(f"Barcode generation failed: {e}")
 
     return redirect("/staff#inventory")
-# ================== Upload Priscription route =====================
+
+# ================= Prescription Medicine Detection =================
+def detect_medicines_from_text(text):
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("SELECT name FROM medicines")
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    matches = []
+    text = text.lower()
+
+    lines = text.splitlines()
+
+    for med in medicines:
+
+        if not med["name"]:
+            continue
+
+        med_name = med["name"].lower()
+
+        best_score = 0
+
+        for line in lines:
+            line = line.strip().lower()
+
+            if not line:
+                continue
+
+            score = fuzz.partial_ratio(med_name, line)
+
+            if score > best_score:
+                best_score = score
+
+        if best_score >= 70:
+            matches.append({
+                "medicine": med["name"],
+                "score": round(best_score, 2)
+            })
+
+    matches.sort(key=lambda x: x["score"], reverse=True)
+
+    return matches
+# ================= Upload Prescription =================
+
 @app.route("/upload_prescription", methods=["GET", "POST"])
 def upload_prescription():
     if "user" not in session:
@@ -1720,7 +1841,10 @@ def upload_prescription():
             ocr_text = "OCR could not clearly read this prescription. Manual staff review required."
 
         detected_medicines = detect_medicines_from_text(ocr_text)
-        detected_text = ", ".join(detected_medicines)
+
+        detected_text = ", ".join(
+            [f"{m['medicine']} ({m['score']}%)" for m in detected_medicines]
+        )
 
         db = get_db()
         cursor = db.cursor()
@@ -1795,6 +1919,7 @@ def staff_prescriptions():
 # ================================== approve/reject route ==============================
 @app.route("/review_prescription/<int:request_id>", methods=["POST"])
 def review_prescription(request_id):
+
     if "user" not in session:
         return redirect("/login")
 
@@ -1809,25 +1934,176 @@ def review_prescription(request_id):
         return redirect("/staff_prescriptions")
 
     db = get_db()
-    cursor = db.cursor()
 
-    cursor.execute("""
-        UPDATE prescription_requests
-        SET status = %s,
-            staff_note = %s,
-            reviewed_at = NOW()
-        WHERE id = %s
-    """, (
-        action,
-        staff_note,
-        request_id
-    ))
+    try:
+        cursor = db.cursor(dictionary=True)
 
-    db.commit()
-    cursor.close()
+        cursor.execute("""
+            SELECT *
+            FROM prescription_requests
+            WHERE id=%s
+        """, (request_id,))
 
-    flash(f"Prescription request {action.lower()} successfully", "success")
-    return redirect("/staff_prescriptions")
+        prescription = cursor.fetchone()
+
+        if not prescription:
+            flash("Prescription request not found", "error")
+            return redirect("/staff_prescriptions")
+
+        # ================= REJECT =================
+        if action == "Rejected":
+
+            cursor.execute("""
+                UPDATE prescription_requests
+                SET status=%s,
+                    staff_note=%s,
+                    reviewed_at=NOW()
+                WHERE id=%s
+            """, (
+                "Rejected",
+                staff_note,
+                request_id
+            ))
+
+            db.commit()
+            cursor.close()
+
+            flash("Prescription rejected successfully", "success")
+            return redirect("/staff_prescriptions")
+
+        # ================= APPROVE + CREATE ORDER =================
+
+        detected_text = prescription["detected_medicines"] or ""
+
+        if not detected_text.strip():
+            flash("No detected medicines found. Cannot create order.", "error")
+            return redirect("/staff_prescriptions")
+
+        medicine_names = []
+
+        for item in detected_text.split(","):
+            clean_name = item.strip()
+
+            if "(" in clean_name:
+                clean_name = clean_name.split("(")[0].strip()
+
+            if clean_name:
+                medicine_names.append(clean_name)
+
+        if not medicine_names:
+            flash("No valid medicines found in prescription.", "error")
+            return redirect("/staff_prescriptions")
+
+        order_total = 0
+        order_items = []
+
+        for med_name in medicine_names:
+
+            cursor.execute("""
+                SELECT *
+                FROM medicines
+                WHERE LOWER(name)=LOWER(%s)
+                LIMIT 1
+            """, (med_name,))
+
+            medicine = cursor.fetchone()
+
+            if not medicine:
+                continue
+
+            if medicine["stock"] <= 0:
+                continue
+
+            qty = 1
+            price = medicine["price"]
+            subtotal = price * qty
+
+            order_total += subtotal
+
+            order_items.append({
+                "medicine_id": medicine["id"],
+                "quantity": qty,
+                "price": price
+            })
+
+        if not order_items:
+            flash("Detected medicines are not available in stock.", "error")
+            return redirect("/staff_prescriptions")
+
+        # create order
+        cursor.execute("""
+            INSERT INTO orders
+            (
+                user_id,
+                total,
+                date,
+                status,
+                prescription
+            )
+            VALUES (%s, %s, %s, %s, %s)
+        """, (
+            prescription["user_id"],
+            order_total,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "Pending",
+            prescription["prescription_image"]
+        ))
+
+        order_id = cursor.lastrowid
+
+        # create order items + reduce stock
+        for item in order_items:
+
+            cursor.execute("""
+                INSERT INTO order_items
+                (
+                    order_id,
+                    medicine_id,
+                    quantity,
+                    price
+                )
+                VALUES (%s, %s, %s, %s)
+            """, (
+                order_id,
+                item["medicine_id"],
+                item["quantity"],
+                item["price"]
+            ))
+
+            cursor.execute("""
+                UPDATE medicines
+                SET stock = stock - %s
+                WHERE id=%s
+            """, (
+                item["quantity"],
+                item["medicine_id"]
+            ))
+
+        # update prescription request
+        cursor.execute("""
+            UPDATE prescription_requests
+            SET status=%s,
+                staff_note=%s,
+                reviewed_at=NOW(),
+                created_order_id=%s
+            WHERE id=%s
+        """, (
+            "Approved",
+            staff_note,
+            order_id,
+            request_id
+        ))
+
+        db.commit()
+        cursor.close()
+
+        flash(f"Prescription approved and Order #{order_id} created successfully", "success")
+        return redirect("/staff_prescriptions")
+
+    except Exception as e:
+        db.rollback()
+        flash(f"Review failed: {e}", "error")
+        return redirect("/staff_prescriptions")
 #==========testing================
 
 # ================= RUN =================
