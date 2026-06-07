@@ -131,6 +131,39 @@ def generate_barcode_image(barcode_number):
     saved_path = code128.save(filename)
 
     return saved_path
+#======================== Auto classification ==============================
+def classify_medicine(name):
+
+    name = name.lower()
+
+    diabetes = ["metformin", "glimepiride", "insulin", "sitagliptin"]
+    cardiac = ["amlodipine", "telmisartan", "atorvastatin", "losartan"]
+    antibiotics = ["amoxicillin", "azithromycin", "ciprofloxacin", "cefixime"]
+    vitamins = ["vitamin", "calcium", "zinc", "b12", "d3"]
+    liver = ["liv", "silymarin", "ursodeoxycholic"]
+
+    prescription_keywords = [
+        "antibiotic", "azithromycin", "amoxicillin", "ciprofloxacin",
+        "insulin", "metformin", "amlodipine", "telmisartan",
+        "steroid", "prednisolone", "tramadol"
+    ]
+
+    department = "General"
+
+    if any(x in name for x in diabetes):
+        department = "Diabetes"
+    elif any(x in name for x in cardiac):
+        department = "Cardiac"
+    elif any(x in name for x in antibiotics):
+        department = "Antibiotics"
+    elif any(x in name for x in vitamins):
+        department = "Vitamins"
+    elif any(x in name for x in liver):
+        department = "Liver"
+
+    prescription_required = any(x in name for x in prescription_keywords)
+
+    return department, prescription_required
 # ================= HOME (SEARCH + FILTER) =================
 @app.route("/")
 def home():
@@ -239,31 +272,39 @@ def home():
         return mapping.get(value, value.title())
 
     departments = {}
-
+    allowed_departments = [
+        "Pain Relief",
+        "Diabetes",
+        "Cardiac",
+        "Antibiotics",
+        "Vitamins",
+        "Liver",
+        "Cold & Cough",
+        "Skin Care",
+        "General"
+    ]
     for med in medicines:
-        dept = clean_name(med.get("category") or med.get("department") or "General")
+        dept = clean_name(med.get("department") or "General")
+
+        if dept not in allowed_departments:
+            dept = "General"
+
         if dept not in departments:
             departments[dept] = []
 
         departments[dept].append(med)
 
     department_icons = {
-        "Vitamins": "🌿",
+        "Pain Relief": "💊",
         "Diabetes": "🩸",
         "Cardiac": "❤️",
-        "Liver": "🫀",
         "Antibiotics": "🦠",
-        "Pain Relief": "💊",
+        "Vitamins": "🌿",
+        "Liver": "🫀",
         "Cold & Cough": "🤧",
         "Skin Care": "🧴",
-        "Tablet": "💊",
-        "Capsule": "💊",
-        "Syrup": "🧴",
-        "Injection": "💉",
-        "Drops": "💧",
         "General": "🏥"
     }
-
     return render_template(
         "index.html",
         medicines=medicines,
@@ -490,14 +531,24 @@ def add_to_cart(id):
         return redirect("/login")
 
     db = get_db()
-
     user_id = session["user"]["id"]
 
-    try:
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT name, prescription_required
+        FROM medicines
+        WHERE id=%s
+    """, (id,))
+    medicine = cursor.fetchone()
+    cursor.close()
 
+    if medicine and medicine["prescription_required"]:
+        flash(f"{medicine['name']} requires prescription. Please upload prescription first.")
+        return redirect("/upload_prescription")
+
+    try:
         cursor = db.cursor()
 
-        # check existing cart item
         cursor.execute("""
             SELECT id, quantity
             FROM cart
@@ -506,42 +557,42 @@ def add_to_cart(id):
 
         existing = cursor.fetchone()
 
-        # if already exists -> increase
         if existing:
-
             cursor.execute("""
                 UPDATE cart
                 SET quantity = quantity + 1
                 WHERE user_id=%s AND medicine_id=%s
             """, (user_id, id))
-
-        # else insert new
         else:
-
             cursor.execute("""
-                INSERT INTO cart
-                (user_id, medicine_id, quantity)
+                INSERT INTO cart (user_id, medicine_id, quantity)
                 VALUES (%s, %s, %s)
             """, (user_id, id, 1))
 
         db.commit()
-
         cursor.close()
 
     except Exception as e:
-
         db.rollback()
-
-        print("ADD TO CART ERROR:", e)
-
         return f"Cart Error: {e}"
 
     return redirect(request.referrer or "/")
-    
-    
 @app.route("/increase/<int:id>")
 def increase(id):
     db = get_db()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT name, prescription_required
+        FROM medicines
+        WHERE id=%s
+    """, (id,))
+    medicine = cursor.fetchone()
+    cursor.close()
+
+    if medicine and medicine["prescription_required"]:
+        flash(f"{medicine['name']} requires prescription. Please upload prescription first.")
+        return redirect("/upload_prescription")
     if "user" not in session:
         return redirect("/login")
     user_id = session["user"]["id"]
@@ -1392,6 +1443,7 @@ def add_medicine():
     try:
 
         name = request.form.get("name")
+        department, prescription_required = classify_medicine(name)
         category = request.form.get("category")
         price = request.form.get("price")
         stock = request.form.get("stock")
@@ -1427,13 +1479,14 @@ def add_medicine():
                 category,
                 department,
                 price,
+                prescription_required,
                 stock,
                 expiry_date,
                 image,
                 barcode
             )
 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
 
         """, (
 
@@ -1441,6 +1494,7 @@ def add_medicine():
             category,
             department,
             price,
+            prescription_required,
             stock,
             expiry,
             image_url,
@@ -1501,6 +1555,7 @@ def bulk_upload():
 
             category = str(row.get("category", "")).strip()
             expiry = str(row.get("expiry", "")).strip()
+            department, prescription_required = classify_medicine(name)
 
             # ---------------- DUPLICATE CHECK ----------------
 
@@ -1519,9 +1574,9 @@ def bulk_upload():
             # ---------------- INSERT ----------------
             cursor = db.cursor(dictionary=True)
             cursor.execute("""
-                INSERT INTO medicines (name, price, stock, category, expiry_date)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (name, price, stock, category, expiry))
+                INSERT INTO medicines (name, price, stock, category, department, prescription_required, expiry_date)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (name, price, stock, category, department, prescription_required, expiry))
 
             inserted += 1
 
