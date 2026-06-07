@@ -316,6 +316,88 @@ def home():
         sort=sort,
         category=category
     )
+# ========================== Department ====================
+@app.route("/department/<dept_name>")
+def department_page(dept_name):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM medicines
+        WHERE department=%s
+        ORDER BY name ASC
+    """, (dept_name,))
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+    cart_count = sum(cart.values())
+
+    return render_template(
+        "department.html",
+        dept_name=dept_name,
+        medicines=medicines,
+        cart=cart,
+        cart_count=cart_count
+    )
+# =================== Search  ========================
+@app.route("/search_medicine")
+def search_medicine():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+
+    search = request.args.get("search", "")
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM medicines
+        WHERE name LIKE %s
+        ORDER BY name ASC
+    """, (f"%{search}%",))
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+    cart_count = sum(cart.values())
+
+    return render_template(
+        "department.html",
+        dept_name=f"Search Results for '{search}'",
+        medicines=medicines,
+        cart=cart,
+        cart_count=cart_count
+    )
 # ================= LOGIN =================
 @app.route('/login', methods=['GET','POST'])
 def login():

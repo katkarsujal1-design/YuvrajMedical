@@ -290,93 +290,93 @@ img{
     font-size:28px;
     margin-bottom:18px;
 }
-
 .department-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(175px,1fr));
-    gap:18px;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
 }
 
 .department-card{
-    text-decoration:none;
-    color:#0f172a;
-    min-height:120px;
-    border-radius:28px;
-    padding:22px;
-    background:linear-gradient(145deg,#ffffff,#f8fafc);
-    box-shadow:0 12px 30px rgba(15,23,42,.08);
-    border:1px solid #e2e8f0;
-    transition:.3s;
     position:relative;
     overflow:hidden;
+    min-height:180px;
+    padding:30px;
+    border-radius:30px;
+    text-decoration:none;
+    color:white;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    box-shadow:0 15px 40px rgba(37,99,235,.25);
+    transition:all .35s ease;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.department-card:nth-child(2n){
+    background:linear-gradient(135deg,#8b5cf6,#6366f1);
+}
+
+.department-card:nth-child(3n){
+    background:linear-gradient(135deg,#10b981,#22c55e);
+}
+
+.department-card:nth-child(4n){
+    background:linear-gradient(135deg,#f97316,#fb923c);
+}
+
+.department-card:nth-child(5n){
+    background:linear-gradient(135deg,#ef4444,#f43f5e);
 }
 
 .department-card::before{
     content:"";
     position:absolute;
-    width:110px;
-    height:110px;
-    right:-35px;
-    top:-35px;
+    width:180px;
+    height:180px;
+    right:-50px;
+    top:-50px;
     border-radius:50%;
-    background:linear-gradient(135deg,rgba(37,99,235,0.14),rgba(6,182,212,0.12));
+    background:rgba(255,255,255,.15);
 }
 
 .department-card::after{
-    content:"View";
+    content:"→";
     position:absolute;
-    right:16px;
-    bottom:14px;
-    font-size:12px;
-    font-weight:900;
-    color:#2563eb;
-    opacity:0;
-    transition:0.3s;
+    right:25px;
+    bottom:20px;
+    font-size:28px;
+    font-weight:bold;
+    opacity:.7;
 }
 
 .department-card:hover{
-    transform:translateY(-7px);
-    box-shadow:0 24px 50px rgba(37,99,235,.18);
-    background:linear-gradient(135deg,#ffffff,#eff6ff);
-}
-
-.department-card:hover::after{
-    opacity:1;
+    transform:translateY(-10px) scale(1.03);
+    box-shadow:0 25px 55px rgba(0,0,0,.25);
 }
 
 .department-card .icon{
-    width:52px;
-    height:52px;
-    border-radius:18px;
-    background:linear-gradient(135deg,#dbeafe,#e0f2fe);
+    width:75px;
+    height:75px;
+    font-size:40px;
+    border-radius:22px;
+    background:rgba(255,255,255,.2);
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-bottom:12px;
-    font-size:34px;
-    position:relative;
-    z-index:2;
-    transition:.3s;
-}
-
-.department-card:hover .icon{
-    transform:scale(1.08) rotate(-5deg);
+    backdrop-filter:blur(10px);
+    margin-bottom:15px;
 }
 
 .department-card h3{
-    margin:10px 0 4px;
-    font-size:19px;
-    position:relative;
-    z-index:2;
+    font-size:26px;
+    margin:10px 0;
+    color:white;
 }
 
 .department-card p{
-    margin:0;
-    color:#64748b;
-    position:relative;
-    z-index:2;
+    font-size:15px;
+    color:rgba(255,255,255,.9);
 }
-
 /* SECTION */
 .section-block{
     margin-top:34px;
@@ -695,25 +695,32 @@ img{
 </section>
 
 <div class="search-box">
-    <form method="GET" action="/">
-        <input type="text" name="search" placeholder="Search medicine..." value="{{ search }}" autocomplete="off">
+    <form method="GET" action="{{ url_for('search_medicine') }}">
 
-        <select name="sort">
-            <option value="">Sort By</option>
-            <option value="low" {% if sort == "low" %}selected{% endif %}>Price: Low to High</option>
-            <option value="high" {% if sort == "high" %}selected{% endif %}>Price: High to Low</option>
-        </select>
+        <input type="text"
+               name="search"
+               placeholder="Search medicine..."
+               autocomplete="off"
+               required>
 
-        <button type="submit">🔍 Search</button>
+        <button type="submit">
+            🔍 Search Medicine
+        </button>
+
     </form>
 </div>
-
 <div class="department-area" id="departments">
-    <h2>🏥 Browse Medicines by Department</h2>
-
+    <h2 style="
+        text-align:center;
+        font-size:38px;
+        margin-bottom:30px;
+        color:#1e293b;
+    ">
+        🏥 Browse Medicines By Department
+    </h2>
     <div class="department-grid">
         {% for dept, meds in departments.items() %}
-        <a href="#dept-{{ dept|replace(' ', '-')|replace('&', 'and') }}" class="department-card">
+	    <a href="{{ url_for('department_page', dept_name=dept) }}" class="department-card">
             <div class="icon">{{ department_icons.get(dept, "🏥") }}</div>
             <h3>{{ dept }}</h3>
             <p>{{ meds|length }} medicines</p>
@@ -721,97 +728,6 @@ img{
         {% endfor %}
     </div>
 </div>
-
-{% if departments %}
-
-{% for dept, meds in departments.items() %}
-
-<section class="section-block" id="dept-{{ dept|replace(' ', '-')|replace('&', 'and') }}">
-
-    <div class="section-header">
-        <div>
-            <h2>{{ department_icons.get(dept, "🏥") }} {{ dept }}</h2>
-            <p>Showing {{ meds|length }} medicines</p>
-        </div>
-
-        <a href="#">↑ Top</a>
-    </div>
-
-    <div class="grid">
-        {% for med in meds %}
-
-        <div class="card">
-            <div class="img-box">
-                <img
-                    loading="lazy"
-                    decoding="async"
-                    fetchpriority="low"
-                    src="/static/images/{{ med['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
-                    alt="{{ med['name'] }}"
-                    data-base="/static/images/{{ med['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
-                    data-step="0"
-                    onerror="
-                        const exts = ['.jpg', '.jpeg', '.png', '/default.png'];
-                        const step = Number(this.dataset.step || 0);
-                        if(step < 3){
-                            this.dataset.step = step + 1;
-                            this.src = this.dataset.base + exts[step];
-                        }else{
-                            this.onerror=null;
-                            this.src='/static/images/default.png';
-                        }
-                    "
-                >
-            </div>
-
-            <h3>{{ med["name"] }}</h3>
-
-            <p><strong>₹{{ med["price"] }}</strong></p>
-
-            {% if med["stock"] > 0 %}
-                <p>Stock: {{ med["stock"] }}</p>
-            {% else %}
-                <p style="color:red;">Out of Stock</p>
-            {% endif %}
-
-            <p>Expiry: {{ med["expiry_date"] }}</p>
-
-            <div class="qty-box">
-                <a href="{{ url_for('decrease', id=med['id']) }}" class="btn">➖</a>
-                <span>{{ cart.get(med['id']|string, 0) }}</span>
-                <a href="{{ url_for('increase', id=med['id']) }}" class="btn">➕</a>
-            </div>
-
-            {% if med["stock"] > 0 %}
-                <a href="{{ url_for('add_to_cart', id=med['id']) }}" class="add-btn">Add to Cart</a>
-            {% else %}
-                <button class="out-btn" disabled>Out of Stock</button>
-            {% endif %}
-        </div>
-
-        {% endfor %}
-    </div>
-
-</section>
-
-{% endfor %}
-
-{% else %}
-
-<div style="text-align:center; padding:40px;">
-    <h2 style="color:red;">❌ No medicines found</h2>
-
-    {% if search %}
-        <p>No results for <strong>{{ search }}</strong></p>
-    {% endif %}
-
-    <a href="/" style="display:inline-block;margin-top:15px;padding:10px 15px;background:#2c7be5;color:white;text-decoration:none;border-radius:5px;">
-        🔄 View All Medicines
-    </a>
-</div>
-
-{% endif %}
-
 <script>
 window.addEventListener("beforeunload", function () {
     localStorage.setItem("scrollPosition", window.scrollY);

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ dept_name }} - Yuvraj Medical</title>
+
+<style>
+body{
+    margin:0;
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:linear-gradient(135deg,#f8fafc,#dbeafe);
+    color:#0f172a;
+}
+
+.header{
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    color:white;
+    padding:16px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.header a{
+    color:white;
+    text-decoration:none;
+    margin-left:12px;
+    font-weight:800;
+}
+
+.hero{
+    margin:24px;
+    padding:35px;
+    border-radius:30px;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    color:white;
+    box-shadow:0 24px 55px rgba(37,99,235,0.28);
+}
+
+.hero h1{
+    font-size:42px;
+    margin:0;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:22px;
+    padding:24px;
+}
+
+.card{
+    background:white;
+    border-radius:28px;
+    padding:22px;
+    text-align:center;
+    box-shadow:0 16px 38px rgba(15,23,42,0.08);
+    transition:0.3s;
+    position:relative;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 24px 50px rgba(37,99,235,0.16);
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    width:130px;
+    height:130px;
+    right:-45px;
+    top:-45px;
+    border-radius:50%;
+    background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(6,182,212,0.12));
+}
+
+.img-box{
+    height:135px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    z-index:2;
+}
+
+.img-box img{
+    width:120px;
+    height:120px;
+    object-fit:contain;
+    border-radius:18px;
+    border:1px solid #e2e8f0;
+    padding:6px;
+    background:white;
+}
+
+.card h3,
+.card p,
+.qty-box,
+.add-btn,
+.out-btn{
+    position:relative;
+    z-index:2;
+}
+
+.card h3{
+    min-height:50px;
+}
+
+.card strong{
+    color:#2563eb;
+    font-size:23px;
+}
+
+.qty-box{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin:14px 0;
+}
+
+.btn{
+    text-decoration:none;
+    background:#e5e7eb;
+    color:#111827;
+    padding:7px 12px;
+    border-radius:10px;
+    font-weight:900;
+}
+
+.add-btn{
+    display:inline-block;
+    text-decoration:none;
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+    color:white;
+    padding:11px 18px;
+    border-radius:999px;
+    font-weight:900;
+}
+
+.out-btn{
+    background:#64748b;
+    color:white;
+    padding:11px 18px;
+    border:none;
+    border-radius:999px;
+    font-weight:900;
+}
+
+.empty{
+    text-align:center;
+    padding:60px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>💊 Yuvraj Medical</h2>
+
+    <div>
+        <a href="/">🏠 Home</a>
+        <a href="/cart">🛒 Cart ({{ cart_count }})</a>
+        <a href="/my_orders">📦 Orders</a>
+        <a href="/logout">🚪 Logout</a>
+    </div>
+</div>
+
+<div class="hero">
+    <h1>{{ dept_name }}</h1>
+    <p>Browse selected medicines from this section.</p>
+</div>
+
+{% if medicines %}
+
+<div class="grid">
+
+{% for med in medicines %}
+
+<div class="card">
+
+    <div class="img-box">
+        <img
+            src="/static/images/{{ med['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+            alt="{{ med['name'] }}"
+            data-base="/static/images/{{ med['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+            data-step="0"
+            onerror="
+                const exts = ['.jpg', '.jpeg', '.png', '/default.png'];
+                const step = Number(this.dataset.step || 0);
+                if(step < 3){
+                    this.dataset.step = step + 1;
+                    this.src = this.dataset.base + exts[step];
+                }else{
+                    this.onerror=null;
+                    this.src='/static/images/default.png';
+                }
+            "
+        >
+    </div>
+
+    <h3>{{ med["name"] }}</h3>
+
+    <p><strong>₹{{ med["price"] }}</strong></p>
+
+    {% if med["stock"] > 0 %}
+        <p>Stock: {{ med["stock"] }}</p>
+    {% else %}
+        <p style="color:red;font-weight:900;">Out of Stock</p>
+    {% endif %}
+
+    {% if med["prescription_required"] %}
+        <p style="color:#dc2626;font-weight:900;">🔒 Prescription Required</p>
+    {% else %}
+        <p style="color:#16a34a;font-weight:900;">✅ Direct Purchase</p>
+    {% endif %}
+
+    <p>Expiry: {{ med["expiry_date"] }}</p>
+
+    <div class="qty-box">
+        <a href="{{ url_for('decrease', id=med['id']) }}" class="btn">➖</a>
+        <span>{{ cart.get(med['id']|string, 0) }}</span>
+        <a href="{{ url_for('increase', id=med['id']) }}" class="btn">➕</a>
+    </div>
+
+    {% if med["stock"] > 0 %}
+        <a href="{{ url_for('add_to_cart', id=med['id']) }}" class="add-btn">Add to Cart</a>
+    {% else %}
+        <button class="out-btn" disabled>Out of Stock</button>
+    {% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty">
+    <h2>❌ No medicines found</h2>
+    <a href="/">Back to Home</a>
+</div>
+
+{% endif %}
+
+</body>
+</html>
