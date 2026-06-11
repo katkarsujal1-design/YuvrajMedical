@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prescription Checkout</title>
+</head>
+<body>
+
+<h2>Approved Prescription</h2>
+
+<p><b>Status:</b> {{ prescription.status }}</p>
+
+<p><b>Medicines:</b></p>
+
+<p>{{ prescription.approved_medicines }}</p>
+<a href="/add_prescription_to_cart/{{ prescription.id }}">
+    🛒 Add Approved Medicines to Cart
+</a>
+<a href="/my_prescriptions">Back</a>
+
+</body>
+</html>

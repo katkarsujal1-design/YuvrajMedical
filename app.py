@@ -215,123 +215,61 @@ def home():
     """, (user_id,))
     cart_rows = cursor.fetchall()
     cursor.close()
-
+    
     cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
     cart_count = sum(cart.values())
+    
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM disease_categories
+        ORDER BY display_order
+    """)    
 
-    def clean_name(value):
-        if not value:
-            return "General"
-
-        value = value.strip().lower()
-
-        mapping = {
-            "tab": "Tablet",
-            "tabs": "Tablet",
-            "tablet": "Tablet",
-            "tablets": "Tablet",
-
-            "cap": "Capsule",
-            "caps": "Capsule",
-            "capsule": "Capsule",
-            "capsules": "Capsule",
-
-            "syp": "Syrup",
-            "syrup": "Syrup",
-            "syrups": "Syrup",
-
-            "inj": "Injection",
-            "injection": "Injection",
-            "injections": "Injection",
-
-            "cream": "Cream",
-            "creams": "Cream",
-            "drop": "Drops",
-            "drops": "Drops",
-            "gel": "Gel",
-            "ointment": "Ointment",
-            "powder": "Powder",
-
-            "vitamin": "Vitamins",
-            "vitamins": "Vitamins",
-            "diabetes": "Diabetes",
-            "cardiac": "Cardiac",
-            "heart": "Cardiac",
-            "liver": "Liver",
-            "antibiotic": "Antibiotics",
-            "antibiotics": "Antibiotics",
-            "pain": "Pain Relief",
-            "pain relief": "Pain Relief",
-            "cold": "Cold & Cough",
-            "cough": "Cold & Cough",
-            "skin": "Skin Care",
-            "derma": "Skin Care",
-            "general": "General"
-        }
-
-        return mapping.get(value, value.title())
-
-    departments = {}
-    allowed_departments = [
-        "Pain Relief",
-        "Diabetes",
-        "Cardiac",
-        "Antibiotics",
-        "Vitamins",
-        "Liver",
-        "Cold & Cough",
-        "Skin Care",
-        "General"
-    ]
-    for med in medicines:
-        dept = clean_name(med.get("department") or "General")
-
-        if dept not in allowed_departments:
-            dept = "General"
-
-        if dept not in departments:
-            departments[dept] = []
-
-        departments[dept].append(med)
-
-    department_icons = {
-        "Pain Relief": "💊",
-        "Diabetes": "🩸",
-        "Cardiac": "❤️",
-        "Antibiotics": "🦠",
-        "Vitamins": "🌿",
-        "Liver": "🫀",
-        "Cold & Cough": "🤧",
-        "Skin Care": "🧴",
-        "General": "🏥"
-    }
+    disease_cards = cursor.fetchall()
+    cursor.close()
     return render_template(
         "index.html",
         medicines=medicines,
-        departments=departments,
-        department_icons=department_icons,
+        disease_cards=disease_cards,
         cart=cart,
         cart_count=cart_count,
         search=search,
         sort=sort,
         category=category
-    )
+     )
 # ========================== Department ====================
-@app.route("/department/<dept_name>")
-def department_page(dept_name):
+@app.route("/department/<disease_name>")
+def department_page(disease_name):
 
     if "user" not in session:
         return redirect("/login")
 
     db = get_db()
 
+    mapping = {
+        "Heart": "Cardiac",
+        "Diabetes": "Diabetes",
+        "Respiratory": "Respiratory",
+        "Skin Care": "Skin Care",
+        "Liver": "Liver",
+        "Gastric": "Gastric",
+        "Pain Relief": "Pain Relief",
+        "Cold & Cough": "Cold & Cough",
+        "Vitamins": "Vitamins",
+        "General": "General"
+    }
+
+    department = mapping.get(disease_name, "General")
+
     cursor = db.cursor(dictionary=True)
+
     cursor.execute("""
         SELECT *
         FROM medicines
         WHERE department=%s
         ORDER BY name ASC
-    """, (dept_name,))
+    """, (department,))
     medicines = cursor.fetchall()
     cursor.close()
 
@@ -351,7 +289,7 @@ def department_page(dept_name):
 
     return render_template(
         "department.html",
-        dept_name=dept_name,
+        dept_name=disease_name,
         medicines=medicines,
         cart=cart,
         cart_count=cart_count
@@ -406,7 +344,6 @@ def login():
 
         email = request.form["email"]
         password = request.form["password"]
-
         db = get_db()
 
         cursor = db.cursor(dictionary=True)
@@ -1931,7 +1868,7 @@ def detect_medicines_from_text(text):
             if score > best_score:
                 best_score = score
 
-        if best_score >= 70:
+        if best_score >= 85:
             matches.append({
                 "medicine": med["name"],
                 "score": round(best_score, 2)
@@ -2027,6 +1964,114 @@ def my_prescriptions():
     cursor.close()
 
     return render_template("my_prescriptions.html", requests_data=requests_data)
+# ============================ checkout prescription ===============================
+@app.route("/checkout_prescription/<int:request_id>")
+def checkout_prescription(request_id):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM prescription_requests
+        WHERE id=%s
+        AND user_id=%s
+        AND status='Approved'
+    """, (request_id, user_id))
+
+    prescription = cursor.fetchone()
+    cursor.close()
+
+    if not prescription:
+        flash("Invalid prescription checkout")
+        return redirect("/my_prescriptions")
+
+    return render_template(
+        "checkout_prescription.html",
+        prescription=prescription
+    )
+# =============================== checkout prescription to cart =======================
+@app.route("/add_prescription_to_cart/<int:request_id>")
+def add_prescription_to_cart(request_id):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT approved_medicines
+        FROM prescription_requests
+        WHERE id=%s
+        AND user_id=%s
+        AND status='Approved'
+    """, (request_id, user_id))
+
+    prescription = cursor.fetchone()
+
+    if not prescription or not prescription["approved_medicines"]:
+        flash("No approved medicines found")
+        cursor.close()
+        return redirect("/my_prescriptions")
+
+    medicine_names = [
+        x.strip()
+        for x in prescription["approved_medicines"].split(",")
+        if x.strip()
+    ]
+
+    added = 0
+
+    for med_name in medicine_names:
+
+        cursor.execute("""
+            SELECT id, stock
+            FROM medicines
+            WHERE LOWER(name)=LOWER(%s)
+            LIMIT 1
+        """, (med_name,))
+
+        medicine = cursor.fetchone()
+
+        if not medicine:
+            continue
+
+        if medicine["stock"] <= 0:
+            continue
+
+        cursor.execute("""
+            SELECT id
+            FROM cart
+            WHERE user_id=%s AND medicine_id=%s
+        """, (user_id, medicine["id"]))
+
+        existing = cursor.fetchone()
+
+        if existing:
+            cursor.execute("""
+                UPDATE cart
+                SET quantity = quantity + 1
+                WHERE user_id=%s AND medicine_id=%s
+            """, (user_id, medicine["id"]))
+        else:
+            cursor.execute("""
+                INSERT INTO cart (user_id, medicine_id, quantity)
+                VALUES (%s, %s, %s)
+            """, (user_id, medicine["id"], 1))
+
+        added += 1
+
+    db.commit()
+    cursor.close()
+
+    flash(f"{added} approved medicines added to cart")
+    return redirect("/cart")
 # ========================== staff priscription request =============================
 @app.route("/staff_prescriptions")
 def staff_prescriptions():
@@ -2064,7 +2109,7 @@ def review_prescription(request_id):
         return redirect("/")
 
     action = request.form.get("action")
-    staff_note = request.form.get("staff_note")
+    staff_note = request.form.get("staff_note", "")
 
     if action not in ["Approved", "Rejected"]:
         flash("Invalid action", "error")
@@ -2085,11 +2130,10 @@ def review_prescription(request_id):
 
         if not prescription:
             flash("Prescription request not found", "error")
+            cursor.close()
             return redirect("/staff_prescriptions")
 
-        # ================= REJECT =================
         if action == "Rejected":
-
             cursor.execute("""
                 UPDATE prescription_requests
                 SET status=%s,
@@ -2108,17 +2152,12 @@ def review_prescription(request_id):
             flash("Prescription rejected successfully", "success")
             return redirect("/staff_prescriptions")
 
-        # ================= APPROVE + CREATE ORDER =================
-
-        detected_text = prescription["detected_medicines"] or ""
-
-        if not detected_text.strip():
-            flash("No detected medicines found. Cannot create order.", "error")
-            return redirect("/staff_prescriptions")
+        selected_medicines = request.form.getlist("selected_medicines")
+        manual_medicines = request.form.get("manual_medicines", "")
 
         medicine_names = []
 
-        for item in detected_text.split(","):
+        for item in selected_medicines:
             clean_name = item.strip()
 
             if "(" in clean_name:
@@ -2127,120 +2166,83 @@ def review_prescription(request_id):
             if clean_name:
                 medicine_names.append(clean_name)
 
+        for item in manual_medicines.split(","):
+            clean_name = item.strip()
+
+            if clean_name:
+                medicine_names.append(clean_name)
+
         if not medicine_names:
-            flash("No valid medicines found in prescription.", "error")
+            flash("Please select at least one medicine before approval.", "error")
+            cursor.close()
             return redirect("/staff_prescriptions")
 
-        order_total = 0
-        order_items = []
+        approved_text = ", ".join(medicine_names)
 
-        for med_name in medicine_names:
-
-            cursor.execute("""
-                SELECT *
-                FROM medicines
-                WHERE LOWER(name)=LOWER(%s)
-                LIMIT 1
-            """, (med_name,))
-
-            medicine = cursor.fetchone()
-
-            if not medicine:
-                continue
-
-            if medicine["stock"] <= 0:
-                continue
-
-            qty = 1
-            price = medicine["price"]
-            subtotal = price * qty
-
-            order_total += subtotal
-
-            order_items.append({
-                "medicine_id": medicine["id"],
-                "quantity": qty,
-                "price": price
-            })
-
-        if not order_items:
-            flash("Detected medicines are not available in stock.", "error")
-            return redirect("/staff_prescriptions")
-
-        # create order
-        cursor.execute("""
-            INSERT INTO orders
-            (
-                user_id,
-                total,
-                date,
-                status,
-                prescription
-            )
-            VALUES (%s, %s, %s, %s, %s)
-        """, (
-            prescription["user_id"],
-            order_total,
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "Pending",
-            prescription["prescription_image"]
-        ))
-
-        order_id = cursor.lastrowid
-
-        # create order items + reduce stock
-        for item in order_items:
-
-            cursor.execute("""
-                INSERT INTO order_items
-                (
-                    order_id,
-                    medicine_id,
-                    quantity,
-                    price
-                )
-                VALUES (%s, %s, %s, %s)
-            """, (
-                order_id,
-                item["medicine_id"],
-                item["quantity"],
-                item["price"]
-            ))
-
-            cursor.execute("""
-                UPDATE medicines
-                SET stock = stock - %s
-                WHERE id=%s
-            """, (
-                item["quantity"],
-                item["medicine_id"]
-            ))
-
-        # update prescription request
         cursor.execute("""
             UPDATE prescription_requests
             SET status=%s,
                 staff_note=%s,
-                reviewed_at=NOW(),
-                created_order_id=%s
+                approved_medicines=%s,
+                reviewed_at=NOW()
             WHERE id=%s
         """, (
             "Approved",
             staff_note,
-            order_id,
+            approved_text,
             request_id
         ))
 
         db.commit()
         cursor.close()
 
-        flash(f"Prescription approved and Order #{order_id} created successfully", "success")
+        flash("Prescription approved. Customer can now proceed to checkout.", "success")
         return redirect("/staff_prescriptions")
 
     except Exception as e:
         db.rollback()
         flash(f"Review failed: {e}", "error")
         return redirect("/staff_prescriptions")
+# ================= Types of medicines ================
+@app.route("/type/<medicine_type>")
+def medicine_type_page(medicine_type):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM medicines
+        WHERE category=%s
+        ORDER BY name ASC
+    """, (medicine_type,))
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+    cart_count = sum(cart.values())
+
+    return render_template(
+        "department.html",
+        medicines=medicines,
+        dept_name=medicine_type,
+        cart=cart,
+        cart_count=cart_count
+    )
 #==========testing================
 
 # ================= RUN =================

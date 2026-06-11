@@ -128,7 +128,27 @@
             <textarea name="staff_note" placeholder="Example: Dolo 650 available, Azithromycin requires confirmation">{{ req.staff_note if req.staff_note else "" }}</textarea>
 
             <br>
+            <h4>Detected Medicines - Select Correct Ones</h4>
 
+{% if req.detected_medicines %}
+    {% for med in req.detected_medicines.split(",") %}
+        <label style="display:block; margin:8px 0;">
+            <input type="checkbox" name="selected_medicines" value="{{ med.split('(')[0].strip() }}" checked>
+            {{ med }}
+        </label>
+    {% endfor %}
+{% else %}
+    <p>No detected medicines</p>
+{% endif %} 
+            
+<label>Add / Correct Medicines Manually</label>
+
+<textarea
+    name="manual_medicines"
+    rows="3"
+    placeholder="Example: Paracetamol 500mg, ORS, Vitamin D3"
+    style="width:100%; padding:12px; border-radius:12px;"
+></textarea>
             <button class="approve" type="submit" name="action" value="Approved">Approve</button>
             <button class="reject" type="submit" name="action" value="Rejected">Reject</button>
         </form>

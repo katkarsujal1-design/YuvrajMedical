@@ -77,15 +77,17 @@
 {% if requests_data %}
     {% for req in requests_data %}
     <div class="card">
-        <p>
-            <b>Status:</b>
-            <span class="status
-                {% if req.status == 'Approved' %}approved{% endif %}
-                {% if req.status == 'Rejected' %}rejected{% endif %}
-            ">
-                {{ req.status }}
-            </span>
-        </p>
+            <p>
+    <b>Status:</b>
+    <span class="status">{{ req.status }}</span>
+</p>
+
+{% if req.status == "Approved" %}
+    <a href="/checkout_prescription/{{ req.id }}"
+       style="display:inline-block;margin-top:15px;padding:10px 16px;background:#16a34a;color:white;text-decoration:none;border-radius:10px;font-weight:bold;">
+        🛒 Proceed to Checkout
+    </a>
+{% endif %}
 
         <p><b>Uploaded On:</b> {{ req.created_at }}</p>
 
