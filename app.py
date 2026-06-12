@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, g
+from flask import Flask, render_template, request, redirect, session, g, jsonify
 #import pymysql
 import re
 from rapidfuzz import fuzz
@@ -295,6 +295,35 @@ def department_page(disease_name):
         cart_count=cart_count
     )
 # =================== Search  ========================
+@app.route("/medicine_suggestions")
+def medicine_suggestions():
+
+    if "user" not in session:
+        return jsonify([])
+
+    query = request.args.get("q", "").strip()[:100]
+
+    if not query:
+        return jsonify([])
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT DISTINCT name
+        FROM medicines
+        WHERE name IS NOT NULL
+          AND name LIKE %s
+        ORDER BY
+            CASE WHEN name LIKE %s THEN 0 ELSE 1 END,
+            name ASC
+        LIMIT 8
+    """, (f"%{query}%", f"{query}%"))
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    return jsonify([medicine["name"] for medicine in medicines])
+
+
 @app.route("/search_medicine")
 def search_medicine():
 
