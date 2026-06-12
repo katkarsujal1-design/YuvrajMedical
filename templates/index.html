@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yuvraj Medical</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
+
 *{
     box-sizing:border-box;
 }
@@ -28,46 +32,90 @@ img{
 /* HEADER */
 .brand{
     display:flex;
+    flex-direction:row;
     align-items:center;
     gap:10px;
+    min-width:245px;
+    position:relative;
+    padding:0;
 }
 
 .brand-icon{
-    width:50px;
-    height:50px;
+    width:62px;
+    height:62px;
     object-fit:contain;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.32));
 }
 
 .brand-name{
-    font-size:24px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:5px;
+    line-height:1;
+}
+
+.brand-name .brand-yuvraj{
+    position:relative;
+    font-family:"Cinzel",Georgia,serif;
+    font-size:23px;
     font-weight:800;
-    color:white;
-    letter-spacing:-1px;
+    letter-spacing:1.8px;
+    color:#67e8f9;
+    background:linear-gradient(90deg,#ecfeff 0%,#67e8f9 42%,#fde68a 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 2px 8px rgba(8,47,73,.22);
+}
+
+.brand-name .brand-yuvraj::after{
+    content:"";
+    display:block;
+    width:72%;
+    height:2px;
+    margin:5px 0 0;
+    border-radius:99px;
+    background:linear-gradient(90deg,transparent,#fbbf24,#67e8f9,transparent);
+}
+
+.brand-name .brand-medical{
+    font-family:"Montserrat","Segoe UI",sans-serif;
+    color:#fde68a;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:5px;
+    text-transform:uppercase;
+    text-shadow:0 2px 8px rgba(0,0,0,.45);
+    transform:translateX(2.5px);
 }
 
 .header{
     background:
     linear-gradient(
         135deg,
-        #0f4fd6,
-        #1d4ed8,
-        #0284c7
+        #4c1d3d,
+        #7f1d4e,
+        #9f3a4a
     );
 
     box-shadow:
-    0 12px 35px rgba(37,99,235,.35);
+    0 12px 35px rgba(76,29,61,.32);
 }
 .header{
     position:sticky;
     top:0;
     z-index:1000;
-    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    background:
+        radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
+        linear-gradient(135deg,#4c1d3d 0%,#7f1d4e 52%,#9f3a4a 100%);
+    border-bottom:1px solid rgba(253,230,138,.42);
     color:white;
-    padding:14px 22px;
+    padding:8px 22px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 12px 30px rgba(37,99,235,.28);
+    box-shadow:0 12px 30px rgba(76,29,61,.3);
 }
 
 .header h2{
@@ -854,7 +902,10 @@ grid-template-columns:1fr;
          class="brand-icon">
 
     <div class="brand-text">
-        <div class="brand-name">Yuvraj Medical</div>
+        <div class="brand-name">
+            <span class="brand-yuvraj">Yuvraj</span>
+            <span class="brand-medical">Medical</span>
+        </div>
     </div>
 </div>
     <div class="nav-links">

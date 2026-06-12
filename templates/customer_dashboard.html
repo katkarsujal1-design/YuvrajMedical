@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="brand">
+            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}"
+                 class="brand-icon" alt="Yuvraj Medical">
+            <div>
+                <div class="brand-name">Yuvraj Medical</div>
+                <div>Customer Dashboard</div>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('cart') }}">Cart</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-wrap">
+        <aside class="sidebar">
+            <section class="profile-card">
+                <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}"
+                     class="profile-pic" alt="">
+                <h3>{{ user.name }}</h3>
+                <p>{{ user.email }}</p>
+                <div class="loyalty">Member ID: {{ user.id }}</div>
+            </section>
+
+            <nav class="quick-actions">
+                <a class="action" href="{{ url_for('profile') }}">My Profile</a>
+                <a class="action" href="{{ url_for('my_orders') }}">All Orders</a>
+                <a class="action" href="{{ url_for('upload_prescription') }}">Upload Prescription</a>
+                <a class="action" href="{{ url_for('my_prescriptions') }}">My Prescriptions</a>
+            </nav>
+        </aside>
+
+        <section class="main">
+            <div class="cards">
+                <div class="stat">
+                    <div class="stat-value">{{ recent_orders|length }}</div>
+                    <div class="stat-label">Recent Orders</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">{{ recommendations|length }}</div>
+                    <div class="stat-label">Recommended Medicines</div>
+                </div>
+            </div>
+
+            <h2>Recent Orders</h2>
+            <div class="orders">
+                {% for order in recent_orders %}
+                    <article class="order">
+                        <div class="order-left">
+                            <strong>Order #{{ order.order_id }}</strong>
+                            <div class="order-items">
+                                {% for item in order["items"] %}
+                                    <div>{{ item.name }} x {{ item.quantity }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="order-right">
+                            <div>{{ order.status }}</div>
+                            <div>{{ order.date }}</div>
+                            <div class="order-total">Rs. {{ order.total }}</div>
+                        </div>
+                    </article>
+                {% else %}
+                    <p>No recent orders found.</p>
+                {% endfor %}
+            </div>
+
+            <h2>Recommended Medicines</h2>
+            <div class="recommendations">
+                {% for medicine in recommendations %}
+                    <article class="rec-card">
+                        <img src="{{ medicine.image or url_for('static', filename='images/yuvraj_logo.png') }}"
+                             onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/yuvraj_logo.png') }}';"
+                             alt="{{ medicine.name }}">
+                        <div class="rec-body">
+                            <div class="rec-title">{{ medicine.name }}</div>
+                            <div class="rec-price">Rs. {{ medicine.price }}</div>
+                            <a class="btn" href="{{ url_for('add_to_cart', id=medicine.id) }}">Add to Cart</a>
+                        </div>
+                    </article>
+                {% else %}
+                    <p>No recommendations available.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

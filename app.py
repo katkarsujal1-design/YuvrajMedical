@@ -953,6 +953,64 @@ def my_orders():
     return render_template("my_orders.html", orders=orders)
 
 
+# ================= CUSTOMER DASHBOARD (Premium) =================
+@app.route("/customer_dashboard")
+def customer_dashboard():
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    # recent orders (limit 6)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT * FROM orders
+        WHERE user_id=%s
+        ORDER BY id DESC
+        LIMIT 6
+    """, (user_id,))
+    orders_raw = cursor.fetchall()
+    cursor.close()
+
+    recent_orders = []
+
+    for o in orders_raw:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT medicines.name, order_items.quantity, order_items.price
+            FROM order_items
+            JOIN medicines ON medicines.id = order_items.medicine_id
+            WHERE order_items.order_id=%s
+        """, (o["id"],))
+        items = cursor.fetchall()
+        cursor.close()
+        recent_orders.append({
+            "order_id": o["id"],
+            "total": o["total"],
+            "date": o["date"],
+            "status": o["status"],
+            "items": items,
+            "prescription": o["prescription"]
+        })
+
+    # simple recommendations: random medicines
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT id, name, price, image FROM medicines ORDER BY RAND() LIMIT 8")
+        recommendations = cursor.fetchall()
+    except Exception:
+        recommendations = []
+    cursor.close()
+
+    return render_template(
+        "customer_dashboard.html",
+        user=session["user"],
+        recent_orders=recent_orders,
+        recommendations=recommendations
+    )
+
+
 # ================= CANCEL ORDER =================
 @app.route("/cancel_order/<int:order_id>")
 def cancel_order(order_id):
