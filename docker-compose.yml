@@ -46,6 +46,7 @@ services:
       - "8080:80"
     volumes:
       - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/app/static:ro
     networks:
       - medical-network
 

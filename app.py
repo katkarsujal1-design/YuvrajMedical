@@ -164,6 +164,25 @@ def classify_medicine(name):
     prescription_required = any(x in name for x in prescription_keywords)
 
     return department, prescription_required
+
+
+def normalize_category(category):
+    category = "" if category is None else str(category).strip()
+    if not category or category.lower() == "nan":
+        return "General"
+    return category
+
+
+BASIC_MEDICINE_TYPES = [
+    {"name": "Tablet", "aliases": ["Tablet"], "image": "images/categories/tablet-category-ai.png"},
+    {"name": "Capsule", "aliases": ["Capsule"], "image": "images/categories/capsule-category-ai.png"},
+    {"name": "Syrup", "aliases": ["Syrup"], "image": "images/categories/syrup-category-ai.png"},
+    {"name": "Injection", "aliases": ["Injection"], "image": "images/categories/injection-category-ai.png"},
+    {"name": "Drops", "aliases": ["Drops", "Eye Drops"], "image": "images/categories/drops-category-ai.png"},
+    {"name": "Cream", "aliases": ["Cream"], "image": "images/categories/cream-category-ai.png"},
+    {"name": "Gel", "aliases": ["Gel"], "image": "images/categories/gel-category-ai.png"},
+    {"name": "Ointment", "aliases": ["Ointment"], "image": "images/categories/ointment-category-ai.png"},
+]
 # ================= HOME (SEARCH + FILTER) =================
 @app.route("/")
 def home():
@@ -228,10 +247,34 @@ def home():
 
     disease_cards = cursor.fetchall()
     cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT name, COUNT(*) AS count
+        FROM (
+            SELECT COALESCE(NULLIF(TRIM(category), ''), 'General') AS name
+            FROM medicines
+        ) AS medicine_categories
+        GROUP BY name
+        ORDER BY name ASC
+    """)
+    category_counts = {
+        row["name"]: row["count"]
+        for row in cursor.fetchall()
+    }
+    medicine_types = []
+    for medicine_type in BASIC_MEDICINE_TYPES:
+        medicine_types.append({
+            "name": medicine_type["name"],
+            "image": medicine_type["image"],
+            "count": sum(category_counts.get(alias, 0) for alias in medicine_type["aliases"])
+        })
+    cursor.close()
     return render_template(
         "index.html",
         medicines=medicines,
         disease_cards=disease_cards,
+        medicine_types=medicine_types,
         cart=cart,
         cart_count=cart_count,
         search=search,
@@ -1550,7 +1593,7 @@ def add_medicine():
 
         name = request.form.get("name")
         department, prescription_required = classify_medicine(name)
-        category = request.form.get("category")
+        category = normalize_category(request.form.get("category"))
         price = request.form.get("price")
         stock = request.form.get("stock")
         expiry = request.form.get("expiry")
@@ -1659,7 +1702,7 @@ def bulk_upload():
             except:
                 stock = 0
 
-            category = str(row.get("category", "")).strip()
+            category = normalize_category(row.get("category", ""))
             expiry = str(row.get("expiry", "")).strip()
             department, prescription_required = classify_medicine(name)
 
@@ -1714,7 +1757,7 @@ def edit_medicine(id):
         data["name"],
         data["price"],
         data["stock"],
-        data["category"],
+        normalize_category(data.get("category")),
         data["expiry"],
         id
     ))
@@ -1826,7 +1869,7 @@ def add_scanned_medicine(barcode):
 
         try:
             name = request.form.get("name")
-            category = request.form.get("category")
+            category = normalize_category(request.form.get("category"))
             price = request.form.get("price")
             stock = request.form.get("stock")
             expiry = request.form.get("expiry")
@@ -2300,12 +2343,35 @@ def medicine_type_page(medicine_type):
     db = get_db()
 
     cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT *
-        FROM medicines
-        WHERE category=%s
-        ORDER BY name ASC
-    """, (medicine_type,))
+    basic_type = next(
+        (item for item in BASIC_MEDICINE_TYPES if item["name"] == medicine_type),
+        None
+    )
+
+    if basic_type:
+        placeholders = ", ".join(["%s"] * len(basic_type["aliases"]))
+        cursor.execute(f"""
+            SELECT *
+            FROM medicines
+            WHERE category IN ({placeholders})
+            ORDER BY name ASC
+        """, tuple(basic_type["aliases"]))
+    elif medicine_type == "General":
+        cursor.execute("""
+            SELECT *
+            FROM medicines
+            WHERE category=%s
+               OR category IS NULL
+               OR TRIM(category) = ''
+            ORDER BY name ASC
+        """, (medicine_type,))
+    else:
+        cursor.execute("""
+            SELECT *
+            FROM medicines
+            WHERE category=%s
+            ORDER BY name ASC
+        """, (medicine_type,))
     medicines = cursor.fetchall()
     cursor.close()
 

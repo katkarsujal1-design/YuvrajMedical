@@ -7,13 +7,24 @@
 body{
     margin:0;
     font-family:"Segoe UI",Arial,sans-serif;
-    background:linear-gradient(135deg,#f8fafc,#dbeafe);
+    background:
+        radial-gradient(circle at top left,rgba(253,230,138,.13),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(127,29,78,.14),transparent 34%),
+        linear-gradient(135deg,#fffaf0,#fdf2f8);
+    background-attachment:fixed;
     color:#0f172a;
 }
 
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
 .header{
-    background:linear-gradient(135deg,#2563eb,#06b6d4);
-    color:white;
+    background:
+        radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
+        linear-gradient(135deg,#4c1d3d 0%,#7f1d4e 52%,#9f3a4a 100%);
+    color:#fff7ed;
     padding:16px 24px;
     display:flex;
     justify-content:space-between;
@@ -21,22 +32,37 @@ body{
     position:sticky;
     top:0;
     z-index:1000;
+    border-bottom:1px solid rgba(253,230,138,.42);
+    box-shadow:0 12px 34px rgba(76,29,61,.28);
 }
 
 .header a{
-    color:white;
+    color:#fff7ed;
     text-decoration:none;
     margin-left:12px;
     font-weight:800;
+    padding:9px 13px;
+    border-radius:999px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(253,230,138,.20);
+    display:inline-block;
+}
+
+.header a:hover{
+    background:#fff7ed;
+    color:#6f1d49;
 }
 
 .hero{
     margin:24px;
     padding:35px;
     border-radius:30px;
-    background:linear-gradient(135deg,#2563eb,#06b6d4);
-    color:white;
-    box-shadow:0 24px 55px rgba(37,99,235,0.28);
+    background:
+        radial-gradient(circle at 82% 15%,rgba(253,230,138,.18),transparent 28%),
+        linear-gradient(135deg,#3b1833,#7f1d4e 58%,#9f3a4a);
+    color:#fff7ed;
+    border:1px solid rgba(253,230,138,.28);
+    box-shadow:0 24px 55px rgba(76,29,61,0.28);
 }
 
 .hero h1{
@@ -46,6 +72,7 @@ body{
 
 .hero p{
     font-size:18px;
+    color:#fce7f3;
 }
 
 .grid{
@@ -56,11 +83,14 @@ body{
 }
 
 .card{
-    background:white;
-    border-radius:28px;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(253,230,138,.12),transparent 34%),
+        linear-gradient(145deg,#fffaf0,#fdf2f8);
+    border-radius:26px;
     padding:22px;
     text-align:center;
-    box-shadow:0 16px 38px rgba(15,23,42,0.08);
+    border:1px solid rgba(180,83,9,.24);
+    box-shadow:0 16px 38px rgba(76,29,61,0.12);
     transition:0.3s;
     position:relative;
     overflow:hidden;
@@ -68,7 +98,8 @@ body{
 
 .card:hover{
     transform:translateY(-8px);
-    box-shadow:0 24px 50px rgba(37,99,235,0.16);
+    box-shadow:0 24px 50px rgba(76,29,61,0.22);
+    border-color:rgba(253,230,138,.58);
 }
 
 .card::before{
@@ -79,7 +110,7 @@ body{
     right:-45px;
     top:-45px;
     border-radius:50%;
-    background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(6,182,212,0.12));
+    background:linear-gradient(135deg,rgba(253,230,138,0.22),rgba(127,29,78,0.10));
 }
 
 .img-box{
@@ -96,7 +127,7 @@ body{
     height:120px;
     object-fit:contain;
     border-radius:18px;
-    border:1px solid #e2e8f0;
+    border:1px solid rgba(180,83,9,.22);
     padding:6px;
     background:white;
 }
@@ -115,7 +146,7 @@ body{
 }
 
 .card strong{
-    color:#2563eb;
+    color:#7f1d4e;
     font-size:23px;
 }
 
@@ -128,18 +159,24 @@ body{
 
 .btn{
     text-decoration:none;
-    background:#e5e7eb;
-    color:#111827;
+    background:#fff7ed;
+    color:#6f1d49;
     padding:7px 12px;
     border-radius:10px;
     font-weight:900;
+    border:1px solid rgba(180,83,9,.22);
+}
+
+.btn:hover{
+    background:#7f1d4e;
+    color:#fde68a;
 }
 
 .add-btn{
     display:inline-block;
     text-decoration:none;
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-    color:white;
+    background:linear-gradient(135deg,#4c1d3d,#9f3a4a);
+    color:#fde68a;
     padding:11px 18px;
     border-radius:999px;
     font-weight:900;
@@ -147,7 +184,7 @@ body{
 
 .out-btn{
     background:#64748b;
-    color:white;
+    color:#fff;
     padding:11px 18px;
     border:none;
     border-radius:999px;
@@ -157,6 +194,16 @@ body{
 .empty{
     text-align:center;
     padding:60px;
+}
+
+.empty a{
+    display:inline-block;
+    margin-top:12px;
+    padding:11px 18px;
+    border-radius:999px;
+    background:linear-gradient(135deg,#4c1d3d,#9f3a4a);
+    color:#fde68a;
+    font-weight:900;
 }
 </style>
 </head>
