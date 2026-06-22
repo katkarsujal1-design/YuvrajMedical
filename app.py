@@ -482,6 +482,230 @@ BASIC_MEDICINE_TYPES = [
     {"name": "Gel", "aliases": ["Gel"], "image": "images/categories/gel.jpeg"},
     {"name": "Ointment", "aliases": ["Ointment"], "image": "images/categories/ointment.jpeg"},
 ]
+
+
+def medicine_package_context(medicine):
+    name = medicine.get("name") or "Medicine"
+    category = normalize_category(medicine.get("category"))
+    normalized = re.sub(r"[^a-z0-9]+", " ", f"{name} {category}".lower()).strip()
+    price = medicine.get("price") or 0
+
+    if any(word in normalized for word in ["tablet", "capsule"]):
+        contents = "1 sealed strip containing 10 tablets/capsules"
+        unit = "Strip pack"
+        loose_note = "not for a loose single tablet/capsule"
+        policy = "Loose single tablets/capsules are not sold separately online. Add quantity 1 to cart to order one strip pack; increase quantity for bulk strips."
+    elif any(word in normalized for word in ["syrup", "suspension"]):
+        contents = "1 sealed full bottle with outer carton when available"
+        unit = "Full bottle pack"
+        loose_note = "not for a loose partial bottle"
+        policy = "Partial bottles are not sold separately online. Add quantity 1 to cart to order one sealed bottle pack; increase quantity for bulk bottles."
+    elif "injection" in normalized or "iv fluid" in normalized:
+        contents = "1 sealed full injection/vial pack as supplied by the manufacturer"
+        unit = "Full injection pack"
+        loose_note = "not for an opened or partial injection pack"
+        policy = "Opened or partial injection packs are not sold online. Add quantity 1 to cart to order one sealed injection pack; increase quantity for bulk packs."
+    elif any(word in normalized for word in ["cream", "gel", "ointment", "lotion", "solution"]):
+        contents = "1 sealed full tube or bottle pack"
+        unit = "Full topical pack"
+        loose_note = "not for a loose or partially used tube/bottle"
+        policy = "Loose or partially used tubes/bottles are not sold online. Add quantity 1 to cart to order one sealed topical pack; increase quantity for bulk packs."
+    elif "drops" in normalized:
+        contents = "1 sealed full drop bottle pack"
+        unit = "Full drop pack"
+        loose_note = "not for a loose or partially used drop bottle"
+        policy = "Partial drop bottles are not sold online. Add quantity 1 to cart to order one sealed drop bottle; increase quantity for bulk packs."
+    elif any(word in normalized for word in ["inhaler", "respules"]):
+        contents = "1 sealed full inhaler/respule pack"
+        unit = "Full respiratory pack"
+        loose_note = "not for an opened or partial respiratory pack"
+        policy = "Opened or partial inhaler/respule packs are not sold online. Add quantity 1 to cart to order one sealed respiratory pack; increase quantity for bulk packs."
+    elif "sachet" in normalized or "powder" in normalized:
+        contents = "1 sealed full sachet/box pack"
+        unit = "Full sachet pack"
+        loose_note = "not for a loose partial sachet or powder pack"
+        policy = "Opened or partial sachet/powder packs are not sold online. Add quantity 1 to cart to order one sealed sachet pack; increase quantity for bulk packs."
+    else:
+        contents = "1 sealed full manufacturer pack"
+        unit = "Full pack"
+        loose_note = "not for an opened or partial pack"
+        policy = "Opened or partial packs are not sold online. Add quantity 1 to cart to order one sealed pack; increase quantity for bulk packs."
+
+    return {
+        "selling_unit": unit,
+        "contents": contents,
+        "price_note": f"Listed price Rs. {price} is for 1 {unit.lower()}, {loose_note}.",
+        "policy": policy
+    }
+
+
+def medicine_detail_context(medicine):
+    name = medicine.get("name") or "Medicine"
+    category = normalize_category(medicine.get("category"))
+    department = normalize_category(medicine.get("department") or category)
+    clean_name = re.sub(r"\s+", " ", name).strip()
+    normalized_name = re.sub(r"[^a-z0-9]+", " ", clean_name.lower()).strip()
+    strength_match = re.search(r"\b\d+(?:\.\d+)?\s?(?:mg|mcg|g|ml|iu|%)\b", clean_name, re.I)
+    strength = strength_match.group(0) if strength_match else ""
+    generic_name = re.sub(r"\b\d+(?:\.\d+)?\s?(?:mg|mcg|g|ml|iu|%)\b", "", clean_name, flags=re.I)
+    generic_name = re.sub(r"\b(tablet|capsule|syrup|injection|cream|gel|ointment|drops|inhaler|solution|sachet)\b", "", generic_name, flags=re.I)
+    generic_name = re.sub(r"\s+", " ", generic_name).strip(" -+/") or clean_name
+    package = medicine_package_context(medicine)
+
+    if "paracetamol" in normalized_name and "500" in normalized_name and "tablet" in normalized_name:
+        return {
+            "description": "Paracetamol 500mg Tablet is an analgesic and antipyretic medicine used for temporary relief of mild to moderate pain and fever. It should be taken only as directed on the label or by a healthcare professional.",
+            "composition": "Paracetamol 500mg",
+            "uses": "Used to reduce fever and relieve common pain such as headache, toothache, sore throat, muscle aches, joint pain, and cold or flu-related body pain.",
+            "side_effects": "Paracetamol usually has few side effects when taken correctly. Rare but serious reactions can include allergy symptoms such as rash, itching, swelling, breathing difficulty, liver problems such as nausea or yellowing of the skin or eyes, and unusual bruising or bleeding. Taking too much can cause serious liver damage.",
+            "dosage": "Store guidance for this product: take 1 tablet in the day and 1 tablet at night after food or as advised by a doctor. Do not take more than 2 tablets in 24 hours unless a doctor specifically tells you to. Avoid taking it with other medicines that also contain paracetamol.",
+            "storage": "Keep tablets in their original container, tightly closed, at room temperature. Store away from excess heat, moisture, and direct sunlight, and keep out of sight and reach of children.",
+            "brand_name": clean_name,
+            "generic_alternative": "Paracetamol 500mg",
+            "review_summary": "Customer reviews for this medicine are not available yet. You can still check stock status and add it to your cart if available.",
+            "package": package
+        }
+
+    medicine_profiles = [
+        {
+            "keywords": ["antibiotic", "amoxicillin", "azithromycin", "ciprofloxacin", "doxycycline", "cefixime", "cefuroxime", "ceftriaxone", "metronidazole", "clindamycin", "levofloxacin"],
+            "type": "antibiotic medicine",
+            "uses": "Used for bacterial infections when prescribed by a doctor. It is not useful for viral illnesses such as common cold unless a clinician confirms a bacterial infection.",
+            "side_effects": "May cause nausea, loose stools, stomach upset, headache, skin rash, allergy, or fungal overgrowth. Severe allergy, persistent diarrhea, breathing trouble, or swelling needs urgent medical help.",
+            "dosage": "Take only in the dose, timing, and duration prescribed by a doctor. Complete the full course and do not stop early or reuse leftover antibiotics.",
+            "storage": "Store in a cool, dry place away from sunlight. Keep the pack closed and keep all antibiotics out of reach of children."
+        },
+        {
+            "keywords": ["diabetes", "metformin", "glimepiride", "gliclazide", "sitagliptin", "vildagliptin", "dapagliflozin", "empagliflozin", "pioglitazone", "insulin"],
+            "type": "diabetes medicine",
+            "uses": "Used to help manage blood sugar in diabetes as part of a treatment plan that may include diet, exercise, and monitoring.",
+            "side_effects": "May cause low blood sugar, stomach upset, dizziness, sweating, weakness, increased urination, or weight changes depending on the medicine. Seek medical help for severe weakness, confusion, fainting, or very low sugar symptoms.",
+            "dosage": "Use exactly as prescribed by your doctor. Do not skip meals or change the dose without medical advice, especially with insulin or sulfonylurea medicines.",
+            "storage": "Store tablets in a cool, dry place. Insulin and some diabetes products may need refrigeration; follow the product label."
+        },
+        {
+            "keywords": ["cardiac", "cardio", "heart", "amlodipine", "losartan", "telmisartan", "atenolol", "propranolol", "atorvastatin", "rosuvastatin", "clopidogrel", "warfarin", "digoxin"],
+            "type": "heart and blood pressure medicine",
+            "uses": "Used for conditions such as high blood pressure, cholesterol control, heart protection, rhythm problems, or blood clot prevention as prescribed.",
+            "side_effects": "May cause dizziness, low blood pressure, swelling, tiredness, headache, muscle pain, slow pulse, or bleeding risk depending on the medicine. Unusual bleeding, chest pain, fainting, or severe muscle pain needs medical attention.",
+            "dosage": "Take only as prescribed and at the same time each day when advised. Do not stop heart, blood pressure, cholesterol, or blood-thinning medicines suddenly without a doctor.",
+            "storage": "Keep in the original pack at room temperature, away from heat and moisture."
+        },
+        {
+            "keywords": ["gastric", "gi", "omeprazole", "pantoprazole", "rabeprazole", "esomeprazole", "ranitidine", "famotidine", "sucralfate", "domperidone", "ondansetron", "lactulose"],
+            "type": "gastric medicine",
+            "uses": "Used for acidity, reflux, stomach protection, nausea, vomiting, constipation, or other digestive symptoms based on the medicine type.",
+            "side_effects": "May cause headache, constipation, diarrhea, dry mouth, stomach cramps, dizziness, or nausea. Severe abdominal pain, persistent vomiting, black stools, or allergic reactions need medical help.",
+            "dosage": "Follow the doctor or label directions. Some acidity medicines work best before food, while nausea or constipation medicines have different timing.",
+            "storage": "Store tightly closed in a cool, dry place. Keep liquids away from direct sunlight and check expiry before use."
+        },
+        {
+            "keywords": ["cetirizine", "levocetirizine", "fexofenadine", "chlorpheniramine", "diphenhydramine", "desloratadine", "rupatadine", "hydroxyzine", "antihistamine", "allergy"],
+            "type": "allergy medicine",
+            "uses": "Used for allergy symptoms such as sneezing, runny nose, itching, watery eyes, skin allergy, or hives.",
+            "side_effects": "May cause sleepiness, dry mouth, dizziness, headache, or tiredness. Avoid driving if the medicine makes you drowsy.",
+            "dosage": "Take as directed on the label or by a doctor. Do not combine multiple allergy medicines unless advised.",
+            "storage": "Store at room temperature in a dry place and keep away from children."
+        },
+        {
+            "keywords": ["cough", "dextromethorphan", "ambroxol", "bromhexine", "guaifenesin", "salbutamol", "montelukast", "inhaler", "respiratory", "asthma"],
+            "type": "cough and respiratory medicine",
+            "uses": "Used for cough, chest congestion, wheezing, breathing support, or respiratory allergy symptoms depending on the medicine.",
+            "side_effects": "May cause drowsiness, dry mouth, nausea, tremor, fast heartbeat, headache, or throat irritation. Breathing difficulty or worsening wheeze needs urgent care.",
+            "dosage": "Use exactly as prescribed or as written on the label. Inhalers and respiratory medicines need correct technique and should not be overused.",
+            "storage": "Keep bottles capped and inhalers at room temperature away from heat. Do not puncture or expose inhalers to high temperature."
+        },
+        {
+            "keywords": ["vitamin", "supplement", "calcium", "zinc", "iron", "ors", "multivitamin", "biotin", "omega", "coenzyme", "glucosamine", "lycopene", "silymarin"],
+            "type": "vitamin or supplement",
+            "uses": "Used to support nutrition, hydration, mineral balance, bone health, immunity, or deficiency management depending on the product.",
+            "side_effects": "May cause stomach upset, constipation, loose stools, nausea, or unusual taste. Excess intake can be harmful, especially with iron, fat-soluble vitamins, or minerals.",
+            "dosage": "Take as advised on the label or by a healthcare professional. Do not exceed the recommended daily amount.",
+            "storage": "Store sealed in a cool, dry place away from moisture and sunlight."
+        },
+        {
+            "keywords": ["cream", "gel", "ointment", "lotion", "skin", "dermatology", "clotrimazole", "ketoconazole", "mupirocin", "adapalene", "tretinoin", "benzoyl", "permethrin", "hydrocortisone", "clobetasol"],
+            "type": "skin or topical medicine",
+            "uses": "Used on the skin for fungal infection, bacterial infection, inflammation, acne, itching, pain relief, or wound care depending on the product.",
+            "side_effects": "May cause burning, redness, dryness, itching, peeling, or irritation at the application site. Stop and seek advice if severe irritation, swelling, or rash occurs.",
+            "dosage": "Apply only to the affected area as prescribed or as directed on the label. Avoid eyes, mouth, and broken skin unless instructed.",
+            "storage": "Keep the cap closed and store in a cool, dry place away from direct heat."
+        },
+        {
+            "keywords": ["eye", "drops", "timolol", "ofloxacin eye", "moxifloxacin eye", "tobramycin eye", "latanoprost", "travoprost", "dorzolamide", "brimonidine"],
+            "type": "eye medicine",
+            "uses": "Used for eye infection, allergy, dryness, inflammation, or eye pressure control depending on the drop.",
+            "side_effects": "May cause temporary burning, blurred vision, redness, watering, irritation, or bitter taste. Eye pain, vision changes, or swelling needs medical help.",
+            "dosage": "Use only the number of drops and timing advised. Do not touch the dropper tip to the eye or any surface.",
+            "storage": "Keep the bottle tightly closed. Store as per label and discard after the recommended period after opening."
+        },
+        {
+            "keywords": ["injection", "iv fluid", "vial", "normal saline", "ringer lactate", "dextrose", "heparin", "enoxaparin"],
+            "type": "injection or hospital-use medicine",
+            "uses": "Used for hospital or clinician-administered treatment such as infection care, fluids, pain relief, blood thinning, or emergency support depending on the product.",
+            "side_effects": "May cause injection-site pain, swelling, allergy, dizziness, bleeding risk, or medicine-specific reactions. Injections should be handled by trained staff.",
+            "dosage": "Use only under medical supervision. Dose, route, dilution, and frequency must be decided by a qualified healthcare professional.",
+            "storage": "Store according to the product label. Protect from heat and do not use if the seal is broken, cloudy, leaking, or expired."
+        },
+        {
+            "keywords": ["psychiatric", "sleep", "sertraline", "fluoxetine", "escitalopram", "venlafaxine", "duloxetine", "amitriptyline", "olanzapine", "risperidone", "quetiapine", "diazepam", "clonazepam", "alprazolam", "zolpidem"],
+            "type": "mental health or sleep medicine",
+            "uses": "Used for conditions such as depression, anxiety, sleep problems, mood symptoms, or psychiatric care when prescribed.",
+            "side_effects": "May cause sleepiness, dizziness, dry mouth, weight changes, mood changes, nausea, or dependence risk for some medicines. Worsening mood, confusion, breathing difficulty, or severe drowsiness needs urgent advice.",
+            "dosage": "Take exactly as prescribed. Do not stop suddenly or change the dose without a doctor, as withdrawal or symptom worsening can occur.",
+            "storage": "Store securely at room temperature, away from children and anyone for whom it was not prescribed."
+        },
+        {
+            "keywords": ["antiviral", "tenofovir", "lamivudine", "zidovudine", "efavirenz", "dolutegravir", "remdesivir", "acyclovir", "valacyclovir", "oseltamivir"],
+            "type": "antiviral medicine",
+            "uses": "Used for viral infections or long-term viral disease management when prescribed by a doctor.",
+            "side_effects": "May cause nausea, headache, tiredness, stomach upset, dizziness, or liver/kidney-related effects depending on the medicine.",
+            "dosage": "Take exactly as prescribed and do not miss doses, especially for long-term antiviral treatment.",
+            "storage": "Store in the original container in a cool, dry place unless the label says otherwise."
+        },
+        {
+            "keywords": ["pain", "analgesic", "ibuprofen", "diclofenac", "naproxen", "aceclofenac", "ketorolac", "meloxicam", "piroxicam", "celecoxib", "etoricoxib", "aspirin"],
+            "type": "pain relief medicine",
+            "uses": "Used for pain, swelling, inflammation, fever, or body aches depending on the medicine.",
+            "side_effects": "May cause acidity, stomach pain, nausea, dizziness, swelling, kidney strain, or bleeding risk. Avoid self-use if you have ulcers, kidney disease, blood thinner use, or pregnancy unless advised.",
+            "dosage": "Take only as directed by a doctor or label. Use the lowest effective dose for the shortest time and avoid combining similar painkillers.",
+            "storage": "Store in a cool, dry place away from moisture and sunlight."
+        }
+    ]
+
+    profile = next(
+        (item for item in medicine_profiles if any(keyword in normalized_name or keyword in category.lower() or keyword in department.lower() for keyword in item["keywords"])),
+        None
+    )
+
+    if profile:
+        return {
+            "description": f"{clean_name} is a {profile['type']} available at Yuvraj Medical. Use it only for the condition and duration advised by a qualified healthcare professional.",
+            "composition": f"{generic_name}{' ' + strength if strength else ''}".strip(),
+            "uses": profile["uses"],
+            "side_effects": profile["side_effects"],
+            "dosage": profile["dosage"],
+            "storage": profile["storage"],
+            "brand_name": clean_name,
+            "generic_alternative": generic_name,
+            "review_summary": "Customer reviews for this medicine are not available yet. You can still check stock status and full-pack availability before ordering.",
+            "package": package
+        }
+
+    return {
+        "description": f"{clean_name} is listed in the {category} category at Yuvraj Medical. Check suitability with a qualified healthcare professional before use.",
+        "composition": f"{generic_name}{' ' + strength if strength else ''}".strip(),
+        "uses": f"Commonly requested for {department.lower()} care based on its catalog classification. Use only as advised by a doctor or pharmacist.",
+        "side_effects": "Side effects can vary by patient and medicine. Stop use and contact a doctor if you notice allergy, severe discomfort, or unusual symptoms.",
+        "dosage": "Follow the dosage written on your prescription or product label. Do not change dose or frequency without medical advice.",
+        "storage": "Store in a cool, dry place away from direct sunlight and keep out of reach of children.",
+        "brand_name": clean_name,
+        "generic_alternative": generic_name,
+        "review_summary": "Customers can order this medicine through the catalog. Detailed product reviews are not available yet.",
+        "package": package
+    }
+
+
 # ================= HOME (SEARCH + FILTER) =================
 @app.route("/")
 def home():
@@ -710,6 +934,57 @@ def search_medicine():
         medicines=medicines,
         cart=cart,
         cart_count=cart_count
+    )
+
+
+@app.route("/medicine/<int:id>")
+def medicine_details(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM medicines WHERE id=%s", (id,))
+    medicine = cursor.fetchone()
+    cursor.close()
+
+    if not medicine:
+        flash("Medicine not found.")
+        return redirect("/")
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM medicines
+        WHERE id <> %s
+          AND (
+                COALESCE(category, '') = COALESCE(%s, '')
+             OR COALESCE(department, '') = COALESCE(%s, '')
+          )
+        ORDER BY stock DESC, name ASC
+        LIMIT 6
+    """, (id, medicine.get("category"), medicine.get("department")))
+    related_medicines = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (session["user"]["id"],))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+
+    return render_template(
+        "medicine_details.html",
+        medicine=medicine,
+        details=medicine_detail_context(medicine),
+        related_medicines=related_medicines,
+        cart=cart,
+        cart_count=sum(cart.values())
     )
 # ================= LOGIN =================
 @app.route('/login', methods=['GET','POST'])
@@ -1446,6 +1721,12 @@ def add_to_cart(id):
     cursor.close()
 
     if medicine and medicine["prescription_required"]:
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({
+                "ok": False,
+                "redirect": "/upload_prescription",
+                "message": f"{medicine['name']} requires prescription."
+            }), 403
         flash(f"{medicine['name']} requires prescription. Please upload prescription first.")
         return redirect("/upload_prescription")
 
@@ -1477,7 +1758,21 @@ def add_to_cart(id):
 
     except Exception as e:
         db.rollback()
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({"ok": False, "message": f"Cart Error: {e}"}), 500
         return f"Cart Error: {e}"
+
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        cursor = db.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
+            (user_id, id)
+        )
+        row = cursor.fetchone() or {"quantity": 0}
+        cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user_id,))
+        count_row = cursor.fetchone() or {"count": 0}
+        cursor.close()
+        return jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
 
     return redirect(request.referrer or "/")
 @app.route("/increase/<int:id>")
@@ -1494,6 +1789,12 @@ def increase(id):
     cursor.close()
 
     if medicine and medicine["prescription_required"]:
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return jsonify({
+                "ok": False,
+                "redirect": "/upload_prescription",
+                "message": f"{medicine['name']} requires prescription."
+            }), 403
         flash(f"{medicine['name']} requires prescription. Please upload prescription first.")
         return redirect("/upload_prescription")
     if "user" not in session:
@@ -1509,6 +1810,17 @@ def increase(id):
 
     db.commit()
     cursor.close()
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        cursor = db.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
+            (user_id, id)
+        )
+        row = cursor.fetchone() or {"quantity": 0}
+        cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user_id,))
+        count_row = cursor.fetchone() or {"count": 0}
+        cursor.close()
+        return jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
     return redirect(request.referrer or "/")
 
 
@@ -1534,7 +1846,373 @@ def decrease(id):
 
     db.commit()
     cursor.close()
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        cursor = db.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
+            (user_id, id)
+        )
+        row = cursor.fetchone() or {"quantity": 0}
+        cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user_id,))
+        count_row = cursor.fetchone() or {"count": 0}
+        cursor.close()
+        return jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
     return redirect(request.referrer or "/")
+
+
+def ensure_cart_feature_schema():
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS cart_saved_later (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            medicine_id INT NOT NULL,
+            quantity INT NOT NULL DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_saved_item (user_id, medicine_id),
+            INDEX idx_saved_user (user_id)
+        )
+    """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS wishlist (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            medicine_id INT NOT NULL,
+            notify_when_available TINYINT(1) NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uniq_wishlist_item (user_id, medicine_id),
+            INDEX idx_wishlist_user (user_id)
+        )
+    """)
+    try:
+        cursor.execute("""
+            ALTER TABLE wishlist
+            ADD COLUMN notify_when_available TINYINT(1) NOT NULL DEFAULT 0
+        """)
+    except Exception:
+        pass
+    db.commit()
+    cursor.close()
+
+
+CART_COUPONS = {
+    "SAVE10": {
+        "type": "percent",
+        "value": 10,
+        "min_subtotal": 100,
+        "label": "10% off on cart value above Rs. 100"
+    },
+    "HEALTH50": {
+        "type": "flat",
+        "value": 50,
+        "min_subtotal": 500,
+        "label": "Rs. 50 off on cart value above Rs. 500"
+    },
+    "FREESHIP": {
+        "type": "free_delivery",
+        "value": 0,
+        "min_subtotal": 200,
+        "label": "Free delivery above Rs. 200"
+    }
+}
+
+
+def calculate_cart_totals(subtotal):
+    coupon_code = session.get("cart_coupon")
+    coupon = CART_COUPONS.get(coupon_code)
+    delivery_charge = 0 if subtotal == 0 or subtotal >= 500 else 40
+    discount = 0
+    coupon_message = None
+
+    if coupon:
+        if subtotal >= coupon["min_subtotal"]:
+            if coupon["type"] == "percent":
+                discount = round(subtotal * coupon["value"] / 100, 2)
+            elif coupon["type"] == "flat":
+                discount = min(coupon["value"], subtotal)
+            elif coupon["type"] == "free_delivery":
+                delivery_charge = 0
+            coupon_message = coupon["label"]
+        else:
+            coupon_message = f"{coupon_code} applies above Rs. {coupon['min_subtotal']}."
+
+    payable_total = max(subtotal - discount, 0) + delivery_charge
+    return {
+        "subtotal": subtotal,
+        "discount": discount,
+        "delivery_charge": delivery_charge,
+        "payable_total": payable_total,
+        "coupon_code": coupon_code if coupon else None,
+        "coupon_message": coupon_message,
+        "estimated_delivery": "1-2 business days"
+    }
+
+
+@app.route("/cart/remove/<int:id>")
+def remove_from_cart(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(
+        "DELETE FROM cart WHERE user_id=%s AND medicine_id=%s",
+        (session["user"]["id"], id)
+    )
+    db.commit()
+    cursor.close()
+    return redirect("/cart")
+
+
+@app.route("/cart/save_for_later/<int:id>")
+def save_for_later(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
+        (user_id, id)
+    )
+    item = cursor.fetchone()
+    if item:
+        cursor.execute("""
+            INSERT INTO cart_saved_later (user_id, medicine_id, quantity)
+            VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+        """, (user_id, id, item["quantity"]))
+        cursor.execute(
+            "DELETE FROM cart WHERE user_id=%s AND medicine_id=%s",
+            (user_id, id)
+        )
+        db.commit()
+    cursor.close()
+    return redirect("/cart")
+
+
+@app.route("/cart/move_saved_to_cart/<int:id>")
+def move_saved_to_cart(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT quantity FROM cart_saved_later WHERE user_id=%s AND medicine_id=%s",
+        (user_id, id)
+    )
+    item = cursor.fetchone()
+    if item:
+        cursor.execute("""
+            INSERT INTO cart (user_id, medicine_id, quantity)
+            VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+        """, (user_id, id, item["quantity"]))
+        cursor.execute(
+            "DELETE FROM cart_saved_later WHERE user_id=%s AND medicine_id=%s",
+            (user_id, id)
+        )
+        db.commit()
+    cursor.close()
+    return redirect("/cart")
+
+
+@app.route("/cart/remove_saved/<int:id>")
+def remove_saved_for_later(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(
+        "DELETE FROM cart_saved_later WHERE user_id=%s AND medicine_id=%s",
+        (session["user"]["id"], id)
+    )
+    db.commit()
+    cursor.close()
+    return redirect("/cart")
+
+
+@app.route("/cart/move_to_wishlist/<int:id>")
+def move_to_wishlist(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    save_medicine_to_wishlist(id)
+    return redirect("/cart")
+
+
+def save_medicine_to_wishlist(id):
+    ensure_cart_feature_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO wishlist (user_id, medicine_id)
+        VALUES (%s, %s)
+        ON DUPLICATE KEY UPDATE created_at = CURRENT_TIMESTAMP
+    """, (user_id, id))
+    cursor.execute(
+        "DELETE FROM cart WHERE user_id=%s AND medicine_id=%s",
+        (user_id, id)
+    )
+    db.commit()
+    cursor.close()
+
+
+@app.route("/wishlist/add/<int:id>")
+def add_to_wishlist(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO wishlist (user_id, medicine_id)
+        VALUES (%s, %s)
+        ON DUPLICATE KEY UPDATE created_at = CURRENT_TIMESTAMP
+    """, (session["user"]["id"], id))
+    db.commit()
+    cursor.close()
+    return redirect(request.referrer or "/wishlist")
+
+
+@app.route("/cart/wishlist_to_cart/<int:id>")
+def wishlist_to_cart(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO cart (user_id, medicine_id, quantity)
+        VALUES (%s, %s, 1)
+        ON DUPLICATE KEY UPDATE quantity = quantity + 1
+    """, (user_id, id))
+    cursor.execute(
+        "DELETE FROM wishlist WHERE user_id=%s AND medicine_id=%s",
+        (user_id, id)
+    )
+    db.commit()
+    cursor.close()
+    return redirect("/cart")
+
+
+@app.route("/wishlist/move_to_cart/<int:id>")
+def wishlist_page_to_cart(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    wishlist_to_cart(id)
+    return redirect("/wishlist")
+
+
+@app.route("/cart/remove_wishlist/<int:id>")
+def remove_wishlist(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    remove_wishlist_item(id)
+    return redirect("/cart")
+
+
+def remove_wishlist_item(id):
+    ensure_cart_feature_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(
+        "DELETE FROM wishlist WHERE user_id=%s AND medicine_id=%s",
+        (session["user"]["id"], id)
+    )
+    db.commit()
+    cursor.close()
+
+
+@app.route("/wishlist/remove/<int:id>")
+def remove_from_wishlist_page(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    remove_wishlist_item(id)
+    return redirect("/wishlist")
+
+
+@app.route("/wishlist/notify/<int:id>")
+def toggle_wishlist_notification(id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE wishlist
+        SET notify_when_available = CASE WHEN notify_when_available = 1 THEN 0 ELSE 1 END
+        WHERE user_id=%s AND medicine_id=%s
+    """, (session["user"]["id"], id))
+    db.commit()
+    cursor.close()
+    return redirect("/wishlist")
+
+
+@app.route("/wishlist")
+def wishlist_page():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id,
+               medicines.name,
+               medicines.price,
+               medicines.stock,
+               medicines.prescription_required,
+               medicines.expiry_date,
+               wishlist.notify_when_available,
+               wishlist.created_at
+        FROM wishlist
+        JOIN medicines ON medicines.id = wishlist.medicine_id
+        WHERE wishlist.user_id=%s
+        ORDER BY wishlist.created_at DESC
+    """, (session["user"]["id"],))
+    wishlist_items = cursor.fetchall()
+    cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (session["user"]["id"],))
+    cart_count = (cursor.fetchone() or {}).get("count", 0)
+    cursor.close()
+    return render_template("wishlist.html", wishlist_items=wishlist_items, cart_count=cart_count)
+
+
+@app.route("/cart/apply_coupon", methods=["POST"])
+def apply_coupon():
+    if "user" not in session:
+        return redirect("/login")
+
+    code = request.form.get("coupon_code", "").strip().upper()
+    if code in CART_COUPONS:
+        session["cart_coupon"] = code
+        flash(f"Coupon {code} applied.")
+    else:
+        session.pop("cart_coupon", None)
+        flash("Invalid coupon code.")
+    return redirect("/cart")
+
+
+@app.route("/cart/remove_coupon")
+def remove_coupon():
+    session.pop("cart_coupon", None)
+    return redirect("/cart")
 
 
 # ================= CART PAGE =================
@@ -1543,6 +2221,7 @@ def cart():
     if "user" not in session:
         return redirect("/login")
 
+    ensure_cart_feature_schema()
     db = get_db()
     user_id = session["user"]["id"]
 
@@ -1558,11 +2237,11 @@ def cart():
     rows = cursor.fetchall()
 
     items = []
-    total = 0
+    subtotal_total = 0
 
     for r in rows:
         subtotal = r["price"] * r["quantity"]
-        total += subtotal
+        subtotal_total += subtotal
 
         items.append({
             "id": r["id"],
@@ -1571,8 +2250,37 @@ def cart():
             "qty": r["quantity"],
             "subtotal": subtotal
         })
+
+    cursor.execute("""
+        SELECT medicines.id, medicines.name, medicines.price,
+               cart_saved_later.quantity
+        FROM cart_saved_later
+        JOIN medicines ON medicines.id = cart_saved_later.medicine_id
+        WHERE cart_saved_later.user_id=%s
+        ORDER BY cart_saved_later.created_at DESC
+    """, (user_id,))
+    saved_items = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT medicines.id, medicines.name, medicines.price
+        FROM wishlist
+        JOIN medicines ON medicines.id = wishlist.medicine_id
+        WHERE wishlist.user_id=%s
+        ORDER BY wishlist.created_at DESC
+    """, (user_id,))
+    wishlist_items = cursor.fetchall()
+
     cursor.close()
-    return render_template("cart.html", items=items, total=total)
+    totals = calculate_cart_totals(subtotal_total)
+    return render_template(
+        "cart.html",
+        items=items,
+        saved_items=saved_items,
+        wishlist_items=wishlist_items,
+        total=totals["payable_total"],
+        totals=totals,
+        coupons=CART_COUPONS
+    )
 
 
 # ================= CHECKOUT =================
@@ -1713,6 +2421,9 @@ def place_order():
                 item["id"]
             ))
 
+        totals = calculate_cart_totals(total)
+        total = totals["payable_total"]
+
         # ================= UPDATE TOTAL =================
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
@@ -1730,6 +2441,7 @@ def place_order():
             DELETE FROM cart
             WHERE user_id=%s
         """, (user_id,))
+        session.pop("cart_coupon", None)
 
         # ================= COMMIT =================
         db.commit()
@@ -1958,142 +2670,6 @@ def build_customer_dashboard_context(db, user_id):
         "notifications": notifications,
         "recommendations": recommendations
     }
-
-
-# ================= CUSTOMER DASHBOARD (Premium) =================
-@app.route("/customer_dashboard")
-def customer_dashboard():
-    if "user" not in session:
-        return redirect("/login")
-
-    db = get_db()
-    user_id = session["user"]["id"]
-
-    # recent orders (limit 6)
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT * FROM orders
-        WHERE user_id=%s
-        ORDER BY id DESC
-        LIMIT 6
-    """, (user_id,))
-    orders_raw = cursor.fetchall()
-    cursor.close()
-
-    recent_orders = []
-
-    for o in orders_raw:
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT medicines.name, order_items.quantity, order_items.price
-            FROM order_items
-            JOIN medicines ON medicines.id = order_items.medicine_id
-            WHERE order_items.order_id=%s
-        """, (o["id"],))
-        items = cursor.fetchall()
-        cursor.close()
-        recent_orders.append({
-            "order_id": o["id"],
-            "total": o["total"],
-            "date": o["date"],
-            "status": o["status"],
-            "items": items,
-            "prescription": o["prescription"]
-        })
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT COUNT(*) AS total_orders, COALESCE(SUM(total), 0) AS total_spent
-        FROM orders
-        WHERE user_id=%s
-    """, (user_id,))
-    order_summary = cursor.fetchone() or {"total_orders": 0, "total_spent": 0}
-    cursor.close()
-
-    prescription_summary = {
-        "total": 0,
-        "pending": 0,
-        "approved": 0,
-        "latest_status": "No prescriptions yet"
-    }
-    recent_prescriptions = []
-    try:
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT *
-            FROM prescription_requests
-            WHERE user_id=%s
-            ORDER BY created_at DESC
-            LIMIT 4
-        """, (user_id,))
-        recent_prescriptions = cursor.fetchall()
-        cursor.close()
-
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-            SELECT
-                COUNT(*) AS total,
-                SUM(CASE WHEN status = 'Pending Review' THEN 1 ELSE 0 END) AS pending,
-                SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) AS approved
-            FROM prescription_requests
-            WHERE user_id=%s
-        """, (user_id,))
-        prescription_counts = cursor.fetchone() or {}
-        cursor.close()
-
-        prescription_summary = {
-            "total": prescription_counts.get("total") or 0,
-            "pending": prescription_counts.get("pending") or 0,
-            "approved": prescription_counts.get("approved") or 0,
-            "latest_status": recent_prescriptions[0]["status"] if recent_prescriptions else "No prescriptions yet"
-        }
-    except Exception:
-        recent_prescriptions = []
-
-    notifications = []
-    if recent_orders:
-        latest_order = recent_orders[0]
-        notifications.append(f"Order #{latest_order['order_id']} is {latest_order['status']}.")
-    if recent_prescriptions:
-        latest_prescription = recent_prescriptions[0]
-        notifications.append(f"Prescription request #{latest_prescription['id']} is {latest_prescription['status']}.")
-    if not notifications:
-        notifications.append("Upload a prescription or place an order to start tracking updates here.")
-
-    cursor = db.cursor(dictionary=True)
-    try:
-        cursor.execute("""
-            SELECT id, name, price, image
-            FROM medicines
-            WHERE stock > 0
-            ORDER BY stock DESC, id DESC
-            LIMIT 6
-        """)
-        featured_medicines = cursor.fetchall()
-    except Exception:
-        featured_medicines = []
-    cursor.close()
-
-    # simple recommendations: random medicines
-    cursor = db.cursor(dictionary=True)
-    try:
-        cursor.execute("SELECT id, name, price, image FROM medicines ORDER BY RAND() LIMIT 8")
-        recommendations = cursor.fetchall()
-    except Exception:
-        recommendations = []
-    cursor.close()
-
-    return render_template(
-        "customer_dashboard.html",
-        user=session["user"],
-        order_summary=order_summary,
-        prescription_summary=prescription_summary,
-        recent_prescriptions=recent_prescriptions,
-        recent_orders=recent_orders,
-        featured_medicines=featured_medicines,
-        notifications=notifications,
-        recommendations=recommendations
-    )
 
 
 # ================= CANCEL ORDER =================

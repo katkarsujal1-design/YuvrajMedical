@@ -1,138 +1,373 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Cart</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Management - Yuvraj Medical</title>
     <style>
-        body {
-            font-family: Arial;
-            margin: 0;
-            background: #f9f9f9;
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:"Segoe UI",Arial,sans-serif;
+            color:#0f172a;
+            background:
+                radial-gradient(circle at 10% 0%,rgba(103,232,249,.13),transparent 30%),
+                radial-gradient(circle at 100% 20%,rgba(253,230,138,.16),transparent 32%),
+                linear-gradient(135deg,#f8fafc,#fff7ed);
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2c7be5;
-            color: white;
-            padding: 15px;
-            position: sticky;
-            top: 0;
+        a{text-decoration:none;color:inherit}
+        .header{
+            position:sticky;
+            top:0;
+            z-index:10;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            padding:16px 5vw;
+            color:#fff7ed;
+            background:
+                radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
+                linear-gradient(135deg,rgba(76,29,61,.96) 0%,rgba(127,29,78,.96) 52%,rgba(159,58,74,.96) 100%);
+            box-shadow:0 12px 34px rgba(76,29,61,.30);
         }
-
-        .left {
-            font-size: 20px;
-            font-weight: bold;
+        .header h1{margin:0;font-size:22px}
+        .nav{display:flex;gap:10px;flex-wrap:wrap}
+        .nav a{
+            padding:9px 13px;
+            border-radius:999px;
+            background:rgba(255,255,255,.14);
+            border:1px solid rgba(253,230,138,.20);
+            font-weight:850;
         }
-
-        .right {
-            display: flex;
-            gap: 10px;
+        .nav a:hover{background:#fff7ed;color:#6f1d49}
+        .wrap{width:min(1180px,calc(100% - 28px));margin:24px auto 48px}
+        .hero{
+            display:flex;
+            justify-content:space-between;
+            gap:18px;
+            flex-wrap:wrap;
+            padding:24px;
+            border-radius:12px;
+            background:#ffffff;
+            border:1px solid rgba(226,232,240,.9);
+            box-shadow:0 18px 42px rgba(15,23,42,.07);
         }
-
-        .btn-link {
-            padding: 10px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
+        .hero h2{margin:0;font-size:30px}
+        .hero p{margin:8px 0 0;color:#64748b;font-weight:750}
+        .chip-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+        .chip{
+            display:inline-flex;
+            padding:8px 11px;
+            border-radius:999px;
+            color:#075985;
+            background:#ecfeff;
+            border:1px solid #bae6fd;
+            font-size:12px;
+            font-weight:950;
         }
-
-        .home-btn { background: green; }
-        .logout-btn { background: red; }
-
-        .container {
-            padding: 20px;
+        .layout{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) 340px;
+            gap:18px;
+            align-items:start;
+            margin-top:18px;
         }
-
-        .card {
-            background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
+        .panel{
+            background:#ffffff;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            box-shadow:0 16px 40px rgba(15,23,42,.06);
+            overflow:hidden;
         }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
+        .panel-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            padding:16px 18px;
+            border-bottom:1px solid #e2e8f0;
+            background:#f8fafc;
         }
-
-        .btn {
-            padding: 5px 10px;
-            background: #ddd;
-            border-radius: 5px;
-            text-decoration: none;
+        .panel-head h3{margin:0;font-size:18px}
+        .item{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:14px;
+            padding:18px;
+            border-bottom:1px solid #e2e8f0;
         }
-
-        .total {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
+        .item:last-child{border-bottom:none}
+        .item h4{margin:0;color:#0f172a;font-size:17px}
+        .item p{margin:7px 0;color:#64748b;font-weight:750}
+        .price{color:#047857!important;font-size:20px;font-weight:950!important}
+        .qty{
+            display:flex;
+            align-items:center;
+            justify-content:flex-end;
+            gap:10px;
+            min-width:160px;
         }
-
-        .checkout-btn {
-    background: green;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-}
+        .qty a,.action-link{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:36px;
+            padding:8px 11px;
+            border-radius:8px;
+            background:#f1f5f9;
+            color:#0f172a;
+            font-weight:950;
+            border:1px solid #e2e8f0;
+        }
+        .qty-count{min-width:48px;text-align:center;font-weight:950}
+        .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+        .danger{color:#991b1b;background:#fee2e2;border-color:#fecaca}
+        .save{color:#075985;background:#ecfeff;border-color:#bae6fd}
+        .wish{color:#7f1d4e;background:#fce7f3;border-color:#fbcfe8}
+        .summary{position:sticky;top:92px;padding:18px}
+        .summary h3{margin:0 0 14px}
+        .summary-row{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:10px 0;
+            border-bottom:1px solid #e2e8f0;
+            color:#475569;
+            font-weight:800;
+        }
+        .summary-row.total{
+            border-bottom:none;
+            color:#0f172a;
+            font-size:20px;
+            font-weight:950;
+        }
+        .coupon{
+            margin:14px 0;
+            padding:14px;
+            border-radius:10px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+        }
+        .coupon form{display:flex;gap:8px}
+        .coupon input{
+            min-width:0;
+            flex:1;
+            padding:10px;
+            border-radius:8px;
+            border:1px solid #cbd5e1;
+            font-weight:800;
+            text-transform:uppercase;
+        }
+        .coupon button,.checkout{
+            border:none;
+            cursor:pointer;
+            border-radius:8px;
+            padding:10px 13px;
+            color:white;
+            background:#0f766e;
+            font-weight:950;
+        }
+        .coupon small{display:block;margin-top:8px;color:#64748b;font-weight:750;line-height:1.45}
+        .checkout{
+            display:flex;
+            justify-content:center;
+            width:100%;
+            margin-top:14px;
+            min-height:46px;
+            align-items:center;
+            background:linear-gradient(135deg,#16a34a,#22c55e);
+        }
+        .delivery-box{
+            margin-top:14px;
+            padding:13px;
+            border-radius:10px;
+            color:#164e63;
+            background:#ecfeff;
+            border:1px solid #bae6fd;
+            font-weight:850;
+            line-height:1.5;
+        }
+        .flash{
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:10px;
+            background:#fef3c7;
+            color:#713f12;
+            font-weight:850;
+        }
+        .mini-list{padding:8px 18px 18px}
+        .mini-item{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:12px 0;
+            border-bottom:1px solid #e2e8f0;
+        }
+        .mini-item:last-child{border-bottom:none}
+        .mini-item b{display:block}
+        .empty{
+            padding:34px 18px;
+            text-align:center;
+            color:#64748b;
+            font-weight:800;
+        }
+        @media(max-width:900px){
+            .layout{grid-template-columns:1fr}
+            .summary{position:static}
+        }
+        @media(max-width:640px){
+            .header{align-items:flex-start;flex-direction:column}
+            .item{grid-template-columns:1fr}
+            .qty{justify-content:flex-start}
+            .coupon form{flex-direction:column}
+        }
     </style>
 </head>
-
 <body>
+<header class="header">
+    <h1>Cart Management</h1>
+    <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/profile">Profile</a>
+        <a href="/my_orders">Orders</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
 
-<div class="header">
-
-    <div class="left">🛒 Cart</div>
-
-    <div class="right">
-        <a href="/profile" class="btn-link home-btn" style="background:purple;">👤 Profile</a>
-        <a href="/" class="btn-link home-btn">🏠 Home</a>
-        <a href="/logout" class="btn-link logout-btn">🚪 Logout</a>
-    </div>
-
-</div>
-
-<div class="container">
-
-{% if items %}
-
-    {% for item in items %}
-    <div class="card">
-        <div class="row">
-            <div>
-                <h3>{{ item.name }}</h3>
-                <p>₹{{ item.price }}</p>
-                <p>Subtotal: ₹{{ item.subtotal }}</p>
-            </div>
-
-            <div>
-                <a href="/decrease/{{item.id}}" class="btn">➖</a>
-                {{ item.qty }}
-                <a href="/increase/{{item.id}}" class="btn">➕</a>
-            </div>
+<main class="wrap">
+    <section class="hero">
+        <div>
+            <h2>Your Medicine Cart</h2>
+            <p>Update packs, save items for later, move products to wishlist, and apply delivery offers.</p>
         </div>
-    </div>
-    {% endfor %}
+        <div class="chip-row">
+            <span class="chip">Estimated delivery: {{ totals.estimated_delivery }}</span>
+            <span class="chip">Delivery: Rs. {{ totals.delivery_charge }}</span>
+            <span class="chip">{{ items|length }} active item(s)</span>
+        </div>
+    </section>
 
-    <div class="total">
-        <h2>Total: ₹{{ total }}</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-      <a href="/checkout" class="checkout-btn">
-    🧾 Proceed to Checkout
-      </a>
-    </div>
+    <section class="layout">
+        <div>
+            <section class="panel">
+                <div class="panel-head">
+                    <h3>Active Cart</h3>
+                    <span class="chip">Pack-based orders</span>
+                </div>
 
-{% else %}
-    <p style="text-align:center;">🛒 Cart is empty</p>
-{% endif %}
+                {% if items %}
+                    {% for item in items %}
+                        <article class="item">
+                            <div>
+                                <h4>{{ item.name }}</h4>
+                                <p class="price">Rs. {{ item.price }} per pack</p>
+                                <p>{{ item.qty }} pack(s) · Subtotal Rs. {{ item.subtotal }}</p>
+                                <p>Loose single tablets/capsules are not sold separately online.</p>
+                                <div class="actions">
+                                    <a class="action-link danger" href="/cart/remove/{{ item.id }}">Remove Item</a>
+                                    <a class="action-link save" href="/cart/save_for_later/{{ item.id }}">Save For Later</a>
+                                    <a class="action-link wish" href="/cart/move_to_wishlist/{{ item.id }}">Move To Wishlist</a>
+                                </div>
+                            </div>
+                            <div class="qty">
+                                <a href="/decrease/{{ item.id }}">−</a>
+                                <span class="qty-count">{{ item.qty }}</span>
+                                <a href="/increase/{{ item.id }}">+</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty">Your cart is empty. Add medicines from the catalog.</div>
+                {% endif %}
+            </section>
 
-</div>
+            <section class="panel" style="margin-top:18px;">
+                <div class="panel-head">
+                    <h3>Saved For Later</h3>
+                    <span class="chip">{{ saved_items|length }} item(s)</span>
+                </div>
+                <div class="mini-list">
+                    {% for item in saved_items %}
+                        <div class="mini-item">
+                            <div>
+                                <b>{{ item.name }}</b>
+                                <span>Rs. {{ item.price }} · {{ item.quantity }} pack(s)</span>
+                            </div>
+                            <div class="actions">
+                                <a class="action-link save" href="/cart/move_saved_to_cart/{{ item.id }}">Move To Cart</a>
+                                <a class="action-link danger" href="/cart/remove_saved/{{ item.id }}">Remove</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty">No saved items yet.</div>
+                    {% endfor %}
+                </div>
+            </section>
 
+            <section class="panel" style="margin-top:18px;">
+                <div class="panel-head">
+                    <h3>Wishlist</h3>
+                    <span class="chip">{{ wishlist_items|length }} item(s)</span>
+                </div>
+                <div class="mini-list">
+                    {% for item in wishlist_items %}
+                        <div class="mini-item">
+                            <div>
+                                <b>{{ item.name }}</b>
+                                <span>Rs. {{ item.price }} per pack</span>
+                            </div>
+                            <div class="actions">
+                                <a class="action-link wish" href="/cart/wishlist_to_cart/{{ item.id }}">Move To Cart</a>
+                                <a class="action-link danger" href="/cart/remove_wishlist/{{ item.id }}">Remove</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty">No wishlist items yet.</div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <aside class="panel summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row"><span>Subtotal</span><b>Rs. {{ totals.subtotal }}</b></div>
+            <div class="summary-row"><span>Discount</span><b>- Rs. {{ totals.discount }}</b></div>
+            <div class="summary-row"><span>Delivery Charges</span><b>Rs. {{ totals.delivery_charge }}</b></div>
+            <div class="summary-row total"><span>Total</span><b>Rs. {{ totals.payable_total }}</b></div>
+
+            <div class="coupon">
+                <form method="POST" action="/cart/apply_coupon">
+                    <input name="coupon_code" placeholder="Coupon code" value="{{ totals.coupon_code or '' }}">
+                    <button type="submit">Apply</button>
+                </form>
+                {% if totals.coupon_code %}
+                    <small>Applied: {{ totals.coupon_code }} · <a href="/cart/remove_coupon">Remove coupon</a></small>
+                {% endif %}
+                {% if totals.coupon_message %}
+                    <small>{{ totals.coupon_message }}</small>
+                {% endif %}
+                <small>Try: SAVE10, HEALTH50, FREESHIP</small>
+            </div>
+
+            <div class="delivery-box">
+                Estimated Delivery: {{ totals.estimated_delivery }}<br>
+                Free delivery on cart subtotal Rs. 500 and above.
+            </div>
+
+            {% if items %}
+                <a href="/checkout" class="checkout">Proceed to Checkout</a>
+            {% endif %}
+        </aside>
+    </section>
+</main>
 </body>
 </html>

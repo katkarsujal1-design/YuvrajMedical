@@ -1142,6 +1142,28 @@ grid-template-columns:1fr;
     transform:translateX(100%);
 }
 
+.detail-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    min-height:42px;
+    margin:0 0 10px;
+    border-radius:16px;
+    color:#075985;
+    background:#ecfeff;
+    border:1px solid rgba(14,165,233,.18);
+    font-weight:950;
+    text-decoration:none;
+    transition:.25s;
+}
+
+.detail-btn:hover{
+    transform:translateY(-2px);
+    background:#dff8ff;
+    border-color:rgba(14,165,233,.32);
+}
+
 .out-btn{
     width:100%;
     background:#64748b;
@@ -3037,6 +3059,7 @@ body{
 </div>
     <div class="header-actions">
         <a href="{{ url_for('cart') }}" class="cart-btn">🛒 Cart ({{ cart_count }})</a>
+        <a href="{{ url_for('wishlist_page') }}">❤️ Wishlist</a>
         <button class="menu-toggle"
                 type="button"
                 aria-controls="account-panel"
@@ -3435,9 +3458,10 @@ body{
 
             <h3>{{ med["name"] }}</h3>
             <p><strong>₹{{ med["price"] }}</strong></p>
+            <p>Price for 1 pack</p>
 
             {% if med["stock"] > 0 %}
-                <p>Stock: {{ med["stock"] }}</p>
+                <p>Packs in stock: {{ med["stock"] }}</p>
             {% else %}
                 <p style="color:red;font-weight:900;">Out of Stock</p>
             {% endif %}
@@ -3450,14 +3474,17 @@ body{
 
             <p>Expiry: {{ med["expiry_date"] }}</p>
 
+            <a href="{{ url_for('medicine_details', id=med['id']) }}" class="detail-btn">View Details</a>
+            <a href="{{ url_for('add_to_wishlist', id=med['id']) }}" class="detail-btn">Save Medicine</a>
+
             <div class="qty-box">
-                <a href="{{ url_for('decrease', id=med['id']) }}" class="btn">➖</a>
-                <span>{{ cart.get(med['id']|string, 0) }}</span>
-                <a href="{{ url_for('increase', id=med['id']) }}" class="btn">➕</a>
+                <a href="{{ url_for('decrease', id=med['id']) }}" class="btn cart-action" data-medicine-id="{{ med['id'] }}">➖</a>
+                <span class="cart-count" data-medicine-id="{{ med['id'] }}">{{ cart.get(med['id']|string, 0) }}</span>
+                <a href="{{ url_for('increase', id=med['id']) }}" class="btn cart-action" data-medicine-id="{{ med['id'] }}">➕</a>
             </div>
 
             {% if med["stock"] > 0 %}
-                <a href="{{ url_for('add_to_cart', id=med['id']) }}" class="add-btn">Add to Cart</a>
+                <a href="{{ url_for('add_to_cart', id=med['id']) }}" class="add-btn cart-action" data-medicine-id="{{ med['id'] }}">Add to Cart</a>
             {% else %}
                 <button class="out-btn" disabled>Out of Stock</button>
             {% endif %}
@@ -3593,15 +3620,41 @@ medicineSearch.addEventListener("blur", () => {
     setTimeout(closeSuggestions, 150);
 });
 
-window.addEventListener("beforeunload", function () {
-    localStorage.setItem("scrollPosition", window.scrollY);
-});
+document.querySelectorAll(".cart-action").forEach((link) => {
+    link.addEventListener("click", async (event) => {
+        event.preventDefault();
+        link.classList.add("loading");
 
-window.addEventListener("load", function () {
-    const scrollPosition = localStorage.getItem("scrollPosition");
-    if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition));
-    }
+        try {
+            const response = await fetch(link.href, {
+                headers: {"X-Requested-With": "XMLHttpRequest"}
+            });
+            const data = await response.json();
+
+            if (!response.ok || !data.ok) {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
+                alert(data.message || "Could not update cart.");
+                return;
+            }
+
+            document
+                .querySelectorAll(`.cart-count[data-medicine-id="${link.dataset.medicineId}"]`)
+                .forEach((node) => {
+                    node.textContent = data.quantity;
+                });
+
+            document.querySelectorAll(".cart-btn").forEach((cartLink) => {
+                cartLink.textContent = `🛒 Cart (${data.cart_count})`;
+            });
+        } catch (error) {
+            window.location.href = link.href;
+        } finally {
+            link.classList.remove("loading");
+        }
+    });
 });
 </script>
 <footer class="footer">
