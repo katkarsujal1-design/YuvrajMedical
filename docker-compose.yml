@@ -31,8 +31,12 @@ services:
       DB_USER: root
       DB_PASSWORD: Root@123
       DB_NAME: medical_store
+      SMS_OTP_MODE: dev
+      FAST2SMS_API_KEY: YgufeB7vxaEXhf8wBHjNOH2UfqWB1tzvB68ATIevJWC9151Rq4IauFBAckOI
     ports:
       - "8000:5000"
+    volumes:
+      - ./static:/app/static
     networks:
       - medical-network
 

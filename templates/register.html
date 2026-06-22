@@ -1,157 +1,468 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Signup - Yuvraj Medical</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | Yuvraj Medical</title>
 
-    <meta charset="UTF-8"> <!-- ✅ FIXED -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+*{
+    box-sizing:border-box;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Arial;
-        }
+body{
+    margin:0;
+    font-family:"Segoe UI",Arial,sans-serif;
+    min-height:100vh;
+    background:
+        linear-gradient(135deg,rgba(0,88,130,.92),rgba(13,148,136,.88)),
+        url("/static/images/hero-doctor-clean.png");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+}
 
-        body {
-            margin: 0;
-            background: linear-gradient(135deg, #2c7be5, #00c6ff);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.register-wrapper{
+    width:100%;
+    max-width:1050px;
+    display:grid;
+    grid-template-columns:1fr 1.2fr;
+    background:white;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.25);
+}
 
-        .container {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
+.left-panel{
+    background:linear-gradient(135deg,#0f766e,#0284c7);
+    color:white;
+    padding:50px 40px;
+    position:relative;
+}
 
-        .logo {
-            text-align: center;
-            font-size: 26px;
-            font-weight: bold;
-            color: #2c7be5;
-            margin-bottom: 15px;
-        }
+.left-panel img{
+    width:84px;
+    height:84px;
+    object-fit:cover;
+    border-radius:18px;
+    margin-bottom:20px;
+    background:white;
+}
 
-        .tabs {
-            display: flex;
-            margin-bottom: 15px;
-        }
+.left-panel h1{
+    font-size:42px;
+    margin:0 0 15px;
+    line-height:1.12;
+}
 
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            background: #eee;
-            font-weight: bold;
-        }
+.left-panel p{
+    line-height:1.8;
+    color:#e0f2fe;
+}
 
-        .tab.active {
-            background: #2c7be5;
-            color: white;
-        }
+.feature{
+    margin-top:16px;
+    background:rgba(255,255,255,.15);
+    padding:14px 18px;
+    border-radius:12px;
+}
 
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 6px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
+.form-panel{
+    padding:45px;
+}
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #28a745;
-            border: none;
-            color: white;
-            font-size: 16px;
-            border-radius: 6px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
+.form-panel h2{
+    margin:0;
+    font-size:34px;
+    color:#0f172a;
+}
 
-        button:hover {
-            background: #218838;
-        }
-    </style>
+.subtitle{
+    color:#64748b;
+    margin:8px 0 25px;
+}
 
-    <script>
-        function showTab(tab) {
-            document.getElementById("customerForm").style.display = tab === "customer" ? "block" : "none";
-            document.getElementById("staffForm").style.display = tab === "staff" ? "block" : "none";
+.alert{
+    padding:12px 14px;
+    border-radius:12px;
+    margin-bottom:18px;
+    font-weight:700;
+    line-height:1.5;
+}
 
-            document.getElementById("tabCustomer").classList.toggle("active", tab === "customer");
-            document.getElementById("tabStaff").classList.toggle("active", tab === "staff");
-        }
-    </script>
+.alert.success{
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    color:#166534;
+}
+
+.alert.error{
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#991b1b;
+}
+
+.step-box{
+    display:flex;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.step{
+    flex:1;
+    padding:12px;
+    border-radius:12px;
+    background:#e0f2fe;
+    color:#0369a1;
+    text-align:center;
+    font-weight:900;
+}
+
+.step.active{
+    background:linear-gradient(135deg,#0ea5e9,#10b981);
+    color:white;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    font-weight:800;
+    margin-bottom:7px;
+    color:#334155;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:13px 15px;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+    outline:none;
+    font-size:15px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:#0ea5e9;
+    box-shadow:0 0 0 4px rgba(14,165,233,.12);
+}
+
+.full{
+    grid-column:1 / -1;
+}
+
+.phone-control{
+    display:grid;
+    gap:10px;
+}
+
+.phone-entry{
+    display:grid;
+    grid-template-columns:minmax(112px, 130px) minmax(0, 1fr);
+    gap:10px;
+}
+
+.phone-entry select,
+.phone-entry input{
+    min-width:0;
+}
+
+.send-otp{
+    border:none;
+    width:100%;
+    min-height:44px;
+    padding:0 18px;
+    border-radius:12px;
+    background:#0ea5e9;
+    color:white;
+    font-weight:900;
+    cursor:pointer;
+    white-space:normal;
+    line-height:1.25;
+}
+
+.send-otp:disabled{
+    background:#94a3b8;
+    cursor:not-allowed;
+}
+
+.register-btn{
+    width:100%;
+    margin-top:12px;
+    border:none;
+    padding:15px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#0ea5e9,#10b981);
+    color:white;
+    font-size:17px;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 15px 30px rgba(16,185,129,.25);
+}
+
+.staff-fields{
+    display:none;
+}
+
+.staff-fields.show{
+    display:contents;
+}
+
+.login-link{
+    text-align:center;
+    margin-top:18px;
+    color:#64748b;
+}
+
+.login-link a{
+    color:#0284c7;
+    font-weight:900;
+    text-decoration:none;
+}
+
+@media(max-width:850px){
+    .register-wrapper{
+        grid-template-columns:1fr;
+    }
+
+    .left-panel{
+        display:none;
+    }
+
+    .form-panel{
+        padding:30px 22px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .phone-entry{
+        grid-template-columns:1fr;
+    }
+
+    .send-otp{
+        min-height:44px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="register-wrapper">
 
-    <div class="logo">💊 Yuvraj Medical</div>
+    <div class="left-panel">
+        <img src="/static/images/yuvraj_logo.png" alt="Yuvraj Medical Logo">
 
-    <!-- TABS -->
-    <div class="tabs">
-        <div id="tabCustomer" class="tab active" onclick="showTab('customer')">
-            Customer
-        </div>
-        <div id="tabStaff" class="tab" onclick="showTab('staff')">
-            Staff
-        </div>
+        <h1>Join Yuvraj Medical</h1>
+
+        <p>
+            Create your account to order medicines, upload prescriptions,
+            track delivery and manage your healthcare safely.
+        </p>
+
+        <div class="feature">100% Genuine Medicines</div>
+        <div class="feature">Prescription Upload Support</div>
+        <div class="feature">OTP Verification</div>
+        <div class="feature">Fast Local Delivery</div>
     </div>
 
-    <!-- ================= CUSTOMER FORM ================= -->
-    <form id="customerForm" method="POST" action="/register">
+    <div class="form-panel">
 
-        <input name="name" placeholder="👤 Full Name" required>
-        <input name="email" type="email" placeholder="📧 Email" required>
-        <input name="password" type="password" placeholder="🔒 Password" required>
+        <h2>Create Account</h2>
+        <p class="subtitle">Register with OTP verification</p>
 
-        <!-- ✅ FIXED -->
-        <input name="phone" placeholder="📞 Contact Number" required>
+        {% if message %}
+        <div class="alert success">{{ message }}</div>
+        {% endif %}
 
-        <input name="address" placeholder="🏠 Address" required>
+        {% if success %}
+        <div class="alert success">{{ success }}</div>
+        {% endif %}
 
-        <input type="hidden" name="role" value="customer">
+        {% if error %}
+        <div class="alert error">{{ error }}</div>
+        {% endif %}
 
-        <button type="submit">Create Customer Account</button>
-    </form>
+        <div class="step-box">
+            <div class="step active">1. Details</div>
+            <div class="step {% if otp_sent %}active{% endif %}">2. OTP Verify</div>
+        </div>
 
-    <!-- ================= STAFF FORM ================= -->
-    <form id="staffForm" method="POST" action="/register" style="display:none;">
+        <form method="POST" action="/register">
 
-        <input name="name" placeholder="👤 Staff Name" required>
-        <input name="email" type="email" placeholder="📧 Email" required>
-        <input name="password" type="password" placeholder="🔒 Password" required>
+            <div class="form-grid">
 
-        <!-- ✅ FIXED -->
-        <input name="phone" placeholder="📞 Contact Number" required>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="Enter full name" value="{{ form.name if form else '' }}" required>
+                </div>
 
-        <input name="age" placeholder="🎂 Age" required>
-        <input name="gender" placeholder="⚧ Gender" required>
-        <input name="religion" placeholder="🕉 Religion" required>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="Enter email" value="{{ form.email if form else '' }}" required>
+                </div>
 
-        <textarea name="address" placeholder="🏠 Address" required></textarea>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <div class="phone-control">
+                        <div class="phone-entry">
+                            <select name="country_code" aria-label="Country code" required>
+                                <option value="+91" {% if not form or form.country_code == "+91" %}selected{% endif %}>India +91</option>
+                                <option value="+1" {% if form and form.country_code == "+1" %}selected{% endif %}>USA +1</option>
+                                <option value="+44" {% if form and form.country_code == "+44" %}selected{% endif %}>UK +44</option>
+                                <option value="+971" {% if form and form.country_code == "+971" %}selected{% endif %}>UAE +971</option>
+                                <option value="+61" {% if form and form.country_code == "+61" %}selected{% endif %}>Australia +61</option>
+                                <option value="+65" {% if form and form.country_code == "+65" %}selected{% endif %}>Singapore +65</option>
+                                <option value="+977" {% if form and form.country_code == "+977" %}selected{% endif %}>Nepal +977</option>
+                                <option value="+880" {% if form and form.country_code == "+880" %}selected{% endif %}>Bangladesh +880</option>
+                            </select>
+                            <input type="tel" name="phone_number" placeholder="Enter phone number" value="{{ form.phone_number if form else '' }}" required>
+                        </div>
+                        <button type="submit" name="action" value="send_otp" class="send-otp" id="sendOtpBtn" data-countdown="{{ resend_seconds or 0 }}">Send OTP</button>
+                    </div>
+                </div>
 
-        <input name="education" placeholder="🎓 Education" required>
-        <input name="aadhar" placeholder="🆔 Aadhar ID" required>
-        <input name="pan" placeholder="💳 PAN ID" required>
+                <div class="form-group">
+                    <label>Enter OTP</label>
+                    <input type="text" name="otp" inputmode="numeric" maxlength="6" placeholder="6 digit OTP">
+                </div>
 
-        <input type="hidden" name="role" value="staff">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Create password" value="{{ form.password if form else '' }}" required>
+                </div>
 
-        <button type="submit">Create Staff Account</button>
-    </form>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select name="role" id="roleSelect" required>
+                        <option value="customer" {% if not form or form.role == "customer" %}selected{% endif %}>Customer</option>
+                        <option value="staff" {% if form and form.role == "staff" %}selected{% endif %}>Staff</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>Address</label>
+                    <textarea name="address" rows="3" placeholder="Enter delivery address" required>{{ form.address if form else '' }}</textarea>
+                </div>
+
+                <div id="staffFields" class="staff-fields {% if form and form.role == 'staff' %}show{% endif %}">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" name="age" placeholder="Enter age" value="{{ form.age if form else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <input type="text" name="gender" placeholder="Enter gender" value="{{ form.gender if form else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Education</label>
+                        <input type="text" name="education" placeholder="Enter education" value="{{ form.education if form else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Aadhar ID</label>
+                        <input type="text" name="aadhar" placeholder="Enter Aadhar ID" value="{{ form.aadhar if form else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>PAN ID</label>
+                        <input type="text" name="pan" placeholder="Enter PAN ID" value="{{ form.pan if form else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Religion</label>
+                        <input type="text" name="religion" placeholder="Enter religion" value="{{ form.religion if form else '' }}">
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="register-btn" type="submit" name="action" value="create_account">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="login-link">
+            Already have an account?
+            <a href="/login">Login here</a>
+        </div>
+
+    </div>
 
 </div>
+
+<script>
+const roleSelect = document.getElementById("roleSelect");
+const staffFields = document.getElementById("staffFields");
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const otpCountdownKey = "registerOtpCountdownEndsAt";
+
+function toggleStaffFields(){
+    staffFields.classList.toggle("show", roleSelect.value === "staff");
+}
+
+function startOtpCountdown(seconds){
+    const endsAt = Date.now() + seconds * 1000;
+    sessionStorage.setItem(otpCountdownKey, String(endsAt));
+    renderOtpCountdown();
+}
+
+function renderOtpCountdown(){
+    const endsAt = Number(sessionStorage.getItem(otpCountdownKey) || 0);
+    const remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
+
+    if(remaining > 0){
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.textContent = `Resend OTP in ${remaining}s`;
+        setTimeout(renderOtpCountdown, 250);
+        return;
+    }
+
+    sessionStorage.removeItem(otpCountdownKey);
+    sendOtpBtn.disabled = false;
+    sendOtpBtn.textContent = sendOtpBtn.dataset.wasSent === "true" ? "Resend OTP" : "Send OTP";
+}
+
+roleSelect.addEventListener("change", toggleStaffFields);
+sendOtpBtn.addEventListener("click", function(){
+    sendOtpBtn.dataset.wasSent = "true";
+    const endsAt = Date.now() + 10000;
+    sessionStorage.setItem(otpCountdownKey, String(endsAt));
+    sendOtpBtn.textContent = "Resend OTP in 10s";
+    setTimeout(renderOtpCountdown, 50);
+});
+toggleStaffFields();
+
+if(Number(sendOtpBtn.dataset.countdown || 0) > 0){
+    sendOtpBtn.dataset.wasSent = "true";
+    startOtpCountdown(Number(sendOtpBtn.dataset.countdown));
+}else{
+    renderOtpCountdown();
+}
+</script>
 
 </body>
 </html>

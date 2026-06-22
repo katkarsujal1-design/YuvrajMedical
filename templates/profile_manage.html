@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management</title>
+    <style>
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:"Segoe UI",Arial,sans-serif;
+            color:#102033;
+            background:
+                radial-gradient(circle at 14% 10%,rgba(14,165,233,.14),transparent 30%),
+                linear-gradient(135deg,#f8fbff,#eefcf8);
+        }
+        a{text-decoration:none}
+        .topbar{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            padding:16px 5vw;
+            color:white;
+            background:linear-gradient(135deg,#082f49,#0f766e);
+            box-shadow:0 18px 42px rgba(8,47,73,.20);
+        }
+        .topbar h1{margin:0;font-size:22px}
+        .nav{display:flex;gap:10px;flex-wrap:wrap}
+        .nav a{
+            padding:9px 13px;
+            border-radius:999px;
+            color:white;
+            background:rgba(255,255,255,.13);
+            border:1px solid rgba(255,255,255,.18);
+            font-size:13px;
+            font-weight:850;
+        }
+        .wrap{
+            width:min(980px,calc(100% - 32px));
+            margin:30px auto 48px;
+        }
+        .panel{
+            border-radius:28px;
+            background:#ffffff;
+            border:1px solid rgba(14,165,233,.14);
+            box-shadow:0 22px 54px rgba(15,23,42,.08);
+            overflow:hidden;
+        }
+        .panel-head{
+            padding:26px;
+            color:white;
+            background:
+                linear-gradient(135deg,rgba(8,47,73,.98),rgba(15,118,110,.92)),
+                radial-gradient(circle at 90% 12%,rgba(253,230,138,.18),transparent 32%);
+        }
+        .panel-head span{
+            display:inline-flex;
+            margin-bottom:10px;
+            padding:7px 10px;
+            border-radius:999px;
+            background:#fde68a;
+            color:#4c1d3d;
+            font-size:11px;
+            font-weight:950;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+        }
+        .panel-head h2{margin:0;font-size:30px}
+        .panel-head p{max-width:680px;margin:8px 0 0;color:#ccfbf1;font-weight:750;line-height:1.55}
+        .panel-body{padding:26px}
+        .message,.error{
+            margin-bottom:18px;
+            padding:13px 15px;
+            border-radius:16px;
+            font-weight:850;
+        }
+        .message{background:#dcfce7;color:#047857;border:1px solid rgba(4,120,87,.18)}
+        .error{background:#fee2e2;color:#b91c1c;border:1px solid rgba(185,28,28,.18)}
+        form{
+            display:grid;
+            gap:14px;
+        }
+        .grid-2{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px;
+        }
+        label{
+            display:grid;
+            gap:7px;
+            color:#334155;
+            font-size:13px;
+            font-weight:900;
+        }
+        input,textarea,select{
+            width:100%;
+            padding:12px 13px;
+            border-radius:14px;
+            border:1px solid rgba(14,165,233,.20);
+            background:#f8fafc;
+            color:#0f172a;
+            font:inherit;
+            font-weight:650;
+            outline:none;
+        }
+        textarea{min-height:110px;resize:vertical}
+        input:focus,textarea:focus,select:focus{
+            border-color:#0f766e;
+            box-shadow:0 0 0 4px rgba(15,118,110,.12);
+            background:white;
+        }
+        .checks{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#475569;
+            font-weight:850;
+        }
+        .checks input{width:auto}
+        .actions{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+            margin-top:4px;
+        }
+        button,.btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:44px;
+            padding:11px 16px;
+            border-radius:999px;
+            border:none;
+            cursor:pointer;
+            color:white;
+            background:linear-gradient(135deg,#0284c7,#0f766e);
+            font-weight:950;
+            box-shadow:0 12px 24px rgba(14,116,144,.18);
+        }
+        .btn.secondary{
+            color:#075985;
+            background:#ecfeff;
+            border:1px solid rgba(14,165,233,.16);
+            box-shadow:none;
+        }
+        .list{
+            display:grid;
+            gap:12px;
+            margin-top:22px;
+        }
+        .list-card{
+            padding:16px;
+            border-radius:18px;
+            background:#f8fafc;
+            border:1px solid rgba(14,165,233,.12);
+        }
+        .list-card strong{
+            display:block;
+            color:#0f172a;
+            margin-bottom:5px;
+        }
+        .list-card p{
+            margin:0;
+            color:#64748b;
+            line-height:1.5;
+            font-weight:700;
+        }
+        @media(max-width:720px){
+            .topbar{align-items:flex-start;flex-direction:column}
+            .grid-2{grid-template-columns:1fr}
+            .panel-head h2{font-size:25px}
+        }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <h1>Profile Management</h1>
+    <nav class="nav">
+        <a href="/profile">Profile</a>
+        <a href="/">Home</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<main class="wrap">
+    <section class="panel">
+        <div class="panel-head">
+            <span>
+                {% if section == "change_password" %}Security
+                {% elif section == "change_mobile" %}Mobile
+                {% elif section == "verify_mobile" %}Verification
+                {% elif section == "verify_email" %}Verification
+                {% elif section == "addresses" %}Delivery
+                {% elif section == "family" %}Family
+                {% else %}Emergency{% endif %}
+            </span>
+            <h2>
+                {% if section == "change_password" %}Change Password
+                {% elif section == "change_mobile" %}Change Mobile Number
+                {% elif section == "verify_mobile" %}Verify Mobile Number
+                {% elif section == "verify_email" %}Verify Email
+                {% elif section == "addresses" %}Manage Delivery Addresses
+                {% elif section == "family" %}Family Member Profiles
+                {% else %}Emergency Contact{% endif %}
+            </h2>
+            <p>Keep this information updated so orders, prescriptions, and urgent medicine communication stay smooth.</p>
+        </div>
+
+        <div class="panel-body">
+            {% if message %}<div class="message">{{ message }}</div>{% endif %}
+            {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+            {% if section == "change_password" %}
+            <form method="POST">
+                <label>Current Password<input type="password" name="current_password" required></label>
+                <div class="grid-2">
+                    <label>New Password<input type="password" name="new_password" required></label>
+                    <label>Confirm New Password<input type="password" name="confirm_password" required></label>
+                </div>
+                <div class="actions">
+                    <button type="submit">Update Password</button>
+                    <a class="btn secondary" href="/profile">Cancel</a>
+                </div>
+            </form>
+
+            {% elif section == "change_mobile" %}
+            <form method="POST">
+                <label>New Mobile Number<input type="text" name="phone" value="{{ user['phone'] }}" required></label>
+                <div class="actions">
+                    <button type="submit">Save Mobile Number</button>
+                    <a class="btn secondary" href="/profile/manage/verify_mobile">Verify Mobile</a>
+                </div>
+            </form>
+
+            {% elif section == "verify_mobile" %}
+            <form method="POST">
+                <input type="hidden" name="action" value="send_otp">
+                <p class="list-card">Current mobile: <strong>{{ user["phone"] }}</strong></p>
+                <div class="actions"><button type="submit">Send Mobile OTP</button></div>
+            </form>
+            <form method="POST" style="margin-top:18px">
+                <label>Enter OTP<input type="text" name="otp" placeholder="6 digit OTP" required></label>
+                <div class="actions"><button type="submit">Verify Mobile</button></div>
+            </form>
+
+            {% elif section == "verify_email" %}
+            <form method="POST">
+                <input type="hidden" name="action" value="send_otp">
+                <p class="list-card">Current email: <strong>{{ user["email"] }}</strong></p>
+                <div class="actions"><button type="submit">Generate Email OTP</button></div>
+            </form>
+            <form method="POST" style="margin-top:18px">
+                <label>Enter OTP<input type="text" name="otp" placeholder="6 digit OTP" required></label>
+                <div class="actions"><button type="submit">Verify Email</button></div>
+            </form>
+
+            {% elif section == "addresses" %}
+            <form method="POST">
+                <div class="grid-2">
+                    <label>Address Label<input type="text" name="label" placeholder="Home, Work, Parent's house"></label>
+                    <label>Recipient Name<input type="text" name="recipient_name" value="{{ user['name'] }}" required></label>
+                    <label>Phone<input type="text" name="phone" value="{{ user['phone'] }}" required></label>
+                    <label>Default Address
+                        <span class="checks"><input type="checkbox" name="is_default"> Set as default</span>
+                    </label>
+                </div>
+                <label>Delivery Address<textarea name="address" required>{{ user["address"] }}</textarea></label>
+                <div class="actions"><button type="submit">Add Address</button></div>
+            </form>
+
+            <div class="list">
+                {% for address in addresses %}
+                <div class="list-card">
+                    <strong>{{ address.label }}{% if address.is_default %} · Default{% endif %}</strong>
+                    <p>{{ address.recipient_name }} · {{ address.phone }}</p>
+                    <p>{{ address.address }}</p>
+                </div>
+                {% else %}
+                <div class="list-card"><strong>No saved delivery addresses yet.</strong><p>Add one above for faster checkout.</p></div>
+                {% endfor %}
+            </div>
+
+            {% elif section == "family" %}
+            <form method="POST">
+                <div class="grid-2">
+                    <label>Member Name<input type="text" name="name" required></label>
+                    <label>Relation<input type="text" name="relation" placeholder="Father, Mother, Spouse" required></label>
+                    <label>Age<input type="number" name="age" min="0"></label>
+                    <label>Notes<input type="text" name="notes" placeholder="Optional care notes"></label>
+                </div>
+                <div class="actions"><button type="submit">Add Family Member</button></div>
+            </form>
+
+            <div class="list">
+                {% for member in family_members %}
+                <div class="list-card">
+                    <strong>{{ member.name }} · {{ member.relation }}</strong>
+                    <p>{% if member.age %}Age {{ member.age }} · {% endif %}{{ member.notes or "No notes added" }}</p>
+                </div>
+                {% else %}
+                <div class="list-card"><strong>No family member profiles yet.</strong><p>Add family profiles for easier repeat medicine orders.</p></div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            <form method="POST">
+                <div class="grid-2">
+                    <label>Contact Name<input type="text" name="name" value="{{ user.get('emergency_contact_name') or '' }}" required></label>
+                    <label>Contact Phone<input type="text" name="phone" value="{{ user.get('emergency_contact_phone') or '' }}" required></label>
+                    <label>Relation<input type="text" name="relation" value="{{ user.get('emergency_contact_relation') or '' }}"></label>
+                </div>
+                <div class="actions"><button type="submit">Save Emergency Contact</button></div>
+            </form>
+            {% endif %}
+        </div>
+    </section>
+</main>
+</body>
+</html>

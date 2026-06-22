@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, session, g, jsonify
 #import pymysql
+import hashlib
 import re
+import secrets
+import requests
 from rapidfuzz import fuzz
 import pytesseract
 from PIL import Image
@@ -50,6 +53,302 @@ def get_db():
         g.db = db_pool.get_connection()
 
     return g.db
+
+
+LOGIN_MAX_FAILED_ATTEMPTS = 5
+LOGIN_LOCK_MINUTES = 15
+OTP_EXPIRY_MINUTES = 10
+OTP_RESEND_SECONDS = 10
+
+
+def ensure_auth_security_schema():
+    if app.config.get("AUTH_SECURITY_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+
+    user_columns = [
+        "ADD COLUMN email_verified TINYINT(1) DEFAULT 0",
+        "ADD COLUMN two_factor_enabled TINYINT(1) DEFAULT 0",
+        "ADD COLUMN failed_login_attempts INT DEFAULT 0",
+        "ADD COLUMN locked_until DATETIME NULL",
+    ]
+
+    for column_sql in user_columns:
+        try:
+            cursor.execute(f"ALTER TABLE users {column_sql}")
+        except mysql.connector.Error:
+            pass
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS auth_otps (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NULL,
+            email VARCHAR(255) NOT NULL,
+            purpose VARCHAR(40) NOT NULL,
+            otp_hash VARCHAR(255) NOT NULL,
+            expires_at DATETIME NOT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            used_at DATETIME NULL,
+            INDEX idx_auth_otps_email_purpose (email, purpose)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS login_activity (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NULL,
+            email VARCHAR(255) NOT NULL,
+            ip_address VARCHAR(80),
+            user_agent TEXT,
+            status VARCHAR(20) NOT NULL,
+            reason VARCHAR(255),
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_login_activity_user (user_id, created_at)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_devices (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            device_hash VARCHAR(128) NOT NULL,
+            user_agent TEXT,
+            ip_address VARCHAR(80),
+            trusted TINYINT(1) DEFAULT 0,
+            is_active TINYINT(1) DEFAULT 1,
+            first_seen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            last_seen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_user_device (user_id, device_hash),
+            INDEX idx_user_devices_user (user_id, last_seen)
+        )
+    """)
+
+    db.commit()
+    cursor.close()
+    app.config["AUTH_SECURITY_SCHEMA_READY"] = True
+
+
+@app.before_request
+def prepare_auth_security():
+    ensure_auth_security_schema()
+
+
+def client_ip():
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    if forwarded_for:
+        return forwarded_for.split(",")[0].strip()
+    return request.remote_addr or ""
+
+
+def current_device_hash():
+    raw_device = f"{request.headers.get('User-Agent', '')}|{client_ip()}"
+    return hashlib.sha256(raw_device.encode("utf-8")).hexdigest()
+
+
+def hash_otp(otp):
+    return generate_password_hash(str(otp))
+
+
+def create_otp(db, user_id, email, purpose):
+    otp = f"{secrets.randbelow(1000000):06d}"
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO auth_otps (user_id, email, purpose, otp_hash, expires_at)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (
+        user_id,
+        email,
+        purpose,
+        hash_otp(otp),
+        datetime.now() + timedelta(minutes=OTP_EXPIRY_MINUTES)
+    ))
+    db.commit()
+    cursor.close()
+    return otp
+
+
+def normalize_fast2sms_number(phone):
+    digits = re.sub(r"\D", "", str(phone or ""))
+
+    if digits.startswith("91") and len(digits) == 12:
+        digits = digits[2:]
+
+    if len(digits) != 10:
+        return None
+
+    return digits
+
+
+def send_phone_otp(phone, otp):
+    sms_otp_mode = os.environ.get("SMS_OTP_MODE", "live").strip().lower()
+    fast2sms_api_key = os.environ.get("FAST2SMS_API_KEY")
+    fast2sms_url = os.environ.get("FAST2SMS_API_URL", "https://www.fast2sms.com/dev/bulkV2")
+    fast2sms_number = normalize_fast2sms_number(phone)
+
+    if sms_otp_mode != "live":
+        print(f"Development registration OTP for {phone}: {otp}")
+        return True, f"Development OTP: {otp}"
+
+    if not fast2sms_number:
+        print(f"SMS OTP not sent: Fast2SMS requires a valid 10 digit Indian mobile number. Got {phone}.")
+        return False, "Use a valid 10 digit Indian mobile number."
+
+    if fast2sms_api_key and fast2sms_api_key != "your_api_key_here":
+        try:
+            response = requests.post(
+                fast2sms_url,
+                headers={
+                    "authorization": fast2sms_api_key,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Cache-Control": "no-cache",
+                },
+                data={
+                    "route": "otp",
+                    "variables_values": str(otp),
+                    "numbers": fast2sms_number,
+                },
+                timeout=10
+            )
+            response.raise_for_status()
+            result = response.json()
+            if result.get("return") is True:
+                return True, None
+
+            print("Fast2SMS OTP send failed:", result)
+            return False, result.get("message") or "Fast2SMS rejected the OTP request."
+        except (ValueError, requests.RequestException) as error:
+            print("Fast2SMS OTP send failed:", error)
+            return False, "Fast2SMS request failed. Check the API key, wallet balance, and network."
+
+    print(f"Registration OTP for {phone}: {otp}")
+    print("SMS OTP not sent: set FAST2SMS_API_KEY to enable Fast2SMS delivery.")
+    return False, "FAST2SMS_API_KEY is missing or still set to the placeholder."
+
+
+def verify_otp(db, email, purpose, otp):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM auth_otps
+        WHERE email=%s AND purpose=%s AND used_at IS NULL AND expires_at >= %s
+        ORDER BY created_at DESC
+        LIMIT 5
+    """, (email, purpose, datetime.now()))
+    rows = cursor.fetchall()
+
+    for row in rows:
+        if check_password_hash(str(row["otp_hash"]), str(otp)):
+            cursor.execute(
+                "UPDATE auth_otps SET used_at=%s WHERE id=%s",
+                (datetime.now(), row["id"])
+            )
+            db.commit()
+            cursor.close()
+            return True
+
+    cursor.close()
+    return False
+
+
+def log_login_activity(db, user_id, email, status, reason):
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO login_activity (user_id, email, ip_address, user_agent, status, reason)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (
+        user_id,
+        email,
+        client_ip(),
+        request.headers.get("User-Agent", ""),
+        status,
+        reason
+    ))
+    db.commit()
+    cursor.close()
+
+
+def record_device(db, user_id):
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO user_devices (user_id, device_hash, user_agent, ip_address, last_seen)
+        VALUES (%s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            user_agent=VALUES(user_agent),
+            ip_address=VALUES(ip_address),
+            is_active=1,
+            last_seen=VALUES(last_seen)
+    """, (
+        user_id,
+        current_device_hash(),
+        request.headers.get("User-Agent", ""),
+        client_ip(),
+        datetime.now()
+    ))
+    db.commit()
+    cursor.close()
+
+
+def login_redirect_for(user):
+    if user["role"] == "owner":
+        return redirect("/owner_dashboard")
+    if user["role"] == "staff":
+        return redirect("/staff")
+    return redirect("/")
+
+
+def complete_login(db, user):
+    session.clear()
+    session.permanent = True
+    session["user"] = {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user["email"],
+        "role": user["role"]
+    }
+
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE users
+        SET failed_login_attempts=0, locked_until=NULL
+        WHERE id=%s
+    """, (user["id"],))
+    db.commit()
+    cursor.close()
+
+    record_device(db, user["id"])
+    log_login_activity(db, user["id"], user["email"], "success", "Login successful")
+    return login_redirect_for(user)
+
+
+def render_login(**context):
+    db = get_db()
+    activity = []
+    devices = []
+
+    if "user" in session:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT email, ip_address, status, reason, created_at
+            FROM login_activity
+            WHERE user_id=%s
+            ORDER BY created_at DESC
+            LIMIT 8
+        """, (session["user"]["id"],))
+        activity = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT id, user_agent, ip_address, trusted, is_active, last_seen
+            FROM user_devices
+            WHERE user_id=%s
+            ORDER BY last_seen DESC
+            LIMIT 8
+        """, (session["user"]["id"],))
+        devices = cursor.fetchall()
+        cursor.close()
+
+    return render_template("login.html", activity=activity, devices=devices, **context)
 
 # ================= Prescription upload ===============
 PRESCRIPTION_FOLDER = "static/prescriptions"
@@ -174,14 +473,14 @@ def normalize_category(category):
 
 
 BASIC_MEDICINE_TYPES = [
-    {"name": "Tablet", "aliases": ["Tablet"], "image": "images/categories/tablet-category-ai.png"},
-    {"name": "Capsule", "aliases": ["Capsule"], "image": "images/categories/capsule-category-ai.png"},
-    {"name": "Syrup", "aliases": ["Syrup"], "image": "images/categories/syrup-category-ai.png"},
-    {"name": "Injection", "aliases": ["Injection"], "image": "images/categories/injection-category-ai.png"},
-    {"name": "Drops", "aliases": ["Drops", "Eye Drops"], "image": "images/categories/drops-category-ai.png"},
-    {"name": "Cream", "aliases": ["Cream"], "image": "images/categories/cream-category-ai.png"},
-    {"name": "Gel", "aliases": ["Gel"], "image": "images/categories/gel-category-ai.png"},
-    {"name": "Ointment", "aliases": ["Ointment"], "image": "images/categories/ointment-category-ai.png"},
+    {"name": "Tablet", "aliases": ["Tablet"], "image": "images/categories/tablet.jpeg"},
+    {"name": "Capsule", "aliases": ["Capsule"], "image": "images/categories/capsule.jpeg"},
+    {"name": "Syrup", "aliases": ["Syrup"], "image": "images/categories/syrup.jpeg"},
+    {"name": "Injection", "aliases": ["Injection"], "image": "images/categories/injection.jpeg"},
+    {"name": "Drops", "aliases": ["Drops", "Eye Drops"], "image": "images/categories/drops.jpeg"},
+    {"name": "Cream", "aliases": ["Cream"], "image": "images/categories/cream.jpeg"},
+    {"name": "Gel", "aliases": ["Gel"], "image": "images/categories/gel.jpeg"},
+    {"name": "Ointment", "aliases": ["Ointment"], "image": "images/categories/ointment.jpeg"},
 ]
 # ================= HOME (SEARCH + FILTER) =================
 @app.route("/")
@@ -270,6 +569,9 @@ def home():
             "count": sum(category_counts.get(alias, 0) for alias in medicine_type["aliases"])
         })
     cursor.close()
+
+    dashboard_context = build_customer_dashboard_context(db, user_id)
+
     return render_template(
         "index.html",
         medicines=medicines,
@@ -279,7 +581,8 @@ def home():
         cart_count=cart_count,
         search=search,
         sort=sort,
-        category=category
+        category=category,
+        **dashboard_context
      )
 # ========================== Department ====================
 @app.route("/department/<disease_name>")
@@ -414,10 +717,9 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form["email"]
+        email = request.form["email"].strip().lower()
         password = request.form["password"]
         db = get_db()
-
         cursor = db.cursor(dictionary=True)
 
         cursor.execute(
@@ -428,6 +730,14 @@ def login():
         user = cursor.fetchone()
 
         if user:
+            locked_until = user.get("locked_until")
+
+            if locked_until and locked_until > datetime.now():
+                cursor.close()
+                log_login_activity(db, user["id"], email, "locked", "Account is temporarily locked")
+                return render_login(
+                    error=f"Account locked. Try again after {locked_until.strftime('%d %b %Y, %I:%M %p')}."
+                )
 
             pass_login = False
 
@@ -441,91 +751,279 @@ def login():
                     pass_login = True
 
             # ================= OLD PASSWORD =================
-            elif user["password"] == password:
+            elif user.get("password") == password:
 
                 pass_login = True
 
                 # convert old password to hashed
                 new_hash = generate_password_hash(password)
 
-                cursor = db.cursor(dictionary=True)
                 cursor.execute(
                     "UPDATE users SET hashed_password=%s WHERE id=%s",
                     (new_hash, user["id"])
                 )
 
                 db.commit()
-                cursor.close()
 
             # ================= LOGIN SUCCESS =================
             if pass_login:
+                if user.get("two_factor_enabled"):
+                    otp = create_otp(db, user["id"], user["email"], "login_2fa")
+                    session.clear()
+                    session["pending_2fa_user_id"] = user["id"]
+                    session["pending_2fa_email"] = user["email"]
+                    cursor.close()
+                    log_login_activity(db, user["id"], email, "pending_2fa", "Password accepted, OTP required")
+                    return render_login(
+                        show_2fa=True,
+                        message=f"2FA code generated for this login: {otp}"
+                    )
 
-                session.clear()
+                cursor.close()
+                return complete_login(db, user)
 
-                session.permanent = True
+            failed_attempts = int(user.get("failed_login_attempts") or 0) + 1
+            locked_until = None
+            reason = "Invalid password"
 
-                session["user"] = {
-                    "id": user["id"],
-                    "name": user["name"],
-                    "email": user["email"],
-                    "role": user["role"]
-                }
+            if failed_attempts >= LOGIN_MAX_FAILED_ATTEMPTS:
+                locked_until = datetime.now() + timedelta(minutes=LOGIN_LOCK_MINUTES)
+                reason = f"Locked after {LOGIN_MAX_FAILED_ATTEMPTS} failed attempts"
 
-                # role redirect
-                if user["role"] == "owner":
-                    return redirect("/owner_dashboard")
+            cursor.execute("""
+                UPDATE users
+                SET failed_login_attempts=%s, locked_until=%s
+                WHERE id=%s
+            """, (failed_attempts, locked_until, user["id"]))
+            db.commit()
+            cursor.close()
+            log_login_activity(db, user["id"], email, "failed", reason)
 
-                elif user["role"] == "staff":
-                    return redirect("/staff")
+            if locked_until:
+                return render_login(
+                    error=f"Too many failed attempts. Account locked until {locked_until.strftime('%d %b %Y, %I:%M %p')}."
+                )
+        else:
+            cursor.close()
+            log_login_activity(db, None, email, "failed", "Unknown email")
 
-                else:
-                    return redirect("/")
+        return render_login(error="Invalid email or password.")
 
-        return "❌ Invalid credentials"
+    return render_login()
 
-    return render_template("login.html")
+
+@app.route("/two_factor", methods=["POST"])
+def two_factor():
+    if "pending_2fa_user_id" not in session:
+        return redirect("/login")
+
+    email = session["pending_2fa_email"]
+    otp = request.form.get("otp", "")
+    db = get_db()
+
+    if not verify_otp(db, email, "login_2fa", otp):
+        log_login_activity(db, session["pending_2fa_user_id"], email, "failed", "Invalid 2FA OTP")
+        return render_login(show_2fa=True, error="Invalid or expired 2FA code.")
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id=%s", (session["pending_2fa_user_id"],))
+    user = cursor.fetchone()
+    cursor.close()
+
+    if not user:
+        session.clear()
+        return render_login(error="Account not found.")
+
+    return complete_login(db, user)
+
+
+@app.route("/two_factor/setup", methods=["POST"])
+def two_factor_setup():
+    if "user" not in session:
+        return redirect("/login")
+
+    action = request.form.get("action")
+    db = get_db()
+
+    if action == "disable":
+        cursor = db.cursor()
+        cursor.execute(
+            "UPDATE users SET two_factor_enabled=0 WHERE id=%s",
+            (session["user"]["id"],)
+        )
+        db.commit()
+        cursor.close()
+        return render_login(message="Two-factor authentication disabled.")
+
+    otp = create_otp(db, session["user"]["id"], session["user"]["email"], "2fa_setup")
+    return render_login(message=f"Enter this setup code to enable 2FA: {otp}", show_2fa_setup=True)
+
+
+@app.route("/two_factor/enable", methods=["POST"])
+def two_factor_enable():
+    if "user" not in session:
+        return redirect("/login")
+
+    otp = request.form.get("otp", "")
+    db = get_db()
+
+    if not verify_otp(db, session["user"]["email"], "2fa_setup", otp):
+        return render_login(error="Invalid or expired setup code.", show_2fa_setup=True)
+
+    cursor = db.cursor()
+    cursor.execute(
+        "UPDATE users SET two_factor_enabled=1 WHERE id=%s",
+        (session["user"]["id"],)
+    )
+    db.commit()
+    cursor.close()
+    return render_login(message="Two-factor authentication enabled.")
+
+
+@app.route("/login_activity")
+def login_activity():
+    if "user" not in session:
+        return redirect("/login")
+    return render_login(show_activity=True)
+
+
+@app.route("/devices")
+def devices():
+    if "user" not in session:
+        return redirect("/login")
+    return render_login(show_devices=True)
+
+
+@app.route("/devices/<int:device_id>/remove", methods=["POST"])
+def remove_device(device_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE user_devices
+        SET is_active=0
+        WHERE id=%s AND user_id=%s
+    """, (device_id, session["user"]["id"]))
+    db.commit()
+    cursor.close()
+    return redirect("/devices")
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        print(request.form)
-        role = request.form.get("role")
+        country_code = request.form.get("country_code", "+91").strip()
+        phone_number = request.form.get("phone_number", request.form.get("phone", "")).strip()
+        full_phone = f"{country_code}{phone_number}"
+        form_data = {
+            "name": request.form.get("name", "").strip(),
+            "email": request.form.get("email", "").strip().lower(),
+            "country_code": country_code,
+            "phone_number": phone_number,
+            "phone": full_phone,
+            "password": request.form.get("password", ""),
+            "role": request.form.get("role", "customer"),
+            "address": request.form.get("address", "").strip(),
+            "age": request.form.get("age", "").strip(),
+            "gender": request.form.get("gender", "").strip(),
+            "religion": request.form.get("religion", "").strip(),
+            "education": request.form.get("education", "").strip(),
+            "aadhar": request.form.get("aadhar", "").strip(),
+            "pan": request.form.get("pan", "").strip(),
+        }
+        action = request.form.get("action", "create_account")
         db = get_db()
 
         try:
-            # 🔐 Generate hashed password
-            hashed_password = generate_password_hash(request.form["password"])
+            required_fields = ["name", "email", "phone", "password", "address"]
+            if any(not form_data[field] for field in required_fields):
+                return render_template(
+                    "register.html",
+                    error="Please fill all required fields.",
+                    form=form_data
+                )
+
+            cursor = db.cursor(dictionary=True)
+            cursor.execute(
+                "SELECT id FROM users WHERE email=%s OR phone=%s LIMIT 1",
+                (form_data["email"], form_data["phone"])
+            )
+            existing_user = cursor.fetchone()
+            cursor.close()
+
+            if existing_user:
+                return render_template(
+                    "register.html",
+                    error="An account with this email or phone already exists.",
+                    form=form_data
+                )
+
+            if action == "send_otp":
+                otp = create_otp(db, None, form_data["email"], "register_account")
+                sms_sent, sms_message = send_phone_otp(form_data["phone"], otp)
+                message = sms_message or "OTP sent to your phone number. Please enter it below."
+                if not sms_sent:
+                    message = f"OTP could not be sent. {sms_message}"
+                return render_template(
+                    "register.html",
+                    message=message if sms_sent else None,
+                    error=None if sms_sent else message,
+                    otp_sent=True,
+                    resend_seconds=OTP_RESEND_SECONDS,
+                    form=form_data
+                )
+
+            otp = request.form.get("otp", "").strip()
+            if not otp:
+                return render_template(
+                    "register.html",
+                    error="Please send and enter the OTP before creating the account.",
+                    form=form_data
+                )
+
+            if not verify_otp(db, form_data["email"], "register_account", otp):
+                return render_template(
+                    "register.html",
+                    error="Invalid or expired OTP. Please send a new OTP.",
+                    otp_sent=True,
+                    form=form_data
+                )
+
+            hashed_password = generate_password_hash(form_data["password"])
+            role = "staff" if form_data["role"] == "staff" else "customer"
 
             # -------- CUSTOMER --------
             if role == "customer":
                 cursor = db.cursor(dictionary=True)
                 cursor.execute("""
-                    INSERT INTO users (name, email, phone, address, role, hashed_password)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO users (name, email, phone, address, role, hashed_password, email_verified)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (
-                    request.form["name"],
-                    request.form["email"],
-                    request.form["phone"],
-                    request.form["address"],
+                    form_data["name"],
+                    form_data["email"],
+                    form_data["phone"],
+                    form_data["address"],
                     "customer",
-                    hashed_password
+                    hashed_password,
+                    1
                 ))
 
             # -------- STAFF --------
             elif role == "staff":
                 cursor = db.cursor(dictionary=True)
                 cursor.execute("""
-                    INSERT INTO users (name, email, phone, address, role, hashed_password)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    INSERT INTO users (name, email, phone, address, role, hashed_password, email_verified)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """, (
-                    request.form["name"],
-                    request.form["email"],
-                    request.form["phone"],
-                    request.form["address"],
+                    form_data["name"],
+                    form_data["email"],
+                    form_data["phone"],
+                    form_data["address"],
                     "staff",
-                    hashed_password
+                    hashed_password,
+                    1
                 ))
-                cursor = db.cursor(dictionary=True)
                 cursor.execute("""
                     INSERT INTO staff (
                         name, email, contact, age, gender,
@@ -533,28 +1031,33 @@ def register():
                     )
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (
-                    request.form["name"],
-                    request.form["email"],
-                    request.form["phone"],
-                    request.form["age"],
-                    request.form["gender"],
-                    request.form["religion"],
-                    request.form["address"],
-                    request.form["education"],
-                    request.form["aadhar"],
-                    request.form["pan"]
+                    form_data["name"],
+                    form_data["email"],
+                    form_data["phone"],
+                    form_data["age"] or None,
+                    form_data["gender"],
+                    form_data["religion"],
+                    form_data["address"],
+                    form_data["education"],
+                    form_data["aadhar"],
+                    form_data["pan"]
                 ))
 
-            # ✅ Commit AFTER all inserts
             db.commit()
             cursor.close()
 
-            # ✅ Redirect AFTER commit
-            return redirect("/login")
+            return render_template(
+                "register.html",
+                success="Account created successfully. You can login now."
+            )
 
         except Exception as e:
             db.rollback()
-            return f"Error: {e}"
+            return render_template(
+                "register.html",
+                error=f"Registration failed: {e}",
+                form=form_data
+            )
 
     return render_template("register.html")
 # ================= LOGOUT =================
@@ -565,21 +1068,330 @@ def logout():
 
 
 # ================= PROFILE =================
+def ensure_profile_management_schema():
+    if app.config.get("PROFILE_MANAGEMENT_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+
+    user_columns = [
+        "ADD COLUMN profile_image VARCHAR(255) NULL",
+        "ADD COLUMN mobile_verified TINYINT(1) DEFAULT 0",
+        "ADD COLUMN emergency_contact_name VARCHAR(255) NULL",
+        "ADD COLUMN emergency_contact_phone VARCHAR(40) NULL",
+        "ADD COLUMN emergency_contact_relation VARCHAR(80) NULL",
+    ]
+
+    for column_sql in user_columns:
+        try:
+            cursor.execute(f"ALTER TABLE users {column_sql}")
+        except mysql.connector.Error:
+            pass
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS delivery_addresses (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            label VARCHAR(80) NOT NULL,
+            recipient_name VARCHAR(255) NOT NULL,
+            phone VARCHAR(40) NOT NULL,
+            address TEXT NOT NULL,
+            is_default TINYINT(1) DEFAULT 0,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_delivery_addresses_user (user_id, is_default)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS family_members (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            relation VARCHAR(80) NOT NULL,
+            age INT NULL,
+            notes TEXT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_family_members_user (user_id)
+        )
+    """)
+
+    db.commit()
+    cursor.close()
+    app.config["PROFILE_MANAGEMENT_SCHEMA_READY"] = True
+
+
+def get_profile_context(user_id):
+    ensure_profile_management_schema()
+    db = get_db()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM delivery_addresses
+        WHERE user_id=%s
+        ORDER BY is_default DESC, id DESC
+    """, (user_id,))
+    addresses = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM family_members
+        WHERE user_id=%s
+        ORDER BY id DESC
+    """, (user_id,))
+    family_members = cursor.fetchall()
+    cursor.close()
+
+    return user, addresses, family_members
+
+
 @app.route("/profile")
 def profile():
     if "user" not in session:
         return redirect("/login")
 
+    user, addresses, family_members = get_profile_context(session["user"]["id"])
+    return render_template(
+        "profile.html",
+        user=user,
+        addresses=addresses,
+        family_members=family_members
+    )
+
+
+@app.route("/profile/photo", methods=["POST"])
+def update_profile_photo():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_profile_management_schema()
+    photo = request.files.get("profile_photo")
+
+    if not photo or not photo.filename:
+        return redirect("/profile")
+
+    allowed_extensions = {"jpg", "jpeg", "png", "webp"}
+    extension = photo.filename.rsplit(".", 1)[-1].lower() if "." in photo.filename else ""
+
+    if extension not in allowed_extensions:
+        return redirect("/profile")
+
+    host_static_root = os.environ.get("HOST_STATIC_ROOT")
+    if not host_static_root and os.path.isdir("/home/admin/YuvrajMedical/static"):
+        host_static_root = "/home/admin/YuvrajMedical/static"
+
+    static_root = host_static_root or os.path.join(app.root_path, "static")
+    upload_dir = os.path.join(static_root, "profile_photos")
+    os.makedirs(upload_dir, exist_ok=True)
+
+    filename = secure_filename(f"user_{session['user']['id']}_{secrets.token_hex(6)}.{extension}")
+    photo.save(os.path.join(upload_dir, filename))
+    image_path = f"profile_photos/{filename}"
+
     db = get_db()
-
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT * FROM users WHERE id=%s
-    """, (session["user"]["id"],))
-    user=cursor.fetchone()
+    cursor = db.cursor()
+    cursor.execute(
+        "UPDATE users SET profile_image=%s WHERE id=%s",
+        (image_path, session["user"]["id"])
+    )
+    db.commit()
     cursor.close()
-    return render_template("profile.html", user=user)
+
+    return redirect("/profile")
+
+
+@app.route("/profile/manage/<section>", methods=["GET", "POST"])
+def profile_manage(section):
+    if "user" not in session:
+        return redirect("/login")
+
+    valid_sections = {
+        "change_password",
+        "change_mobile",
+        "verify_mobile",
+        "verify_email",
+        "addresses",
+        "family",
+        "emergency",
+    }
+    if section not in valid_sections:
+        return redirect("/profile")
+
+    user_id = session["user"]["id"]
+    db = get_db()
+    message = None
+    error = None
+
+    if request.method == "POST":
+        try:
+            if section == "change_password":
+                current_password = request.form.get("current_password", "")
+                new_password = request.form.get("new_password", "")
+                confirm_password = request.form.get("confirm_password", "")
+
+                cursor = db.cursor(dictionary=True)
+                cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+                user = cursor.fetchone()
+
+                password_ok = False
+                if user.get("hashed_password"):
+                    password_ok = check_password_hash(user["hashed_password"], current_password)
+                elif user.get("password") == current_password:
+                    password_ok = True
+
+                if not password_ok:
+                    error = "Current password is incorrect."
+                elif len(new_password) < 6:
+                    error = "New password must be at least 6 characters."
+                elif new_password != confirm_password:
+                    error = "New password and confirmation do not match."
+                else:
+                    cursor.execute("""
+                        UPDATE users
+                        SET hashed_password=%s
+                        WHERE id=%s
+                    """, (generate_password_hash(new_password), user_id))
+                    db.commit()
+                    message = "Password changed successfully."
+                cursor.close()
+
+            elif section == "change_mobile":
+                phone = request.form.get("phone", "").strip()
+                if not normalize_fast2sms_number(phone):
+                    error = "Enter a valid 10 digit mobile number."
+                else:
+                    cursor = db.cursor()
+                    cursor.execute("""
+                        UPDATE users
+                        SET phone=%s, mobile_verified=0
+                        WHERE id=%s
+                    """, (phone, user_id))
+                    db.commit()
+                    cursor.close()
+                    message = "Mobile number updated. Please verify it."
+
+            elif section == "verify_mobile":
+                action = request.form.get("action")
+                user, _, _ = get_profile_context(user_id)
+                if action == "send_otp":
+                    otp = create_otp(db, user_id, user["email"], "verify_mobile")
+                    sms_sent, sms_message = send_phone_otp(user["phone"], otp)
+                    message = sms_message or "OTP sent to your mobile number."
+                    if not sms_sent:
+                        error = sms_message or "Could not send OTP."
+                        message = None
+                else:
+                    otp = request.form.get("otp", "").strip()
+                    if verify_otp(db, user["email"], "verify_mobile", otp):
+                        cursor = db.cursor()
+                        cursor.execute("UPDATE users SET mobile_verified=1 WHERE id=%s", (user_id,))
+                        db.commit()
+                        cursor.close()
+                        message = "Mobile number verified successfully."
+                    else:
+                        error = "Invalid or expired mobile OTP."
+
+            elif section == "verify_email":
+                action = request.form.get("action")
+                user, _, _ = get_profile_context(user_id)
+                if action == "send_otp":
+                    otp = create_otp(db, user_id, user["email"], "verify_email")
+                    message = f"Email verification OTP generated: {otp}"
+                else:
+                    otp = request.form.get("otp", "").strip()
+                    if verify_otp(db, user["email"], "verify_email", otp):
+                        cursor = db.cursor()
+                        cursor.execute("UPDATE users SET email_verified=1 WHERE id=%s", (user_id,))
+                        db.commit()
+                        cursor.close()
+                        message = "Email verified successfully."
+                    else:
+                        error = "Invalid or expired email OTP."
+
+            elif section == "addresses":
+                label = request.form.get("label", "").strip() or "Home"
+                recipient_name = request.form.get("recipient_name", "").strip()
+                phone = request.form.get("phone", "").strip()
+                address = request.form.get("address", "").strip()
+                is_default = 1 if request.form.get("is_default") == "on" else 0
+
+                if not recipient_name or not phone or not address:
+                    error = "Please fill recipient name, phone, and address."
+                else:
+                    cursor = db.cursor()
+                    if is_default:
+                        cursor.execute(
+                            "UPDATE delivery_addresses SET is_default=0 WHERE user_id=%s",
+                            (user_id,)
+                        )
+                    cursor.execute("""
+                        INSERT INTO delivery_addresses
+                            (user_id, label, recipient_name, phone, address, is_default)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """, (user_id, label, recipient_name, phone, address, is_default))
+                    db.commit()
+                    cursor.close()
+                    message = "Delivery address added."
+
+            elif section == "family":
+                name = request.form.get("name", "").strip()
+                relation = request.form.get("relation", "").strip()
+                age = request.form.get("age", "").strip()
+                notes = request.form.get("notes", "").strip()
+
+                if not name or not relation:
+                    error = "Please fill family member name and relation."
+                else:
+                    cursor = db.cursor()
+                    cursor.execute("""
+                        INSERT INTO family_members (user_id, name, relation, age, notes)
+                        VALUES (%s, %s, %s, %s, %s)
+                    """, (user_id, name, relation, int(age) if age else None, notes or None))
+                    db.commit()
+                    cursor.close()
+                    message = "Family member profile added."
+
+            elif section == "emergency":
+                name = request.form.get("name", "").strip()
+                phone = request.form.get("phone", "").strip()
+                relation = request.form.get("relation", "").strip()
+
+                if not name or not phone:
+                    error = "Please fill emergency contact name and phone."
+                else:
+                    cursor = db.cursor()
+                    cursor.execute("""
+                        UPDATE users
+                        SET emergency_contact_name=%s,
+                            emergency_contact_phone=%s,
+                            emergency_contact_relation=%s
+                        WHERE id=%s
+                    """, (name, phone, relation, user_id))
+                    db.commit()
+                    cursor.close()
+                    message = "Emergency contact updated."
+        except Exception as e:
+            db.rollback()
+            error = f"Could not save changes: {e}"
+
+    user, addresses, family_members = get_profile_context(user_id)
+    return render_template(
+        "profile_manage.html",
+        section=section,
+        user=user,
+        addresses=addresses,
+        family_members=family_members,
+        message=message,
+        error=error
+    )
 
 # ================= Edit Profile =========
 @app.route("/edit_profile", methods=["GET", "POST"])
@@ -1025,6 +1837,129 @@ def my_orders():
     return render_template("my_orders.html", orders=orders)
 
 
+def build_customer_dashboard_context(db, user_id):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT * FROM orders
+        WHERE user_id=%s
+        ORDER BY id DESC
+        LIMIT 6
+    """, (user_id,))
+    orders_raw = cursor.fetchall()
+    cursor.close()
+
+    recent_orders = []
+    for o in orders_raw:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT medicines.name, order_items.quantity, order_items.price
+            FROM order_items
+            JOIN medicines ON medicines.id = order_items.medicine_id
+            WHERE order_items.order_id=%s
+        """, (o["id"],))
+        items = cursor.fetchall()
+        cursor.close()
+        recent_orders.append({
+            "order_id": o["id"],
+            "total": o["total"],
+            "date": o["date"],
+            "status": o["status"],
+            "items": items,
+            "prescription": o["prescription"]
+        })
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT COUNT(*) AS total_orders, COALESCE(SUM(total), 0) AS total_spent
+        FROM orders
+        WHERE user_id=%s
+    """, (user_id,))
+    order_summary = cursor.fetchone() or {"total_orders": 0, "total_spent": 0}
+    cursor.close()
+
+    prescription_summary = {
+        "total": 0,
+        "pending": 0,
+        "approved": 0,
+        "latest_status": "No prescriptions yet"
+    }
+    recent_prescriptions = []
+    try:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT *
+            FROM prescription_requests
+            WHERE user_id=%s
+            ORDER BY created_at DESC
+            LIMIT 4
+        """, (user_id,))
+        recent_prescriptions = cursor.fetchall()
+        cursor.close()
+
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN status = 'Pending Review' THEN 1 ELSE 0 END) AS pending,
+                SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) AS approved
+            FROM prescription_requests
+            WHERE user_id=%s
+        """, (user_id,))
+        prescription_counts = cursor.fetchone() or {}
+        cursor.close()
+
+        prescription_summary = {
+            "total": prescription_counts.get("total") or 0,
+            "pending": prescription_counts.get("pending") or 0,
+            "approved": prescription_counts.get("approved") or 0,
+            "latest_status": recent_prescriptions[0]["status"] if recent_prescriptions else "No prescriptions yet"
+        }
+    except Exception:
+        recent_prescriptions = []
+
+    notifications = []
+    if recent_orders:
+        latest_order = recent_orders[0]
+        notifications.append(f"Order #{latest_order['order_id']} is {latest_order['status']}.")
+    if recent_prescriptions:
+        latest_prescription = recent_prescriptions[0]
+        notifications.append(f"Prescription request #{latest_prescription['id']} is {latest_prescription['status']}.")
+    if not notifications:
+        notifications.append("Upload a prescription or place an order to start tracking updates here.")
+
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT id, name, price, image
+            FROM medicines
+            WHERE stock > 0
+            ORDER BY stock DESC, id DESC
+            LIMIT 6
+        """)
+        featured_medicines = cursor.fetchall()
+    except Exception:
+        featured_medicines = []
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT id, name, price, image FROM medicines ORDER BY RAND() LIMIT 8")
+        recommendations = cursor.fetchall()
+    except Exception:
+        recommendations = []
+    cursor.close()
+
+    return {
+        "order_summary": order_summary,
+        "prescription_summary": prescription_summary,
+        "recent_prescriptions": recent_prescriptions,
+        "recent_orders": recent_orders,
+        "featured_medicines": featured_medicines,
+        "notifications": notifications,
+        "recommendations": recommendations
+    }
+
+
 # ================= CUSTOMER DASHBOARD (Premium) =================
 @app.route("/customer_dashboard")
 def customer_dashboard():
@@ -1066,6 +2001,79 @@ def customer_dashboard():
             "prescription": o["prescription"]
         })
 
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT COUNT(*) AS total_orders, COALESCE(SUM(total), 0) AS total_spent
+        FROM orders
+        WHERE user_id=%s
+    """, (user_id,))
+    order_summary = cursor.fetchone() or {"total_orders": 0, "total_spent": 0}
+    cursor.close()
+
+    prescription_summary = {
+        "total": 0,
+        "pending": 0,
+        "approved": 0,
+        "latest_status": "No prescriptions yet"
+    }
+    recent_prescriptions = []
+    try:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT *
+            FROM prescription_requests
+            WHERE user_id=%s
+            ORDER BY created_at DESC
+            LIMIT 4
+        """, (user_id,))
+        recent_prescriptions = cursor.fetchall()
+        cursor.close()
+
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN status = 'Pending Review' THEN 1 ELSE 0 END) AS pending,
+                SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) AS approved
+            FROM prescription_requests
+            WHERE user_id=%s
+        """, (user_id,))
+        prescription_counts = cursor.fetchone() or {}
+        cursor.close()
+
+        prescription_summary = {
+            "total": prescription_counts.get("total") or 0,
+            "pending": prescription_counts.get("pending") or 0,
+            "approved": prescription_counts.get("approved") or 0,
+            "latest_status": recent_prescriptions[0]["status"] if recent_prescriptions else "No prescriptions yet"
+        }
+    except Exception:
+        recent_prescriptions = []
+
+    notifications = []
+    if recent_orders:
+        latest_order = recent_orders[0]
+        notifications.append(f"Order #{latest_order['order_id']} is {latest_order['status']}.")
+    if recent_prescriptions:
+        latest_prescription = recent_prescriptions[0]
+        notifications.append(f"Prescription request #{latest_prescription['id']} is {latest_prescription['status']}.")
+    if not notifications:
+        notifications.append("Upload a prescription or place an order to start tracking updates here.")
+
+    cursor = db.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT id, name, price, image
+            FROM medicines
+            WHERE stock > 0
+            ORDER BY stock DESC, id DESC
+            LIMIT 6
+        """)
+        featured_medicines = cursor.fetchall()
+    except Exception:
+        featured_medicines = []
+    cursor.close()
+
     # simple recommendations: random medicines
     cursor = db.cursor(dictionary=True)
     try:
@@ -1078,7 +2086,12 @@ def customer_dashboard():
     return render_template(
         "customer_dashboard.html",
         user=session["user"],
+        order_summary=order_summary,
+        prescription_summary=prescription_summary,
+        recent_prescriptions=recent_prescriptions,
         recent_orders=recent_orders,
+        featured_medicines=featured_medicines,
+        notifications=notifications,
         recommendations=recommendations
     )
 

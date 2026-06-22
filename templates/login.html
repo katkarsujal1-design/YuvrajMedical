@@ -20,11 +20,12 @@
 body{
     min-height:100vh;
     background:linear-gradient(135deg,#dff6ff,#eef7ff,#ffffff);
-    overflow:hidden;
+    overflow:auto;
     display:flex;
     justify-content:center;
     align-items:center;
     position:relative;
+    padding:28px 0;
 }
 
 /* BACKGROUND */
@@ -203,7 +204,7 @@ body::after{
 
 .login-box{
     width:100%;
-    max-width:400px;
+    max-width:430px;
 }
 
 .login-title{
@@ -221,7 +222,7 @@ body::after{
 /* INPUTS */
 
 .input-group{
-    margin-bottom:22px;
+    margin-bottom:18px;
 }
 
 .input-group label{
@@ -277,7 +278,7 @@ body::after{
 /* LINKS */
 
 .links{
-    margin-top:28px;
+    margin-top:22px;
     text-align:center;
     color:#475569;
     font-size:14px;
@@ -296,6 +297,118 @@ body::after{
     font-size:13px;
 }
 
+.alert{
+    padding:12px 14px;
+    border-radius:14px;
+    margin-bottom:18px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.alert.success{
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    color:#166534;
+}
+
+.alert.error{
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#991b1b;
+}
+
+.security-panel{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid #dbeafe;
+}
+
+.security-title{
+    color:#07111f;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.security-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.security-link,
+.mini-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:10px 12px;
+    border:1px solid #dbeafe;
+    border-radius:12px;
+    background:white;
+    color:#0284c7;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.security-form{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+}
+
+.security-form input{
+    width:100%;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #dbeafe;
+    outline:none;
+}
+
+.inline-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.data-panel{
+    margin-top:18px;
+    max-height:190px;
+    overflow:auto;
+    border:1px solid #dbeafe;
+    border-radius:12px;
+    background:white;
+}
+
+.data-row{
+    padding:12px;
+    border-bottom:1px solid #eaf2ff;
+    font-size:12px;
+    color:#475569;
+}
+
+.data-row:last-child{
+    border-bottom:none;
+}
+
+.data-row strong{
+    display:block;
+    color:#07111f;
+    font-size:13px;
+}
+
+.device-action{
+    width:auto;
+    margin-top:8px;
+    padding:8px 10px;
+    border-radius:10px;
+    font-size:12px;
+    background:#ef4444;
+    box-shadow:none;
+}
+
 /* MOBILE */
 
 @media(max-width:900px){
@@ -309,11 +422,16 @@ body::after{
     }
 
     .right{
-        padding:30px;
+        padding:30px 22px;
     }
 
     .login-title{
         font-size:30px;
+    }
+
+    .security-grid,
+    .inline-actions{
+        grid-template-columns:1fr;
     }
 }
 
@@ -406,6 +524,20 @@ body::after{
                 Login to continue accessing your dashboard
             </p>
 
+            {% if message %}
+            <div class="alert success">{{ message }}</div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert error">{{ error }}</div>
+            {% endif %}
+
+            {% if show_2fa %}
+            <form method="POST" action="/two_factor" class="security-form">
+                <input name="otp" inputmode="numeric" maxlength="6" placeholder="Enter 2FA OTP" required>
+                <button type="submit" class="login-btn">Verify 2FA</button>
+            </form>
+            {% else %}
             <form method="POST">
 
                 <div class="input-group">
@@ -443,12 +575,71 @@ body::after{
                 </button>
 
             </form>
+            {% endif %}
 
             <div class="links">
                 New user?
                 <a href="/register">
                     Create Account
                 </a>
+            </div>
+
+            <div class="security-panel">
+                <div class="security-title">Account security</div>
+
+                <div class="security-grid">
+                    <a class="security-link" href="/login_activity">Login activity</a>
+                    <a class="security-link" href="/devices">Devices</a>
+                </div>
+
+                {% if session.get("user") %}
+                <div class="inline-actions">
+                    <form method="POST" action="/two_factor/setup">
+                        <input type="hidden" name="action" value="enable">
+                        <button type="submit" class="mini-btn">Set up 2FA</button>
+                    </form>
+                    <form method="POST" action="/two_factor/setup">
+                        <input type="hidden" name="action" value="disable">
+                        <button type="submit" class="mini-btn">Disable 2FA</button>
+                    </form>
+                </div>
+
+                {% if show_2fa_setup %}
+                <form method="POST" action="/two_factor/enable" class="security-form">
+                    <input name="otp" inputmode="numeric" maxlength="6" placeholder="2FA setup OTP" required>
+                    <button type="submit" class="mini-btn">Enable 2FA</button>
+                </form>
+                {% endif %}
+                {% endif %}
+
+                {% if show_activity %}
+                <div class="data-panel">
+                    {% for row in activity %}
+                    <div class="data-row">
+                        <strong>{{ row.status|title }} - {{ row.reason }}</strong>
+                        {{ row.email }} | {{ row.ip_address or "Unknown IP" }} | {{ row.created_at }}
+                    </div>
+                    {% else %}
+                    <div class="data-row">No login activity yet.</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if show_devices %}
+                <div class="data-panel">
+                    {% for device in devices %}
+                    <div class="data-row">
+                        <strong>{{ "Active" if device.is_active else "Removed" }} device</strong>
+                        {{ device.ip_address or "Unknown IP" }} | Last seen {{ device.last_seen }}
+                        <form method="POST" action="/devices/{{ device.id }}/remove">
+                            <button type="submit" class="device-action">Remove</button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="data-row">No devices recorded yet.</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
             <div class="footer">
