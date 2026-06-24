@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, g, jsonify
+from flask import Flask, render_template, request, redirect, session, g, jsonify, send_from_directory, abort
 #import pymysql
 import hashlib
 import re
@@ -935,6 +935,402 @@ def search_medicine():
         cart=cart,
         cart_count=cart_count
     )
+
+
+AI_FEATURE_CONFIG = {
+    "medicine_search": {"title": "AI Medicine Search"},
+    "symptom_checker": {"title": "AI Symptom Checker"},
+    "health_assistant": {"title": "AI Health Assistant"},
+    "disease_info": {"title": "AI Disease Information"},
+    "medicine_suggestions": {"title": "AI Medicine Suggestions"},
+    "reminder_suggestions": {"title": "AI Medicine Reminder Suggestions"},
+    "health_question": {
+        "title": "AI Health Assistant",
+    },
+    "general": {"title": "AI Health Assistant"},
+}
+
+
+SYMPTOM_GUIDANCE = {
+    "fever": {
+        "category": "Fever and pain relief",
+        "steps": "Check temperature, drink fluids, rest, and avoid self-medicating with antibiotics.",
+        "red_flags": "Very high fever, fever longer than 3 days, stiff neck, confusion, breathlessness, rash, dehydration, infants, pregnancy, or serious chronic illness.",
+    },
+    "cough": {
+        "category": "Cough, cold, and respiratory care",
+        "steps": "Warm fluids, steam comfort, avoid smoke/dust, and choose cough support based on dry cough or phlegm.",
+        "red_flags": "Breathing trouble, chest pain, blood in cough, wheezing, blue lips, fever more than 3 days, or symptoms lasting more than 2 weeks.",
+    },
+    "cold": {
+        "category": "Cold, allergy, and congestion care",
+        "steps": "Rest, fluids, saline gargle or steam comfort, and avoid sharing towels/utensils.",
+        "red_flags": "Severe headache, chest pain, breathing difficulty, persistent high fever, or symptoms worsening after improvement.",
+    },
+    "acidity": {
+        "category": "Gastric and acidity care",
+        "steps": "Eat smaller meals, avoid spicy/oily foods, avoid lying down after food, and track trigger foods.",
+        "red_flags": "Chest pressure, vomiting blood, black stool, severe abdominal pain, weight loss, or repeated vomiting.",
+    },
+    "pain": {
+        "category": "Pain relief and anti-inflammatory care",
+        "steps": "Rest the affected area, use gentle heat/cold as suitable, and avoid repeated painkiller use without advice.",
+        "red_flags": "Severe injury, swelling, weakness, numbness, chest pain, severe headache, or pain with fever.",
+    },
+    "allergy": {
+        "category": "Allergy and antihistamine care",
+        "steps": "Avoid the trigger, wash exposed skin, and monitor rash/itching/sneezing patterns.",
+        "red_flags": "Face/lip swelling, breathing difficulty, wheezing, dizziness, or fast-spreading rash.",
+    },
+    "skin": {
+        "category": "Skin care, antifungal, antibacterial, or anti-itch care",
+        "steps": "Keep the area clean and dry, avoid scratching, and avoid mixing creams without advice.",
+        "red_flags": "Pus, fever, spreading redness, severe pain, diabetes, eye/genital area involvement, or no improvement.",
+    },
+    "diabetes": {
+        "category": "Diabetes care",
+        "steps": "Monitor sugar, keep meals regular, stay hydrated, and take medicines exactly as prescribed.",
+        "red_flags": "Very low sugar symptoms, confusion, fainting, vomiting, very high readings, or infection wounds.",
+    },
+    "blood pressure": {
+        "category": "Heart and blood pressure care",
+        "steps": "Check readings correctly, reduce salt, avoid missed doses, and keep follow-up with your doctor.",
+        "red_flags": "Chest pain, severe headache, weakness on one side, breathlessness, fainting, or very high readings.",
+    },
+}
+
+
+DISEASE_GUIDANCE = {
+    "diabetes": "Diabetes means blood sugar stays higher than normal. Common care includes regular monitoring, diet planning, exercise, foot care, and doctor-prescribed medicines. Watch for very low sugar, wounds, infection, vomiting, or confusion.",
+    "hypertension": "Hypertension means blood pressure stays high. Care includes regular BP checks, low-salt food, exercise, stress control, and taking prescribed medicines consistently. Emergency signs include chest pain, severe headache, weakness, or breathlessness.",
+    "asthma": "Asthma causes airway narrowing with wheezing, cough, chest tightness, or breathlessness. Avoid triggers, follow inhaler plans, and seek urgent help for severe breathing difficulty or blue lips.",
+    "acidity": "Acidity or reflux can cause burning, sour burps, bloating, or throat irritation. Smaller meals and avoiding trigger foods helps. Chest pressure, black stool, blood vomiting, or severe pain needs urgent care.",
+    "skin infection": "Skin infections can cause redness, itching, swelling, pus, or pain. Keep the area clean and avoid sharing towels. Fever, spreading redness, diabetes, or pus needs medical review.",
+}
+
+
+URGENT_TERMS = {
+    "chest pain", "breathing difficulty", "shortness of breath", "fainting",
+    "stroke", "severe bleeding", "blood vomiting", "suicide", "overdose",
+    "blue lips", "unconscious", "seizure"
+}
+
+
+SYMPTOM_ALIASES = {
+    "fever": ("fever", "temperature", "body hot", "body heat", "getting hot", "very hot", "hot body", "chills"),
+    "cough": ("cough", "coughing", "khansi"),
+    "cold": ("cold", "runny nose", "blocked nose", "sneezing", "throat pain", "sore throat"),
+    "acidity": ("acidity", "acid", "gas", "gastric", "heartburn", "burning stomach", "reflux"),
+    "pain": ("pain", "ache", "headache", "body pain", "back pain", "joint pain"),
+    "allergy": ("allergy", "itching", "rash", "hives", "sneezing allergy"),
+    "skin": ("skin", "pimple", "fungal", "redness", "itchy skin"),
+    "diabetes": ("diabetes", "sugar", "blood sugar"),
+    "blood pressure": ("bp", "blood pressure", "hypertension"),
+}
+
+
+DIET_TERMS = ("diet", "nutrition", "food plan", "meal plan", "weight loss", "weight gain", "protein")
+
+
+def ai_terms(query):
+    terms = [
+        term
+        for term in re.findall(r"[A-Za-z0-9]+", query or "")
+        if len(term) >= 3
+    ][:8]
+    return terms
+
+
+def fetch_ai_medicine_matches(query, limit=8):
+    terms = ai_terms(query)
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    if terms:
+        where_parts = []
+        params = []
+        for term in terms:
+            like = f"%{term}%"
+            where_parts.append("(name LIKE %s OR category LIKE %s OR department LIKE %s)")
+            params.extend([like, like, like])
+
+        cursor.execute(f"""
+            SELECT id, name, category, department, price, stock, prescription_required
+            FROM medicines
+            WHERE {" OR ".join(where_parts)}
+            ORDER BY name ASC
+            LIMIT %s
+        """, tuple(params + [limit]))
+    else:
+        cursor.execute("""
+            SELECT id, name, category, department, price, stock, prescription_required
+            FROM medicines
+            ORDER BY stock DESC, name ASC
+            LIMIT %s
+        """, (limit,))
+
+    rows = cursor.fetchall()
+    cursor.close()
+    return rows
+
+
+def format_medicine_matches(rows):
+    if not rows:
+        return "No matching medicines were found in the local inventory."
+
+    lines = []
+    for row in rows[:5]:
+        rx_note = "Prescription required" if row.get("prescription_required") else "Direct purchase may be available"
+        stock_note = f"{row.get('stock') or 0} packs in stock"
+        lines.append(
+            f"- {row.get('name')} | Rs. {row.get('price')} | {stock_note} | {rx_note}"
+        )
+    return "\n".join(lines)
+
+
+def symptom_profile(user_text):
+    text = (user_text or "").lower()
+    for key, aliases in SYMPTOM_ALIASES.items():
+        if any(alias in text for alias in aliases):
+            return key, SYMPTOM_GUIDANCE[key]
+    return None, {
+        "category": "General health support",
+        "steps": "Note when symptoms started, severity, temperature if fever is present, current medicines, allergies, and any known illness.",
+        "red_flags": "Severe pain, breathing difficulty, chest pain, fainting, confusion, dehydration, pregnancy, infant age, or symptoms getting worse.",
+    }
+
+
+def disease_profile(user_text):
+    text = (user_text or "").lower()
+    for key, description in DISEASE_GUIDANCE.items():
+        if key in text:
+            return key.title(), description
+    return "General Disease Information", (
+        "Please enter a disease name such as diabetes, hypertension, asthma, acidity, or skin infection. "
+        "I can explain common symptoms, basic care, prevention, and warning signs."
+    )
+
+
+def reminder_suggestion(user_text):
+    clean_text = user_text.strip()
+    times = re.findall(r"\b\d{1,2}(?::\d{2})?\s*(?:am|pm)?\b", clean_text, flags=re.I)
+    schedule = "\n".join(f"- Reminder at {time.strip()}: take only the dose written on your prescription/label." for time in times[:6])
+    if not schedule:
+        schedule = (
+            "- Morning: after breakfast if your prescription says morning dose.\n"
+            "- Afternoon: after lunch if your prescription says afternoon dose.\n"
+            "- Night: after dinner or before sleep only if your prescription says night dose."
+        )
+
+    return (
+        "Medicine Reminder Plan\n"
+        f"{schedule}\n\n"
+        "Tips:\n"
+        "- Do not change dose or timing without doctor/pharmacist advice.\n"
+        "- Keep a 10 minute early alert.\n"
+        "- Mark the dose as taken only after taking it."
+    )
+
+
+def symptom_answer(user_text, heading="AI Symptom Checker"):
+    symptom_key, profile = symptom_profile(user_text)
+    symptom_note = symptom_key.title() if symptom_key else "General symptom"
+    common_signs = {
+        "fever": "Hot body\n- Chills\n- Weakness or body pain",
+        "cough": "Coughing\n- Throat irritation\n- Chest congestion or dry cough",
+        "cold": "Runny nose\n- Sneezing\n- Mild fever or throat irritation",
+        "acidity": "Burning in stomach/chest\n- Sour burps\n- Bloating",
+        "pain": "Pain or ache\n- Tiredness\n- Tenderness in the affected area",
+        "allergy": "Sneezing or itching\n- Rash\n- Watery eyes",
+        "skin": "Redness or itching\n- Rash\n- Swelling or irritation",
+        "diabetes": "High/low sugar symptoms\n- Excess thirst\n- Frequent urination",
+        "blood pressure": "Headache or dizziness\n- Chest discomfort\n- Unusual tiredness",
+    }.get(symptom_key, "New or unclear symptom\n- Note start time\n- Note severity")
+
+    return (
+        f"{symptom_note}\n\n"
+        "Common signs:\n"
+        f"- {common_signs}\n\n"
+        "Suggestions:\n"
+        f"- {profile['steps']}\n"
+        "- Drink enough water and rest.\n"
+        "- Use only prescribed or pharmacist-confirmed medicine.\n\n"
+        "See a doctor if:\n"
+        f"- {profile['red_flags']}"
+    )
+
+
+def nutrition_answer(user_text):
+    text = user_text.lower()
+    goal = "general wellness"
+    if "weight loss" in text or "lose" in text:
+        goal = "weight loss"
+    elif "weight gain" in text or "gain" in text:
+        goal = "weight gain"
+    elif "diabetes" in text or "sugar" in text:
+        goal = "diabetes-friendly eating"
+    elif "protein" in text:
+        goal = "higher protein meals"
+
+    extra = {
+        "weight loss": "- Keep portions controlled, prefer dal/eggs/paneer/curd with vegetables, and reduce sugary drinks and fried snacks.",
+        "weight gain": "- Add calorie-dense healthy foods like milk, curd, paneer, nuts, peanut butter, eggs, and frequent small meals.",
+        "diabetes-friendly eating": "- Prefer high-fiber meals, avoid sugary drinks, keep rice/roti portions steady, and monitor sugar as advised.",
+        "higher protein meals": "- Include dal, sprouts, eggs, paneer, curd, chicken/fish if non-vegetarian, or soy/tofu.",
+        "general wellness": "- Use balanced meals: half plate vegetables/salad, one quarter protein, one quarter roti/rice/poha/upma, plus water.",
+    }[goal]
+
+    return (
+        f"Nutrition Plan: {goal.title()}\n\n"
+        "Daily structure:\n"
+        "- Breakfast: protein + fruit or light carbs.\n"
+        "- Lunch: roti/rice + dal/paneer/egg/chicken + vegetables.\n"
+        "- Snack: fruit, nuts, roasted chana, or buttermilk.\n"
+        "- Dinner: lighter protein + vegetables.\n"
+        f"{extra}\n\n"
+        "Ask a dietitian/doctor for a personal plan if you have diabetes, kidney/liver disease, pregnancy, major weight change, or long-term illness."
+    )
+
+
+def manual_ai_answer(feature, user_text):
+    feature = feature if feature in AI_FEATURE_CONFIG else "health_assistant"
+    text = (user_text or "").strip()
+    lower_text = text.lower()
+    symptom_key, profile = symptom_profile(text)
+
+    if any(term in lower_text for term in URGENT_TERMS):
+        return (
+            "Urgent Warning\n"
+            "Your message includes symptoms that can be serious. Please seek urgent medical care now or contact local emergency services.\n\n"
+            "While waiting, avoid self-medicating unless a doctor has already instructed you."
+        )
+
+    if feature == "medicine_search":
+        matches = fetch_ai_medicine_matches(text, limit=5)
+        return (
+            f"Medicine Search: {text}\n\n"
+            "Found in Yuvraj Medical:\n"
+            f"{format_medicine_matches(matches)}\n\n"
+            "Confirm suitability, dose, allergy, pregnancy safety, and prescription need with staff or a doctor."
+        )
+
+    if feature == "medicine_suggestions":
+        matches = fetch_ai_medicine_matches(f"{profile['category']} {text}", limit=5)
+        return (
+            "Medicine Suggestions\n\n"
+            f"Care category: {profile['category']}\n\n"
+            "Ask staff/pharmacist about:\n"
+            f"{format_medicine_matches(matches)}\n\n"
+            "These are catalog suggestions, not a prescription."
+        )
+
+    if feature == "symptom_checker":
+        return symptom_answer(text)
+
+    if feature == "disease_info":
+        if symptom_key and not any(disease in lower_text for disease in DISEASE_GUIDANCE):
+            return symptom_answer(text, heading="AI Disease Information")
+
+        disease_name, description = disease_profile(text)
+        return (
+            f"{disease_name}\n\n"
+            f"{description}\n\n"
+            "Care basics:\n"
+            "- Take prescribed medicines on time.\n"
+            "- Track symptoms and triggers.\n"
+            "- Keep follow-up appointments.\n\n"
+            "See a doctor if symptoms worsen or become severe."
+        )
+
+    if feature == "reminder_suggestions":
+        return reminder_suggestion(text)
+
+    if any(term in lower_text for term in DIET_TERMS):
+        return nutrition_answer(text)
+
+    if symptom_key:
+        return symptom_answer(text, heading="AI Health Assistant")
+
+    if any(disease in lower_text for disease in DISEASE_GUIDANCE):
+        disease_name, description = disease_profile(text)
+        return (
+            f"{disease_name}\n\n"
+            f"{description}\n\n"
+            "Care basics:\n"
+            "- Follow your doctor's plan.\n"
+            "- Track symptoms and triggers.\n"
+            "- Keep follow-up appointments.\n\n"
+            "Seek urgent care if symptoms become severe."
+        )
+
+    return (
+        "What can I help with?\n\n"
+        "- Find medicine\n"
+        "- Check symptoms\n"
+        "- Medicine info\n"
+        "- Medicine reminders\n"
+        "- Disease information\n\n"
+        "Try: fever, cold, headache, diabetes, Paracetamol, or remind me at 9am."
+    )
+
+
+def fetch_ai_medicine_context(query):
+    rows = fetch_ai_medicine_matches(query, limit=30)
+    if not rows:
+        return "No matching local store medicines were found for this query."
+    return format_medicine_matches(rows)
+
+
+def call_ai_health_assistant(feature, user_text, medicine_context=None):
+    return manual_ai_answer(feature, user_text)
+
+
+@app.route("/ai_health_assistant")
+def ai_health_assistant():
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart_count = sum(row["quantity"] for row in cart_rows)
+    return render_template("ai_health_assistant.html", cart_count=cart_count)
+
+
+@app.route("/ai_health_assistant/ask", methods=["POST"])
+def ai_health_assistant_ask():
+    if "user" not in session:
+        return jsonify({"error": "Please login to use AI Health Assistant."}), 401
+
+    data = request.get_json(silent=True) or {}
+    feature = (data.get("feature") or "general").strip()
+    user_text = (data.get("message") or "").strip()
+
+    if feature not in AI_FEATURE_CONFIG:
+        return jsonify({"error": "Invalid AI feature selected."}), 400
+
+    if len(user_text) < 2:
+        return jsonify({"error": "Please enter your question."}), 400
+
+    if len(user_text) > 1200:
+        return jsonify({"error": "Please keep your question under 1200 characters."}), 400
+
+    answer = call_ai_health_assistant(feature, user_text)
+    return jsonify({
+        "answer": answer,
+        "feature": AI_FEATURE_CONFIG[feature]["title"],
+        "safety_note": "Manual guidance only. Please confirm treatment, dose, and prescription needs with a qualified doctor or pharmacist.",
+    })
 
 
 @app.route("/medicine/<int:id>")
@@ -2542,7 +2938,7 @@ def my_orders():
             "date": o["date"],
             "status": o["status"],
             "items": items,
-            "prescription": o["prescription"]
+            "prescription": o.get("prescription")
         })
 
 
@@ -2577,7 +2973,7 @@ def build_customer_dashboard_context(db, user_id):
             "date": o["date"],
             "status": o["status"],
             "items": items,
-            "prescription": o["prescription"]
+            "prescription": o.get("prescription")
         })
 
     cursor = db.cursor(dictionary=True)
@@ -3552,8 +3948,51 @@ def generate_all_barcodes():
 
     return redirect("/staff#inventory")
 
+GENERIC_MEDICINE_WORDS = {
+    "tablet", "tablets", "tab", "tabs", "capsule", "capsules", "cap", "caps",
+    "syrup", "injection", "injectable", "cream", "ointment", "gel", "drops",
+    "drop", "eye", "ear", "nasal", "spray", "inhaler", "solution", "sachet",
+    "powder", "patch", "lotion", "suspension", "respules", "iv", "fluid",
+    "mg", "ml", "mcg", "gm", "g", "iu", "percent"
+}
+
+
+def normalize_medicine_text(value):
+    value = re.sub(r"(\d+)\s*(mg|ml|mcg|gm|g|iu)\b", r"\1 \2", value.lower())
+    value = re.sub(r"[^a-z0-9]+", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def meaningful_medicine_tokens(value):
+    tokens = normalize_medicine_text(value).split()
+    return [
+        token
+        for token in tokens
+        if len(token) > 1 and token not in GENERIC_MEDICINE_WORDS
+    ]
+
+
+def prescription_candidate_lines(text):
+    lines = [
+        normalize_medicine_text(line)
+        for line in text.splitlines()
+        if normalize_medicine_text(line)
+    ]
+
+    candidates = list(lines)
+
+    for size in (2, 3):
+        for index in range(0, max(len(lines) - size + 1, 0)):
+            candidates.append(" ".join(lines[index:index + size]))
+
+    if text:
+        candidates.append(normalize_medicine_text(text))
+
+    return candidates
+
+
 # ================= Prescription Medicine Detection =================
-def detect_medicines_from_text(text):
+def detect_medicines_from_text(text, max_matches=5, min_score=72):
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -3563,31 +4002,43 @@ def detect_medicines_from_text(text):
     cursor.close()
 
     matches = []
-    text = text.lower()
-
-    lines = text.splitlines()
+    candidates = prescription_candidate_lines(text)
 
     for med in medicines:
 
         if not med["name"]:
             continue
 
-        med_name = med["name"].lower()
+        med_name = normalize_medicine_text(med["name"])
+        med_tokens = meaningful_medicine_tokens(med["name"])
+
+        if not med_tokens:
+            continue
 
         best_score = 0
 
-        for line in lines:
-            line = line.strip().lower()
+        for candidate in candidates:
+            candidate_tokens = meaningful_medicine_tokens(candidate)
 
-            if not line:
+            if not candidate_tokens:
                 continue
 
-            score = fuzz.partial_ratio(med_name, line)
+            overlap = set(med_tokens) & set(candidate_tokens)
+
+            if not overlap:
+                continue
+
+            if med_tokens[0] not in overlap and len(overlap) < 2:
+                continue
+
+            name_score = fuzz.token_sort_ratio(med_name, candidate)
+            overlap_score = (len(overlap) / len(set(med_tokens))) * 100
+            score = (name_score * 0.7) + (overlap_score * 0.3)
 
             if score > best_score:
                 best_score = score
 
-        if best_score >= 85:
+        if best_score >= min_score:
             matches.append({
                 "medicine": med["name"],
                 "score": round(best_score, 2)
@@ -3595,7 +4046,7 @@ def detect_medicines_from_text(text):
 
     matches.sort(key=lambda x: x["score"], reverse=True)
 
-    return matches
+    return matches[:max_matches]
 # ================= Upload Prescription =================
 
 @app.route("/upload_prescription", methods=["GET", "POST"])
@@ -3609,16 +4060,16 @@ def upload_prescription():
         prescription = request.files.get("prescription")
 
         if not prescription or prescription.filename == "":
-            flash("Please upload a prescription image", "error")
+            flash("Please upload a prescription file", "error")
             return redirect("/upload_prescription")
 
-        allowed_extensions = {"png", "jpg", "jpeg", "webp"}
+        allowed_extensions = {"png", "jpg", "jpeg", "webp", "pdf"}
 
         filename = secure_filename(prescription.filename)
         ext = filename.rsplit(".", 1)[-1].lower()
 
         if ext not in allowed_extensions:
-            flash("Only PNG, JPG, JPEG, and WEBP files are allowed", "error")
+            flash("Only PNG, JPG, JPEG, WEBP, and PDF files are allowed", "error")
             return redirect("/upload_prescription")
 
         os.makedirs(PRESCRIPTION_FOLDER, exist_ok=True)
@@ -3628,7 +4079,10 @@ def upload_prescription():
 
         prescription.save(save_path)
 
-        ocr_text = read_prescription_text(save_path)
+        if ext == "pdf":
+            ocr_text = "PDF uploaded. OCR is available for image prescriptions only. Manual staff review required."
+        else:
+            ocr_text = read_prescription_text(save_path)
 
         if not ocr_text or len(ocr_text.strip()) < 5:
             ocr_text = "OCR could not clearly read this prescription. Manual staff review required."
@@ -3661,6 +4115,88 @@ def upload_prescription():
         return redirect("/my_prescriptions")
 
     return render_template("upload_prescription.html")
+
+
+@app.route("/download_prescription/<int:request_id>")
+def download_prescription(request_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    if session["user"].get("role") in ["staff", "owner"]:
+        cursor.execute("""
+            SELECT prescription_image
+            FROM prescription_requests
+            WHERE id=%s
+        """, (request_id,))
+    else:
+        cursor.execute("""
+            SELECT prescription_image
+            FROM prescription_requests
+            WHERE id=%s AND user_id=%s
+        """, (request_id, session["user"]["id"]))
+
+    prescription = cursor.fetchone()
+    cursor.close()
+
+    if not prescription or not prescription.get("prescription_image"):
+        abort(404)
+
+    filename = os.path.basename(prescription["prescription_image"])
+    file_path = os.path.join(PRESCRIPTION_FOLDER, filename)
+
+    if not os.path.exists(file_path):
+        abort(404)
+
+    extension = filename.rsplit(".", 1)[-1].lower() if "." in filename else "file"
+    return send_from_directory(
+        PRESCRIPTION_FOLDER,
+        filename,
+        as_attachment=True,
+        download_name=f"prescription_{request_id}.{extension}"
+    )
+
+
+@app.route("/delete_prescription/<int:request_id>", methods=["POST"])
+def delete_prescription(request_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT prescription_image
+        FROM prescription_requests
+        WHERE id=%s AND user_id=%s
+    """, (request_id, session["user"]["id"]))
+
+    prescription = cursor.fetchone()
+
+    if not prescription:
+        cursor.close()
+        flash("Prescription request not found", "error")
+        return redirect("/my_prescriptions")
+
+    cursor.execute("""
+        DELETE FROM prescription_requests
+        WHERE id=%s AND user_id=%s
+    """, (request_id, session["user"]["id"]))
+    db.commit()
+    cursor.close()
+
+    filename = os.path.basename(prescription["prescription_image"])
+    file_path = os.path.join(PRESCRIPTION_FOLDER, filename)
+
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except OSError:
+            pass
+
+    flash("Prescription deleted successfully", "success")
+    return redirect("/my_prescriptions")
 # ====================== customer prescription status =======================
 @app.route("/my_prescriptions")
 def my_prescriptions():

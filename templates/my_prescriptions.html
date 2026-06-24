@@ -1,117 +1,717 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Prescriptions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription History</title>
     <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #dbe4f0;
+            --panel: #ffffff;
+            --soft: #f5f8fc;
+            --blue: #1d4ed8;
+            --blue-dark: #1e3a8a;
+            --green: #15803d;
+            --amber: #b45309;
+            --red: #b91c1c;
+            --shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f8fafc;
             margin: 0;
-            padding: 30px;
-        }
-
-        h2 {
-            color: #2563eb;
-            text-align: center;
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .status {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 30px;
-            background: #fef3c7;
-            color: #92400e;
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .approved {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .rejected {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        img {
-            max-width: 220px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-
-        pre {
-            background: #f1f5f9;
-            padding: 12px;
-            border-radius: 10px;
-            white-space: pre-wrap;
-        }
-
-        .links {
-            text-align: center;
-            margin-top: 25px;
+            min-height: 100vh;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(29, 78, 216, 0.10), transparent 32rem),
+                linear-gradient(135deg, #f8fbff 0%, #eef4f8 48%, #f7fafc 100%);
         }
 
         a {
-            color: #2563eb;
+            color: inherit;
             text-decoration: none;
-            font-weight: bold;
+        }
+
+        .page-shell {
+            width: 100%;
+            min-height: 100vh;
+            padding: 0 0 42px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            width: 100%;
+            padding: 10px 24px;
+            margin-bottom: 0;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 8% 8%, rgba(253, 230, 138, 0.16), transparent 28%),
+                radial-gradient(circle at 92% 18%, rgba(103, 232, 249, 0.12), transparent 30%),
+                linear-gradient(135deg, rgba(8, 47, 73, 0.98), rgba(15, 118, 110, 0.96));
+            border-bottom: 1px solid rgba(103, 232, 249, 0.24);
+            box-shadow: 0 16px 38px rgba(8, 47, 73, 0.22);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 270px;
+        }
+
+        .brand-icon {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 14px rgba(2, 6, 23, 0.28));
+        }
+
+        .brand-name {
+            display: block;
+        }
+
+        .brand-yuvraj {
+            display: block;
+            font-family: "Cinzel", Georgia, "Times New Roman", serif;
+            font-size: 28px;
+            letter-spacing: 1.7px;
+            line-height: 1;
+            background: linear-gradient(90deg, #ecfeff 0%, #67e8f9 42%, #fde68a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 3px 12px rgba(2, 6, 23, 0.44);
+        }
+
+        .brand-medical {
+            display: block;
+            margin-top: 3px;
+            font-size: 13px;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #67e8f9 0%, #fde68a 55%, #ecfeff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateX(2.5px);
+        }
+
+        .brand-tagline {
+            display: block;
+            margin-top: 4px;
+            color: #ccfbf1;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .nav-actions,
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn,
+        .delete-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .btn:hover,
+        .delete-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            color: white;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            box-shadow: 0 12px 24px rgba(29, 78, 216, 0.22);
+        }
+
+        .btn-light {
+            color: var(--blue-dark);
+            background: rgba(255, 255, 255, 0.88);
+            border-color: var(--line);
+        }
+
+        .topbar .btn-light {
+            color: #ecfeff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(103, 232, 249, 0.22);
+        }
+
+        .topbar .btn-light:hover,
+        .topbar .btn-primary:hover {
+            color: #075985;
+            background: #ffffff;
+            box-shadow: 0 12px 24px rgba(2, 6, 23, 0.18);
+        }
+
+        .btn-success {
+            color: white;
+            background: linear-gradient(135deg, #16a34a, #166534);
+            box-shadow: 0 12px 24px rgba(22, 101, 52, 0.18);
+        }
+
+        .delete-btn {
+            color: var(--red);
+            background: #fff1f2;
+            border-color: #fecdd3;
+            font-family: inherit;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            min-height: calc(72vh - 82px);
+            border: 0;
+            border-radius: 0;
+            background:
+                radial-gradient(circle at 80% 18%, rgba(187, 247, 208, 0.22), transparent 28%),
+                linear-gradient(90deg, rgba(8, 47, 73, 0.96) 0%, rgba(12, 74, 110, 0.90) 45%, rgba(15, 118, 110, 0.76) 100%),
+                url("{{ url_for('static', filename='images/dashboard-prescription-ai.png') }}");
+            background-size: auto, auto, 540px;
+            background-repeat: no-repeat;
+            background-position: center, center, right 6vw bottom 34px;
+            box-shadow: 0 24px 55px rgba(14, 116, 144, 0.18);
+            padding: 58px 6vw 76px;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 720px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ecfeff;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.36);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        h1 {
+            margin: 16px 0 10px;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-size: clamp(42px, 6vw, 74px);
+            line-height: 1.02;
+            letter-spacing: 0;
+            color: #ffffff;
+            text-shadow: 0 8px 24px rgba(2, 6, 23, 0.34);
+        }
+
+        .hero-accent {
+            display: block;
+            color: #fef08a;
+            text-shadow: 0 7px 20px rgba(2, 6, 23, 0.32);
+        }
+
+        .hero p {
+            margin: 0;
+            color: #f8fafc;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 560px;
+            text-shadow: 0 4px 14px rgba(2, 6, 23, 0.24);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            width: min(1180px, calc(100% - 32px));
+            margin: -38px auto 28px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(219, 228, 240, 0.95);
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .metric span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .metric strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto 14px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 0;
+        }
+
+        .section-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 16px;
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .history-card {
+            display: grid;
+            grid-template-columns: 210px minmax(0, 1fr);
+            gap: 22px;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(219, 228, 240, 0.95);
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 14px 38px rgba(15, 23, 42, 0.07);
+        }
+
+        .preview {
+            min-height: 238px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(180deg, #ffffff, #f3f7fb);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview img {
+            width: 100%;
+            height: 100%;
+            min-height: 238px;
+            object-fit: cover;
+        }
+
+        .pdf-preview {
+            width: 100%;
+            min-height: 238px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 22px;
+            color: var(--blue-dark);
+            text-align: center;
+            font-weight: 900;
+        }
+
+        .pdf-preview span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 72px;
+            border-radius: 8px;
+            color: white;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 12px 24px rgba(185, 28, 28, 0.18);
+        }
+
+        .card-main {
+            min-width: 0;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .request-title {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0;
+        }
+
+        .request-meta {
+            margin-top: 7px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 900;
+            border: 1px solid transparent;
+        }
+
+        .status-pending-review,
+        .status-pending {
+            color: var(--amber);
+            background: #fff7ed;
+            border-color: #fed7aa;
+        }
+
+        .status-approved {
+            color: var(--green);
+            background: #ecfdf3;
+            border-color: #bbf7d0;
+        }
+
+        .status-rejected {
+            color: var(--red);
+            background: #fff1f2;
+            border-color: #fecdd3;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .detail-box {
+            min-width: 0;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--soft);
+            padding: 14px;
+        }
+
+        .detail-box.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-box label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 8px;
+        }
+
+        .detail-box p,
+        .detail-box pre {
+            margin: 0;
+            color: #1e293b;
+            font: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .actions {
+            padding-top: 4px;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            width: min(860px, calc(100% - 32px));
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 50px 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state h2 {
+            margin: 0 0 10px;
+            font-size: 28px;
+        }
+
+        .empty-state p {
+            margin: 0 auto 20px;
+            max-width: 460px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                min-height: 560px;
+                background-size: auto, auto, 360px;
+                background-position: center, center, right -80px bottom 24px;
+            }
+
+            .summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .history-card {
+                grid-template-columns: 160px minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page-shell {
+                width: 100%;
+                padding-top: 0;
+            }
+
+            .topbar,
+            .section-head,
+            .card-top {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .nav-actions,
+            .actions {
+                width: 100%;
+            }
+
+            .btn,
+            .delete-btn,
+            .actions form {
+                width: 100%;
+            }
+
+            .hero {
+                padding: 24px;
+                min-height: 0;
+                background-image:
+                    radial-gradient(circle at 80% 18%, rgba(187, 247, 208, 0.18), transparent 28%),
+                    linear-gradient(135deg, rgba(8, 47, 73, 0.97), rgba(15, 118, 110, 0.92));
+            }
+
+            .summary-grid,
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .history-card {
+                grid-template-columns: 1fr;
+                padding: 14px;
+            }
+
+            .preview,
+            .preview img,
+            .pdf-preview {
+                min-height: 210px;
+            }
         }
     </style>
 </head>
 <body>
 
-<h2>My Prescription Requests</h2>
+{% set ns = namespace(total=0, approved=0, pending=0, rejected=0) %}
+{% for item in requests_data %}
+    {% set ns.total = ns.total + 1 %}
+    {% if item.status == "Approved" %}
+        {% set ns.approved = ns.approved + 1 %}
+    {% elif item.status == "Rejected" %}
+        {% set ns.rejected = ns.rejected + 1 %}
+    {% else %}
+        {% set ns.pending = ns.pending + 1 %}
+    {% endif %}
+{% endfor %}
 
-{% if requests_data %}
-    {% for req in requests_data %}
-    <div class="card">
+<main class="page-shell">
+    <header class="topbar">
+        <a href="/" class="brand" aria-label="Yuvraj Medical home">
+            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" class="brand-icon" alt="Yuvraj Medical">
+            <span class="brand-name">
+                <span class="brand-yuvraj">Yuvraj</span>
+                <span class="brand-medical">Medical</span>
+                <span class="brand-tagline">Trusted Online Pharmacy</span>
+            </span>
+        </a>
+
+        <nav class="nav-actions" aria-label="Prescription navigation">
+            <a href="/" class="btn btn-light">Home</a>
+            <a href="/upload_prescription" class="btn btn-primary">Upload New</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="eyebrow">Prescription History</span>
+            <h1>
+                Prescription history.
+                <span class="hero-accent">Every request, clearly tracked.</span>
+            </h1>
             <p>
-    <b>Status:</b>
-    <span class="status">{{ req.status }}</span>
-</p>
+                Track every uploaded prescription, review staff decisions, download files,
+                and move approved medicines to checkout from one polished workspace.
+            </p>
+        </div>
+    </section>
 
-{% if req.status == "Approved" %}
-    <a href="/checkout_prescription/{{ req.id }}"
-       style="display:inline-block;margin-top:15px;padding:10px 16px;background:#16a34a;color:white;text-decoration:none;border-radius:10px;font-weight:bold;">
-        🛒 Proceed to Checkout
-    </a>
-{% endif %}
+    <section class="summary-grid" aria-label="Prescription summary">
+        <div class="metric">
+            <span>Total Requests</span>
+            <strong>{{ ns.total }}</strong>
+        </div>
+        <div class="metric">
+            <span>Under Review</span>
+            <strong>{{ ns.pending }}</strong>
+        </div>
+        <div class="metric">
+            <span>Approved</span>
+            <strong>{{ ns.approved }}</strong>
+        </div>
+        <div class="metric">
+            <span>Rejected</span>
+            <strong>{{ ns.rejected }}</strong>
+        </div>
+    </section>
 
-        <p><b>Uploaded On:</b> {{ req.created_at }}</p>
+    {% if requests_data %}
+        <section class="section-head">
+            <div>
+                <h2>Recent Prescriptions</h2>
+                <p>Newest uploads appear first with status, OCR options, staff notes, and next actions.</p>
+            </div>
+        </section>
 
-        <p><b>Prescription:</b></p>
-        <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}">
+        <section class="history-list" aria-label="Prescription request list">
+            {% for req in requests_data %}
+            <article class="history-card">
+                <div class="preview">
+                    {% if req.prescription_image.lower().endswith('.pdf') %}
+                        <a class="pdf-preview" href="/download_prescription/{{ req.id }}">
+                            <span>PDF</span>
+                            View or download prescription
+                        </a>
+                    {% else %}
+                        <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}" alt="Uploaded prescription">
+                    {% endif %}
+                </div>
 
-        <p><b>OCR Detected Medicines:</b></p>
-        <pre>{{ req.detected_medicines if req.detected_medicines else "No clear medicine detected" }}</pre>
+                <div class="card-main">
+                    <div class="card-top">
+                        <div>
+                            <h3 class="request-title">Prescription Request #{{ req.id }}</h3>
+                            <div class="request-meta">
+                                <span>Uploaded {{ req.created_at }}</span>
+                                <span>File: {{ req.prescription_image }}</span>
+                            </div>
+                        </div>
 
-        <p><b>OCR Full Text:</b></p>
-        <pre>{{ req.ocr_text if req.ocr_text else "No readable text found" }}</pre>
+                        <span class="status status-{{ req.status|lower|replace(' ', '-') }}">
+                            {{ req.status }}
+                        </span>
+                    </div>
 
-        <p><b>Staff Note:</b></p>
-        <pre>{{ req.staff_note if req.staff_note else "Waiting for staff review" }}</pre>
-    </div>
-    {% endfor %}
-{% else %}
-    <p style="text-align:center;">No prescription request found.</p>
-{% endif %}
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <label>OCR Medicine Options</label>
+                            {% if req.detected_medicines %}
+                                <p>{{ req.detected_medicines.split(",")[:5]|join(", ") }}</p>
+                            {% else %}
+                                <p>No clear high-percent medicine detected.</p>
+                            {% endif %}
+                        </div>
 
-<div class="links">
-    <a href="/upload_prescription">Upload New Prescription</a> |
-    <a href="/">Back to Home</a>
-</div>
+                        <div class="detail-box">
+                            <label>Staff Approved Medicines</label>
+                            <pre>{{ req.approved_medicines if req.approved_medicines else "Waiting for staff approval." }}</pre>
+                        </div>
+
+                        <div class="detail-box full">
+                            <label>Staff Note</label>
+                            <pre>{{ req.staff_note if req.staff_note else "Waiting for staff review." }}</pre>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        {% if req.status == "Approved" %}
+                            <a href="/checkout_prescription/{{ req.id }}" class="btn btn-success">
+                                Proceed to Checkout
+                            </a>
+                        {% endif %}
+
+                        <a href="/download_prescription/{{ req.id }}" class="btn btn-light">
+                            Download Prescription
+                        </a>
+
+                        <form method="POST" action="/delete_prescription/{{ req.id }}" onsubmit="return confirm('Delete this prescription request?');">
+                            <button class="delete-btn" type="submit">Delete Prescription</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <section class="empty-state">
+            <h2>No prescription requests yet</h2>
+            <p>
+                Upload your first prescription and the Yuvraj Medical team will review it
+                before confirming eligible medicines.
+            </p>
+            <a href="/upload_prescription" class="btn btn-primary">Upload Prescription</a>
+        </section>
+    {% endif %}
+</main>
 
 </body>
 </html>

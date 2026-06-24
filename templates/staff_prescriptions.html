@@ -91,6 +91,16 @@
             color: #2563eb;
             text-decoration: none;
         }
+
+        .download {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 9px 14px;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -115,23 +125,33 @@
         </p>
 
         <p><b>Prescription Image:</b></p>
-        <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}">
+        {% if req.prescription_image.lower().endswith('.pdf') %}
+            <p><b>PDF Prescription:</b> {{ req.prescription_image }}</p>
+        {% else %}
+            <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}">
+        {% endif %}
+        <br>
+        <a class="download" href="/download_prescription/{{ req.id }}">Download Prescription</a>
 
-        <p><b>OCR Full Text:</b></p>
-        <pre>{{ req.ocr_text if req.ocr_text else "OCR could not detect clear text" }}</pre>
+        <p><b>Higher Percent OCR Options:</b></p>
+        {% if req.detected_medicines %}
+            <pre>{{ req.detected_medicines.split(",")[:5]|join(", ") }}</pre>
+        {% else %}
+            <pre>No clear high-percent medicine matched with database</pre>
+        {% endif %}
 
-        <p><b>Detected Medicines:</b></p>
-        <pre>{{ req.detected_medicines if req.detected_medicines else "No clear medicine matched with database" }}</pre>
+        <p><b>Staff Approved Medicines:</b></p>
+        <pre>{{ req.approved_medicines if req.approved_medicines else "Not approved yet" }}</pre>
 
         <form method="POST" action="/review_prescription/{{ req.id }}">
             <label><b>Staff Note:</b></label>
             <textarea name="staff_note" placeholder="Example: Dolo 650 available, Azithromycin requires confirmation">{{ req.staff_note if req.staff_note else "" }}</textarea>
 
             <br>
-            <h4>Detected Medicines - Select Correct Ones</h4>
+            <h4>Higher Percent Options - Select Correct Medicines</h4>
 
 {% if req.detected_medicines %}
-    {% for med in req.detected_medicines.split(",") %}
+    {% for med in req.detected_medicines.split(",")[:5] %}
         <label style="display:block; margin:8px 0;">
             <input type="checkbox" name="selected_medicines" value="{{ med.split('(')[0].strip() }}" checked>
             {{ med }}

@@ -1,80 +1,543 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Prescription</title>
     <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #dbe4f0;
+            --soft: #f5f8fc;
+            --blue: #1d4ed8;
+            --blue-dark: #1e3a8a;
+            --green: #15803d;
+            --shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #eef4ff;
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(29, 78, 216, 0.10), transparent 32rem),
+                linear-gradient(135deg, #f8fbff 0%, #eef4f8 48%, #f7fafc 100%);
         }
 
-        .box {
-            width: 420px;
-            margin: 80px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            text-align: center;
+        a {
+            color: inherit;
+            text-decoration: none;
         }
 
-        h2 {
-            color: #2563eb;
+        .page-shell {
+            width: 100%;
+            min-height: 100vh;
+            padding: 0 0 44px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            width: 100%;
+            padding: 10px 24px;
+            margin-bottom: 0;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 8% 8%, rgba(253, 230, 138, 0.16), transparent 28%),
+                radial-gradient(circle at 92% 18%, rgba(103, 232, 249, 0.12), transparent 30%),
+                linear-gradient(135deg, rgba(8, 47, 73, 0.98), rgba(15, 118, 110, 0.96));
+            border-bottom: 1px solid rgba(103, 232, 249, 0.24);
+            box-shadow: 0 16px 38px rgba(8, 47, 73, 0.22);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 270px;
+        }
+
+        .brand-icon {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 14px rgba(2, 6, 23, 0.28));
+        }
+
+        .brand-name {
+            display: block;
+        }
+
+        .brand-yuvraj {
+            display: block;
+            font-family: "Cinzel", Georgia, "Times New Roman", serif;
+            font-size: 28px;
+            letter-spacing: 1.7px;
+            line-height: 1;
+            background: linear-gradient(90deg, #ecfeff 0%, #67e8f9 42%, #fde68a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 3px 12px rgba(2, 6, 23, 0.44);
+        }
+
+        .brand-medical {
+            display: block;
+            margin-top: 3px;
+            font-size: 13px;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #67e8f9 0%, #fde68a 55%, #ecfeff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transform: translateX(2.5px);
+        }
+
+        .brand-tagline {
+            display: block;
+            margin-top: 4px;
+            color: #ccfbf1;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .nav-actions,
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn,
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 11px 17px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .btn:hover,
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary,
+        button {
+            color: white;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            box-shadow: 0 12px 24px rgba(29, 78, 216, 0.22);
+        }
+
+        .btn-light {
+            color: var(--blue-dark);
+            background: rgba(255, 255, 255, 0.88);
+            border-color: var(--line);
+        }
+
+        .topbar .btn-light {
+            color: #ecfeff;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(103, 232, 249, 0.22);
+        }
+
+        .topbar .btn-light:hover,
+        .topbar .btn-primary:hover {
+            color: #075985;
+            background: #ffffff;
+            box-shadow: 0 12px 24px rgba(2, 6, 23, 0.18);
+        }
+
+        .upload-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 430px;
+            gap: 22px;
+            align-items: stretch;
+            width: min(1280px, calc(100% - 48px));
+            min-height: calc(100vh - 82px);
+            margin: 0 auto;
+            padding: 28px 0 36px;
+        }
+
+        .hero-panel,
+        .upload-panel {
+            border: 1px solid rgba(219, 228, 240, 0.95);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-panel {
+            position: relative;
+            overflow: hidden;
+            min-height: 100%;
+            padding: 52px;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(187, 247, 208, 0.22), transparent 28%),
+                linear-gradient(90deg, rgba(8, 47, 73, 0.96) 0%, rgba(12, 74, 110, 0.90) 45%, rgba(15, 118, 110, 0.76) 100%),
+                url("{{ url_for('static', filename='images/dashboard-prescription-ai.png') }}");
+            background-size: auto, auto, 520px;
+            background-repeat: no-repeat;
+            background-position: center, center, right 28px bottom 34px;
+        }
+
+        .hero-content {
+            max-width: 590px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            color: #ecfeff;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.36);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        h1 {
+            margin: 16px 0 12px;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-size: clamp(40px, 5.6vw, 70px);
+            line-height: 1.02;
+            letter-spacing: 0;
+            color: #ffffff;
+            text-shadow: 0 8px 24px rgba(2, 6, 23, 0.34);
+        }
+
+        .hero-accent {
+            display: block;
+            color: #fef08a;
+            text-shadow: 0 7px 20px rgba(2, 6, 23, 0.32);
+        }
+
+        .hero-panel p {
+            margin: 0;
+            color: #f8fafc;
+            font-size: 17px;
+            line-height: 1.7;
+            max-width: 560px;
+            text-shadow: 0 4px 14px rgba(2, 6, 23, 0.24);
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 28px;
+            max-width: 680px;
+        }
+
+        .trust-card {
+            min-height: 118px;
+            padding: 16px;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(8px);
+        }
+
+        .trust-card strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .trust-card span {
+            display: block;
+            color: #dffdf6;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .upload-panel {
+            padding: 24px;
+            align-self: center;
+        }
+
+        .panel-head {
+            padding-bottom: 18px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .panel-head h2 {
+            margin: 0 0 8px;
+            font-size: 26px;
+            letter-spacing: 0;
+        }
+
+        .panel-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .upload-zone {
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .upload-label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             margin-bottom: 10px;
         }
 
-        p {
-            color: #555;
+        input[type="file"] {
+            width: 100%;
+            padding: 18px;
+            color: #334155;
+            border: 1px dashed #8fb3ef;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #ffffff, #f4f8ff);
+            font-family: inherit;
             font-size: 14px;
+            cursor: pointer;
         }
 
-        input[type="file"] {
-            margin: 20px 0;
-            width: 100%;
+        input[type="file"]::file-selector-button {
+            margin-right: 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #eaf1ff;
+            color: var(--blue-dark);
+            padding: 10px 12px;
+            font-family: inherit;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .file-note {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0 18px;
             padding: 12px;
-            border: 1px dashed #2563eb;
-            border-radius: 10px;
-            background: #f8fbff;
+            border-radius: 8px;
+            color: #315078;
+            background: #eef6ff;
+            border: 1px solid #cfe3ff;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .file-note strong {
+            color: var(--blue-dark);
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            border: none;
-            background: #2563eb;
+        }
+
+        .form-actions {
+            margin-top: 16px;
+        }
+
+        .form-actions .btn {
+            flex: 1 1 180px;
+        }
+
+        .process-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid var(--line);
+        }
+
+        .process-step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .process-step b {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 28px;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
             color: white;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
+            background: var(--green);
+            font-size: 12px;
         }
 
-        button:hover {
-            background: #1d4ed8;
+        @media (max-width: 960px) {
+            .upload-layout {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .hero-panel {
+                min-height: 520px;
+                background-size: auto, auto, 380px;
+                background-position: center, center, right 18px bottom 20px;
+            }
         }
 
-        a {
-            display: inline-block;
-            margin-top: 18px;
-            color: #2563eb;
-            text-decoration: none;
+        @media (max-width: 700px) {
+            .page-shell {
+                width: 100%;
+                padding-top: 0;
+            }
+
+            .topbar {
+                align-items: stretch;
+                flex-direction: column;
+                padding: 12px 16px;
+            }
+
+            .nav-actions,
+            .nav-actions .btn {
+                width: 100%;
+            }
+
+            .hero-panel {
+                min-height: 0;
+                padding: 24px;
+                background-image:
+                    radial-gradient(circle at 80% 18%, rgba(187, 247, 208, 0.18), transparent 28%),
+                    linear-gradient(135deg, rgba(8, 47, 73, 0.97), rgba(15, 118, 110, 0.92));
+            }
+
+            .trust-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-panel {
+                padding: 18px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>Upload Prescription</h2>
-    <p>Upload your prescription image. Our staff will verify it before confirming medicines.</p>
+<main class="page-shell">
+    <header class="topbar">
+        <a href="/" class="brand" aria-label="Yuvraj Medical home">
+            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" class="brand-icon" alt="Yuvraj Medical">
+            <span class="brand-name">
+                <span class="brand-yuvraj">Yuvraj</span>
+                <span class="brand-medical">Medical</span>
+                <span class="brand-tagline">Trusted Online Pharmacy</span>
+            </span>
+        </a>
 
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="prescription" accept="image/*" required>
-        <button type="submit">Upload Prescription</button>
-    </form>
+        <nav class="nav-actions" aria-label="Prescription navigation">
+            <a href="/" class="btn btn-light">Home</a>
+            <a href="/my_prescriptions" class="btn btn-primary">Prescription History</a>
+        </nav>
+    </header>
 
-    <a href="/">Back to Home</a>
-</div>
+    <section class="upload-layout">
+        <div class="hero-panel">
+            <div class="hero-content">
+                <span class="eyebrow">Prescription Upload</span>
+                <h1>
+                    Upload once.
+                    <span class="hero-accent">Verified care starts here.</span>
+                </h1>
+                <p>
+                    Send your doctor prescription securely for staff review. Once approved,
+                    your eligible medicines can move straight into checkout.
+                </p>
+
+                <div class="trust-grid" aria-label="Upload benefits">
+                    <div class="trust-card">
+                        <strong>Image or PDF</strong>
+                        <span>Upload a clear photo, scan, or PDF prescription.</span>
+                    </div>
+                    <div class="trust-card">
+                        <strong>Staff Review</strong>
+                        <span>The team checks medicine details before approval.</span>
+                    </div>
+                    <div class="trust-card">
+                        <strong>Easy Checkout</strong>
+                        <span>Approved requests can continue to prescription checkout.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="upload-panel">
+            <div class="panel-head">
+                <h2>Upload Prescription</h2>
+                <p>Choose a clear prescription image or PDF. Maximum clarity helps staff approve it faster.</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                <label class="upload-zone">
+                    <span class="upload-label">Prescription File</span>
+                    <input type="file" name="prescription" accept="image/*,.pdf" required>
+                </label>
+
+                <div class="file-note">
+                    <strong>Tip:</strong>
+                    <span>Use a well-lit image where the doctor name, date, and medicine names are readable.</span>
+                </div>
+
+                <button type="submit">Upload Prescription</button>
+            </form>
+
+            <div class="form-actions">
+                <a href="/my_prescriptions" class="btn btn-light">View Uploaded</a>
+                <a href="/" class="btn btn-light">Back to Home</a>
+            </div>
+
+            <div class="process-list" aria-label="Prescription review process">
+                <div class="process-step">
+                    <b>1</b>
+                    <span>Select your image or PDF prescription.</span>
+                </div>
+                <div class="process-step">
+                    <b>2</b>
+                    <span>Staff reviews detected medicines and notes.</span>
+                </div>
+                <div class="process-step">
+                    <b>3</b>
+                    <span>Approved medicines become ready for checkout.</span>
+                </div>
+            </div>
+        </aside>
+    </section>
+</main>
 
 </body>
 </html>

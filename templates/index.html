@@ -3098,6 +3098,7 @@ body{
     <nav>
         <a href="{{ url_for('profile') }}"><span>👤 Profile</span><span>›</span></a>
         <a href="{{ url_for('my_orders') }}"><span>📦 My Orders</span><span>›</span></a>
+        <a href="/ai_health_assistant"><span>🤖 AI Features</span><span>›</span></a>
         <a href="/upload_prescription"><span>📄 Upload Prescription</span><span>›</span></a>
         <a href="/my_prescriptions"><span>🧾 My Prescriptions</span><span>›</span></a>
         <a href="{{ url_for('logout') }}" class="logout-btn"><span>🚪 Logout</span><span>›</span></a>
@@ -3120,6 +3121,7 @@ body{
 
         <div class="hero-actions">
             <a href="#departments">Browse Medicines</a>
+            <a href="/ai_health_assistant">AI Features</a>
             <a href="/upload_prescription" class="hero-outline">Upload Prescription</a>
         </div>
 
@@ -3227,6 +3229,72 @@ body{
             <a href="{{ url_for('my_orders') }}">Track latest</a>
         </div>
     </article>
+</section>
+
+<section class="offers-section" aria-label="AI Features">
+    <div class="offers-head">
+        <div>
+            <span class="offers-eyebrow">Manual Offline Assistant</span>
+            <h2>🤖 AI Features</h2>
+            <p>Helpful medicine and health tools powered by local rules and inventory, without any API.</p>
+        </div>
+    </div>
+
+    <div class="offers-grid">
+        <a href="/ai_health_assistant?feature=medicine_search" class="offer-card image-offer">
+            <div class="offer-content">
+                <span class="offer-badge">Search</span>
+                <h3>AI Medicine Search</h3>
+                <p>Search matching medicines from Yuvraj Medical inventory.</p>
+                <span class="offer-cta">Open search</span>
+            </div>
+        </a>
+
+        <a href="/ai_health_assistant?feature=symptom_checker" class="offer-card image-offer">
+            <div class="offer-content">
+                <span class="offer-badge">Check</span>
+                <h3>AI Symptom Checker</h3>
+                <p>Get basic symptom category guidance and warning signs.</p>
+                <span class="offer-cta">Check symptoms</span>
+            </div>
+        </a>
+
+        <a href="/ai_health_assistant?feature=health_assistant" class="offer-card image-offer">
+            <div class="offer-content">
+                <span class="offer-badge">Help</span>
+                <h3>AI Health Assistant</h3>
+                <p>Ask general medicine, pharmacy, and health support questions.</p>
+                <span class="offer-cta">Ask assistant</span>
+            </div>
+        </a>
+
+        <a href="/ai_health_assistant?feature=disease_info" class="offer-card image-offer">
+            <div class="offer-content">
+                <span class="offer-badge">Info</span>
+                <h3>AI Disease Information</h3>
+                <p>Read simple disease summaries, care tips, and red flags.</p>
+                <span class="offer-cta">View info</span>
+            </div>
+        </a>
+
+        <a href="/ai_health_assistant?feature=medicine_suggestions" class="offer-card image-offer">
+            <div class="offer-content">
+                <span class="offer-badge">Suggest</span>
+                <h3>AI Medicine Suggestions</h3>
+                <p>Find catalog suggestions by symptom or care category.</p>
+                <span class="offer-cta">Get suggestions</span>
+            </div>
+        </a>
+
+        <a href="/ai_health_assistant?feature=reminder_suggestions" class="offer-card image-offer">
+            <div class="offer-content">
+                <span class="offer-badge">Reminder</span>
+                <h3>AI Medicine Reminder Suggestions</h3>
+                <p>Create a simple medicine reminder plan from your timings.</p>
+                <span class="offer-cta">Plan reminders</span>
+            </div>
+        </a>
+    </div>
 </section>
 
 <section class="offers-section" aria-label="Offers">
