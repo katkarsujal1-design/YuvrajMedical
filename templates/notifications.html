@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <style>
+        :root{--ink:#102033;--muted:#64748b;--line:#dbe4f0;--wine:#7f1d4e;--teal:#0f766e;--soft:#f8fafc;--amber:#a16207;--green:#047857;--red:#b91c1c;--shadow:0 24px 70px rgba(15,23,42,.11)}
+        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc 0%,#eef7f5 52%,#fdf2f8 100%)}body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(115deg,rgba(127,29,78,.055),transparent 30%,rgba(15,118,110,.06) 72%,transparent)}a{text-decoration:none;color:inherit}
+        .wrap{width:min(1220px,calc(100% - 32px));margin:28px auto 56px}.hero{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;margin-bottom:18px}.hero-main,.hero-side,.stat,.type-card,.toolbar,.notice-card,.empty{border:1px solid rgba(219,228,240,.92);border-radius:8px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}.hero-main{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,.9fr) minmax(300px,.75fr);gap:24px;align-items:center;padding:34px;background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(236,254,255,.74))}.hero-main::after{content:"";position:absolute;inset:auto 0 0 auto;width:52%;height:7px;background:linear-gradient(90deg,var(--wine),var(--teal),#facc15)}.hero-copy{position:relative;z-index:2}.hero-visual{position:relative;z-index:2;overflow:hidden;border-radius:8px;border:1px solid rgba(15,118,110,.18);background:#fff;box-shadow:0 18px 42px rgba(15,23,42,.13)}.hero-visual::after{content:"Live alert intelligence";position:absolute;left:14px;bottom:14px;padding:8px 11px;border-radius:999px;color:#fff;background:rgba(16,32,51,.74);backdrop-filter:blur(12px);font-size:12px;font-weight:1000}.hero-visual img{display:block;width:100%;height:330px;object-fit:cover}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;color:var(--teal);background:#ecfeff;border:1px solid rgba(15,118,110,.14);font-size:12px;font-weight:1000;letter-spacing:.09em;text-transform:uppercase}.hero h1{max-width:760px;margin:14px 0 0;font-size:clamp(38px,4.8vw,64px);line-height:.98;letter-spacing:0}.hero h1 .title-gradient{display:inline;background:linear-gradient(92deg,var(--wine),#334155 38%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.hero p{max-width:700px;margin:16px 0 0;color:#475569;font-size:16px;font-weight:800;line-height:1.75}.hero-text-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.hero-text-chips span{padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#334155;font-size:12px;font-weight:1000}.hero-side{padding:18px;display:grid;align-content:space-between;gap:14px;background:linear-gradient(135deg,rgba(127,29,78,.06),rgba(15,118,110,.08)),#fff}.status-ring{aspect-ratio:1;border-radius:999px;display:grid;place-items:center;text-align:center;background:conic-gradient(var(--teal) 0 72%,#e2e8f0 72% 100%);padding:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}.ring-inner{width:100%;height:100%;border-radius:999px;background:#fff;display:grid;place-items:center}.ring-inner strong{display:block;font-size:44px;line-height:1;color:var(--wine)}.ring-inner span{display:block;margin-top:6px;color:var(--muted);font-size:12px;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.hero-actions{display:grid;gap:10px}.hero-actions button,.hero-actions a{border:0;border-radius:8px;padding:12px 14px;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));font-weight:1000;cursor:pointer;text-align:center}.hero-actions a{background:#fff;color:var(--ink);border:1px solid var(--line)}
+        .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{position:relative;overflow:hidden;padding:17px}.stat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--wine),var(--teal));opacity:.82}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.07em;text-transform:uppercase}.stat strong{display:block;margin-top:8px;font-size:30px;line-height:1;color:#0f172a}.stat small{display:block;margin-top:6px;color:var(--muted);font-weight:800}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;margin-bottom:18px;background:linear-gradient(135deg,#fff,rgba(236,254,255,.72))}.toolbar h2{margin:0;font-size:21px}.toolbar h2 span{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:800}.filters{display:flex;flex-wrap:wrap;gap:8px}.filter-btn{border:1px solid var(--line);border-radius:999px;padding:9px 12px;background:#fff;color:var(--muted);font-weight:1000;cursor:pointer;box-shadow:0 8px 18px rgba(15,23,42,.04)}.filter-btn.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--wine),var(--teal))}
+        .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:18px}.type-card{position:relative;overflow:hidden;padding:16px 15px 15px}.type-card::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--wine),var(--teal))}.type-card strong{display:block;font-size:16px;letter-spacing:0}.type-card span{display:block;margin-top:8px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.5}
+        .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px}.list{display:grid;gap:12px}.notice-card{position:relative;display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:16px;align-items:start;padding:18px;transition:transform .18s ease,box-shadow .18s ease}.notice-card:hover{transform:translateY(-2px);box-shadow:0 26px 68px rgba(15,23,42,.14)}.notice-card.unread{border-color:rgba(15,118,110,.38);background:linear-gradient(135deg,rgba(15,118,110,.07),rgba(127,29,78,.05)),#fff}.notice-card.unread::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:4px;border-radius:0 999px 999px 0;background:linear-gradient(180deg,var(--wine),var(--teal))}.icon{width:62px;height:62px;border-radius:8px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));font-weight:1000;font-size:15px;box-shadow:0 12px 26px rgba(15,118,110,.2)}.notice-card h3{margin:0;font-size:21px;line-height:1.2;letter-spacing:0}.notice-card p{margin:9px 0 0;color:#526174;font-weight:800;line-height:1.62}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pill{padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12px;font-weight:1000}.pill.unread{background:#ecfdf5;color:var(--green);border-color:#bbf7d0}.pill.read{background:#f8fafc;color:#64748b}.notice-actions{display:grid;gap:8px;min-width:132px}.notice-actions a,.notice-actions button{border:1px solid var(--line);border-radius:8px;padding:10px 11px;background:#fff;color:var(--ink);font-weight:1000;cursor:pointer;text-align:center}.notice-actions .primary{border:0;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 12px 24px rgba(15,118,110,.18)}
+        .side-panel{display:grid;gap:12px;align-content:start}.insight{padding:17px;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 16px 38px rgba(15,23,42,.07)}.insight h3{margin:0;font-size:18px}.insight p{margin:9px 0 0;color:var(--muted);font-weight:800;line-height:1.58}.quick-links{display:grid;gap:8px;margin-top:12px}.quick-links a{padding:11px;border-radius:8px;background:#f8fafc;border:1px solid var(--line);font-weight:1000}.empty{padding:38px;text-align:center;color:var(--muted);font-weight:800}.empty strong{display:block;margin-bottom:6px;color:var(--ink);font-size:21px}.is-hidden{display:none!important}
+        @media(max-width:980px){.hero,.layout,.hero-main{grid-template-columns:1fr}.hero-side{grid-template-columns:180px minmax(0,1fr);align-items:center}.hero-visual img{height:260px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){.wrap{width:min(100% - 22px,1220px);margin-top:18px}.hero-side,.notice-card{grid-template-columns:1fr}.hero-visual img{height:210px}.toolbar{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr}.notice-actions{grid-template-columns:1fr 1fr}.icon{width:48px;height:48px}.status-ring{max-width:190px}}
+    </style>
+</head>
+<body>
+{% include "partials/site_header.html" %}
+<main class="wrap">
+    <section class="hero">
+        <div class="hero-main">
+            <div class="hero-copy">
+                <span class="eyebrow">Notification Center</span>
+                <h1><span class="title-gradient">Every healthcare update</span>, sorted and ready to act on.</h1>
+                <p>Review order updates, prescription decisions, delivery movement, offers, refill reminders, expiry alerts, and health tips from one professional workspace.</p>
+                <div class="hero-text-chips" aria-label="Notification capabilities">
+                    <span>Order intelligence</span>
+                    <span>Delivery signals</span>
+                    <span>Health reminders</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="{{ url_for('static', filename='images/notification-center-premium.png') }}" alt="Healthcare notification dashboard visual">
+            </div>
+        </div>
+        <aside class="hero-side" aria-label="Unread notification summary">
+            <div class="status-ring">
+                <div class="ring-inner">
+                    <div><strong>{{ summary.unread }}</strong><span>Unread</span></div>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <form method="POST" action="/notifications/mark_all_read"><button type="submit">Mark All Read</button></form>
+                <a href="/my_orders">Open Orders</a>
+            </div>
+        </aside>
+    </section>
+
+    <section class="stats" aria-label="Notification summary">
+        <div class="stat"><span>Total Alerts</span><strong>{{ summary.total }}</strong><small>All saved notifications</small></div>
+        <div class="stat"><span>Unread</span><strong>{{ summary.unread }}</strong><small>Needs attention</small></div>
+        <div class="stat"><span>Categories</span><strong>{{ summary.types|length }}</strong><small>Active alert groups</small></div>
+        <div class="stat"><span>Status</span><strong>{{ "Clear" if summary.unread == 0 else "Action" }}</strong><small>{{ "Everything is read" if summary.unread == 0 else "Review unread items" }}</small></div>
+    </section>
+
+    <section class="toolbar" aria-label="Notification filters">
+        <h2>Notification Feed <span>Filter by priority, category, or unread alerts.</span></h2>
+        <div class="filters">
+            <button class="filter-btn active" type="button" data-filter="all">All</button>
+            <button class="filter-btn" type="button" data-filter="unread">Unread</button>
+            {% for type in summary.types.keys() %}
+            <button class="filter-btn" type="button" data-filter="{{ type }}">{{ type }}</button>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="types" aria-label="Notification categories">
+        {% for type, description in summary.types.items() %}
+        <article class="type-card">
+            <strong>{{ type }}</strong>
+            <span>{{ description }}</span>
+        </article>
+        {% endfor %}
+    </section>
+
+    <div class="layout">
+        <section class="list" aria-label="Notification list" id="notification-list">
+            {% for notification in notifications %}
+            <article class="notice-card {% if not notification.is_read %}unread{% endif %}" data-type="{{ notification.type }}" data-read="{{ 1 if notification.is_read else 0 }}">
+                <div class="icon">{{ notification.type[:2]|upper }}</div>
+                <div>
+                    <h3>{{ notification.title }}</h3>
+                    <p>{{ notification.message }}</p>
+                    <div class="meta">
+                        <span class="pill">{{ notification.type }}</span>
+                        <span class="pill">{{ notification.created_at }}</span>
+                        <span class="pill {{ 'read' if notification.is_read else 'unread' }}">{{ "Read" if notification.is_read else "Unread" }}</span>
+                    </div>
+                </div>
+                <div class="notice-actions">
+                    {% if notification.target_url %}<a class="primary" href="{{ notification.target_url }}">Open</a>{% endif %}
+                    {% if not notification.is_read %}
+                    <form method="POST" action="/notifications/mark_read/{{ notification.id }}"><button type="submit">Mark Read</button></form>
+                    {% endif %}
+                </div>
+            </article>
+            {% else %}
+            <div class="empty"><strong>No notifications yet.</strong>Order, prescription, delivery, offer, refill, expiry, and health tip updates will appear here.</div>
+            {% endfor %}
+            <div class="empty is-hidden" id="filtered-empty"><strong>No matching notifications.</strong>Try a different category or view all notifications.</div>
+        </section>
+
+        <aside class="side-panel" aria-label="Notification actions and guidance">
+            <section class="insight">
+                <h3>Priority Guide</h3>
+                <p>Unread delivery, expiry, and prescription alerts usually need the fastest attention. Offer and health-tip alerts can be reviewed anytime.</p>
+            </section>
+            <section class="insight">
+                <h3>Quick Links</h3>
+                <div class="quick-links">
+                    <a href="/my_orders">My Orders</a>
+                    <a href="/my_prescriptions">My Prescriptions</a>
+                    <a href="/payment_history">Payment History</a>
+                    <a href="/ai_health_assistant">AI Health Assistant</a>
+                </div>
+            </section>
+        </aside>
+    </div>
+</main>
+
+<script>
+const filterButtons = document.querySelectorAll(".filter-btn");
+const cards = document.querySelectorAll(".notice-card");
+const filteredEmpty = document.getElementById("filtered-empty");
+
+filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        filterButtons.forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        const filter = button.dataset.filter;
+        let visible = 0;
+
+        cards.forEach((card) => {
+            const match = filter === "all" || (filter === "unread" && card.dataset.read === "0") || card.dataset.type === filter;
+            card.classList.toggle("is-hidden", !match);
+            if (match) visible += 1;
+        });
+
+        if (filteredEmpty) filteredEmpty.classList.toggle("is-hidden", visible !== 0);
+    });
+});
+</script>
+{% include "partials/site_header_script.html" %}
+</body>
+</html>

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>{{ dept_name }} - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
@@ -451,28 +452,7 @@ a{
 </head>
 
 <body>
-
-<div class="header">
-    <a class="brand" href="/">
-        <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}"
-             class="brand-icon"
-             alt="Yuvraj Medical">
-        <div class="brand-name">
-            <span class="brand-yuvraj">Yuvraj</span>
-            <span class="brand-medical">Medical</span>
-            <span class="brand-tagline">Trusted Online Pharmacy</span>
-        </div>
-    </a>
-
-    <div class="header-nav">
-        <a href="/">🏠 Home</a>
-        <a href="/cart" class="cart-link">🛒 Cart ({{ cart_count }})</a>
-        <a href="/wishlist">❤️ Wishlist</a>
-        <a href="/my_orders">📦 Orders</a>
-        <a href="/profile">👤 Profile</a>
-        <a href="/logout">🚪 Logout</a>
-    </div>
-</div>
+{% include "partials/site_header.html" %}
 
 <div class="hero">
     <span class="hero-kicker">Curated Disease Care</span>
@@ -599,5 +579,6 @@ document.querySelectorAll(".cart-action").forEach((link) => {
     });
 });
 </script>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

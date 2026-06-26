@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ medicine["name"] }} - Medicine Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
         *{box-sizing:border-box}
@@ -482,28 +483,7 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <a class="brand" href="/">
-            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}"
-                 class="brand-icon"
-                 alt="Yuvraj Medical">
-            <div>
-                <div class="brand-name">
-                    <span class="brand-yuvraj">Yuvraj</span>
-                    <span class="brand-medical">Medical</span>
-                    <span class="brand-tagline">Trusted Online Pharmacy</span>
-                </div>
-            </div>
-        </a>
-        <nav class="nav">
-            <a href="/">🏠 Home</a>
-            <a href="/cart" class="cart-link">🛒 Cart ({{ cart_count }})</a>
-            <a href="/wishlist">❤️ Wishlist</a>
-            <a href="/my_orders">📦 Orders</a>
-            <a href="/profile">👤 Profile</a>
-            <a href="/logout">🚪 Logout</a>
-        </nav>
-    </header>
+    {% include "partials/site_header.html" %}
 
     <main class="wrap">
         <div class="breadcrumb">
@@ -673,11 +653,22 @@
             <div class="review-box">
                 <div class="review-mark">★</div>
                 <div>
-                    <strong>Review status</strong>
-                    <p>{{ details.review_summary }}</p>
+                    <strong>{{ "%.1f"|format(review_summary.average_rating|float) }} / 5 · {{ review_summary.review_count }} review{{ "" if review_summary.review_count == 1 else "s" }}</strong>
+                    <p>{{ details.review_summary if review_summary.review_count == 0 else "Customer reviews are now available for this medicine." }}</p>
+                    <p><a href="/reviews_feedback" style="color:#0f766e;font-weight:950;">Rate this medicine</a></p>
                 </div>
             </div>
+            {% for review in medicine_reviews %}
+            <div class="review-box" style="margin-top:12px;">
+                <div class="review-mark">{{ review.rating }}</div>
+                <div>
+                    <strong>{{ review.title or "Medicine review" }}</strong>
+                    <p>{{ review.message }}</p>
+                </div>
+            </div>
+            {% endfor %}
         </section>
     </main>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

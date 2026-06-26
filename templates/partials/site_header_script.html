@@ -1,0 +1,46 @@
+<script>
+(() => {
+    const panel = document.getElementById("yvm-account-panel");
+    const overlay = document.getElementById("yvm-side-overlay");
+    const toggle = document.querySelector(".yvm-menu-toggle");
+    const close = document.querySelector(".yvm-side-close");
+    if (!panel || !overlay || !toggle || !close) return;
+    let pageScrollY = 0;
+
+    const setOpen = (isOpen) => {
+        if (isOpen) {
+            pageScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+            document.body.style.top = `-${pageScrollY}px`;
+            panel.scrollTop = 0;
+            panel.classList.add("open");
+            overlay.classList.add("open");
+            document.documentElement.classList.add("yvm-menu-open");
+            document.body.classList.add("yvm-menu-open");
+        } else {
+            panel.classList.remove("open");
+            overlay.classList.remove("open");
+            document.documentElement.classList.remove("yvm-menu-open");
+            document.body.classList.remove("yvm-menu-open");
+            document.body.style.top = "";
+            window.scrollTo(0, pageScrollY);
+        }
+        panel.setAttribute("aria-hidden", String(!isOpen));
+        toggle.setAttribute("aria-expanded", String(isOpen));
+    };
+
+    toggle.addEventListener("click", () => setOpen(!panel.classList.contains("open")));
+    close.addEventListener("click", () => setOpen(false));
+    overlay.addEventListener("click", () => setOpen(false));
+    document.addEventListener("wheel", (event) => {
+        if (!panel.classList.contains("open")) return;
+        if (!panel.contains(event.target)) event.preventDefault();
+    }, { passive: false });
+    document.addEventListener("touchmove", (event) => {
+        if (!panel.classList.contains("open")) return;
+        if (!panel.contains(event.target)) event.preventDefault();
+    }, { passive: false });
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") setOpen(false);
+    });
+})();
+</script>

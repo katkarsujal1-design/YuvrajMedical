@@ -1,10 +1,30 @@
-<h2>📸 Smart Medicine Scanner</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Medicine Scanner</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+<style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:#122033;display:grid;place-items:center;padding:24px}
+    .scanner-card{width:min(560px,100%);padding:28px;border:1px solid rgba(216,226,238,.95);border-radius:8px;background:rgba(255,255,255,.94);box-shadow:0 22px 58px rgba(15,23,42,.12)}
+    h2{margin:0 0 18px;font-size:28px;color:#812052}
+    input{width:100%;padding:12px;border:1px solid #d8e2ee;border-radius:8px;background:#fff}
+    button{width:100%;min-height:44px;margin-top:14px;border:0;border-radius:8px;color:#fff;background:linear-gradient(135deg,#812052,#0f766e);font-weight:950;cursor:pointer}
+    #status{min-height:24px;margin:14px 0 0;color:#0f766e;font-weight:850}
+</style>
+</head>
+<body>
+<main class="scanner-card">
+<h2>Smart Medicine Scanner</h2>
 
 <input type="file" id="img" accept="image/*" capture="environment">
 
-<button onclick="scan()">🚀 Scan & Auto Add</button>
+<button onclick="scan()">Scan & Auto Add</button>
 
 <p id="status"></p>
+</main>
 
 <script>
 function scan(){
@@ -38,3 +58,5 @@ function scan(){
 
 }
 </script>
+</body>
+</html>

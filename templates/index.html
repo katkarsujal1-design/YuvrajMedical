@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yuvraj Medical</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
 
@@ -236,9 +238,11 @@ img{
     position:fixed;
     top:0;
     right:0;
+    bottom:0;
     z-index:1500;
     width:min(360px,88vw);
-    height:100vh;
+    height:auto;
+    max-height:100dvh;
     padding:22px;
     background:
         radial-gradient(circle at 85% 0%,rgba(253,230,138,.14),transparent 30%),
@@ -247,6 +251,25 @@ img{
     box-shadow:-24px 0 60px rgba(31,8,24,.36);
     transform:translateX(100%);
     transition:.32s ease;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(253,230,138,.62) rgba(255,255,255,.12);
+}
+
+.side-panel::-webkit-scrollbar{
+    width:8px;
+}
+
+.side-panel::-webkit-scrollbar-track{
+    background:rgba(255,255,255,.10);
+    border-radius:999px;
+}
+
+.side-panel::-webkit-scrollbar-thumb{
+    background:rgba(253,230,138,.62);
+    border-radius:999px;
 }
 
 .side-panel.open{
@@ -293,16 +316,43 @@ img{
 
 .side-panel nav{
     display:grid;
-    gap:12px;
+    gap:10px;
+}
+
+.side-section{
+    display:grid;
+    gap:10px;
+    margin-top:16px;
+}
+
+.side-section:first-child{
+    margin-top:0;
+}
+
+.side-section-title{
+    margin:0;
+    color:#fde68a;
+    font-size:11px;
+    font-weight:1000;
+    letter-spacing:.11em;
+    text-transform:uppercase;
 }
 
 .side-panel a{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:14px 16px;
-    border-radius:16px;
+    gap:12px;
+    min-height:44px;
+    padding:11px 13px;
+    border-radius:12px;
     background:rgba(255,255,255,.12);
+    line-height:1.25;
+}
+
+.side-panel a span:first-child{
+    min-width:0;
+    overflow-wrap:anywhere;
 }
 
 .side-notifications{
@@ -348,6 +398,17 @@ img{
 
 .side-notice + .side-notice{
     margin-top:9px;
+}
+
+html.home-menu-open,
+body.home-menu-open{
+    overflow:hidden;
+    overscroll-behavior:none;
+}
+
+body.home-menu-open{
+    position:fixed;
+    width:100%;
 }
 
 /* HERO */
@@ -2534,6 +2595,31 @@ body{
     background:#22c55e;
 }
 
+.ai-assistant-float{
+    position:relative;
+    background:linear-gradient(135deg,#7f1d4e,#0f766e);
+}
+
+.ai-assistant-float::after{
+    content:"AI";
+    position:absolute;
+    top:-5px;
+    right:-5px;
+    min-width:22px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    padding:0 5px;
+    border-radius:999px;
+    color:#4c1d3d;
+    background:#fde68a;
+    border:2px solid #ffffff;
+    font-size:10px;
+    font-weight:950;
+    line-height:1;
+    box-shadow:0 8px 16px rgba(15,23,42,.18);
+}
+
 .call-float{
     background:#0284c7;
 }
@@ -3076,7 +3162,7 @@ body{
             <span class="marquee-chip">Welcome {{ session["user"]["name"] }}</span>
             Yuvraj Medical is ready for your healthcare needs
             &nbsp;|&nbsp; Search medicines, upload prescriptions, and track orders from one place
-            &nbsp;|&nbsp; {{ notifications|length }} new update{{ "" if notifications|length == 1 else "s" }} waiting in your menu
+            &nbsp;|&nbsp; Open the Notifications page for all healthcare updates
         </span>
     </marquee>
 </div>
@@ -3090,18 +3176,48 @@ body{
 
     <section class="side-notifications" aria-label="Notifications">
         <h4>Notifications</h4>
-        {% for note in notifications %}
-            <div class="side-notice">{{ note }}</div>
-        {% endfor %}
+        <a class="side-notice" href="/notifications">View all order, prescription, delivery, offer, refill, expiry, and health tip notifications.</a>
     </section>
 
-    <nav>
-        <a href="{{ url_for('profile') }}"><span>👤 Profile</span><span>›</span></a>
-        <a href="{{ url_for('my_orders') }}"><span>📦 My Orders</span><span>›</span></a>
-        <a href="/ai_health_assistant"><span>🤖 AI Features</span><span>›</span></a>
-        <a href="/upload_prescription"><span>📄 Upload Prescription</span><span>›</span></a>
-        <a href="/my_prescriptions"><span>🧾 My Prescriptions</span><span>›</span></a>
-        <a href="{{ url_for('logout') }}" class="logout-btn"><span>🚪 Logout</span><span>›</span></a>
+    <nav aria-label="Home account quick access">
+        <section class="side-section">
+            <h4 class="side-section-title">Shop</h4>
+            <a href="/"><span>Home</span><span>›</span></a>
+            <a href="#departments"><span>Departments</span><span>›</span></a>
+            <a href="#offers"><span>Offers</span><span>›</span></a>
+            <a href="{{ url_for('cart') }}"><span>Cart</span><span>›</span></a>
+            <a href="{{ url_for('wishlist_page') }}"><span>Wishlist</span><span>›</span></a>
+        </section>
+
+        <section class="side-section">
+            <h4 class="side-section-title">Orders & Care</h4>
+            <a href="{{ url_for('my_orders') }}"><span>My Orders</span><span>›</span></a>
+            <a href="/reorder_subscription"><span>Reorder & Subscription</span><span>›</span></a>
+            <a href="/payment_history"><span>Payment History</span><span>›</span></a>
+            <a href="/upload_prescription"><span>Upload Prescription</span><span>›</span></a>
+            <a href="/my_prescriptions"><span>My Prescriptions</span><span>›</span></a>
+        </section>
+
+        <section class="side-section">
+            <h4 class="side-section-title">Rewards & Support</h4>
+            <a href="/rewards"><span>Rewards & Loyalty</span><span>›</span></a>
+            <a href="/notifications"><span>Notifications</span><span>›</span></a>
+            <a href="/reviews_feedback"><span>Reviews & Feedback</span><span>›</span></a>
+            <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>›</span></a>
+        </section>
+
+        <section class="side-section">
+            <h4 class="side-section-title">Account</h4>
+            <a href="{{ url_for('profile') }}"><span>Profile</span><span>›</span></a>
+            {% if session.get("user", {}).get("role") in ["staff", "owner"] %}
+            <a href="/staff"><span>Staff Dashboard</span><span>›</span></a>
+            {% endif %}
+            {% if session.get("user", {}).get("role") == "owner" %}
+            <a href="/owner_dashboard"><span>Owner Dashboard</span><span>›</span></a>
+            <a href="/cms"><span>CMS Dashboard</span><span>›</span></a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="logout-btn"><span>Logout</span><span>›</span></a>
+        </section>
     </nav>
 </aside>
 
@@ -3121,7 +3237,6 @@ body{
 
         <div class="hero-actions">
             <a href="#departments">Browse Medicines</a>
-            <a href="/ai_health_assistant">AI Features</a>
             <a href="/upload_prescription" class="hero-outline">Upload Prescription</a>
         </div>
 
@@ -3229,72 +3344,6 @@ body{
             <a href="{{ url_for('my_orders') }}">Track latest</a>
         </div>
     </article>
-</section>
-
-<section class="offers-section" aria-label="AI Features">
-    <div class="offers-head">
-        <div>
-            <span class="offers-eyebrow">Manual Offline Assistant</span>
-            <h2>🤖 AI Features</h2>
-            <p>Helpful medicine and health tools powered by local rules and inventory, without any API.</p>
-        </div>
-    </div>
-
-    <div class="offers-grid">
-        <a href="/ai_health_assistant?feature=medicine_search" class="offer-card image-offer">
-            <div class="offer-content">
-                <span class="offer-badge">Search</span>
-                <h3>AI Medicine Search</h3>
-                <p>Search matching medicines from Yuvraj Medical inventory.</p>
-                <span class="offer-cta">Open search</span>
-            </div>
-        </a>
-
-        <a href="/ai_health_assistant?feature=symptom_checker" class="offer-card image-offer">
-            <div class="offer-content">
-                <span class="offer-badge">Check</span>
-                <h3>AI Symptom Checker</h3>
-                <p>Get basic symptom category guidance and warning signs.</p>
-                <span class="offer-cta">Check symptoms</span>
-            </div>
-        </a>
-
-        <a href="/ai_health_assistant?feature=health_assistant" class="offer-card image-offer">
-            <div class="offer-content">
-                <span class="offer-badge">Help</span>
-                <h3>AI Health Assistant</h3>
-                <p>Ask general medicine, pharmacy, and health support questions.</p>
-                <span class="offer-cta">Ask assistant</span>
-            </div>
-        </a>
-
-        <a href="/ai_health_assistant?feature=disease_info" class="offer-card image-offer">
-            <div class="offer-content">
-                <span class="offer-badge">Info</span>
-                <h3>AI Disease Information</h3>
-                <p>Read simple disease summaries, care tips, and red flags.</p>
-                <span class="offer-cta">View info</span>
-            </div>
-        </a>
-
-        <a href="/ai_health_assistant?feature=medicine_suggestions" class="offer-card image-offer">
-            <div class="offer-content">
-                <span class="offer-badge">Suggest</span>
-                <h3>AI Medicine Suggestions</h3>
-                <p>Find catalog suggestions by symptom or care category.</p>
-                <span class="offer-cta">Get suggestions</span>
-            </div>
-        </a>
-
-        <a href="/ai_health_assistant?feature=reminder_suggestions" class="offer-card image-offer">
-            <div class="offer-content">
-                <span class="offer-badge">Reminder</span>
-                <h3>AI Medicine Reminder Suggestions</h3>
-                <p>Create a simple medicine reminder plan from your timings.</p>
-                <span class="offer-cta">Plan reminders</span>
-            </div>
-        </a>
-    </div>
 </section>
 
 <section class="offers-section" aria-label="Offers">
@@ -3563,6 +3612,9 @@ body{
 {% endif %}
 
 <div class="floating-contact" aria-label="Quick contact">
+    <a class="ai-assistant-float"
+       href="/ai_health_assistant"
+       aria-label="Open AI Health Assistant">🤖</a>
     <a class="whatsapp-float"
        href="https://wa.me/919999999999"
        aria-label="Chat on WhatsApp">☎</a>
@@ -3576,10 +3628,16 @@ const menuToggle = document.querySelector(".menu-toggle");
 const sidePanel = document.getElementById("account-panel");
 const sideOverlay = document.getElementById("side-overlay");
 const sideClose = document.querySelector(".side-close");
+let homeMenuScrollY = 0;
 
 function openSidePanel() {
+    homeMenuScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.style.top = `-${homeMenuScrollY}px`;
     sidePanel.classList.add("open");
     sideOverlay.classList.add("open");
+    document.documentElement.classList.add("home-menu-open");
+    document.body.classList.add("home-menu-open");
+    sidePanel.scrollTop = 0;
     sidePanel.setAttribute("aria-hidden", "false");
     menuToggle.setAttribute("aria-expanded", "true");
 }
@@ -3587,6 +3645,10 @@ function openSidePanel() {
 function closeSidePanel() {
     sidePanel.classList.remove("open");
     sideOverlay.classList.remove("open");
+    document.documentElement.classList.remove("home-menu-open");
+    document.body.classList.remove("home-menu-open");
+    document.body.style.top = "";
+    window.scrollTo(0, homeMenuScrollY);
     sidePanel.setAttribute("aria-hidden", "true");
     menuToggle.setAttribute("aria-expanded", "false");
 }
@@ -3594,6 +3656,14 @@ function closeSidePanel() {
 menuToggle.addEventListener("click", openSidePanel);
 sideOverlay.addEventListener("click", closeSidePanel);
 sideClose.addEventListener("click", closeSidePanel);
+document.addEventListener("wheel", (event) => {
+    if (!sidePanel.classList.contains("open")) return;
+    if (!sidePanel.contains(event.target)) event.preventDefault();
+}, { passive: false });
+document.addEventListener("touchmove", (event) => {
+    if (!sidePanel.classList.contains("open")) return;
+    if (!sidePanel.contains(event.target)) event.preventDefault();
+}, { passive: false });
 
 document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {

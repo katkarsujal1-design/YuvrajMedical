@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Prescription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
         :root {
             --ink: #0f172a;
@@ -448,24 +449,9 @@
     </style>
 </head>
 <body>
+{% include "partials/site_header.html" %}
 
 <main class="page-shell">
-    <header class="topbar">
-        <a href="/" class="brand" aria-label="Yuvraj Medical home">
-            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" class="brand-icon" alt="Yuvraj Medical">
-            <span class="brand-name">
-                <span class="brand-yuvraj">Yuvraj</span>
-                <span class="brand-medical">Medical</span>
-                <span class="brand-tagline">Trusted Online Pharmacy</span>
-            </span>
-        </a>
-
-        <nav class="nav-actions" aria-label="Prescription navigation">
-            <a href="/" class="btn btn-light">Home</a>
-            <a href="/my_prescriptions" class="btn btn-primary">Prescription History</a>
-        </nav>
-    </header>
-
     <section class="upload-layout">
         <div class="hero-panel">
             <div class="hero-content">
@@ -538,6 +524,7 @@
         </aside>
     </section>
 </main>
+{% include "partials/site_header_script.html" %}
 
 </body>
 </html>

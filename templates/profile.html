@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
         *{box-sizing:border-box}
         body{
@@ -713,23 +714,8 @@
     </style>
 </head>
 <body>
+{% include "partials/site_header.html" %}
 <div class="shell">
-    <header class="topbar">
-        <div class="brand">
-            <div class="brand-badge">
-                <img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt="Profile tools">
-            </div>
-            <div>
-                <h1>Profile Management</h1>
-                <span>Yuvraj Medical account control center</span>
-            </div>
-        </div>
-        <nav class="nav">
-            <a href="/">Home</a>
-            <a href="/logout">Logout</a>
-        </nav>
-    </header>
-
     <main class="profile-wrap">
         <section class="hero">
             <aside class="identity-card">
@@ -849,7 +835,7 @@
                 <h2>Profile Tools</h2>
                 <p>All requested profile management features in one place.</p>
             </div>
-            <span class="section-badge">10 account controls</span>
+            <span class="section-badge">20 account controls</span>
         </section>
 
         <section class="management-grid">
@@ -943,8 +929,99 @@
                 <p>Add a trusted contact for urgent medicine coordination.</p>
                 <span class="action-arrow">Set →</span>
             </a>
+            <a class="action-card featured" href="/rewards" data-code="11">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Points</span>
+                </div>
+                <h3>Loyalty Points</h3>
+                <p>Watch medicine purchases turn into care points and tier progress.</p>
+                <span class="action-arrow">Earn →</span>
+            </a>
+            <a class="action-card featured" href="/rewards#redeem" data-code="12">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Cashback</span>
+                </div>
+                <h3>Cashback History</h3>
+                <p>Review credited and pending cashback from verified payments.</p>
+                <span class="action-arrow">Track →</span>
+            </a>
+            <a class="action-card" href="/rewards" data-code="13">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Refer</span>
+                </div>
+                <h3>Referral Rewards</h3>
+                <p>Share your personal referral code and unlock bonus savings.</p>
+                <span class="action-arrow">Share →</span>
+            </a>
+            <a class="action-card" href="/rewards#redeem" data-code="14">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Coupons</span>
+                </div>
+                <h3>Coupons</h3>
+                <p>Browse reward coupons for discounts and free delivery.</p>
+                <span class="action-arrow">Browse →</span>
+            </a>
+            <a class="action-card" href="/rewards#redeem" data-code="15">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Redeem</span>
+                </div>
+                <h3>Reward Redemption</h3>
+                <p>Activate eligible rewards directly into your shopping cart.</p>
+                <span class="action-arrow">Redeem →</span>
+            </a>
+            <a class="action-card featured" href="/reorder_subscription#buy-again" data-code="16">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Repeat</span>
+                </div>
+                <h3>Buy Again</h3>
+                <p>Quickly reorder medicines from your previous purchases.</p>
+                <span class="action-arrow">Buy →</span>
+            </a>
+            <a class="action-card featured" href="/reorder_subscription#subscription-form" data-code="17">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Monthly</span>
+                </div>
+                <h3>Monthly Medicine Subscription</h3>
+                <p>Set monthly refill plans for routine medicines.</p>
+                <span class="action-arrow">Plan →</span>
+            </a>
+            <a class="action-card" href="/reorder_subscription#subscription-form" data-code="18">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Auto</span>
+                </div>
+                <h3>Auto Reorder</h3>
+                <p>Turn on automatic reorder preference for active subscriptions.</p>
+                <span class="action-arrow">Enable →</span>
+            </a>
+            <a class="action-card" href="/reorder_subscription" data-code="19">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Refill</span>
+                </div>
+                <h3>Refill Reminder</h3>
+                <p>Track upcoming refill dates before medicine runs out.</p>
+                <span class="action-arrow">Track →</span>
+            </a>
+            <a class="action-card" href="/reorder_subscription" data-code="20">
+                <div class="action-top">
+                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
+                    <span class="tool-chip">Rx</span>
+                </div>
+                <h3>Repeat Prescription Orders</h3>
+                <p>Repeat approved prescription medicine orders from one dashboard.</p>
+                <span class="action-arrow">Repeat →</span>
+            </a>
         </section>
     </main>
 </div>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

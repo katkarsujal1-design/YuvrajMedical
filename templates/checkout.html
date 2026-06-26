@@ -1,127 +1,178 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Checkout</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
-        body {
-            font-family: Arial;
-            background: #f4f4f4;
-            margin: 0;
-        }
-
-        .header {
-            background: #2c7be5;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-btns a {
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            color: white;
-            margin-left: 10px;
-            font-size: 14px;
-        }
-
-        .home {
-            background: green;
-        }
-
-        .cart {
-            background: orange;
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .form-box {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            margin: auto;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-        }
-
-        button {
-            background: green;
-            color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #218838;
-        }
+        :root{--ink:#102033;--muted:#63748b;--line:#d9e4f1;--wine:#812052;--teal:#0f766e;--soft:#f6f9fc;--danger:#b91c1c;--gold:#a16207}
+        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc,#eef7f5)}
+        a{text-decoration:none;color:inherit}.shell{max-width:1180px;margin:0 auto;padding:28px 18px 42px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.brand h1{margin:0;font-family:Georgia,serif;font-size:32px;color:var(--wine)}.brand span{display:block;margin-top:4px;color:var(--muted);font-weight:800;font-size:13px}.nav{display:flex;gap:10px}.nav a{padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:900;font-size:13px}
+        .pay-hero{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:18px;margin-bottom:20px}.pay-intro,.pay-card{border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 18px 46px rgba(15,23,42,.08)}.pay-intro{padding:24px;background:linear-gradient(135deg,rgba(129,32,82,.08),rgba(15,118,110,.08)),#fff}.pay-intro h2{margin:0;font-size:32px;line-height:1.1}.pay-intro p{margin:10px 0 0;color:var(--muted);font-weight:700;line-height:1.6}.pay-card{padding:14px;display:grid;align-content:center;text-align:center}.pay-card img{width:100%;aspect-ratio:1;object-fit:contain;border:1px solid var(--line);border-radius:8px}.pay-card strong{margin-top:10px;color:var(--teal);font-size:13px}
+        .hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:20px;align-items:stretch}.panel{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:8px;box-shadow:0 18px 46px rgba(15,23,42,.08)}.checkout-panel{padding:24px}.summary-panel{padding:18px;align-self:start;position:sticky;top:18px}
+        .eyebrow{margin:0 0 8px;color:var(--teal);font-size:12px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}.title{margin:0;font-size:34px;line-height:1.1}.sub{margin:10px 0 0;color:var(--muted);font-weight:700;line-height:1.6}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}.field{display:grid;gap:7px}.field.wide{grid-column:1/-1}label{font-size:12px;font-weight:1000;color:#334155;text-transform:uppercase;letter-spacing:.05em}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;padding:12px 13px;font:inherit;color:var(--ink);outline:none}textarea{min-height:92px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:rgba(15,118,110,.55);box-shadow:0 0 0 4px rgba(15,118,110,.08)}
+        .payment-box{margin-top:22px;padding:18px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(135deg,rgba(129,32,82,.05),rgba(15,118,110,.07)),#fff}.payment-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.payment-head h2,.summary-panel h2{margin:0;font-size:20px}.method-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.method{position:relative}.method input{position:absolute;opacity:0;pointer-events:none}.method span{display:flex;min-height:72px;align-items:center;justify-content:center;text-align:center;padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:1000;font-size:13px;color:#24364d;box-shadow:0 8px 18px rgba(15,23,42,.04);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.method span::before{content:"";width:9px;height:9px;margin-right:8px;border-radius:999px;background:#cbd5e1}.method:hover span{transform:translateY(-1px)}.method input:checked + span{border-color:var(--teal);box-shadow:0 0 0 4px rgba(15,118,110,.09),0 12px 24px rgba(15,118,110,.1);color:var(--teal)}.method input:checked + span::before{background:linear-gradient(135deg,var(--wine),var(--teal))}.method.disabled span{background:#f1f5f9;color:#94a3b8;box-shadow:none}.method.disabled span::before{background:#dbe4f0}
+        .manual-pay{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px;margin-top:16px;padding:14px;border:1px dashed rgba(15,118,110,.35);border-radius:8px;background:#f8fffd}.qr{padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;text-align:center;box-shadow:0 12px 24px rgba(15,23,42,.06)}.qr img{display:block;width:100%;aspect-ratio:1;object-fit:contain;border-radius:6px}.qr strong{display:block;margin-top:9px;font-size:12px;color:var(--teal)}.proof{display:grid;gap:12px}.help{margin:0;color:var(--muted);font-size:13px;font-weight:700;line-height:1.55}.cod-note{margin-top:14px;padding:12px;border-radius:8px;border:1px solid #fde68a;background:#fffbeb;color:#854d0e;font-size:13px;font-weight:800}
+        .submit{margin-top:20px;width:100%;border:0;border-radius:8px;padding:14px 18px;background:linear-gradient(135deg,var(--wine),var(--teal));color:#fff;font-weight:1000;font-size:15px;cursor:pointer;box-shadow:0 16px 30px rgba(15,118,110,.18)}.submit:hover{transform:translateY(-1px)}.flash{margin:0 0 16px;padding:12px 14px;border:1px solid #fecaca;border-radius:8px;background:#fff1f2;color:var(--danger);font-weight:800}
+        .items{display:grid;gap:10px;margin-top:15px}.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff}.item strong{font-size:14px}.item span{color:var(--muted);font-size:12px;font-weight:800}.totals{margin-top:16px;display:grid;gap:9px}.line{display:flex;justify-content:space-between;color:var(--muted);font-weight:800}.line.payable{margin-top:6px;padding-top:13px;border-top:1px solid var(--line);color:var(--ink);font-size:18px;font-weight:1000}.secure{margin-top:16px;padding:14px;border-radius:8px;background:#f8fafc;border:1px solid var(--line)}.secure b{display:block;margin-bottom:6px}.secure p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;font-weight:700}
+        @media(max-width:900px){.pay-hero,.hero{grid-template-columns:1fr}.pay-card{max-width:280px}.summary-panel{position:static}.method-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.manual-pay{grid-template-columns:1fr}.qr img{max-width:240px;margin:auto}}@media(max-width:560px){.topbar,.payment-head{flex-direction:column;align-items:flex-start}.grid,.method-grid{grid-template-columns:1fr}.title,.pay-intro h2{font-size:28px}.nav{width:100%;flex-wrap:wrap}.nav a{flex:1;text-align:center}}
     </style>
 </head>
-
 <body>
+{% include "partials/site_header.html" %}
+<main class="shell">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash">{{ messages[0] }}</div>
+    {% endif %}
+    {% endwith %}
 
-<div class="header">
-    <h2>🧾 Checkout</h2>
+    <section class="pay-hero">
+        <div class="pay-intro">
+            <p class="eyebrow">Payments</p>
+            <h2>Pay by UPI, wallet, or COD with staff-verified proof.</h2>
+            <p>Use the QR for UPI apps, upload the screenshot, and track verification from Payment History.</p>
+        </div>
+        <div class="pay-card">
+            <img src="{{ url_for('static', filename='images/payment_qr.jpeg') }}" alt="Yuvraj Medical UPI QR code">
+            <strong>Business UPI QR</strong>
+        </div>
+    </section>
 
-    <!-- NAV BUTTONS -->
-    <div class="nav-btns">
-        <a href="/" class="home">🏠 Home</a>
-        <a href="/cart" class="cart">🛒 Cart</a>
-    </div>
-</div>
+    <form class="hero" action="/place_order" method="POST" enctype="multipart/form-data">
+        <section class="panel checkout-panel">
+            <p class="eyebrow">Checkout</p>
+            <h2 class="title">Complete delivery and payment details.</h2>
+            <p class="sub">Manual UPI payments are verified by staff using the transaction ID and uploaded screenshot. Card payments need a gateway, so they are shown as unavailable for now.</p>
 
-<div class="container">
+            <div class="grid">
+                <div class="field">
+                    <label for="name">Full Name</label>
+                    <input id="name" type="text" name="name" required>
+                </div>
+                <div class="field">
+                    <label for="contact">Contact Number</label>
+                    <input id="contact" type="text" name="contact" required>
+                </div>
+                <div class="field wide">
+                    <label for="address">Delivery Address</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
+                <div class="field wide">
+                    <label for="delivery_notes">Delivery Notes</label>
+                    <textarea id="delivery_notes" name="delivery_notes" placeholder="Landmark, preferred time, or handover instructions"></textarea>
+                </div>
+                <div class="field wide">
+                    <label for="prescription">Doctor Prescription</label>
+                    <input id="prescription" type="file" name="prescription" accept="image/*,.pdf">
+                </div>
+            </div>
 
-    <div class="form-box">
+            <section class="payment-box">
+                <div class="payment-head">
+                    <div>
+                        <h2>Payment Method</h2>
+                        <p class="help">Choose COD or scan the QR with any UPI app and upload proof.</p>
+                    </div>
+                </div>
 
-		<form action="/place_order" method="POST" enctype="multipart/form-data">
-			!-- 📂 PRESCRIPTION SECTION -->
-<div style="margin-top:15px;">
+                <div class="method-grid" id="method-grid">
+                    {% for method in payment_methods %}
+                    <label class="method">
+                        <input type="radio" name="payment_method" value="{{ method }}" {% if loop.first %}checked{% endif %}>
+                        <span>{{ method }}</span>
+                    </label>
+                    {% endfor %}
+                    <label class="method disabled" title="Requires payment gateway">
+                        <input type="radio" disabled>
+                        <span>Debit Card</span>
+                    </label>
+                    <label class="method disabled" title="Requires payment gateway">
+                        <input type="radio" disabled>
+                        <span>Credit Card</span>
+                    </label>
+                </div>
 
-    <label style="font-weight:bold;">
-        📄 Upload Doctor Prescription
-    </label>
+                <div class="manual-pay" id="manual-pay">
+                    <div class="qr">
+                        <img src="{{ url_for('static', filename='images/payment_qr.jpeg') }}" alt="Yuvraj Medical UPI QR code">
+                        <strong>Scan and pay with UPI</strong>
+                    </div>
+                    <div class="proof">
+                        <p class="help">After payment, enter the UTR / transaction ID and upload the screenshot. Your payment status will stay pending until staff verifies it.</p>
+                        <div class="field">
+                            <label for="transaction_id">UPI Transaction ID / UTR</label>
+                            <input id="transaction_id" name="transaction_id" placeholder="Example: 412345678901">
+                        </div>
+                        <div class="field">
+                            <label for="payment_screenshot">Payment Screenshot</label>
+                            <input id="payment_screenshot" type="file" name="payment_screenshot" accept="image/png,image/jpeg,image/jpg,image/webp">
+                        </div>
+                        <div class="field">
+                            <label for="payment_notes">Payment Notes</label>
+                            <input id="payment_notes" name="payment_notes" placeholder="Optional note for staff">
+                        </div>
+                    </div>
+                </div>
 
-    <p style="font-size:13px; color:gray; margin:5px 0;">
-        Please upload a valid prescription from a certified doctor for better support.
-    </p>
+                <div class="cod-note" id="cod-note">Cash On Delivery orders can be paid when your medicine package arrives.</div>
+            </section>
 
-    <input type="file" name="prescription" accept="image/*,.pdf"
-           style="padding:8px; border:1px solid #ccc; width:100%;">
+            <button class="submit" type="submit">Place Order Securely</button>
+        </section>
 
-</div>
-            <input type="text" name="name" placeholder="Full Name" required>
+        <aside class="panel summary-panel">
+            <h2>Order Summary</h2>
+            <div class="items">
+                {% for item in cart_items %}
+                <div class="item">
+                    <div>
+                        <strong>{{ item.name }}</strong>
+                        <span>Qty {{ item.quantity }} x Rs. {{ item.price }}</span>
+                    </div>
+                    <strong>Rs. {{ item.price * item.quantity }}</strong>
+                </div>
+                {% else %}
+                <div class="item"><strong>Your cart is empty</strong><span>Add medicines before checkout.</span></div>
+                {% endfor %}
+            </div>
+            <div class="totals">
+                <div class="line"><span>Subtotal</span><strong>Rs. {{ totals.subtotal }}</strong></div>
+                <div class="line"><span>Discount</span><strong>Rs. {{ totals.discount }}</strong></div>
+                <div class="line"><span>Delivery</span><strong>Rs. {{ totals.delivery_fee }}</strong></div>
+                <div class="line payable"><span>Payable</span><strong>Rs. {{ totals.payable_total }}</strong></div>
+            </div>
+            <div class="secure">
+                <b>Manual verification enabled</b>
+                <p>Your screenshot is stored with the order for staff review. Never upload card photos or card numbers.</p>
+            </div>
+        </aside>
+    </form>
+</main>
 
-            <input type="text" name="contact" placeholder="Contact Number" required>
+<script>
+const manualMethods = new Set({{ manual_payment_methods|tojson }});
+const manualPay = document.getElementById("manual-pay");
+const codNote = document.getElementById("cod-note");
+const transactionInput = document.getElementById("transaction_id");
+const screenshotInput = document.getElementById("payment_screenshot");
 
-            <textarea name="address" placeholder="Delivery Address" required></textarea>
+function updatePaymentFields() {
+    const selected = document.querySelector("input[name='payment_method']:checked");
+    const value = selected ? selected.value : "";
+    const needsProof = manualMethods.has(value);
+    manualPay.style.display = needsProof ? "grid" : "none";
+    codNote.style.display = value === "Cash On Delivery" ? "block" : "none";
+    transactionInput.required = needsProof;
+    screenshotInput.required = needsProof;
+}
 
-            <select name="payment" required>
-                <option value="">Select Payment Method</option>
-                <option value="GPay">GPay</option>
-                <option value="COD">Cash on Delivery</option>
-            </select>
-
-            <button type="submit">Place Order</button>
-
-        </form>
-
-    </div>
-
-</div>
-
+document.querySelectorAll("input[name='payment_method']").forEach((input) => {
+    input.addEventListener("change", updatePaymentFields);
+});
+updatePaymentFields();
+</script>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

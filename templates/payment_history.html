@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <style>
+        :root{--ink:#102033;--muted:#64748b;--line:#dbe4f0;--wine:#812052;--teal:#0f766e;--soft:#f8fafc;--red:#b91c1c;--amber:#a16207}
+        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc 0%,#eef7f5 54%,#f9f1f5 100%)}a{text-decoration:none;color:inherit}
+        .wrap{max-width:1180px;margin:0 auto;padding:30px 18px 48px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:22px}.brand h1{margin:0;font-family:Georgia,serif;color:var(--wine);font-size:34px}.brand p{margin:5px 0 0;color:var(--muted);font-weight:800}.nav{display:flex;gap:10px;flex-wrap:wrap}.nav a{padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.88);font-weight:900;font-size:13px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+        .hero{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:18px;align-items:stretch;margin-bottom:18px}.hero-main,.qr-card,.stat,.card,.empty{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.93);box-shadow:0 18px 42px rgba(15,23,42,.08)}.hero-main{padding:26px;position:relative;overflow:hidden}.hero-main::after{content:"";position:absolute;right:-70px;bottom:-95px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(15,118,110,.16),transparent 68%)}.hero-main span{color:var(--teal);font-size:12px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}.hero-main h2{position:relative;z-index:1;margin:8px 0 0;font-size:36px;line-height:1.1}.hero-main p{position:relative;z-index:1;margin:10px 0 0;color:var(--muted);font-weight:700;line-height:1.6;max-width:680px}
+        .qr-card{padding:14px;text-align:center}.qr-card img{width:100%;aspect-ratio:1;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff}.qr-card strong{display:block;margin-top:10px;color:var(--teal);font-size:13px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{padding:16px}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.07em;text-transform:uppercase}.stat strong{display:block;margin-top:8px;font-size:24px}
+        .grid{display:grid;gap:14px}.card{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:14px;align-items:start;padding:16px;transition:transform .18s ease,box-shadow .18s ease}.card:hover{transform:translateY(-2px);box-shadow:0 20px 46px rgba(15,23,42,.11)}.icon{width:54px;height:54px;border-radius:8px;display:grid;place-items:center;color:#fff;font-weight:1000;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 12px 26px rgba(15,118,110,.18)}.card h3{margin:0;font-size:20px}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.pill{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--soft);font-size:12px;font-weight:900;color:var(--muted)}.status{align-self:start;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:1000;white-space:nowrap}.status-verified{background:#ecfdf5;color:#047857}.status-rejected{background:#fef2f2;color:var(--red)}.status-pending-verification,.status-pending-cod{background:#fffbeb;color:var(--amber)}.proof{display:inline-flex;margin-top:12px;padding:9px 12px;border-radius:8px;background:#ecfeff;color:var(--teal);font-size:13px;font-weight:1000}.empty{padding:32px;text-align:center;color:var(--muted);font-weight:800}.empty strong{display:block;margin-bottom:6px;color:var(--ink);font-size:20px}
+        @media(max-width:860px){.hero{grid-template-columns:1fr}.qr-card{max-width:290px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.card{grid-template-columns:1fr}.icon{width:46px;height:46px}}@media(max-width:560px){.top{flex-direction:column;align-items:flex-start}.nav{width:100%}.nav a{flex:1;text-align:center}.hero-main h2{font-size:28px}.stats{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+{% include "partials/site_header.html" %}
+<main class="wrap">
+    <section class="hero">
+        <div class="hero-main">
+            <span>Payments</span>
+            <h2>Manual payments, verification, and receipts in one place.</h2>
+            <p>Track UPI, Google Pay, PhonePe, Paytm, COD, and wallet payment records with verification status, transaction IDs, and uploaded proof.</p>
+        </div>
+        <div class="qr-card">
+            <img src="{{ url_for('static', filename='images/payment_qr.jpeg') }}" alt="Yuvraj Medical UPI QR code">
+            <strong>Yuvraj Medical UPI QR</strong>
+        </div>
+    </section>
+
+    <section class="stats" aria-label="Payment summary">
+        <div class="stat"><span>Total Records</span><strong>{{ summary.total }}</strong></div>
+        <div class="stat"><span>Verified</span><strong>{{ summary.verified }}</strong></div>
+        <div class="stat"><span>Pending</span><strong>{{ summary.pending }}</strong></div>
+        <div class="stat"><span>Total Amount</span><strong>Rs. {{ summary.amount }}</strong></div>
+    </section>
+
+    <section class="grid">
+        {% for payment in payments %}
+        <article class="card">
+            <div class="icon">{{ payment.method[:2]|upper }}</div>
+            <div>
+                <h3>Order #{{ payment.order_id }} · Rs. {{ payment.amount }}</h3>
+                <div class="meta">
+                    <span class="pill">{{ payment.method }}</span>
+                    <span class="pill">Order: {{ payment.order_status }}</span>
+                    <span class="pill">Txn: {{ payment.transaction_id or "Not required" }}</span>
+                    <span class="pill">{{ payment.created_at }}</span>
+                </div>
+                {% if payment.screenshot %}
+                <a class="proof" href="/{{ payment.screenshot }}" target="_blank">View uploaded screenshot</a>
+                {% endif %}
+            </div>
+            <span class="status status-{{ payment.status|lower|replace(' ', '-') }}">{{ payment.status }}</span>
+        </article>
+        {% else %}
+        <div class="empty"><strong>No payment records yet.</strong>Your checkout payments will appear here after you place an order.</div>
+        {% endfor %}
+    </section>
+</main>
+{% include "partials/site_header_script.html" %}
+</body>
+</html>

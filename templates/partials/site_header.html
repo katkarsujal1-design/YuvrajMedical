@@ -1,0 +1,93 @@
+<header class="yvm-site-header">
+    <a href="/" class="yvm-site-brand" aria-label="Yuvraj Medical home">
+        <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical">
+        <span class="yvm-brand-text">
+            <span class="yvm-brand-yuvraj">Yuvraj</span>
+            <span class="yvm-brand-medical">Medical</span>
+            <span class="yvm-brand-tagline">Trusted Online Pharmacy</span>
+        </span>
+    </a>
+
+    <nav class="yvm-header-actions" aria-label="Main navigation">
+        <a href="{{ url_for('cart') }}" class="yvm-cart-link">Cart ({{ cart_count|default(0) }})</a>
+        <a href="{{ url_for('wishlist_page') }}">Wishlist</a>
+        <button class="yvm-menu-toggle" type="button" aria-controls="yvm-account-panel" aria-expanded="false">
+            <span>Menu</span>
+            <span class="yvm-menu-badge">{{ notification_unread_count|default(notifications|default([])|length) }}</span>
+        </button>
+    </nav>
+</header>
+
+<div class="yvm-marquee-wrap">
+    <marquee class="yvm-marquee" behavior="scroll" direction="left" scrollamount="6">
+        <span>
+            <span class="yvm-marquee-chip">Welcome {{ session.get("user", {}).get("name", "Guest") }}</span>
+            Yuvraj Medical is ready for your healthcare needs
+            &nbsp;|&nbsp; Search medicines, upload prescriptions, and track orders from one place
+            &nbsp;|&nbsp; {{ notification_unread_count|default(notifications|default([])|length) }} unread update{{ "" if notification_unread_count|default(notifications|default([])|length) == 1 else "s" }} waiting in your menu
+        </span>
+    </marquee>
+</div>
+
+<div class="yvm-side-overlay" id="yvm-side-overlay"></div>
+<aside class="yvm-side-panel" id="yvm-account-panel" aria-hidden="true">
+    <div class="yvm-side-panel-head">
+        <h3>My Account</h3>
+        <button class="yvm-side-close" type="button" aria-label="Close menu">x</button>
+    </div>
+
+    <div class="yvm-side-scroll">
+        <section class="yvm-side-notifications" aria-label="Notifications">
+            <div class="yvm-side-notifications-head">
+                <h4>Notifications</h4>
+                <a href="/notifications">Open</a>
+            </div>
+            <a class="yvm-side-notice is-unread" href="/notifications">
+                <span class="yvm-notice-type">{{ notification_unread_count|default(0) }} unread</span>
+                <strong>Notification Center</strong>
+                <small>View order, prescription, delivery, offer, refill, expiry, and health tip notifications.</small>
+            </a>
+        </section>
+
+        <nav aria-label="Quick access menu">
+            <section class="yvm-side-section">
+                <h4 class="yvm-side-section-title">Shop</h4>
+                <a href="/"><span>Home</span><span>&gt;</span></a>
+                <a href="/#departments"><span>Departments</span><span>&gt;</span></a>
+                <a href="/#offers"><span>Offers</span><span>&gt;</span></a>
+                <a href="{{ url_for('cart') }}"><span>Cart</span><span>&gt;</span></a>
+                <a href="{{ url_for('wishlist_page') }}"><span>Wishlist</span><span>&gt;</span></a>
+            </section>
+
+            <section class="yvm-side-section">
+                <h4 class="yvm-side-section-title">Orders & Care</h4>
+                <a href="{{ url_for('my_orders') }}"><span>My Orders</span><span>&gt;</span></a>
+                <a href="/reorder_subscription"><span>Reorder & Subscription</span><span>&gt;</span></a>
+                <a href="/payment_history"><span>Payment History</span><span>&gt;</span></a>
+                <a href="/upload_prescription"><span>Upload Prescription</span><span>&gt;</span></a>
+                <a href="/my_prescriptions"><span>My Prescriptions</span><span>&gt;</span></a>
+            </section>
+
+            <section class="yvm-side-section">
+                <h4 class="yvm-side-section-title">Rewards & Support</h4>
+                <a href="/rewards"><span>Rewards & Loyalty</span><span>&gt;</span></a>
+                <a href="/notifications"><span>Notifications</span><span>&gt;</span></a>
+                <a href="/reviews_feedback"><span>Reviews & Feedback</span><span>&gt;</span></a>
+                <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>&gt;</span></a>
+            </section>
+
+            <section class="yvm-side-section">
+                <h4 class="yvm-side-section-title">Account</h4>
+                <a href="{{ url_for('profile') }}"><span>Profile</span><span>&gt;</span></a>
+                {% if session.get("user", {}).get("role") in ["staff", "owner"] %}
+                <a href="/staff"><span>Staff Dashboard</span><span>&gt;</span></a>
+                {% endif %}
+                {% if session.get("user", {}).get("role") == "owner" %}
+                <a href="/owner_dashboard"><span>Owner Dashboard</span><span>&gt;</span></a>
+                <a href="/cms"><span>CMS Dashboard</span><span>&gt;</span></a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}"><span>Logout</span><span>&gt;</span></a>
+            </section>
+        </nav>
+    </div>
+</aside>

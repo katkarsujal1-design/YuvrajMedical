@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
         *{box-sizing:border-box}
         :root{
@@ -316,22 +317,7 @@
     </style>
 </head>
 <body>
-<header class="header">
-    <a class="brand" href="/">
-        <img src="/static/images/yuvraj_logo.png" alt="Yuvraj Medical">
-        <span>
-            <strong>Yuvraj Medical</strong>
-            <span>Secure medicine checkout</span>
-        </span>
-    </a>
-    <nav class="nav">
-        <a href="/">Home</a>
-        <a href="/wishlist">Wishlist</a>
-        <a href="/profile">Profile</a>
-        <a href="/my_orders">Orders</a>
-        <a href="/logout">Logout</a>
-    </nav>
-</header>
+{% include "partials/site_header.html" %}
 
 <main class="wrap">
     <section class="hero">
@@ -536,5 +522,6 @@
         </aside>
     </section>
 </main>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

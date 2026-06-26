@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reorder & Subscription - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <style>
+        :root{--ink:#122033;--muted:#64748b;--line:#d8e2ee;--wine:#812052;--teal:#0f766e;--green:#047857;--amber:#a16207;--red:#b91c1c}
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+        a{text-decoration:none;color:inherit}
+        button,input,select{font:inherit}
+        .wrap{width:min(1200px,calc(100% - 28px));margin:28px auto 54px}
+        .hero{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;margin-bottom:18px}
+        .hero-main,.panel,.stat,.medicine-card,.sub-card,.rx-card{border:1px solid rgba(216,226,238,.96);border-radius:8px;background:rgba(255,255,255,.94);box-shadow:0 22px 58px rgba(15,23,42,.10)}
+        .hero-main{min-height:330px;position:relative;overflow:hidden;padding:32px;color:white;background:linear-gradient(90deg,rgba(18,32,51,.95),rgba(18,32,51,.70) 55%,rgba(15,118,110,.16)),url("{{ url_for('static', filename='images/order-management-premium.png') }}") center/cover no-repeat}
+        .eyebrow{display:inline-flex;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.26);font-size:12px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
+        h1{margin:14px 0 0;max-width:720px;font-family:Georgia,serif;font-size:48px;line-height:1.04;color:white}
+        .hero-main p{max-width:690px;margin:14px 0 0;color:#e2e8f0;font-weight:780;line-height:1.65}
+        .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+        .btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border-radius:8px;border:1px solid transparent;font-weight:950;cursor:pointer;transition:.18s ease}
+        .btn:hover{transform:translateY(-1px)}
+        .primary{color:white;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 14px 28px rgba(15,118,110,.16)}
+        .secondary{color:var(--teal);background:#ecfeff;border-color:#bae6fd}
+        .danger{color:#991b1b;background:#fee2e2;border-color:#fecaca}
+        .hero-side{display:grid;gap:12px}
+        .stat{padding:16px;position:relative;overflow:hidden}
+        .stat::after{content:attr(data-code);position:absolute;right:12px;top:5px;color:rgba(15,118,110,.08);font-size:44px;font-weight:1000}
+        .stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
+        .stat strong{display:block;margin-top:8px;font-size:28px}
+        .layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:18px;align-items:start}
+        .panel{padding:20px}
+        .panel-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:14px}
+        .panel-head h2{margin:0;font-size:22px}
+        .panel-head p{margin:6px 0 0;color:var(--muted);font-weight:760;line-height:1.5}
+        .badge{display:inline-flex;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#fff7ed;color:var(--amber);border:1px solid #fed7aa;font-size:12px;font-weight:1000}
+        .grid{display:grid;gap:12px}
+        .medicine-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff)}
+        .medicine-card h3,.sub-card h3,.rx-card h3{margin:0;font-size:17px}
+        .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+        .pill{display:inline-flex;padding:6px 8px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0;color:var(--muted);font-size:12px;font-weight:900}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        label{display:grid;gap:6px;color:#334155;font-size:13px;font-weight:900}
+        input,select{width:100%;min-height:40px;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:var(--ink)}
+        select[multiple]{min-height:154px;padding:8px}
+        select[multiple] option{padding:8px;border-radius:6px}
+        .field-help{margin-top:3px;color:var(--muted);font-size:12px;font-weight:800}
+        .checks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+        .check{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#f8fafc;font-weight:850;color:#334155}
+        .check input{width:auto;min-height:auto}
+        .sub-card{padding:15px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff)}
+        .sub-top{display:flex;justify-content:space-between;gap:12px;align-items:start}
+        .status{display:inline-flex;padding:7px 9px;border-radius:999px;font-size:12px;font-weight:1000;background:#ecfdf5;color:var(--green)}
+        .status.Paused{background:#fffbeb;color:var(--amber)}
+        .status.Cancelled{background:#fef2f2;color:var(--red)}
+        .sub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+        .rx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+        .rx-card{padding:14px;box-shadow:none}
+        .empty{padding:22px;border:1px dashed var(--line);border-radius:8px;background:#fff;color:var(--muted);font-weight:850;text-align:center}
+        .notice{margin-bottom:14px;padding:12px 14px;border-radius:8px;background:#ecfeff;border:1px solid #bae6fd;color:#075985;font-weight:900}
+        @media(max-width:960px){.hero,.layout{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(2,minmax(0,1fr))}.rx-grid{grid-template-columns:1fr}}
+        @media(max-width:620px){.wrap{width:min(100% - 22px,1200px)}h1{font-size:34px}.hero-main{min-height:420px;padding:22px}.hero-side,.form-grid,.checks{grid-template-columns:1fr}.medicine-card,.panel-head,.sub-top{grid-template-columns:1fr;display:grid}.badge{justify-self:start}}
+    </style>
+</head>
+<body>
+{% include "partials/site_header.html" %}
+<main class="wrap">
+    <section class="hero">
+        <div class="hero-main">
+            <span class="eyebrow">Reorder & Subscription</span>
+            <h1>Your routine medicines, ready before you run out.</h1>
+            <p>Buy again from past orders, create monthly medicine subscriptions, turn on auto reorder, set refill reminders, and repeat approved prescription orders from one care dashboard.</p>
+            <div class="hero-actions">
+                <a class="btn primary" href="#subscription-form">Create Subscription</a>
+                <a class="btn secondary" href="#buy-again">Buy Again</a>
+            </div>
+        </div>
+        <aside class="hero-side">
+            <div class="stat" data-code="BA"><span>Buy Again</span><strong>{{ summary.buy_again }}</strong></div>
+            <div class="stat" data-code="MS"><span>Subscriptions</span><strong>{{ summary.subscriptions }}</strong></div>
+            <div class="stat" data-code="AR"><span>Auto Reorder</span><strong>{{ summary.auto_reorder }}</strong></div>
+            <div class="stat" data-code="RR"><span>Refill Due Soon</span><strong>{{ summary.due_soon }}</strong></div>
+        </aside>
+    </section>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="notice">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <section class="layout">
+        <div class="panel" id="buy-again">
+            <div class="panel-head">
+                <div>
+                    <h2>Buy Again</h2>
+                    <p>Frequently ordered medicines from your past orders.</p>
+                </div>
+                <span class="badge">Fast repeat cart</span>
+            </div>
+            <div class="grid">
+                {% for item in buy_again_items %}
+                <article class="medicine-card">
+                    <div>
+                        <h3>{{ item.name }}</h3>
+                        <div class="meta">
+                            <span class="pill">Rs. {{ item.price }}</span>
+                            <span class="pill">{{ item.order_count }} order{{ "" if item.order_count == 1 else "s" }}</span>
+                            <span class="pill">Stock {{ item.stock }}</span>
+                            {% if item.prescription_required %}<span class="pill">Prescription</span>{% endif %}
+                        </div>
+                    </div>
+                    <a class="btn primary" href="/buy_again/{{ item.id }}">Buy Again</a>
+                </article>
+                {% else %}
+                <div class="empty">Your past medicines will appear here after you place an order.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel" id="subscription-form">
+            <div class="panel-head">
+                <div>
+                    <h2>Monthly Medicine Subscription</h2>
+                    <p>Set quantity, refill cycle, reminders, and auto reorder.</p>
+                </div>
+                <span class="badge">Auto Reorder</span>
+            </div>
+            <form method="POST" action="/subscriptions/create">
+                <div class="form-grid">
+                    <label>Medicines For Auto Reorder
+                        <select name="medicine_ids" multiple required>
+                            {% for item in available_medicines %}
+                            <option value="{{ item.id }}">{{ item.name }} · Rs. {{ item.price }}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="field-help">Select multiple medicines for one monthly auto reorder plan.</span>
+                    </label>
+                    <label>Quantity
+                        <input type="number" name="quantity" value="1" min="1" required>
+                    </label>
+                    <label>Refill Cycle
+                        <select name="frequency_days">
+                            <option value="15">Every 15 days</option>
+                            <option value="30" selected>Monthly</option>
+                            <option value="45">Every 45 days</option>
+                            <option value="60">Every 2 months</option>
+                            <option value="90">Every 3 months</option>
+                        </select>
+                    </label>
+                    <label>Next Refill Date
+                        <input type="date" name="next_refill_date" value="{{ default_next_refill }}">
+                    </label>
+                    <label>Repeat Prescription
+                        <select name="prescription_request_id">
+                            <option value="">No prescription linked</option>
+                            {% for rx in prescriptions %}
+                            <option value="{{ rx.id }}">Prescription #{{ rx.id }} · {{ rx.status }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+                <div class="checks">
+                    <label class="check"><input type="checkbox" name="refill_reminder" checked> Refill Reminder</label>
+                    <label class="check"><input type="checkbox" name="auto_reorder"> Auto Reorder</label>
+                </div>
+                <button class="btn primary" type="submit">Save Subscription</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="layout" style="margin-top:18px">
+        <div class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Active Plans</h2>
+                    <p>Manage subscription status and add subscription medicines to cart.</p>
+                </div>
+                <span class="badge">Refill Reminder</span>
+            </div>
+            <div class="grid">
+                {% for sub in subscriptions %}
+                <article class="sub-card">
+                    <div class="sub-top">
+                        <div>
+                            <h3>{{ sub.medicine_name }}</h3>
+                            <div class="meta">
+                                <span class="pill">Qty {{ sub.quantity }}</span>
+                                <span class="pill">Every {{ sub.frequency_days }} days</span>
+                                <span class="pill">Next {{ sub.next_refill_date or "Not set" }}</span>
+                                <span class="pill">{{ "Auto reorder on" if sub.auto_reorder else "Manual reorder" }}</span>
+                                <span class="pill">{{ "Reminder on" if sub.refill_reminder else "Reminder off" }}</span>
+                            </div>
+                        </div>
+                        <span class="status {{ sub.status }}">{{ sub.status }}</span>
+                    </div>
+                    <div class="sub-actions">
+                        <form method="POST" action="/subscriptions/{{ sub.id }}/cart"><button class="btn primary" type="submit">Add To Cart</button></form>
+                        <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="{{ 'Paused' if sub.status == 'Active' else 'Active' }}"><button class="btn secondary" type="submit">{{ "Pause" if sub.status == "Active" else "Resume" }}</button></form>
+                        <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="Cancelled"><button class="btn danger" type="submit">Cancel</button></form>
+                    </div>
+                </article>
+                {% else %}
+                <div class="empty">No subscriptions yet. Create a monthly medicine plan from your previous orders.</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-head">
+                <div>
+                    <h2>Repeat Prescription Orders</h2>
+                    <p>Add approved prescription medicines to cart again.</p>
+                </div>
+                <span class="badge">{{ summary.prescriptions }} prescriptions</span>
+            </div>
+            <div class="rx-grid">
+                {% for rx in prescriptions %}
+                <article class="rx-card">
+                    <h3>Prescription #{{ rx.id }}</h3>
+                    <div class="meta">
+                        <span class="pill">{{ rx.status }}</span>
+                        <span class="pill">{{ rx.created_at }}</span>
+                    </div>
+                    <div class="sub-actions">
+                        <a class="btn primary" href="/repeat_prescription_order/{{ rx.id }}">Repeat Order</a>
+                        <a class="btn secondary" href="/my_prescriptions">View</a>
+                    </div>
+                </article>
+                {% else %}
+                <div class="empty">Approved prescriptions will appear here for repeat ordering.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% include "partials/site_header_script.html" %}
+</body>
+</html>

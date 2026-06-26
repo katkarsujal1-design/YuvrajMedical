@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescription History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
         :root {
             --ink: #0f172a;
@@ -574,22 +575,9 @@
     {% endif %}
 {% endfor %}
 
-<main class="page-shell">
-    <header class="topbar">
-        <a href="/" class="brand" aria-label="Yuvraj Medical home">
-            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" class="brand-icon" alt="Yuvraj Medical">
-            <span class="brand-name">
-                <span class="brand-yuvraj">Yuvraj</span>
-                <span class="brand-medical">Medical</span>
-                <span class="brand-tagline">Trusted Online Pharmacy</span>
-            </span>
-        </a>
+{% include "partials/site_header.html" %}
 
-        <nav class="nav-actions" aria-label="Prescription navigation">
-            <a href="/" class="btn btn-light">Home</a>
-            <a href="/upload_prescription" class="btn btn-primary">Upload New</a>
-        </nav>
-    </header>
+<main class="page-shell">
 
     <section class="hero">
         <div class="hero-content">
@@ -692,6 +680,12 @@
                         <a href="/download_prescription/{{ req.id }}" class="btn btn-light">
                             Download Prescription
                         </a>
+                        <a href="/repeat_prescription_order/{{ req.id }}" class="btn btn-success">
+                            Repeat Prescription Order
+                        </a>
+                        <a href="/reorder_subscription" class="btn btn-light">
+                            Subscription
+                        </a>
 
                         <form method="POST" action="/delete_prescription/{{ req.id }}" onsubmit="return confirm('Delete this prescription request?');">
                             <button class="delete-btn" type="submit">Delete Prescription</button>
@@ -709,9 +703,11 @@
                 before confirming eligible medicines.
             </p>
             <a href="/upload_prescription" class="btn btn-primary">Upload Prescription</a>
+            <a href="/reorder_subscription" class="btn btn-light">Open Reorder & Subscription</a>
         </section>
     {% endif %}
 </main>
+{% include "partials/site_header_script.html" %}
 
 </body>
 </html>

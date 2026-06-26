@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, session, g, jsonify, send_from_directory, abort
+from flask import Flask, render_template, request, redirect, session, g, jsonify, send_from_directory, abort, make_response
 #import pymysql
+import base64
 import hashlib
 import re
 import secrets
@@ -17,6 +18,7 @@ import os
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+from urllib.parse import quote
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY","my-super-secret")
@@ -53,6 +55,470 @@ def get_db():
         g.db = db_pool.get_connection()
 
     return g.db
+
+
+@app.context_processor
+def inject_site_header_context():
+    user = session.get("user")
+    if not user:
+        return {"cart_count": 0, "notifications": [], "notification_items": [], "notification_unread_count": 0}
+
+    try:
+        db = get_db()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user["id"],))
+        cart_count = (cursor.fetchone() or {}).get("count", 0)
+        cursor.close()
+
+        notification_items, notification_unread_count = get_user_notifications(user["id"], limit=6)
+        notifications = [item["message"] for item in notification_items]
+        if not notification_items:
+            notifications.append("Upload a prescription or place an order to start tracking updates here.")
+        return {
+            "cart_count": cart_count,
+            "notifications": notifications,
+            "notification_items": notification_items,
+            "notification_unread_count": notification_unread_count,
+        }
+    except Exception:
+        return {"cart_count": 0, "notifications": [], "notification_items": [], "notification_unread_count": 0}
+
+
+ORDER_STATUSES = [
+    "Pending",
+    "Approved",
+    "Packed",
+    "Out For Delivery",
+    "Delivered",
+    "Cancelled",
+    "Refunded",
+]
+
+ORDER_STATUS_STEPS = [
+    "Pending",
+    "Approved",
+    "Packed",
+    "Out For Delivery",
+    "Delivered",
+]
+
+PAYMENT_METHODS = [
+    "UPI",
+    "Google Pay",
+    "PhonePe",
+    "Paytm",
+    "Cash On Delivery",
+    "Wallet Balance",
+]
+
+MANUAL_PAYMENT_METHODS = ["UPI", "Google Pay", "PhonePe", "Paytm"]
+
+NOTIFICATION_TYPES = {
+    "Order Updates": "Order status and fulfillment progress",
+    "Prescription Updates": "Prescription upload and review updates",
+    "Delivery Updates": "Delivery OTP, courier, and live status updates",
+    "Offer Notifications": "Savings and monthly health offers",
+    "Refill Reminders": "Repeat medicine and refill reminders",
+    "Expiry Reminders": "Medicine expiry reminders",
+    "Health Tips Notifications": "Short wellness and safety tips",
+}
+
+REVIEW_TYPES = [
+    "Medicine Rating",
+    "Order Review",
+    "Delivery Experience",
+    "Issue Report",
+]
+
+
+def ensure_order_management_schema():
+    if app.config.get("ORDER_MANAGEMENT_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    for column_sql in [
+        "ADD COLUMN return_status VARCHAR(40) DEFAULT 'Not Requested'",
+        "ADD COLUMN refund_status VARCHAR(40) DEFAULT 'Not Applicable'",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE orders {column_sql}")
+        except mysql.connector.Error:
+            pass
+    db.commit()
+    cursor.close()
+    app.config["ORDER_MANAGEMENT_SCHEMA_READY"] = True
+
+
+def ensure_delivery_feature_schema():
+    if app.config.get("DELIVERY_FEATURE_SCHEMA_READY"):
+        return
+
+    ensure_order_management_schema()
+    db = get_db()
+    cursor = db.cursor()
+    delivery_columns = [
+        "ADD COLUMN delivery_status VARCHAR(80) DEFAULT 'Pending'",
+        "ADD COLUMN delivery_otp VARCHAR(10) NULL",
+        "ADD COLUMN delivery_notes TEXT NULL",
+        "ADD COLUMN delivery_address TEXT NULL",
+        "ADD COLUMN courier_name VARCHAR(120) NULL",
+        "ADD COLUMN courier_tracking_id VARCHAR(120) NULL",
+        "ADD COLUMN courier_tracking_url VARCHAR(255) NULL",
+        "ADD COLUMN delivery_updated_at DATETIME NULL",
+    ]
+    for column_sql in delivery_columns:
+        try:
+            cursor.execute(f"ALTER TABLE orders {column_sql}")
+        except mysql.connector.Error:
+            pass
+    try:
+        cursor.execute("""
+            UPDATE orders
+            SET delivery_otp = LPAD(FLOOR(RAND() * 1000000), 6, '0')
+            WHERE delivery_otp IS NULL OR delivery_otp=''
+        """)
+        cursor.execute("""
+            UPDATE orders
+            SET delivery_status = CASE
+                WHEN status='Pending' THEN 'Order Received'
+                WHEN status='Approved' THEN 'Delivery Scheduled'
+                WHEN status='Packed' THEN 'Packed For Pickup'
+                WHEN status='Out For Delivery' THEN 'Out For Delivery'
+                WHEN status='Delivered' THEN 'Delivered'
+                WHEN status='Cancelled' THEN 'Delivery Cancelled'
+                WHEN status='Refunded' THEN 'Refunded'
+                ELSE 'Order Received'
+            END
+            WHERE delivery_status IS NULL OR delivery_status=''
+        """)
+        cursor.execute("""
+            UPDATE orders
+            SET courier_tracking_id = CONCAT('YMD', LPAD(id, 6, '0'))
+            WHERE courier_tracking_id IS NULL OR courier_tracking_id=''
+        """)
+        cursor.execute("""
+            UPDATE orders
+            SET courier_name = 'Yuvraj Local Delivery'
+            WHERE courier_name IS NULL OR courier_name=''
+        """)
+    except mysql.connector.Error:
+        pass
+    db.commit()
+    cursor.close()
+    app.config["DELIVERY_FEATURE_SCHEMA_READY"] = True
+
+
+def ensure_payment_schema():
+    if app.config.get("PAYMENT_SCHEMA_READY"):
+        return
+
+    ensure_delivery_feature_schema()
+    db = get_db()
+    cursor = db.cursor()
+    for column_sql in [
+        "ADD COLUMN payment_method VARCHAR(80) DEFAULT 'Cash On Delivery'",
+        "ADD COLUMN payment_status VARCHAR(80) DEFAULT 'Pending'",
+        "ADD COLUMN payment_reference VARCHAR(160) NULL",
+        "ADD COLUMN payment_screenshot VARCHAR(255) NULL",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE orders {column_sql}")
+        except mysql.connector.Error:
+            pass
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS payments (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            order_id INT NOT NULL,
+            user_id INT NOT NULL,
+            method VARCHAR(80) NOT NULL,
+            amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+            transaction_id VARCHAR(160),
+            screenshot VARCHAR(255),
+            status VARCHAR(80) NOT NULL DEFAULT 'Pending Verification',
+            notes TEXT,
+            created_at DATETIME,
+            verified_at DATETIME,
+            verified_by INT,
+            INDEX(order_id),
+            INDEX(user_id)
+        )
+    """)
+    db.commit()
+    cursor.close()
+    app.config["PAYMENT_SCHEMA_READY"] = True
+
+
+def ensure_notification_schema():
+    if app.config.get("NOTIFICATION_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS notifications (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            type VARCHAR(80) NOT NULL,
+            title VARCHAR(180) NOT NULL,
+            message TEXT NOT NULL,
+            target_url VARCHAR(255),
+            dedupe_key VARCHAR(190) NOT NULL,
+            is_read TINYINT(1) NOT NULL DEFAULT 0,
+            created_at DATETIME,
+            UNIQUE KEY unique_notification_dedupe (dedupe_key),
+            INDEX(user_id),
+            INDEX(type),
+            INDEX(is_read)
+        )
+    """)
+    db.commit()
+    cursor.close()
+    app.config["NOTIFICATION_SCHEMA_READY"] = True
+
+
+def ensure_reviews_feedback_schema():
+    if app.config.get("REVIEWS_FEEDBACK_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS reviews_feedback (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            review_type VARCHAR(80) NOT NULL,
+            medicine_id INT NULL,
+            order_id INT NULL,
+            rating INT NULL,
+            title VARCHAR(180),
+            message TEXT NOT NULL,
+            issue_category VARCHAR(120),
+            status VARCHAR(60) NOT NULL DEFAULT 'Submitted',
+            created_at DATETIME,
+            INDEX(user_id),
+            INDEX(medicine_id),
+            INDEX(order_id),
+            INDEX(review_type)
+        )
+    """)
+    db.commit()
+    cursor.close()
+    app.config["REVIEWS_FEEDBACK_SCHEMA_READY"] = True
+
+
+def add_notification(user_id, notification_type, title, message, target_url, dedupe_key):
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("""
+            INSERT IGNORE INTO notifications (
+                user_id,
+                type,
+                title,
+                message,
+                target_url,
+                dedupe_key,
+                is_read,
+                created_at
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, 0, %s)
+        """, (
+            user_id,
+            notification_type,
+            title,
+            message,
+            target_url,
+            dedupe_key,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ))
+        db.commit()
+    except mysql.connector.Error:
+        db.rollback()
+    finally:
+        cursor.close()
+
+
+def sync_user_notifications(user_id):
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id, status, delivery_status, courier_tracking_id
+        FROM orders
+        WHERE user_id=%s
+        ORDER BY id DESC
+        LIMIT 1
+    """, (user_id,))
+    latest_order = cursor.fetchone()
+    if latest_order:
+        add_notification(
+            user_id,
+            "Order Updates",
+            f"Order #{latest_order['id']} is {latest_order['status']}",
+            f"Your medicine order is currently marked as {latest_order['status']}.",
+            f"/order_details/{latest_order['id']}",
+            f"order:{user_id}:{latest_order['id']}:{latest_order['status']}"
+        )
+        delivery_status = latest_order.get("delivery_status") or latest_order["status"]
+        add_notification(
+            user_id,
+            "Delivery Updates",
+            f"Delivery update for Order #{latest_order['id']}",
+            f"Live delivery status: {delivery_status}. Tracking ID: {latest_order.get('courier_tracking_id') or 'Not assigned yet'}.",
+            f"/order_tracking/{latest_order['id']}",
+            f"delivery:{user_id}:{latest_order['id']}:{delivery_status}"
+        )
+
+    try:
+        cursor.execute("""
+            SELECT id, status
+            FROM prescription_requests
+            WHERE user_id=%s
+            ORDER BY created_at DESC
+            LIMIT 1
+        """, (user_id,))
+        latest_prescription = cursor.fetchone()
+    except mysql.connector.Error:
+        latest_prescription = None
+    if latest_prescription:
+        add_notification(
+            user_id,
+            "Prescription Updates",
+            f"Prescription #{latest_prescription['id']} is {latest_prescription['status']}",
+            "Your uploaded prescription review status has been updated.",
+            "/my_prescriptions",
+            f"prescription:{user_id}:{latest_prescription['id']}:{latest_prescription['status']}"
+        )
+
+    add_notification(
+        user_id,
+        "Offer Notifications",
+        "Monthly medicine saver offer",
+        "Explore monthly refill essentials, budget picks, and combo savings curated for your basket.",
+        "/#offers",
+        f"offer:{user_id}:monthly-saver"
+    )
+
+    cursor.execute("""
+        SELECT id, date
+        FROM orders
+        WHERE user_id=%s
+          AND status='Delivered'
+          AND date <= DATE_SUB(NOW(), INTERVAL 25 DAY)
+        ORDER BY date DESC
+        LIMIT 1
+    """, (user_id,))
+    refill_order = cursor.fetchone()
+    if refill_order:
+        add_notification(
+            user_id,
+            "Refill Reminders",
+            f"Refill reminder for Order #{refill_order['id']}",
+            "It may be time to reorder routine medicines from your delivered order.",
+            f"/reorder/{refill_order['id']}",
+            f"refill:{user_id}:{refill_order['id']}"
+        )
+
+    cursor.execute("""
+        SELECT medicines.name, medicines.expiry_date
+        FROM order_items
+        JOIN orders ON orders.id = order_items.order_id
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.user_id=%s
+          AND medicines.expiry_date IS NOT NULL
+          AND medicines.expiry_date >= CURDATE()
+          AND medicines.expiry_date <= DATE_ADD(CURDATE(), INTERVAL 60 DAY)
+        ORDER BY medicines.expiry_date ASC
+        LIMIT 1
+    """, (user_id,))
+    expiring_medicine = cursor.fetchone()
+    if expiring_medicine:
+        add_notification(
+            user_id,
+            "Expiry Reminders",
+            f"{expiring_medicine['name']} expires soon",
+            f"Check your medicine stock. Expiry date: {expiring_medicine['expiry_date']}.",
+            "/my_orders",
+            f"expiry:{user_id}:{expiring_medicine['name']}:{expiring_medicine['expiry_date']}"
+        )
+
+    today_key = datetime.now().strftime("%Y-%m-%d")
+    add_notification(
+        user_id,
+        "Health Tips Notifications",
+        "Daily medicine safety tip",
+        "Take medicines only as prescribed and confirm dose changes with a pharmacist or doctor.",
+        "/ai_health_assistant",
+        f"health-tip:{user_id}:{today_key}"
+    )
+    cursor.close()
+
+
+def get_user_notifications(user_id, limit=None):
+    sync_user_notifications(user_id)
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    limit_sql = "LIMIT %s" if limit else ""
+    params = [user_id]
+    if limit:
+        params.append(limit)
+    cursor.execute(f"""
+        SELECT *
+        FROM notifications
+        WHERE user_id=%s
+        ORDER BY is_read ASC, created_at DESC, id DESC
+        {limit_sql}
+    """, tuple(params))
+    notifications = cursor.fetchall()
+    cursor.execute("""
+        SELECT COUNT(*) AS unread
+        FROM notifications
+        WHERE user_id=%s AND is_read=0
+    """, (user_id,))
+    unread_count = (cursor.fetchone() or {}).get("unread", 0)
+    cursor.close()
+    return notifications, unread_count
+
+
+def delivery_status_for_order_status(status):
+    return {
+        "Pending": "Order Received",
+        "Approved": "Delivery Scheduled",
+        "Packed": "Packed For Pickup",
+        "Out For Delivery": "Out For Delivery",
+        "Delivered": "Delivered",
+        "Cancelled": "Delivery Cancelled",
+        "Refunded": "Refunded",
+    }.get(status, "Order Received")
+
+
+def static_image_data_uri(relative_path):
+    path = os.path.join(app.static_folder, relative_path)
+    try:
+        with open(path, "rb") as image_file:
+            encoded = base64.b64encode(image_file.read()).decode("ascii")
+        extension = relative_path.rsplit(".", 1)[-1].lower()
+        mime = "image/jpeg" if extension in ["jpg", "jpeg"] else "image/png"
+        return f"data:{mime};base64,{encoded}"
+    except OSError:
+        return ""
+
+
+def order_tracking_steps(status):
+    current = status if status in ORDER_STATUS_STEPS else None
+    current_index = ORDER_STATUS_STEPS.index(current) if current else -1
+    return [
+        {
+            "name": step,
+            "done": current_index >= index,
+            "active": step == current,
+        }
+        for index, step in enumerate(ORDER_STATUS_STEPS)
+    ]
 
 
 LOGIN_MAX_FAILED_ATTEMPTS = 5
@@ -1338,6 +1804,7 @@ def medicine_details(id):
     if "user" not in session:
         return redirect("/login")
 
+    ensure_reviews_feedback_schema()
     db = get_db()
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT * FROM medicines WHERE id=%s", (id,))
@@ -1374,13 +1841,37 @@ def medicine_details(id):
 
     cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
 
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT COUNT(*) AS review_count,
+               COALESCE(AVG(rating), 0) AS average_rating
+        FROM reviews_feedback
+        WHERE medicine_id=%s
+          AND review_type='Medicine Rating'
+          AND rating IS NOT NULL
+    """, (id,))
+    review_summary = cursor.fetchone() or {"review_count": 0, "average_rating": 0}
+    cursor.execute("""
+        SELECT reviews_feedback.*, users.name AS customer_name
+        FROM reviews_feedback
+        LEFT JOIN users ON users.id = reviews_feedback.user_id
+        WHERE reviews_feedback.medicine_id=%s
+          AND reviews_feedback.review_type='Medicine Rating'
+        ORDER BY reviews_feedback.id DESC
+        LIMIT 4
+    """, (id,))
+    medicine_reviews = cursor.fetchall()
+    cursor.close()
+
     return render_template(
         "medicine_details.html",
         medicine=medicine,
         details=medicine_detail_context(medicine),
         related_medicines=related_medicines,
         cart=cart,
-        cart_count=sum(cart.values())
+        cart_count=sum(cart.values()),
+        review_summary=review_summary,
+        medicine_reviews=medicine_reviews,
     )
 # ================= LOGIN =================
 @app.route('/login', methods=['GET','POST'])
@@ -1587,6 +2078,7 @@ def register():
         country_code = request.form.get("country_code", "+91").strip()
         phone_number = request.form.get("phone_number", request.form.get("phone", "")).strip()
         full_phone = f"{country_code}{phone_number}"
+        referral_code = request.form.get("referral_code", "").strip().upper()
         form_data = {
             "name": request.form.get("name", "").strip(),
             "email": request.form.get("email", "").strip().lower(),
@@ -1602,11 +2094,13 @@ def register():
             "education": request.form.get("education", "").strip(),
             "aadhar": request.form.get("aadhar", "").strip(),
             "pan": request.form.get("pan", "").strip(),
+            "referral_code": referral_code,
         }
         action = request.form.get("action", "create_account")
         db = get_db()
 
         try:
+            ensure_referral_schema()
             required_fields = ["name", "email", "phone", "password", "address"]
             if any(not form_data[field] for field in required_fields):
                 return render_template(
@@ -1629,6 +2123,16 @@ def register():
                     error="An account with this email or phone already exists.",
                     form=form_data
                 )
+
+            inviter = None
+            if referral_code:
+                inviter = find_user_by_referral_code(referral_code)
+                if not inviter:
+                    return render_template(
+                        "register.html",
+                        error="Invalid referral code. Please check it or leave the field blank.",
+                        form=form_data
+                    )
 
             if action == "send_otp":
                 otp = create_otp(db, None, form_data["email"], "register_account")
@@ -1679,6 +2183,26 @@ def register():
                     hashed_password,
                     1
                 ))
+                new_user_id = cursor.lastrowid
+                if inviter and inviter["id"] != new_user_id:
+                    cursor.execute("""
+                        INSERT IGNORE INTO referral_rewards (
+                            inviter_user_id,
+                            invitee_user_id,
+                            referral_code,
+                            reward_amount,
+                            status,
+                            created_at
+                        )
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """, (
+                        inviter["id"],
+                        new_user_id,
+                        referral_code,
+                        100,
+                        "Expected",
+                        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    ))
 
             # -------- STAFF --------
             elif role == "staff":
@@ -1730,7 +2254,9 @@ def register():
                 form=form_data
             )
 
-    return render_template("register.html")
+    referral_code = request.args.get("ref", "").strip().upper()
+    form = {"referral_code": referral_code, "country_code": "+91", "role": "customer"} if referral_code else None
+    return render_template("register.html", form=form)
 # ================= LOGOUT =================
 @app.route("/logout")
 def logout():
@@ -2314,6 +2840,13 @@ CART_COUPONS = {
 }
 
 
+REWARD_COUPON_COSTS = {
+    "FREESHIP": 120,
+    "SAVE10": 250,
+    "HEALTH50": 500,
+}
+
+
 def calculate_cart_totals(subtotal):
     coupon_code = session.get("cart_coupon")
     coupon = CART_COUPONS.get(coupon_code)
@@ -2343,6 +2876,226 @@ def calculate_cart_totals(subtotal):
         "coupon_message": coupon_message,
         "estimated_delivery": "1-2 business days"
     }
+
+
+def rupees_value(value):
+    return float(value or 0)
+
+
+def ensure_referral_schema():
+    if app.config.get("REFERRAL_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS referral_rewards (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            inviter_user_id INT NOT NULL,
+            invitee_user_id INT NOT NULL,
+            referral_code VARCHAR(40) NOT NULL,
+            reward_amount DECIMAL(10,2) NOT NULL DEFAULT 100,
+            status VARCHAR(40) NOT NULL DEFAULT 'Expected',
+            created_at DATETIME NOT NULL,
+            UNIQUE KEY uniq_referral_invitee (invitee_user_id),
+            INDEX idx_referral_inviter (inviter_user_id),
+            INDEX idx_referral_code (referral_code)
+        )
+    """)
+    db.commit()
+    cursor.close()
+    app.config["REFERRAL_SCHEMA_READY"] = True
+
+
+def referral_code_for_user(user):
+    referral_name = re.sub(r"[^A-Z0-9]", "", (user.get("name") or "YUVRAJ").upper())[:4] or "YMR"
+    return f"{referral_name}{int(user['id']):04d}"
+
+
+def find_user_by_referral_code(code):
+    code = (code or "").strip().upper()
+    if not code:
+        return None
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, name, email FROM users WHERE role='customer'")
+    users = cursor.fetchall()
+    cursor.close()
+
+    for user in users:
+        if referral_code_for_user(user) == code:
+            return user
+    return None
+
+
+def reward_tier_for_points(points):
+    tiers = [
+        {"name": "Wellness Starter", "min": 0, "next": 750, "accent": "Fresh savings unlocked"},
+        {"name": "Care Plus", "min": 750, "next": 1800, "accent": "Bigger monthly rewards"},
+        {"name": "Gold Health Circle", "min": 1800, "next": 3600, "accent": "Priority coupons and cashback"},
+        {"name": "Platinum Care", "min": 3600, "next": None, "accent": "Top tier medicine benefits"},
+    ]
+    active = tiers[0]
+    for tier in tiers:
+        if points >= tier["min"]:
+            active = tier
+    next_points = active["next"]
+    progress = 100 if next_points is None else min(100, int((points - active["min"]) * 100 / (next_points - active["min"])))
+    return active, progress, next_points
+
+
+def build_rewards_context(user_id):
+    ensure_payment_schema()
+    ensure_referral_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, name, email FROM users WHERE id=%s", (user_id,))
+    user = cursor.fetchone() or {"id": user_id, "name": "Customer", "email": ""}
+
+    cursor.execute("""
+        SELECT id, total, status, date, payment_status
+        FROM orders
+        WHERE user_id=%s
+        ORDER BY id DESC
+    """, (user_id,))
+    orders = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT payments.*, orders.status AS order_status
+        FROM payments
+        JOIN orders ON orders.id = payments.order_id
+        WHERE payments.user_id=%s
+        ORDER BY payments.id DESC
+        LIMIT 10
+    """, (user_id,))
+    payments = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT referral_rewards.*,
+               users.name AS invitee_name,
+               users.email AS invitee_email
+        FROM referral_rewards
+        LEFT JOIN users ON users.id = referral_rewards.invitee_user_id
+        WHERE referral_rewards.inviter_user_id=%s
+        ORDER BY referral_rewards.id DESC
+    """, (user_id,))
+    referral_rewards = cursor.fetchall()
+    cursor.close()
+
+    completed_orders = [order for order in orders if order.get("status") == "Delivered"]
+    active_orders = [order for order in orders if order.get("status") in ["Pending", "Approved", "Packed", "Out For Delivery"]]
+    total_spent = sum(rupees_value(order.get("total")) for order in orders if order.get("status") != "Cancelled")
+    delivered_spent = sum(rupees_value(order.get("total")) for order in completed_orders)
+    points = int(total_spent // 10) + len(completed_orders) * 50
+    pending_points = int(sum(rupees_value(order.get("total")) for order in active_orders) // 10)
+    cashback_available = round(sum(rupees_value(payment.get("amount")) * 0.02 for payment in payments if payment.get("status") == "Verified"), 2)
+    cashback_pending = round(sum(rupees_value(payment.get("amount")) * 0.02 for payment in payments if payment.get("status") in ["Pending Verification", "Pending COD"]), 2)
+    tier, tier_progress, next_tier_points = reward_tier_for_points(points)
+
+    referral_code = referral_code_for_user(user)
+    host = request.host_url.rstrip("/")
+    referral_link = f"{host}/register?ref={referral_code}"
+    whatsapp_message = (
+        "Hi, I use Yuvraj Medical for online medicine orders. "
+        f"Use my referral code {referral_code} and register here: {referral_link}"
+    )
+    whatsapp_share_url = f"https://wa.me/?text={quote(whatsapp_message)}"
+    referral_completed = len([item for item in referral_rewards if item.get("status") in ["Rewarded", "Credited"]])
+    referral_pending = len([item for item in referral_rewards if item.get("status") == "Expected"])
+    referral_bonus = sum(rupees_value(item.get("reward_amount")) for item in referral_rewards)
+
+    coupons = []
+    for code, coupon in CART_COUPONS.items():
+        point_cost = REWARD_COUPON_COSTS.get(code, 0)
+        coupons.append({
+            "code": code,
+            "label": coupon["label"],
+            "min_subtotal": coupon["min_subtotal"],
+            "point_cost": point_cost,
+            "available": points >= point_cost,
+        })
+
+    cashback_history = []
+    for payment in payments:
+        amount = rupees_value(payment.get("amount"))
+        cashback_history.append({
+            "order_id": payment.get("order_id"),
+            "method": payment.get("method"),
+            "amount": amount,
+            "cashback": round(amount * 0.02, 2),
+            "status": "Credited" if payment.get("status") == "Verified" else "Pending",
+            "created_at": payment.get("created_at"),
+        })
+
+    point_history = []
+    for order in orders[:8]:
+        base_points = int(rupees_value(order.get("total")) // 10)
+        bonus = 50 if order.get("status") == "Delivered" else 0
+        point_history.append({
+            "order_id": order.get("id"),
+            "status": order.get("status"),
+            "points": base_points + bonus,
+            "date": order.get("date"),
+        })
+
+    return {
+        "user": user,
+        "summary": {
+            "points": points,
+            "pending_points": pending_points,
+            "cashback_available": cashback_available,
+            "cashback_pending": cashback_pending,
+            "orders": len(orders),
+            "delivered_orders": len(completed_orders),
+            "total_spent": total_spent,
+            "delivered_spent": delivered_spent,
+        },
+        "tier": tier,
+        "tier_progress": tier_progress,
+        "next_tier_points": next_tier_points,
+        "referral": {
+            "code": referral_code,
+            "link": referral_link,
+            "whatsapp_url": whatsapp_share_url,
+            "completed": referral_completed,
+            "pending": referral_pending,
+            "bonus": referral_bonus,
+            "max_bonus": 100,
+            "expected_reward": sum(rupees_value(item.get("reward_amount")) for item in referral_rewards if item.get("status") == "Expected"),
+            "history": referral_rewards,
+        },
+        "coupons": coupons,
+        "cashback_history": cashback_history,
+        "point_history": point_history,
+    }
+
+
+@app.route("/rewards")
+def rewards():
+    if "user" not in session:
+        return redirect("/login")
+
+    return render_template("rewards.html", **build_rewards_context(session["user"]["id"]))
+
+
+@app.route("/rewards/redeem", methods=["POST"])
+def redeem_reward():
+    if "user" not in session:
+        return redirect("/login")
+
+    code = (request.form.get("coupon_code") or "").strip().upper()
+    rewards_context = build_rewards_context(session["user"]["id"])
+    available_codes = {
+        coupon["code"] for coupon in rewards_context["coupons"] if coupon["available"]
+    }
+    if code in available_codes:
+        session["cart_coupon"] = code
+        flash(f"Reward coupon {code} is ready in your cart.")
+        return redirect("/cart")
+
+    flash("This reward coupon needs more loyalty points.")
+    return redirect("/rewards")
 
 
 @app.route("/cart/remove/<int:id>")
@@ -2685,7 +3438,31 @@ def checkout():
     if "user" not in session:
         return redirect("/login")
 
-    return render_template("checkout.html")
+    ensure_payment_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id,
+               medicines.name,
+               medicines.price,
+               cart.quantity
+        FROM cart
+        JOIN medicines ON medicines.id = cart.medicine_id
+        WHERE cart.user_id=%s
+    """, (session["user"]["id"],))
+    cart_items = cursor.fetchall()
+    cursor.close()
+
+    subtotal = sum(item["price"] * item["quantity"] for item in cart_items)
+    totals = calculate_cart_totals(subtotal)
+
+    return render_template(
+        "checkout.html",
+        cart_items=cart_items,
+        totals=totals,
+        payment_methods=PAYMENT_METHODS,
+        manual_payment_methods=MANUAL_PAYMENT_METHODS
+    )
 
 # ================= PLACE ORDER =================
 # ================= PLACE ORDER =================
@@ -2695,6 +3472,7 @@ def place_order():
     if "user" not in session:
         return redirect("/login")
 
+    ensure_payment_schema()
     db = get_db()
 
     try:
@@ -2704,6 +3482,53 @@ def place_order():
         cursor.execute("BEGIN")
 
         user_id = session["user"]["id"]
+        delivery_address = (request.form.get("address") or "").strip()
+        delivery_notes = (request.form.get("delivery_notes") or "").strip()
+        delivery_otp = f"{secrets.randbelow(1000000):06d}"
+        payment_method = (request.form.get("payment_method") or "").strip()
+        transaction_id = (request.form.get("transaction_id") or "").strip()
+        payment_notes = (request.form.get("payment_notes") or "").strip()
+        payment_screenshot_file = request.files.get("payment_screenshot")
+        payment_screenshot_path = None
+
+        if payment_method not in PAYMENT_METHODS:
+            db.rollback()
+            flash("Please select a valid payment method.")
+            return redirect("/checkout")
+
+        if payment_method in ["Debit Card", "Credit Card"]:
+            db.rollback()
+            flash("Card payments require a payment gateway and are not enabled yet.")
+            return redirect("/checkout")
+
+        if payment_method in MANUAL_PAYMENT_METHODS:
+            if not transaction_id:
+                db.rollback()
+                flash("Please enter the UPI transaction ID / UTR number.")
+                return redirect("/checkout")
+            if not payment_screenshot_file or payment_screenshot_file.filename == "":
+                db.rollback()
+                flash("Please upload the payment screenshot for manual verification.")
+                return redirect("/checkout")
+
+        if payment_screenshot_file and payment_screenshot_file.filename:
+            extension = payment_screenshot_file.filename.rsplit(".", 1)[-1].lower()
+            if extension not in {"jpg", "jpeg", "png", "webp"}:
+                db.rollback()
+                flash("Payment screenshot must be JPG, JPEG, PNG, or WEBP.")
+                return redirect("/checkout")
+            upload_folder = os.path.join("static", "uploads", "payments")
+            os.makedirs(upload_folder, exist_ok=True)
+            filename = secure_filename(
+                f"payment_{session['user']['id']}_{secrets.token_hex(8)}.{extension}"
+            )
+            payment_screenshot_path = os.path.join(upload_folder, filename)
+            payment_screenshot_file.save(payment_screenshot_path)
+
+        if not delivery_address:
+            cursor.execute("SELECT address FROM users WHERE id=%s", (user_id,))
+            user_row = cursor.fetchone() or {}
+            delivery_address = user_row.get("address") or "Delivery address not provided"
 
         # ================= PRESCRIPTION UPLOAD =================
         file = request.files.get("prescription")
@@ -2769,15 +3594,33 @@ def place_order():
                 total,
                 date,
                 status,
-                prescription
+                prescription,
+                delivery_status,
+                delivery_otp,
+                delivery_notes,
+                delivery_address,
+                delivery_updated_at,
+                payment_method,
+                payment_status,
+                payment_reference,
+                payment_screenshot
             )
-            VALUES (%s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             user_id,
             0,
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "Pending",
-            file_path
+            file_path,
+            delivery_status_for_order_status("Pending"),
+            delivery_otp,
+            delivery_notes,
+            delivery_address,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            payment_method,
+            "Pending Verification" if payment_method in MANUAL_PAYMENT_METHODS else "Pending COD",
+            transaction_id or None,
+            payment_screenshot_path
         ))
 
         order_id = cursor.lastrowid
@@ -2831,6 +3674,31 @@ def place_order():
             order_id
         ))
 
+        cursor.execute("""
+            INSERT INTO payments (
+                order_id,
+                user_id,
+                method,
+                amount,
+                transaction_id,
+                screenshot,
+                status,
+                notes,
+                created_at
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            order_id,
+            user_id,
+            payment_method,
+            total,
+            transaction_id or None,
+            payment_screenshot_path,
+            "Pending Verification" if payment_method in MANUAL_PAYMENT_METHODS else "Pending COD",
+            payment_notes,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ))
+
         # ================= CLEAR CART =================
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
@@ -2843,7 +3711,10 @@ def place_order():
         db.commit()
         cursor.close()
 
-        flash("Order placed successfully")
+        if payment_method in MANUAL_PAYMENT_METHODS:
+            flash("Order placed. Payment proof submitted for staff verification.")
+        else:
+            flash("Order placed successfully.")
 
         return redirect("/my_orders")
 
@@ -2906,6 +3777,7 @@ def my_orders():
     if "user" not in session:
         return redirect("/login")
 
+    ensure_payment_schema()
     db = get_db()
     user_id = session["user"]["id"]
 
@@ -2925,7 +3797,7 @@ def my_orders():
 
         cursor=db.cursor(dictionary=True)
         cursor.execute("""
-            SELECT medicines.name, order_items.quantity, order_items.price
+            SELECT medicines.id AS medicine_id, medicines.name, order_items.quantity, order_items.price
             FROM order_items
             JOIN medicines ON medicines.id = order_items.medicine_id
             WHERE order_items.order_id=%s
@@ -2938,11 +3810,730 @@ def my_orders():
             "date": o["date"],
             "status": o["status"],
             "items": items,
-            "prescription": o.get("prescription")
+            "prescription": o.get("prescription"),
+            "return_status": o.get("return_status") or "Not Requested",
+            "refund_status": o.get("refund_status") or "Not Applicable",
+            "tracking_steps": order_tracking_steps(o["status"]),
+            "can_cancel": o["status"] in ["Pending", "Approved"],
+            "can_return": o["status"] == "Delivered",
+            "can_reorder": o["status"] in ["Delivered", "Cancelled", "Refunded"],
+            "delivery_status": o.get("delivery_status") or delivery_status_for_order_status(o["status"]),
+            "delivery_otp": o.get("delivery_otp") or "Not generated",
+            "delivery_notes": o.get("delivery_notes") or "No delivery notes added.",
+            "delivery_address": o.get("delivery_address") or "Delivery address not saved.",
+            "courier_name": o.get("courier_name") or "Yuvraj Local Delivery",
+            "courier_tracking_id": o.get("courier_tracking_id") or f"YMD{o['id']:06d}",
+            "courier_tracking_url": o.get("courier_tracking_url") or "",
+            "payment_method": o.get("payment_method") or "Cash On Delivery",
+            "payment_status": o.get("payment_status") or "Pending",
+            "payment_reference": o.get("payment_reference") or "Not provided",
+            "payment_screenshot": o.get("payment_screenshot"),
         })
 
 
-    return render_template("my_orders.html", orders=orders)
+    summary = {
+        "total_orders": len(orders),
+        "active_orders": len([o for o in orders if o["status"] in ["Pending", "Approved", "Packed", "Out For Delivery"]]),
+        "delivered_orders": len([o for o in orders if o["status"] == "Delivered"]),
+        "refund_orders": len([o for o in orders if o["refund_status"] != "Not Applicable"]),
+    }
+
+    return render_template(
+        "my_orders.html",
+        orders=orders,
+        order_statuses=ORDER_STATUSES,
+        summary=summary
+    )
+
+
+def get_customer_order(order_id, user_id):
+    ensure_payment_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM orders
+        WHERE id=%s AND user_id=%s
+    """, (order_id, user_id))
+    order = cursor.fetchone()
+    cursor.close()
+    if not order:
+        return None, []
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id AS medicine_id, medicines.name, order_items.quantity, order_items.price
+        FROM order_items
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE order_items.order_id=%s
+    """, (order_id,))
+    items = cursor.fetchall()
+    cursor.close()
+    return order, items
+
+
+@app.route("/payment_history")
+def payment_history():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_payment_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT payments.*, orders.status AS order_status
+        FROM payments
+        JOIN orders ON orders.id = payments.order_id
+        WHERE payments.user_id=%s
+        ORDER BY payments.id DESC
+    """, (session["user"]["id"],))
+    payments = cursor.fetchall()
+    cursor.close()
+    summary = {
+        "total": len(payments),
+        "verified": len([p for p in payments if p.get("status") == "Verified"]),
+        "pending": len([p for p in payments if p.get("status") in ["Pending Verification", "Pending COD"]]),
+        "amount": sum(float(p.get("amount") or 0) for p in payments),
+    }
+    return render_template("payment_history.html", payments=payments, summary=summary)
+
+
+@app.route("/notifications")
+def notifications_page():
+    if "user" not in session:
+        return redirect("/login")
+
+    notifications, unread_count = get_user_notifications(session["user"]["id"])
+    summary = {
+        "total": len(notifications),
+        "unread": unread_count,
+        "types": NOTIFICATION_TYPES,
+    }
+    return render_template("notifications.html", notifications=notifications, summary=summary)
+
+
+@app.route("/notifications/mark_read/<int:notification_id>", methods=["POST"])
+def mark_notification_read(notification_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE notifications
+        SET is_read=1
+        WHERE id=%s AND user_id=%s
+    """, (notification_id, session["user"]["id"]))
+    db.commit()
+    cursor.close()
+    return redirect("/notifications")
+
+
+@app.route("/notifications/mark_all_read", methods=["POST"])
+def mark_all_notifications_read():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE notifications
+        SET is_read=1
+        WHERE user_id=%s
+    """, (session["user"]["id"],))
+    db.commit()
+    cursor.close()
+    return redirect("/notifications")
+
+
+@app.route("/reviews_feedback", methods=["GET", "POST"])
+def reviews_feedback():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_reviews_feedback_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    if request.method == "POST":
+        review_type = request.form.get("review_type")
+        medicine_id = request.form.get("medicine_id") or None
+        order_id = request.form.get("order_id") or None
+        rating = request.form.get("rating") or None
+        title = (request.form.get("title") or "").strip()
+        message = (request.form.get("message") or "").strip()
+        issue_category = (request.form.get("issue_category") or "").strip() or None
+
+        if review_type not in REVIEW_TYPES:
+            flash("Please select a valid feedback type.")
+            return redirect("/reviews_feedback")
+
+        if review_type != "Issue Report":
+            try:
+                rating = int(rating)
+            except (TypeError, ValueError):
+                rating = 0
+            if rating < 1 or rating > 5:
+                flash("Please select a rating from 1 to 5 stars.")
+                return redirect("/reviews_feedback")
+        else:
+            rating = None
+
+        if not message:
+            flash("Please write your review or issue details.")
+            return redirect("/reviews_feedback")
+
+        cursor = db.cursor()
+        cursor.execute("""
+            INSERT INTO reviews_feedback (
+                user_id,
+                review_type,
+                medicine_id,
+                order_id,
+                rating,
+                title,
+                message,
+                issue_category,
+                status,
+                created_at
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'Submitted', %s)
+        """, (
+            user_id,
+            review_type,
+            medicine_id,
+            order_id,
+            rating,
+            title,
+            message,
+            issue_category,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ))
+        db.commit()
+        cursor.close()
+        flash("Thank you. Your review or feedback has been submitted.")
+        return redirect("/reviews_feedback")
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT DISTINCT medicines.id, medicines.name
+        FROM order_items
+        JOIN orders ON orders.id = order_items.order_id
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.user_id=%s
+        ORDER BY medicines.name ASC
+    """, (user_id,))
+    purchased_medicines = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT id, total, date, status, delivery_status
+        FROM orders
+        WHERE user_id=%s
+        ORDER BY id DESC
+        LIMIT 20
+    """, (user_id,))
+    orders = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reviews_feedback.*,
+               medicines.name AS medicine_name,
+               orders.status AS order_status
+        FROM reviews_feedback
+        LEFT JOIN medicines ON medicines.id = reviews_feedback.medicine_id
+        LEFT JOIN orders ON orders.id = reviews_feedback.order_id
+        WHERE reviews_feedback.user_id=%s
+        ORDER BY reviews_feedback.id DESC
+    """, (user_id,))
+    feedback_items = cursor.fetchall()
+    cursor.close()
+
+    summary = {
+        "total": len(feedback_items),
+        "medicine": len([item for item in feedback_items if item["review_type"] == "Medicine Rating"]),
+        "orders": len([item for item in feedback_items if item["review_type"] == "Order Review"]),
+        "delivery": len([item for item in feedback_items if item["review_type"] == "Delivery Experience"]),
+        "issues": len([item for item in feedback_items if item["review_type"] == "Issue Report"]),
+    }
+
+    return render_template(
+        "reviews_feedback.html",
+        review_types=REVIEW_TYPES,
+        purchased_medicines=purchased_medicines,
+        orders=orders,
+        feedback_items=feedback_items,
+        summary=summary,
+    )
+
+
+@app.route("/order_details/<int:order_id>")
+def order_details(order_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    order, items = get_customer_order(order_id, session["user"]["id"])
+    if not order:
+        abort(404)
+
+    return render_template(
+        "order_details.html",
+        order=order,
+        items=items,
+        tracking_steps=order_tracking_steps(order["status"]),
+        can_cancel=order["status"] in ["Pending", "Approved"],
+        can_return=order["status"] == "Delivered",
+        can_reorder=order["status"] in ["Delivered", "Cancelled", "Refunded"],
+    )
+
+
+@app.route("/order_tracking/<int:order_id>")
+def order_tracking(order_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    order, items = get_customer_order(order_id, session["user"]["id"])
+    if not order:
+        abort(404)
+
+    return render_template(
+        "order_tracking.html",
+        order=order,
+        items=items,
+        tracking_steps=order_tracking_steps(order["status"]),
+    )
+
+
+@app.route("/delivery_tracking/<int:order_id>")
+def delivery_tracking(order_id):
+    return redirect(f"/order_tracking/{order_id}")
+
+
+@app.route("/courier_tracking/<int:order_id>")
+def courier_tracking(order_id):
+    return redirect(f"/order_tracking/{order_id}")
+
+
+@app.route("/download_invoice/<int:order_id>")
+def download_invoice(order_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    order, items = get_customer_order(order_id, session["user"]["id"])
+    if not order:
+        abort(404)
+
+    invoice_image = static_image_data_uri("images/order-card-visual-premium.png")
+    html = render_template("invoice.html", order=order, items=items, invoice_image=invoice_image)
+    response = make_response(html)
+    response.headers["Content-Type"] = "text/html; charset=utf-8"
+    response.headers["Content-Disposition"] = f"attachment; filename=invoice-{order_id}.html"
+    return response
+
+
+@app.route("/reorder/<int:order_id>")
+def reorder(order_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    order, items = get_customer_order(order_id, session["user"]["id"])
+    if not order:
+        abort(404)
+
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor(dictionary=True)
+    added = 0
+
+    for item in items:
+        cursor.execute("""
+            SELECT stock
+            FROM medicines
+            WHERE id=%s
+        """, (item["medicine_id"],))
+        medicine = cursor.fetchone()
+        if medicine and medicine["stock"] > 0:
+            quantity = min(item["quantity"], medicine["stock"])
+            cursor.execute("""
+                INSERT INTO cart (user_id, medicine_id, quantity)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+            """, (user_id, item["medicine_id"], quantity))
+            added += 1
+
+    db.commit()
+    cursor.close()
+    flash("Previous order medicines were added to your cart." if added else "No medicines from this order are currently available.")
+    return redirect("/cart")
+
+
+def ensure_subscription_schema():
+    if app.config.get("SUBSCRIPTION_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS medicine_subscriptions (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            medicine_id INT NOT NULL,
+            quantity INT NOT NULL DEFAULT 1,
+            frequency_days INT NOT NULL DEFAULT 30,
+            next_refill_date DATE NULL,
+            auto_reorder TINYINT(1) NOT NULL DEFAULT 0,
+            refill_reminder TINYINT(1) NOT NULL DEFAULT 1,
+            repeat_prescription_request_id INT NULL,
+            status VARCHAR(40) NOT NULL DEFAULT 'Active',
+            notes TEXT NULL,
+            created_at DATETIME NOT NULL,
+            updated_at DATETIME NOT NULL,
+            UNIQUE KEY uniq_user_medicine_subscription (user_id, medicine_id),
+            INDEX idx_subscription_user (user_id, status),
+            INDEX idx_subscription_refill (next_refill_date)
+        )
+    """)
+    db.commit()
+    cursor.close()
+    app.config["SUBSCRIPTION_SCHEMA_READY"] = True
+
+
+def add_medicine_to_customer_cart(user_id, medicine_id, quantity=1):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT stock FROM medicines WHERE id=%s", (medicine_id,))
+    medicine = cursor.fetchone()
+    if not medicine or medicine["stock"] <= 0:
+        cursor.close()
+        return False
+
+    quantity = max(1, min(int(quantity or 1), medicine["stock"]))
+    cursor.execute("""
+        INSERT INTO cart (user_id, medicine_id, quantity)
+        VALUES (%s, %s, %s)
+        ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+    """, (user_id, medicine_id, quantity))
+    db.commit()
+    cursor.close()
+    return True
+
+
+def build_reorder_subscription_context(user_id):
+    ensure_subscription_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT medicines.id,
+               medicines.name,
+               medicines.price,
+               medicines.stock,
+               medicines.prescription_required,
+               COUNT(DISTINCT orders.id) AS order_count,
+               SUM(order_items.quantity) AS total_quantity,
+               MAX(orders.date) AS last_order_date
+        FROM order_items
+        JOIN orders ON orders.id = order_items.order_id
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.user_id=%s
+          AND orders.status != 'Cancelled'
+        GROUP BY medicines.id, medicines.name, medicines.price, medicines.stock, medicines.prescription_required
+        ORDER BY last_order_date DESC, total_quantity DESC
+        LIMIT 10
+    """, (user_id,))
+    buy_again_items = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT id, name, price, stock, prescription_required
+        FROM medicines
+        WHERE stock > 0
+        ORDER BY name ASC
+        LIMIT 120
+    """)
+    available_medicines = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT medicine_subscriptions.*,
+               medicines.name AS medicine_name,
+               medicines.price,
+               medicines.stock,
+               medicines.prescription_required
+        FROM medicine_subscriptions
+        JOIN medicines ON medicines.id = medicine_subscriptions.medicine_id
+        WHERE medicine_subscriptions.user_id=%s
+        ORDER BY
+            CASE medicine_subscriptions.status WHEN 'Active' THEN 0 ELSE 1 END,
+            medicine_subscriptions.next_refill_date ASC,
+            medicine_subscriptions.id DESC
+    """, (user_id,))
+    subscriptions = cursor.fetchall()
+
+    try:
+        cursor.execute("""
+            SELECT id, status, created_at, matched_medicines
+            FROM prescription_requests
+            WHERE user_id=%s
+            ORDER BY created_at DESC
+            LIMIT 8
+        """, (user_id,))
+        prescriptions = cursor.fetchall()
+    except mysql.connector.Error:
+        prescriptions = []
+
+    cursor.close()
+
+    today = datetime.now().date()
+    due_soon = []
+    for subscription in subscriptions:
+        next_refill = subscription.get("next_refill_date")
+        if next_refill and subscription.get("status") == "Active":
+            if hasattr(next_refill, "date"):
+                next_refill = next_refill.date()
+            if next_refill <= today + timedelta(days=7):
+                due_soon.append(subscription)
+
+    summary = {
+        "buy_again": len(buy_again_items),
+        "subscriptions": len([item for item in subscriptions if item.get("status") == "Active"]),
+        "auto_reorder": len([item for item in subscriptions if item.get("auto_reorder") and item.get("status") == "Active"]),
+        "due_soon": len(due_soon),
+        "prescriptions": len(prescriptions),
+    }
+
+    return {
+        "buy_again_items": buy_again_items,
+        "available_medicines": available_medicines,
+        "subscriptions": subscriptions,
+        "prescriptions": prescriptions,
+        "summary": summary,
+        "default_next_refill": (today + timedelta(days=30)).strftime("%Y-%m-%d"),
+    }
+
+
+@app.route("/reorder_subscription")
+def reorder_subscription():
+    if "user" not in session:
+        return redirect("/login")
+
+    return render_template(
+        "reorder_subscription.html",
+        **build_reorder_subscription_context(session["user"]["id"])
+    )
+
+
+@app.route("/buy_again/<int:medicine_id>")
+def buy_again(medicine_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    added = add_medicine_to_customer_cart(session["user"]["id"], medicine_id, 1)
+    flash("Medicine added to cart." if added else "This medicine is currently out of stock.")
+    return redirect("/cart" if added else "/reorder_subscription")
+
+
+@app.route("/subscriptions/create", methods=["POST"])
+def create_subscription():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_subscription_schema()
+    user_id = session["user"]["id"]
+    medicine_ids = [medicine_id for medicine_id in request.form.getlist("medicine_ids") if medicine_id]
+    if not medicine_ids:
+        single_medicine_id = request.form.get("medicine_id")
+        medicine_ids = [single_medicine_id] if single_medicine_id else []
+    if not medicine_ids:
+        flash("Please select at least one medicine to subscribe.")
+        return redirect("/reorder_subscription")
+
+    quantity = max(1, int(request.form.get("quantity") or 1))
+    frequency_days = int(request.form.get("frequency_days") or 30)
+    if frequency_days not in [15, 30, 45, 60, 90]:
+        frequency_days = 30
+    next_refill_date = request.form.get("next_refill_date") or (datetime.now().date() + timedelta(days=frequency_days)).strftime("%Y-%m-%d")
+    auto_reorder = 1 if request.form.get("auto_reorder") == "on" else 0
+    refill_reminder = 1 if request.form.get("refill_reminder") == "on" else 0
+    repeat_prescription_request_id = request.form.get("prescription_request_id") or None
+
+    db = get_db()
+    cursor = db.cursor()
+    saved_count = 0
+    for medicine_id in medicine_ids:
+        cursor.execute("""
+            INSERT INTO medicine_subscriptions (
+                user_id,
+                medicine_id,
+                quantity,
+                frequency_days,
+                next_refill_date,
+                auto_reorder,
+                refill_reminder,
+                repeat_prescription_request_id,
+                status,
+                created_at,
+                updated_at
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'Active', %s, %s)
+            ON DUPLICATE KEY UPDATE
+                quantity=VALUES(quantity),
+                frequency_days=VALUES(frequency_days),
+                next_refill_date=VALUES(next_refill_date),
+                auto_reorder=VALUES(auto_reorder),
+                refill_reminder=VALUES(refill_reminder),
+                repeat_prescription_request_id=VALUES(repeat_prescription_request_id),
+                status='Active',
+                updated_at=VALUES(updated_at)
+        """, (
+            user_id,
+            medicine_id,
+            quantity,
+            frequency_days,
+            next_refill_date,
+            auto_reorder,
+            refill_reminder,
+            repeat_prescription_request_id,
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        ))
+        saved_count += 1
+    db.commit()
+    cursor.close()
+    flash(f"{saved_count} monthly medicine subscription{'s' if saved_count != 1 else ''} saved.")
+    return redirect("/reorder_subscription")
+
+
+@app.route("/subscriptions/<int:subscription_id>/cart", methods=["POST"])
+def subscription_to_cart(subscription_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_subscription_schema()
+    user_id = session["user"]["id"]
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM medicine_subscriptions
+        WHERE id=%s AND user_id=%s
+    """, (subscription_id, user_id))
+    subscription = cursor.fetchone()
+    cursor.close()
+    if not subscription:
+        abort(404)
+
+    added = add_medicine_to_customer_cart(user_id, subscription["medicine_id"], subscription["quantity"])
+    flash("Subscription medicine added to cart." if added else "Subscription medicine is currently out of stock.")
+    return redirect("/cart" if added else "/reorder_subscription")
+
+
+@app.route("/subscriptions/<int:subscription_id>/status", methods=["POST"])
+def update_subscription_status(subscription_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    action = request.form.get("action")
+    if action not in ["Active", "Paused", "Cancelled"]:
+        flash("Invalid subscription action.")
+        return redirect("/reorder_subscription")
+
+    ensure_subscription_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE medicine_subscriptions
+        SET status=%s,
+            updated_at=%s
+        WHERE id=%s AND user_id=%s
+    """, (action, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), subscription_id, session["user"]["id"]))
+    db.commit()
+    cursor.close()
+    flash(f"Subscription marked as {action}.")
+    return redirect("/reorder_subscription")
+
+
+@app.route("/repeat_prescription_order/<int:request_id>")
+def repeat_prescription_order(request_id):
+    return redirect(f"/add_prescription_to_cart/{request_id}")
+
+
+@app.route("/return_order/<int:order_id>")
+def return_order(order_id):
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_payment_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT status, return_status
+        FROM orders
+        WHERE id=%s AND user_id=%s
+    """, (order_id, user_id))
+    order = cursor.fetchone()
+
+    if not order:
+        cursor.close()
+        abort(404)
+
+    if order["status"] != "Delivered":
+        cursor.close()
+        flash("Only delivered orders can be returned.")
+        return redirect("/my_orders")
+
+    cursor.execute("""
+        UPDATE orders
+        SET return_status='Return Requested',
+            refund_status='Processing'
+        WHERE id=%s AND user_id=%s
+    """, (order_id, user_id))
+    db.commit()
+    cursor.close()
+    flash("Return request submitted. Refund status is now Processing.")
+    return redirect(f"/order_details/{order_id}")
+
+
+@app.route("/verify_payment/<int:payment_id>", methods=["POST"])
+def verify_payment(payment_id):
+    if "user" not in session or session["user"]["role"] not in ["owner", "staff"]:
+        return redirect("/login")
+
+    ensure_payment_schema()
+    action = request.form.get("action")
+    if action not in ["Verified", "Rejected"]:
+        flash("Invalid payment action.")
+        return redirect("/staff#orders")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT order_id FROM payments WHERE id=%s", (payment_id,))
+    payment = cursor.fetchone()
+    if not payment:
+        cursor.close()
+        flash("Payment record not found.")
+        return redirect("/staff#orders")
+
+    cursor.execute("""
+        UPDATE payments
+        SET status=%s,
+            verified_at=%s,
+            verified_by=%s
+        WHERE id=%s
+    """, (
+        action,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        session["user"]["id"],
+        payment_id
+    ))
+    cursor.execute("""
+        UPDATE orders
+        SET payment_status=%s
+        WHERE id=%s
+    """, (action, payment["order_id"]))
+    db.commit()
+    cursor.close()
+    flash(f"Payment marked as {action}.")
+    return redirect("/staff#orders")
 
 
 def build_customer_dashboard_context(db, user_id):
@@ -3074,6 +4665,7 @@ def cancel_order(order_id):
     if "user" not in session:
         return redirect("/login")
 
+    ensure_order_management_schema()
     db = get_db()
     user_id = session["user"]["id"]
 
@@ -3088,8 +4680,9 @@ def cancel_order(order_id):
     if not order:
         return "Invalid order"
 
-    if order["status"] == "Delivered":
-        return "Cannot cancel delivered order"
+    if order["status"] not in ["Pending", "Approved"]:
+        flash("This order cannot be cancelled at the current status.")
+        return redirect("/my_orders")
 
 
     cursor = db.cursor(dictionary=True)
@@ -3110,7 +4703,9 @@ def cancel_order(order_id):
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         UPDATE orders
-        SET status='Cancelled'
+        SET status='Cancelled',
+            refund_status='Not Applicable',
+            return_status='Not Requested'
         WHERE id=%s
     """, (order_id,))
 
@@ -3123,19 +4718,90 @@ def deliver_order(id):
     if "user" not in session or session["user"]["role"] != "staff":
         return redirect("/login")
 
+    ensure_delivery_feature_schema()
     db = get_db()
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         UPDATE orders
-        SET status='Delivered'
+        SET status='Delivered',
+            delivery_status='Delivered',
+            delivery_updated_at=%s
         WHERE id=%s
-    """, (id,))
+    """, (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id))
 
     db.commit()
     cursor.close()
 
     return redirect("/staff")
+
+
+@app.route("/update_order_status/<int:order_id>", methods=["POST"])
+def update_order_status(order_id):
+    if "user" not in session or session["user"]["role"] not in ["owner", "staff"]:
+        return redirect("/login")
+
+    ensure_delivery_feature_schema()
+    status = request.form.get("status")
+    if status not in ORDER_STATUSES:
+        flash("Invalid order status.")
+        return redirect("/staff#orders")
+
+    refund_status = "Not Applicable"
+    return_status = "Not Requested"
+    if status == "Refunded":
+        refund_status = "Completed"
+        return_status = "Return Closed"
+    elif status == "Cancelled":
+        refund_status = "Not Applicable"
+
+    courier_name = (request.form.get("courier_name") or "").strip()
+    courier_tracking_id = (request.form.get("courier_tracking_id") or "").strip()
+    courier_tracking_url = (request.form.get("courier_tracking_url") or "").strip()
+    delivery_notes = (request.form.get("delivery_notes") or "").strip()
+    submitted_delivery_otp = (request.form.get("delivery_otp") or "").strip()
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("SELECT delivery_otp FROM orders WHERE id=%s", (order_id,))
+    existing_order = cursor.fetchone() or {}
+    if status == "Delivered" and existing_order.get("delivery_otp") and submitted_delivery_otp != existing_order["delivery_otp"]:
+        cursor.close()
+        flash("Delivery OTP is required to mark this order as Delivered.")
+        return redirect("/staff#orders")
+
+    cursor.execute("""
+        UPDATE orders
+        SET status=%s,
+            refund_status=%s,
+            return_status=CASE
+                WHEN return_status='Return Requested' THEN return_status
+                ELSE %s
+            END,
+            delivery_status=%s,
+            courier_name=COALESCE(NULLIF(%s, ''), courier_name),
+            courier_tracking_id=COALESCE(NULLIF(%s, ''), courier_tracking_id),
+            courier_tracking_url=COALESCE(NULLIF(%s, ''), courier_tracking_url),
+            delivery_notes=COALESCE(NULLIF(%s, ''), delivery_notes),
+            delivery_updated_at=%s
+        WHERE id=%s
+    """, (
+        status,
+        refund_status,
+        return_status,
+        delivery_status_for_order_status(status),
+        courier_name,
+        courier_tracking_id,
+        courier_tracking_url,
+        delivery_notes,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        order_id
+    ))
+    db.commit()
+    cursor.close()
+    flash(f"Order #{order_id} updated to {status}.")
+    return redirect("/staff#orders")
 # ================= OWNER DASHBOARD =================
 @app.route("/owner_dashboard")
 def owner_dashboard():
@@ -3490,6 +5156,7 @@ def staff_dashboard():
     if session["user"]["role"] not in ["owner", "staff"]:
         return redirect("/")
 
+    ensure_payment_schema()
     db = get_db()
 
 
@@ -3501,9 +5168,17 @@ def staff_dashboard():
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
-        SELECT orders.*, users.name AS customer_name
+        SELECT orders.*,
+               users.name AS customer_name,
+               payments.id AS payment_id,
+               payments.method AS payment_method,
+               payments.transaction_id AS payment_transaction_id,
+               payments.screenshot AS payment_screenshot,
+               payments.status AS payment_status,
+               payments.created_at AS payment_created_at
         FROM orders
         JOIN users ON users.id = orders.user_id
+        LEFT JOIN payments ON payments.order_id = orders.id
         ORDER BY orders.id DESC
     """)
     orders = cursor.fetchall()
@@ -3560,7 +5235,8 @@ def staff_dashboard():
         total_orders=total_orders,
         pending_orders=pending_orders,
         delivered_orders=delivered_orders,
-        total_medicines=total_medicines
+        total_medicines=total_medicines,
+        order_statuses=ORDER_STATUSES
     )
 
 #---------- ADD MEDICINE -------------

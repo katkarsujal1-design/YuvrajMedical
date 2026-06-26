@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register | Yuvraj Medical</title>
 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+
 <style>
 *{
     box-sizing:border-box;
@@ -358,6 +360,11 @@ body{
                         <option value="customer" {% if not form or form.role == "customer" %}selected{% endif %}>Customer</option>
                         <option value="staff" {% if form and form.role == "staff" %}selected{% endif %}>Staff</option>
                     </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>Referral Code</label>
+                    <input type="text" name="referral_code" placeholder="Enter referral code if someone invited you" value="{{ form.referral_code if form else '' }}">
                 </div>
 
                 <div class="form-group full">

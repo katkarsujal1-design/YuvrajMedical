@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <style>
         *{box-sizing:border-box}
         body{
@@ -174,14 +175,7 @@
     </style>
 </head>
 <body>
-<header class="topbar">
-    <h1>Profile Management</h1>
-    <nav class="nav">
-        <a href="/profile">Profile</a>
-        <a href="/">Home</a>
-        <a href="/logout">Logout</a>
-    </nav>
-</header>
+{% include "partials/site_header.html" %}
 
 <main class="wrap">
     <section class="panel">
@@ -316,5 +310,6 @@
         </div>
     </section>
 </main>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>
