@@ -4346,7 +4346,10 @@ def create_subscription():
         flash("Please select at least one medicine to subscribe.")
         return redirect("/reorder_subscription")
 
-    quantity = max(1, int(request.form.get("quantity") or 1))
+    try:
+        quantity = max(1, int(request.form.get("quantity") or 1))
+    except (TypeError, ValueError):
+        quantity = 1
     frequency_days = int(request.form.get("frequency_days") or 30)
     if frequency_days not in [15, 30, 45, 60, 90]:
         frequency_days = 30
@@ -4359,6 +4362,10 @@ def create_subscription():
     cursor = db.cursor()
     saved_count = 0
     for medicine_id in medicine_ids:
+        try:
+            medicine_quantity = max(1, int(request.form.get(f"quantity_{medicine_id}") or quantity))
+        except (TypeError, ValueError):
+            medicine_quantity = quantity
         cursor.execute("""
             INSERT INTO medicine_subscriptions (
                 user_id,
@@ -4386,7 +4393,7 @@ def create_subscription():
         """, (
             user_id,
             medicine_id,
-            quantity,
+            medicine_quantity,
             frequency_days,
             next_refill_date,
             auto_reorder,
