@@ -460,6 +460,7 @@ body.yvm-page-checkout-prescription { --yvm-page-image: url("/static/images/orde
 body.yvm-page-my-orders,
 body.yvm-page-order-details,
 body.yvm-page-order-tracking,
+body.yvm-page-delivery-services,
 body.yvm-page-reorder-subscription,
 body.yvm-page-payment-history,
 body.yvm-page-invoice { --yvm-page-image: url("/static/images/order-management-premium.png"); }

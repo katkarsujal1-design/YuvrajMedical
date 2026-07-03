@@ -1594,6 +1594,11 @@ def health_essentials():
     )
 
 
+@app.route("/delivery-services")
+def delivery_services():
+    return render_template("delivery_services.html")
+
+
 @app.route("/category/<category_name>")
 def category_page(category_name):
 

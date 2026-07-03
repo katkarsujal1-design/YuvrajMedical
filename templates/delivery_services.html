@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Delivery | Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
+        :root {
+            --del-ink: #102134;
+            --del-muted: #64748b;
+            --del-line: rgba(148, 163, 184, .30);
+            --del-panel: rgba(255, 255, 255, .93);
+            --del-teal: #0f766e;
+            --del-teal-dark: #053344;
+            --del-emerald: #10b981;
+            --del-wine: #8a2459;
+            --del-gold: #b7791f;
+            --del-blue: #e6f4ff;
+            --del-shadow: 0 26px 70px rgba(15, 23, 42, .13);
+            --del-shadow-soft: 0 16px 38px rgba(15, 23, 42, .09);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--del-ink);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background:
+                linear-gradient(rgba(15, 118, 110, .028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 118, 110, .028) 1px, transparent 1px),
+                radial-gradient(circle at 8% 8%, rgba(16, 185, 129, .14), transparent 30rem),
+                radial-gradient(circle at 88% 4%, rgba(8, 145, 178, .13), transparent 26rem),
+                linear-gradient(180deg, #f8fcfd 0%, #ffffff 42%, #effaf8 100%);
+            background-size: 36px 36px, 36px 36px, auto, auto, auto;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .delivery-shell {
+            width: min(1220px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 34px 0 0;
+        }
+
+        .delivery-hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, .92fr) minmax(380px, 1.08fr);
+            gap: 30px;
+            align-items: center;
+            min-height: 610px;
+            padding: 42px;
+            border: 1px solid rgba(255, 255, 255, .72);
+            border-radius: 8px;
+            background:
+                radial-gradient(circle at 72% 14%, rgba(16, 185, 129, .22), transparent 19rem),
+                linear-gradient(135deg, rgba(5, 51, 68, .98), rgba(0, 99, 94, .96) 58%, rgba(14, 116, 144, .90));
+            box-shadow: var(--del-shadow);
+            color: #ffffff;
+        }
+
+        .delivery-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(120deg, rgba(255, 255, 255, .16), transparent 34%),
+                linear-gradient(90deg, transparent, rgba(255, 255, 255, .08));
+        }
+
+        .hero-copy,
+        .hero-scene {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 34px;
+            padding: 8px 13px;
+            border: 1px solid rgba(204, 251, 241, .34);
+            border-radius: 999px;
+            color: #e9fffb;
+            background: rgba(255, 255, 255, .12);
+            backdrop-filter: blur(16px);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 18px;
+            height: 12px;
+            border-radius: 3px 3px 2px 2px;
+            background:
+                linear-gradient(90deg, #a7f3d0 0 68%, transparent 68%),
+                linear-gradient(#a7f3d0, #a7f3d0);
+            box-shadow: 8px 6px 0 -5px #a7f3d0, -8px 6px 0 -5px #a7f3d0;
+        }
+
+        h1 {
+            margin: 18px 0 16px;
+            max-width: 700px;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-size: clamp(42px, 5.4vw, 74px);
+            line-height: 1.03;
+            letter-spacing: 0;
+            text-shadow: 0 16px 34px rgba(2, 6, 23, .28);
+        }
+
+        .hero-copy p {
+            max-width: 660px;
+            margin: 0;
+            color: #dffdf6;
+            font-size: 18px;
+            line-height: 1.72;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn,
+        .track-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 13px 18px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+        }
+
+        .btn:hover,
+        .track-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary,
+        .track-btn {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--del-wine), var(--del-teal));
+            box-shadow: 0 18px 34px rgba(5, 51, 68, .26);
+        }
+
+        .btn-ghost {
+            color: #ecfeff;
+            background: rgba(255, 255, 255, .12);
+            border-color: rgba(204, 251, 241, .28);
+            backdrop-filter: blur(14px);
+        }
+
+        .btn-light {
+            color: var(--del-teal-dark);
+            background: linear-gradient(180deg, #ffffff, #ecfeff);
+            border-color: rgba(8, 145, 178, .24);
+            box-shadow: 0 12px 28px rgba(8, 145, 178, .10);
+        }
+
+        .hero-scene {
+            min-height: 470px;
+            display: grid;
+            align-items: center;
+        }
+
+        .scene-card {
+            position: relative;
+            min-height: 438px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .24);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .18)),
+                #ffffff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), 0 32px 60px rgba(2, 6, 23, .22);
+        }
+
+        .scene-card img {
+            display: block;
+            width: 100%;
+            height: 438px;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .scene-overlay {
+            position: absolute;
+            inset: auto 18px 18px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, .54);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .82);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 18px 34px rgba(15, 23, 42, .12);
+        }
+
+        .scene-overlay span {
+            display: block;
+            color: var(--del-muted);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .scene-overlay strong {
+            display: block;
+            margin-top: 4px;
+            color: var(--del-ink);
+            font-size: 18px;
+        }
+
+        .qr-label {
+            width: 58px;
+            height: 58px;
+            border: 8px solid #ffffff;
+            border-radius: 8px;
+            background:
+                linear-gradient(90deg, #0f766e 50%, transparent 0) 0 0 / 14px 14px,
+                linear-gradient(#0f766e 50%, transparent 0) 0 0 / 14px 14px,
+                #ffffff;
+            box-shadow: 0 12px 24px rgba(15, 118, 110, .18);
+        }
+
+        .floating-chip {
+            position: absolute;
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            color: #073f3b;
+            background: rgba(255, 255, 255, .90);
+            border: 1px solid rgba(15, 118, 110, .16);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, .12);
+            font-size: 12px;
+            font-weight: 950;
+        }
+
+        .chip-map {
+            top: 20px;
+            left: 18px;
+        }
+
+        .chip-gps {
+            top: 82px;
+            right: 18px;
+        }
+
+        .section-panel {
+            margin-top: 28px;
+        }
+
+        .section-head {
+            max-width: 760px;
+            margin-bottom: 18px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            color: var(--del-ink);
+            font-size: clamp(28px, 3vw, 42px);
+            letter-spacing: 0;
+        }
+
+        .section-head p {
+            margin: 8px 0 0;
+            color: var(--del-muted);
+            line-height: 1.65;
+            font-weight: 750;
+        }
+
+        .tracker-card,
+        .area-card,
+        .feature-card,
+        .vehicle-card,
+        .step-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--del-line);
+            border-radius: 8px;
+            background: var(--del-panel);
+            box-shadow: var(--del-shadow-soft);
+            backdrop-filter: blur(16px);
+        }
+
+        .tracker-card::before,
+        .area-card::before,
+        .feature-card::before,
+        .vehicle-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, var(--del-wine), var(--del-teal), var(--del-gold));
+        }
+
+        .tracker-card {
+            display: grid;
+            grid-template-columns: minmax(0, .84fr) minmax(340px, 1fr);
+            gap: 28px;
+            align-items: start;
+            padding: 28px;
+        }
+
+        .tracker-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .tracker-form input {
+            width: 100%;
+            min-height: 50px;
+            padding: 0 16px;
+            border: 1px solid rgba(148, 163, 184, .46);
+            border-radius: 8px;
+            color: var(--del-ink);
+            background: #ffffff;
+            font-weight: 850;
+            outline: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .72);
+        }
+
+        .tracker-form input:focus {
+            border-color: rgba(15, 118, 110, .64);
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, .10);
+        }
+
+        .tracker-note {
+            min-height: 44px;
+            margin-top: 12px;
+            padding: 12px 14px;
+            border: 1px solid #cfe9f6;
+            border-radius: 8px;
+            color: #315078;
+            background: #eef8ff;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .timeline {
+            display: grid;
+            gap: 0;
+        }
+
+        .timeline-step {
+            position: relative;
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 14px;
+            min-height: 74px;
+            color: var(--del-muted);
+        }
+
+        .timeline-step::before {
+            content: "";
+            position: absolute;
+            left: 23px;
+            top: 42px;
+            bottom: -14px;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(15, 118, 110, .44), rgba(148, 163, 184, .28));
+        }
+
+        .timeline-step:last-child::before {
+            display: none;
+        }
+
+        .timeline-dot {
+            position: relative;
+            z-index: 1;
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f766e, #10b981);
+            box-shadow: 0 14px 26px rgba(15, 118, 110, .20);
+            font-size: 18px;
+            font-weight: 950;
+            animation: timelinePulse 2.6s ease-in-out infinite;
+        }
+
+        .timeline-step:nth-child(2) .timeline-dot {
+            animation-delay: .2s;
+        }
+
+        .timeline-step:nth-child(3) .timeline-dot {
+            animation-delay: .4s;
+        }
+
+        .timeline-step:nth-child(4) .timeline-dot {
+            color: #0f4f4a;
+            background: linear-gradient(135deg, #fde68a, #a7f3d0);
+            animation-delay: .6s;
+        }
+
+        .timeline-step:nth-child(5) .timeline-dot {
+            background: linear-gradient(135deg, #dbeafe, #0f766e);
+            animation-delay: .8s;
+        }
+
+        @keyframes timelinePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 14px 26px rgba(15, 118, 110, .20);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 18px 34px rgba(15, 118, 110, .30);
+            }
+        }
+
+        .timeline-copy strong {
+            display: block;
+            color: var(--del-ink);
+            font-size: 17px;
+            line-height: 1.25;
+        }
+
+        .timeline-copy span {
+            display: block;
+            margin-top: 5px;
+            color: var(--del-muted);
+            line-height: 1.5;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .area-grid,
+        .features-grid,
+        .vehicles-grid,
+        .steps-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .area-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .area-card {
+            min-height: 260px;
+            padding: 22px;
+        }
+
+        .zone-distance {
+            display: inline-flex;
+            align-items: center;
+            min-height: 36px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            color: #0f4f4a;
+            background: #ecfeff;
+            border: 1px solid rgba(15, 118, 110, .18);
+            font-size: 13px;
+            font-weight: 950;
+        }
+
+        .zone-badge {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 10px;
+            border-radius: 999px;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--del-wine), var(--del-teal));
+            font-size: 11px;
+            font-weight: 950;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .area-card h3,
+        .feature-card h3,
+        .vehicle-card h3,
+        .step-card h3 {
+            margin: 18px 0 10px;
+            color: var(--del-ink);
+            font-size: 22px;
+            letter-spacing: 0;
+        }
+
+        .area-card ul {
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .area-card li,
+        .feature-card p,
+        .vehicle-card p,
+        .step-card p {
+            color: var(--del-muted);
+            line-height: 1.55;
+            font-weight: 760;
+        }
+
+        .area-card li::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 9px;
+            border-radius: 999px;
+            background: var(--del-emerald);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, .12);
+        }
+
+        .steps-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .step-card {
+            min-height: 220px;
+            padding: 22px 18px;
+        }
+
+        .step-card:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 52px;
+            right: -21px;
+            z-index: 2;
+            width: 40px;
+            height: 14px;
+            background: linear-gradient(90deg, rgba(15, 118, 110, .16), rgba(15, 118, 110, .72));
+            clip-path: polygon(0 32%, 72% 32%, 72% 0, 100% 50%, 72% 100%, 72% 68%, 0 68%);
+        }
+
+        .step-icon,
+        .feature-icon,
+        .vehicle-icon {
+            width: 46px;
+            height: 46px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 8px;
+            color: #0f766e;
+            background: linear-gradient(180deg, #ecfeff, #d1fae5);
+            border: 1px solid rgba(15, 118, 110, .16);
+            font-size: 13px;
+            font-weight: 950;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            margin-right: 8px;
+            border-radius: 8px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f766e, #10b981);
+            box-shadow: 0 14px 26px rgba(15, 118, 110, .20);
+            font-weight: 950;
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .feature-card {
+            min-height: 166px;
+            padding: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+        }
+
+        .vehicles-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-bottom: 38px;
+        }
+
+        .vehicle-card {
+            min-height: 184px;
+            padding: 22px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(236, 254, 255, .88));
+        }
+
+        .vehicle-card h3 {
+            font-size: 22px;
+        }
+
+        .footer {
+            margin-top: 42px;
+            background: linear-gradient(135deg, #053344, #00635e);
+            color: #ffffff;
+        }
+
+        .footer-container {
+            width: min(1180px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 28px 0;
+            display: grid;
+            grid-template-columns: 1.3fr .8fr 1fr;
+            gap: 24px;
+        }
+
+        .footer h2,
+        .footer h3 {
+            margin: 0 0 12px;
+        }
+
+        .footer p {
+            margin: 8px 0;
+            color: #dbeafe;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            display: block;
+            color: #dff8f4;
+            text-decoration: none;
+            margin: 8px 0;
+            font-weight: 800;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 14px;
+            border-top: 1px solid rgba(255, 255, 255, .16);
+            color: #dff8f4;
+            font-weight: 800;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand img {
+            height: 50px;
+            width: 50px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 1060px) {
+            .delivery-hero,
+            .tracker-card {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-scene {
+                min-height: auto;
+            }
+
+            .area-grid,
+            .features-grid,
+            .steps-grid,
+            .vehicles-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .step-card:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .delivery-shell {
+                width: min(100% - 28px, 1220px);
+                padding-top: 20px;
+            }
+
+            .delivery-hero,
+            .tracker-card {
+                padding: 22px;
+            }
+
+            .delivery-hero {
+                min-height: auto;
+            }
+
+            .hero-actions,
+            .hero-actions .btn,
+            .track-btn {
+                width: 100%;
+            }
+
+            .scene-card,
+            .scene-card img {
+                min-height: 320px;
+                height: 320px;
+            }
+
+            .tracker-form,
+            .area-grid,
+            .features-grid,
+            .steps-grid,
+            .vehicles-grid,
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .zone-badge {
+                position: static;
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 38px;
+            }
+
+            .delivery-hero,
+            .tracker-card,
+            .area-card,
+            .feature-card,
+            .vehicle-card {
+                padding: 18px;
+            }
+
+            .floating-chip {
+                display: none;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+</head>
+<body class="yvm-pro-page yvm-page-delivery-services">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+{% include "partials/site_header.html" %}
+
+<main class="delivery-shell">
+    <section class="delivery-hero" aria-labelledby="delivery-title">
+        <div class="hero-copy">
+            <span class="eyebrow">Trusted Medicine Delivery</span>
+            <h1 id="delivery-title">Fast, Safe & Reliable Medicine Delivery</h1>
+            <p>
+                Get medicines delivered directly to your doorstep with secure packaging, verified pharmacy
+                handling, and real-time delivery updates.
+            </p>
+            <p>
+                Nearby orders can be delivered on the same day while longer-distance deliveries are handled
+                through trusted courier partners.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#delivery-availability">Check Delivery Area</a>
+                <a class="btn btn-ghost" href="/">Order Medicines</a>
+            </div>
+        </div>
+
+        <div class="hero-scene" aria-label="Yuvraj Medical delivery service visual">
+            <div class="scene-card">
+                <img src="{{ url_for('static', filename='images/promo-fast-home-delivery-premium.png') }}" alt="Yuvraj Medical branded delivery box, scooter, medicines, route and tracking">
+                <span class="floating-chip chip-map">Route map active</span>
+                <span class="floating-chip chip-gps">GPS location locked</span>
+                <div class="scene-overlay">
+                    <div>
+                        <span>Digital Tracking Screen</span>
+                        <strong>YMD-DELIVERY-247</strong>
+                    </div>
+                    <span class="qr-label" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-panel tracker-card" aria-labelledby="tracker-title">
+        <div>
+            <div class="section-head">
+                <h2 id="tracker-title">Track Your Delivery</h2>
+                <p>Enter a tracking ID to preview live delivery progress for your medicine order.</p>
+            </div>
+            <form class="tracker-form" id="tracker-form">
+                <input id="tracking-id" type="text" placeholder="Tracking ID, e.g. YMD247001" aria-label="Tracking ID">
+                <button class="track-btn" type="submit">Track</button>
+            </form>
+            <div class="tracker-note" id="tracker-note">Demo timeline is ready. Enter a tracking ID to highlight the current delivery stage.</div>
+        </div>
+
+        <div class="timeline" aria-label="Demo delivery timeline">
+            <div class="timeline-step">
+                <span class="timeline-dot">✓</span>
+                <div class="timeline-copy">
+                    <strong>Order Placed</strong>
+                    <span>Your medicine request has been received.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <span class="timeline-dot">✓</span>
+                <div class="timeline-copy">
+                    <strong>Pharmacist Verified</strong>
+                    <span>Prescription and medicine details are checked by pharmacy staff.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <span class="timeline-dot">✓</span>
+                <div class="timeline-copy">
+                    <strong>Packed</strong>
+                    <span>Medicines are packed securely with a QR shipping label.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <span class="timeline-dot">→</span>
+                <div class="timeline-copy">
+                    <strong>Out For Delivery</strong>
+                    <span>Delivery partner is moving toward your saved address.</span>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <span class="timeline-dot">⌂</span>
+                <div class="timeline-copy">
+                    <strong>Delivered</strong>
+                    <span>Order completed at your doorstep.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-panel" id="delivery-availability">
+        <div class="section-head">
+            <h2>Delivery Availability</h2>
+            <p>Delivery timing depends on distance, prescription review, stock availability, and courier coverage.</p>
+        </div>
+        <div class="area-grid">
+            <article class="area-card">
+                <span class="zone-distance">0-5 km</span>
+                <span class="zone-badge">Fastest</span>
+                <h3>Home Delivery Available</h3>
+                <ul>
+                    <li>Same Day Delivery</li>
+                    <li>Free / Low Charges</li>
+                    <li>Best for nearby and urgent local orders</li>
+                </ul>
+            </article>
+            <article class="area-card">
+                <span class="zone-distance">5-15 km</span>
+                <span class="zone-badge">Extended Zone</span>
+                <h3>Extended Delivery</h3>
+                <ul>
+                    <li>Extra Delivery Charges</li>
+                    <li>Estimated Time: 1 Day</li>
+                    <li>Handled by local delivery support when available</li>
+                </ul>
+            </article>
+            <article class="area-card">
+                <span class="zone-distance">15+ km</span>
+                <span class="zone-badge">Courier Partner</span>
+                <h3>Courier Delivery</h3>
+                <ul>
+                    <li>2-3 Business Days</li>
+                    <li>Not Available for Emergency Orders</li>
+                    <li>Supported through trusted courier partners</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-panel">
+        <div class="section-head">
+            <h2>How It Works</h2>
+            <p>Every order moves through pharmacy review, secure packing, and a delivery handoff.</p>
+        </div>
+        <div class="steps-grid">
+            <article class="step-card">
+                <span class="step-number">1</span><span class="step-icon">Rx</span>
+                <h3>Search Medicines or Upload Prescription</h3>
+                <p>Start with medicine search or send a doctor prescription for review.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">2</span><span class="step-icon">Ph</span>
+                <h3>Pharmacist Review</h3>
+                <p>The Yuvraj Medical team verifies medicines, prescription needs, and stock.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">3</span><span class="step-icon">PK</span>
+                <h3>Secure Packaging</h3>
+                <p>Medicines are packed safely with delivery details and handling notes.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">4</span><span class="step-icon">DL</span>
+                <h3>Doorstep Delivery</h3>
+                <p>Nearby orders use local delivery while distant orders use courier support.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-panel">
+        <div class="section-head">
+            <h2>Delivery Features</h2>
+            <p>Built for reliable medicine movement from pharmacy counter to customer doorstep.</p>
+        </div>
+        <div class="features-grid">
+            <article class="feature-card">
+                <span class="feature-icon">SD</span>
+                <h3>Same Day Delivery</h3>
+                <p>Nearby orders can move quickly once medicines are verified and ready.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">LT</span>
+                <h3>Live Order Tracking</h3>
+                <p>Track key delivery stages from placement to doorstep completion.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">SP</span>
+                <h3>Secure Medicine Packaging</h3>
+                <p>Orders are packed to keep medicine labels and items protected.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">VH</span>
+                <h3>Verified Pharmacy Handling</h3>
+                <p>Pharmacy staff review order details before delivery preparation.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">TP</span>
+                <h3>Temperature Safe Packaging</h3>
+                <p>Careful packing helps protect sensitive products during handoff.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon">IN</span>
+                <h3>Courier Support Across India</h3>
+                <p>Long-distance delivery can be handled through trusted courier partners.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-panel">
+        <div class="section-head">
+            <h2>Delivery Vehicles</h2>
+            <p>Different order sizes and distances use the most suitable delivery mode.</p>
+        </div>
+        <div class="vehicles-grid">
+            <article class="vehicle-card">
+                <span class="vehicle-icon">2W</span>
+                <h3>Scooter Delivery</h3>
+                <p>Nearby Orders</p>
+            </article>
+            <article class="vehicle-card">
+                <span class="vehicle-icon">4W</span>
+                <h3>Car Delivery</h3>
+                <p>Bulk Orders</p>
+            </article>
+            <article class="vehicle-card">
+                <span class="vehicle-icon">CP</span>
+                <h3>Courier Partner</h3>
+                <p>Long Distance Orders</p>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <div class="footer-brand">
+                <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical">
+                <h2>Yuvraj Medical</h2>
+            </div>
+            <p>Your trusted online pharmacy for medicines, healthcare products and prescription services.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <a href="/">Home</a>
+            <a href="/cart">Cart</a>
+            <a href="/my_orders">My Orders</a>
+            <a href="/upload_prescription">Upload Prescription</a>
+            <a href="/delivery-services">Fast Delivery</a>
+        </div>
+
+        <div class="footer-section">
+            <h3>Contact Us</h3>
+            <p>+91 XXXXX XXXXX</p>
+            <p>support@yuvrajmedical.co.in</p>
+            <p>Virar, Maharashtra</p>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2026 Yuvraj Medical. All Rights Reserved.</div>
+</footer>
+
+{% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+<script>
+    const trackerForm = document.getElementById("tracker-form");
+    const trackerInput = document.getElementById("tracking-id");
+    const trackerNote = document.getElementById("tracker-note");
+
+    trackerForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const trackingId = trackerInput.value.trim() || "YMD247001";
+        trackerNote.textContent = `Tracking ${trackingId}: your demo order is currently out for delivery.`;
+    });
+</script>
+</body>
+</html>

@@ -3806,6 +3806,140 @@ body.yvm-page-home{
     background:linear-gradient(135deg,#009879,#05b89a);
 }
 
+.news-offers-section{
+    width:min(1240px,calc(100% - 36px));
+    margin:22px auto 30px;
+    padding:22px;
+    border:1px solid rgba(14,165,233,.14);
+    border-radius:26px;
+    background:
+        linear-gradient(135deg,rgba(255,255,255,.96),rgba(236,254,255,.88),rgba(240,253,244,.90)),
+        radial-gradient(circle at 10% 0%,rgba(253,230,138,.24),transparent 34%);
+    box-shadow:0 24px 58px rgba(8,47,73,.11),inset 0 1px 0 rgba(255,255,255,.88);
+    overflow:hidden;
+}
+
+.news-offers-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:18px;
+    margin-bottom:16px;
+}
+
+.news-offers-head h2{
+    margin:0;
+    color:#0f172a;
+    font-family:"Montserrat","Segoe UI",sans-serif;
+    font-size:28px;
+    font-weight:950;
+    letter-spacing:0;
+}
+
+.news-offers-head p{
+    margin:6px 0 0;
+    color:#526d7f;
+    font-size:14px;
+    font-weight:800;
+    line-height:1.5;
+}
+
+.news-carousel-controls{
+    display:flex;
+    gap:9px;
+    align-items:center;
+}
+
+.news-carousel-btn{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(13,148,136,.18);
+    border-radius:50%;
+    color:#075985;
+    background:#ffffff;
+    box-shadow:0 10px 22px rgba(8,47,73,.08);
+    font-weight:950;
+    cursor:pointer;
+    transition:transform .2s ease,background .2s ease,color .2s ease;
+}
+
+.news-carousel-btn:hover{
+    transform:translateY(-2px);
+    color:#ffffff;
+    background:linear-gradient(135deg,#0f766e,#0ea5e9);
+}
+
+.news-carousel-viewport{
+    overflow:hidden;
+    border-radius:22px;
+}
+
+.news-carousel-track{
+    display:flex;
+    transition:transform 1.1s cubic-bezier(.2,.82,.2,1);
+    will-change:transform;
+}
+
+.news-banner{
+    flex:0 0 100%;
+    width:100%;
+    min-height:360px;
+    display:block;
+    border:1px solid rgba(255,255,255,.74);
+    border-radius:22px;
+    overflow:hidden;
+    position:relative;
+    color:#0f172a;
+    background:var(--banner-bg);
+    box-shadow:0 18px 42px rgba(15,23,42,.09);
+}
+
+.news-banner::before{
+    display:none;
+}
+
+.news-banner-visual{
+    width:100%;
+    min-height:360px;
+    border-radius:22px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#ffffff,#f1fbfb);
+    display:grid;
+    place-items:center;
+}
+
+.news-banner-visual img{
+    display:block;
+    width:100%;
+    height:360px;
+    object-fit:contain;
+    object-position:center;
+}
+
+.news-carousel-dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:16px;
+}
+
+.news-carousel-dot{
+    width:9px;
+    height:9px;
+    border:0;
+    border-radius:999px;
+    background:#bad7df;
+    cursor:pointer;
+    transition:width .25s ease,background .25s ease;
+}
+
+.news-carousel-dot.active{
+    width:28px;
+    background:linear-gradient(90deg,#0f766e,#0ea5e9);
+}
+
 .health-concern-section{
     margin:18px 0;
     padding:20px;
@@ -4141,6 +4275,8 @@ body.yvm-page-home{
     .health-grid,.product-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
     .health-concern-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .promo-grid,.review-grid{grid-template-columns:1fr}
+    .news-banner,.news-banner-visual{min-height:310px}
+    .news-banner-visual img{height:310px}
     .article-grid,.home-trust-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
     .home-service-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -4155,6 +4291,12 @@ body.yvm-page-home{
     .home-hero{min-height:auto;padding-top:24px}
     .hero-copy h1{font-size:36px}
     .home-hero-stats,.health-grid,.product-grid,.article-grid,.home-trust-strip,.health-concern-grid{grid-template-columns:1fr 1fr}
+    .news-offers-section{width:min(100% - 22px,1240px);padding:16px;border-radius:20px}
+    .news-offers-head{align-items:flex-start;flex-direction:column}
+    .news-offers-head h2{font-size:24px}
+    .news-banner{min-height:210px;border-radius:18px}
+    .news-banner-visual{min-height:210px;border-radius:18px}
+    .news-banner-visual img{height:210px}
     .promo-card{grid-template-columns:1fr}
     .promo-card img,
     .promo-card-visual{display:none}
@@ -4343,7 +4485,7 @@ body.yvm-page-home{
             <div><h3>Upload Prescription</h3><p>Get medicines verified by our experts</p><span>Upload Now →</span></div>
             <img src="{{ url_for('static', filename='images/dashboard-prescription-ai.png') }}" alt="Upload prescription">
         </a>
-        <a class="promo-card gift enhanced" href="{{ url_for('search_medicine') }}?search=delivery">
+        <a class="promo-card gift enhanced" href="{{ url_for('delivery_services') }}">
             <div>
                 <h3>Fast Home Delivery</h3>
                 <p>Order medicines online and get fast, secure delivery to your doorstep.</p>
@@ -4359,6 +4501,62 @@ body.yvm-page-home{
                 <span class="promo-float-icon">📦</span>
             </div>
         </a>
+    </section>
+
+    <section class="news-offers-section" aria-label="Health News and Offers">
+        <div class="news-offers-head">
+            <div>
+                <h2>Health News & Offers</h2>
+                <p>Fresh healthcare updates, prescription services, delivery support and seasonal care collections.</p>
+            </div>
+            <div class="news-carousel-controls" aria-label="Carousel controls">
+                <button class="news-carousel-btn" type="button" data-news-prev aria-label="Previous banner">&lt;</button>
+                <button class="news-carousel-btn" type="button" data-news-next aria-label="Next banner">&gt;</button>
+            </div>
+        </div>
+
+        <div class="news-carousel" id="news-offers-carousel">
+            <div class="news-carousel-viewport">
+                <div class="news-carousel-track">
+                    <article class="news-banner" style="--banner-bg:linear-gradient(135deg,#ecfeff,#ffffff 58%,#e0f2fe)">
+                        <div class="news-banner-visual">
+                            <img src="{{ url_for('static', filename='images/news_offers/upload-prescription.webp') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/dashboard-prescription-ai.png') }}';" alt="Upload prescription online banner">
+                        </div>
+                    </article>
+
+                    <article class="news-banner" style="--banner-bg:linear-gradient(135deg,#f0fdf4,#ffffff 56%,#ccfbf1)">
+                        <div class="news-banner-visual">
+                            <img src="{{ url_for('static', filename='images/news_offers/same-day-delivery.webp') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/promo-fast-home-delivery-premium.png') }}';" alt="Same day delivery banner">
+                        </div>
+                    </article>
+
+                    <article class="news-banner" style="--banner-bg:linear-gradient(135deg,#fff7ed,#ffffff 58%,#ecfeff)">
+                        <div class="news-banner-visual">
+                            <img src="{{ url_for('static', filename='images/news_offers/health-essentials-offer.webp') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/promo-health-essentials-products-premium.png') }}';" alt="Health essentials offer banner">
+                        </div>
+                    </article>
+
+                    <article class="news-banner" style="--banner-bg:linear-gradient(135deg,#eef2ff,#ffffff 58%,#dcfce7)">
+                        <div class="news-banner-visual">
+                            <img src="{{ url_for('static', filename='images/news_offers/diabetes-care.webp') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/diseases/diabetes.jpg') }}';" alt="Diabetes care banner">
+                        </div>
+                    </article>
+
+                    <article class="news-banner" style="--banner-bg:linear-gradient(135deg,#f8fafc,#ffffff 58%,#e0f2fe)">
+                        <div class="news-banner-visual">
+                            <img src="{{ url_for('static', filename='images/news_offers/cough-cold-care.webp') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/diseases/cough.jpg') }}';" alt="Cough and cold care banner">
+                        </div>
+                    </article>
+
+                    <article class="news-banner" style="--banner-bg:linear-gradient(135deg,#fefce8,#ffffff 58%,#dcfce7)">
+                        <div class="news-banner-visual">
+                            <img src="{{ url_for('static', filename='images/news_offers/vitamins-supplements.webp') }}" onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/diseases/vitamins.jpg') }}';" alt="Vitamins and supplements banner">
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="news-carousel-dots" aria-label="Carousel slide indicators"></div>
+        </div>
     </section>
 
     <section class="health-concern-section" aria-label="Shop by health concern">
@@ -5030,6 +5228,94 @@ document.querySelectorAll(".cart-action").forEach((link) => {
         }
     });
 });
+
+const newsCarousel = document.getElementById("news-offers-carousel");
+if (newsCarousel) {
+    const track = newsCarousel.querySelector(".news-carousel-track");
+    const slides = Array.from(newsCarousel.querySelectorAll(".news-banner"));
+    const dotsWrap = newsCarousel.querySelector(".news-carousel-dots");
+    const prevButton = document.querySelector("[data-news-prev]");
+    const nextButton = document.querySelector("[data-news-next]");
+    let currentNewsSlide = 0;
+    let newsTimer;
+    let touchStartX = 0;
+
+    slides.forEach((_, index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "news-carousel-dot";
+        dot.setAttribute("aria-label", `Show banner ${index + 1}`);
+        dot.addEventListener("click", () => {
+            showNewsSlide(index);
+            restartNewsAutoScroll();
+        });
+        dotsWrap.appendChild(dot);
+    });
+
+    const dots = Array.from(dotsWrap.querySelectorAll(".news-carousel-dot"));
+
+    function showNewsSlide(index) {
+        currentNewsSlide = (index + slides.length) % slides.length;
+        track.style.transform = `translateX(-${currentNewsSlide * 100}%)`;
+        dots.forEach((dot, dotIndex) => {
+            dot.classList.toggle("active", dotIndex === currentNewsSlide);
+        });
+    }
+
+    function startNewsAutoScroll() {
+        stopNewsAutoScroll();
+        newsTimer = window.setInterval(() => {
+            showNewsSlide(currentNewsSlide + 1);
+        }, 9000);
+    }
+
+    function stopNewsAutoScroll() {
+        window.clearInterval(newsTimer);
+    }
+
+    function restartNewsAutoScroll() {
+        stopNewsAutoScroll();
+        startNewsAutoScroll();
+    }
+
+    prevButton.addEventListener("click", () => {
+        showNewsSlide(currentNewsSlide - 1);
+        restartNewsAutoScroll();
+    });
+
+    nextButton.addEventListener("click", () => {
+        showNewsSlide(currentNewsSlide + 1);
+        restartNewsAutoScroll();
+    });
+
+    newsCarousel.addEventListener("mouseenter", stopNewsAutoScroll);
+    newsCarousel.addEventListener("mouseleave", startNewsAutoScroll);
+    newsCarousel.addEventListener("focusin", stopNewsAutoScroll);
+    newsCarousel.addEventListener("focusout", startNewsAutoScroll);
+    slides.forEach((slide) => {
+        slide.addEventListener("mouseenter", stopNewsAutoScroll);
+        slide.addEventListener("mouseleave", startNewsAutoScroll);
+    });
+
+    newsCarousel.addEventListener("touchstart", (event) => {
+        touchStartX = event.touches[0].clientX;
+        stopNewsAutoScroll();
+    }, { passive: true });
+
+    newsCarousel.addEventListener("touchend", (event) => {
+        const touchEndX = event.changedTouches[0].clientX;
+        const swipeDistance = touchEndX - touchStartX;
+
+        if (Math.abs(swipeDistance) > 48) {
+            showNewsSlide(currentNewsSlide + (swipeDistance < 0 ? 1 : -1));
+        }
+
+        startNewsAutoScroll();
+    }, { passive: true });
+
+    showNewsSlide(0);
+    startNewsAutoScroll();
+}
 </script>
 <footer class="footer">
 
