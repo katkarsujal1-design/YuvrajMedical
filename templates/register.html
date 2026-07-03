@@ -6,8 +6,8 @@
 <title>Register | Yuvraj Medical</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-
-<style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
 *{
     box-sizing:border-box;
 }
@@ -266,10 +266,20 @@ body{
     }
 }
 </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
 <body class="yvm-pro-page yvm-page-register">
 
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+    
 <div class="register-wrapper">
 
     <div class="left-panel">
@@ -471,5 +481,6 @@ if(Number(sendOtpBtn.dataset.countdown || 0) > 0){
 }
 </script>
 
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

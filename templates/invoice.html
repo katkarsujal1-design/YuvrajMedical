@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Invoice #{{ order["id"] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-
-<style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
         :root{--ink:#12202f;--muted:#64748b;--line:#dbe4f0;--wine:#7f1d4e;--teal:#0f766e}
         *{box-sizing:border-box}body{margin:0;padding:34px;font-family:Inter,Arial,sans-serif;color:var(--ink);background:#f8fafc}.invoice{max-width:920px;margin:0 auto;padding:34px;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 18px 42px rgba(15,23,42,.08)}
@@ -14,8 +14,20 @@
         .chips{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0}.chip{padding:8px 11px;border-radius:999px;background:#f8fafc;border:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:900}
         table{width:100%;border-collapse:separate;border-spacing:0 9px;margin-top:10px}th{padding:0 12px 5px;color:var(--muted);font-size:11px;text-align:left;text-transform:uppercase;letter-spacing:.07em}td{padding:13px 12px;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}td:first-child{border-left:1px solid var(--line);border-radius:8px 0 0 8px}td:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0;font-weight:900}.payment-summary{margin-top:18px;padding:15px;border:1px solid rgba(15,118,110,.2);border-radius:8px;background:linear-gradient(135deg,rgba(127,29,78,.06),rgba(15,118,110,.08)),#fff}.payment-summary span{display:block;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.payment-summary strong{display:block;margin-top:7px;font-size:16px}.payment-summary p{margin:8px 0 0;color:var(--muted);font-size:13px;font-weight:700}.total{display:flex;justify-content:flex-end;margin-top:20px}.total-box{min-width:280px;padding:18px;border-radius:8px;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));text-align:right}.total-box span{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.total-box strong{display:block;margin-top:8px;font-size:28px}.note{margin-top:24px;padding:14px;border-radius:8px;background:#f8fafc;border:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.6}
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-invoice">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+{% include "partials/site_header.html" %}
 <main class="invoice">
     <div class="head">
         <div class="brand"><h1>Yuvraj Medical</h1><p>Trusted Online Pharmacy</p></div>
@@ -46,5 +58,6 @@
     <div class="total"><div class="total-box"><span>Total Paid</span><strong>Rs. {{ order["total"] }}</strong></div></div>
     <p class="note">This is a system-generated invoice. Please consult a pharmacist or doctor for prescription and dosage guidance.</p>
 </main>
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

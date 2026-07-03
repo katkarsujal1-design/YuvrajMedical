@@ -199,22 +199,6 @@ body {
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(253,230,138,.62) rgba(255,255,255,.12);
-}
-
-.yvm-side-panel::-webkit-scrollbar {
-    width: 8px;
-}
-
-.yvm-side-panel::-webkit-scrollbar-track {
-    background: rgba(255,255,255,.10);
-    border-radius: 999px;
-}
-
-.yvm-side-panel::-webkit-scrollbar-thumb {
-    background: rgba(253,230,138,.62);
-    border-radius: 999px;
 }
 
 .yvm-side-panel.open {

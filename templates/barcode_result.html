@@ -4,8 +4,8 @@
     <title>Barcode Result</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-
-<style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
         body{
             font-family:Arial;
             background:linear-gradient(135deg,#dbeafe,#f8fafc,#ede9fe);
@@ -79,9 +79,19 @@
             color:#334155;
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
 <body class="yvm-pro-page yvm-page-barcode-result">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
 <div class="card">
 
@@ -124,5 +134,6 @@
 
 </div>
 
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

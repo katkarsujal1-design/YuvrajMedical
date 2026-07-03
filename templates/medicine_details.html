@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ medicine["name"] }} - Medicine Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
         *{box-sizing:border-box}
@@ -481,8 +482,19 @@
             .review-box{grid-template-columns:1fr}
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-medicine-details">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
     {% include "partials/site_header.html" %}
 
     <main class="wrap">
@@ -502,17 +514,7 @@
                         alt="{{ medicine['name'] }}"
                         data-base="/static/images/{{ medicine['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
                         data-step="0"
-                        onerror="
-                            const exts = ['.jpg', '.jpeg', '.png'];
-                            const step = Number(this.dataset.step || 0);
-                            if(step < 3){
-                                this.dataset.step = step + 1;
-                                this.src = this.dataset.base + exts[step];
-                            }else{
-                                this.onerror=null;
-                                this.src='/static/images/yuvraj_logo.png';
-                            }
-                        "
+                        onerror="swapMedicineImage(this)"
                     >
                 </div>
                 <div class="trust-row">
@@ -603,17 +605,7 @@
                                 alt="{{ item['name'] }}"
                                 data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
                                 data-step="0"
-                                onerror="
-                                    const exts = ['.jpg', '.jpeg', '.png'];
-                                    const step = Number(this.dataset.step || 0);
-                                    if(step < 3){
-                                        this.dataset.step = step + 1;
-                                        this.src = this.dataset.base + exts[step];
-                                    }else{
-                                        this.onerror=null;
-                                        this.src='/static/images/yuvraj_logo.png';
-                                    }
-                                "
+                                onerror="swapMedicineImage(this)"
                             >
                         </div>
                         <h3>{{ item["name"] }}</h3>
@@ -669,6 +661,22 @@
             {% endfor %}
         </section>
     </main>
+<script>
+    function swapMedicineImage(img) {
+        const extensions = [".jpg", ".jpeg", ".png"];
+        const step = Number(img.dataset.step || 0);
+
+        if (step < extensions.length) {
+            img.dataset.step = step + 1;
+            img.src = img.dataset.base + extensions[step];
+            return;
+        }
+
+        img.onerror = null;
+        img.src = "/static/images/yuvraj_logo.png";
+    }
+</script>
 {% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

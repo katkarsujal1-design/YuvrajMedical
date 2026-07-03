@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reorder & Subscription - Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         :root{--ink:#122033;--muted:#64748b;--line:#d8e2ee;--wine:#812052;--teal:#0f766e;--green:#047857;--amber:#a16207;--red:#b91c1c;--cream:#fffaf0;--mint:#e9fbf6}
         *{box-sizing:border-box}
@@ -30,7 +31,7 @@
         .stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
         .stat strong{display:block;margin-top:8px;font-size:28px}
         .layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:18px;align-items:start}
-        .dashboard-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:18px;align-items:start}
+        .dashboard-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:18px;align-items:stretch}
         .stack{display:grid;gap:18px;align-content:start}
         .full-board{margin-top:18px}
         .plans-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -41,7 +42,8 @@
         .panel-head p{margin:6px 0 0;color:var(--muted);font-weight:760;line-height:1.5}
         .badge{display:inline-flex;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#fff7ed;color:var(--amber);border:1px solid #fed7aa;font-size:12px;font-weight:1000}
         .grid{display:grid;gap:12px}
-        #buy-again .grid{max-height:548px;overflow:auto;padding-right:4px}
+        #buy-again{display:flex;flex-direction:column;min-height:100%}
+        #buy-again .grid{flex:1;min-height:0;overflow:auto;padding-right:4px}
         .medicine-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff)}
         .medicine-card h3,.sub-card h3,.rx-card h3{margin:0;font-size:17px}
         .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
@@ -89,8 +91,19 @@
         @media(max-width:960px){.hero,.layout,.dashboard-layout,.plans-grid{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(2,minmax(0,1fr))}.rx-grid{grid-template-columns:1fr}#buy-again .grid{max-height:none;overflow:visible;padding-right:0}}
         @media(max-width:620px){.wrap{width:min(100% - 22px,1200px)}h1{font-size:34px}.hero-main{min-height:420px;padding:22px}.hero-side,.form-grid,.checks,.plan-builder-top,.plan-controls{grid-template-columns:1fr}.plan-total{justify-items:start}.medicine-card,.panel-head,.sub-top{grid-template-columns:1fr;display:grid}.medicine-option{grid-template-columns:auto minmax(0,1fr);align-items:start}.medicine-option .qty-input{grid-column:2}.badge{justify-self:start}}
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-reorder-subscription">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+    
 {% include "partials/site_header.html" %}
 <main class="wrap">
     <section class="hero">
@@ -368,5 +381,6 @@
         renderSelected();
     })();
 </script>
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

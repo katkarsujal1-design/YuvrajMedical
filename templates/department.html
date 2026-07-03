@@ -3,8 +3,8 @@
 <head>
     <title>{{ dept_name }} - Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-
-<style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
 body{
     margin:0;
@@ -449,9 +449,20 @@ a{
     }
 }
 </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
 <body class="yvm-pro-page yvm-page-department">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
 {% include "partials/site_header.html" %}
 
 <div class="hero">
@@ -580,5 +591,6 @@ document.querySelectorAll(".cart-action").forEach((link) => {
 });
 </script>
 {% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

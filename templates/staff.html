@@ -6,8 +6,8 @@
 <title>Yuvraj Medical - Staff Dashboard</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-
-<style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
 :root{
     --primary:#6366f1;
     --secondary:#8b5cf6;
@@ -40,19 +40,6 @@ body{
     #f8fafc;
     color:var(--text);
     overflow-x:hidden;
-}
-
-::-webkit-scrollbar{
-    width:10px;
-}
-
-::-webkit-scrollbar-track{
-    background:#e2e8f0;
-}
-
-::-webkit-scrollbar-thumb{
-    background:linear-gradient(var(--primary),var(--accent));
-    border-radius:20px;
 }
 
 .layout{
@@ -159,6 +146,7 @@ body{
     font-size:34px;
     font-weight:800;
     background:linear-gradient(135deg,var(--primary),var(--accent));
+    background-clip:text;
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
@@ -702,9 +690,19 @@ tr:hover{
     }
 }
 </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
 <body class="yvm-pro-page yvm-page-staff">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
 <div class="layout">
 
@@ -979,5 +977,6 @@ tr:hover{
 
 </div>
 
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

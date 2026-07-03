@@ -3,8 +3,8 @@
 <head>
     <title>Staff Prescription Requests</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-
-<style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
         body {
             font-family: Arial, sans-serif;
             background: #f8fafc;
@@ -104,8 +104,18 @@
             font-weight: bold;
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-staff-prescriptions">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
 <h2>Prescription Review Requests</h2>
 
@@ -184,5 +194,6 @@
     <a href="/staff">Back to Staff Dashboard</a>
 </p>
 
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

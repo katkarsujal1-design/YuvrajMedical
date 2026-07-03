@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         :root{--ink:#102033;--muted:#63748b;--line:#d9e4f1;--wine:#812052;--teal:#0f766e;--soft:#f6f9fc;--danger:#b91c1c;--gold:#a16207}
         *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc,#eef7f5)}
@@ -18,8 +19,19 @@
         .items{display:grid;gap:10px;margin-top:15px}.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff}.item strong{font-size:14px}.item span{color:var(--muted);font-size:12px;font-weight:800}.totals{margin-top:16px;display:grid;gap:9px}.line{display:flex;justify-content:space-between;color:var(--muted);font-weight:800}.line.payable{margin-top:6px;padding-top:13px;border-top:1px solid var(--line);color:var(--ink);font-size:18px;font-weight:1000}.secure{margin-top:16px;padding:14px;border-radius:8px;background:#f8fafc;border:1px solid var(--line)}.secure b{display:block;margin-bottom:6px}.secure p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;font-weight:700}
         @media(max-width:900px){.pay-hero,.hero{grid-template-columns:1fr}.pay-card{max-width:280px}.summary-panel{position:static}.method-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.manual-pay{grid-template-columns:1fr}.qr img{max-width:240px;margin:auto}}@media(max-width:560px){.topbar,.payment-head{flex-direction:column;align-items:flex-start}.grid,.method-grid{grid-template-columns:1fr}.title,.pay-intro h2{font-size:28px}.nav{width:100%;flex-wrap:wrap}.nav a{flex:1;text-align:center}}
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-checkout">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
 {% include "partials/site_header.html" %}
 <main class="shell">
     {% with messages = get_flashed_messages() %}
@@ -140,7 +152,7 @@
             <div class="totals">
                 <div class="line"><span>Subtotal</span><strong>Rs. {{ totals.subtotal }}</strong></div>
                 <div class="line"><span>Discount</span><strong>Rs. {{ totals.discount }}</strong></div>
-                <div class="line"><span>Delivery</span><strong>Rs. {{ totals.delivery_fee }}</strong></div>
+                <div class="line"><span>Delivery</span><strong>Rs. {{ totals.delivery_charge }}</strong></div>
                 <div class="line payable"><span>Payable</span><strong>Rs. {{ totals.payable_total }}</strong></div>
             </div>
             <div class="secure">
@@ -151,8 +163,10 @@
     </form>
 </main>
 
+<script id="manual-payment-methods" type="application/json">{{ manual_payment_methods|tojson }}</script>
 <script>
-const manualMethods = new Set({{ manual_payment_methods|tojson }});
+const manualMethodData = document.getElementById("manual-payment-methods");
+const manualMethods = new Set(JSON.parse(manualMethodData ? manualMethodData.textContent : "[]"));
 const manualPay = document.getElementById("manual-pay");
 const codNote = document.getElementById("cod-note");
 const transactionInput = document.getElementById("transaction_id");
@@ -162,10 +176,22 @@ function updatePaymentFields() {
     const selected = document.querySelector("input[name='payment_method']:checked");
     const value = selected ? selected.value : "";
     const needsProof = manualMethods.has(value);
-    manualPay.style.display = needsProof ? "grid" : "none";
-    codNote.style.display = value === "Cash On Delivery" ? "block" : "none";
-    transactionInput.required = needsProof;
-    screenshotInput.required = needsProof;
+
+    if (manualPay) {
+        manualPay.style.display = needsProof ? "grid" : "none";
+    }
+
+    if (codNote) {
+        codNote.style.display = value === "Cash On Delivery" ? "block" : "none";
+    }
+
+    if (transactionInput) {
+        transactionInput.required = needsProof;
+    }
+
+    if (screenshotInput) {
+        screenshotInput.required = needsProof;
+    }
 }
 
 document.querySelectorAll("input[name='payment_method']").forEach((input) => {
@@ -174,5 +200,6 @@ document.querySelectorAll("input[name='payment_method']").forEach((input) => {
 updatePaymentFields();
 </script>
 {% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

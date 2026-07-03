@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rewards & Loyalty - Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         :root{--ink:#122033;--muted:#66758a;--line:#d8e2ee;--wine:#812052;--teal:#0f766e;--blue:#075985;--green:#047857;--amber:#a16207;--soft:#f8fafc;--gold:#c88719}
         *{box-sizing:border-box}
@@ -117,8 +118,19 @@
         @media(max-width:980px){.hero,.layout{grid-template-columns:1fr}.visual{grid-template-columns:240px 1fr;align-items:center}.stats,.benefit-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.coupon-grid{grid-template-columns:1fr 1fr}}
         @media(max-width:620px){.wrap{width:min(100% - 22px,1200px);margin-top:18px}.hero-main{min-height:430px;padding:22px}h1{font-size:34px}.visual{grid-template-columns:1fr}.stats,.coupon-grid,.referral-stats,.benefit-strip,.hero-proof{grid-template-columns:1fr}.panel-head,.codebox,.history-card,.referral-cap{grid-template-columns:1fr}.panel-head{display:grid}.badge{justify-self:start}}
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-rewards">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
 {% include "partials/site_header.html" %}
 <main class="wrap">
     <section class="hero">
@@ -147,8 +159,8 @@
                 <span>{{ tier.name }}</span>
                 <strong>{{ summary.points }} points</strong>
                 <small>{{ tier.accent }}</small>
-                <div class="meter" style="--progress:{{ tier_progress }}%"><i></i></div>
-                <small>{% if next_tier_points %}{{ next_tier_points - summary.points }} points to next tier{% else %}Highest tier unlocked{% endif %}</small>
+                <div class="meter" style="--progress: {{ tier_progress }}%;"><i></i></div>
+                <small>{% if next_tier_gap is not none %}{{ next_tier_gap }} points to next tier{% else %}Highest tier unlocked{% endif %}</small>
             </div>
         </aside>
     </section>
@@ -156,8 +168,8 @@
     <section class="stats" aria-label="Rewards summary">
         <div class="reward-card" data-code="LP"><span>Loyalty Points</span><strong>{{ summary.points }}</strong><small>{{ summary.pending_points }} pending from active orders</small></div>
         <div class="reward-card" data-code="CB"><span>Cashback</span><strong>Rs. {{ summary.cashback_available }}</strong><small>Rs. {{ summary.cashback_pending }} waiting for verification</small></div>
-        <div class="reward-card" data-code="RR"><span>Referral Rewards</span><strong>Rs. {{ referral.expected_reward }}</strong><small>{{ referral.pending }} expected reward{{ "" if referral.pending == 1 else "s" }} from invites</small></div>
-        <div class="reward-card" data-code="RD"><span>Reward Redemption</span><strong>{{ coupons|selectattr("available")|list|length }}</strong><small>Coupons ready to activate</small></div>
+        <div class="reward-card" data-code="RR"><span>Referral Rewards</span><strong>Rs. {{ referral.expected_reward }}</strong><small>{{ referral.pending }} expected reward{% if referral.pending != 1 %}s{% endif %} from invites</small></div>
+        <div class="reward-card" data-code="RD"><span>Reward Redemption</span><strong>{{ available_coupon_count }}</strong><small>Coupons ready to activate</small></div>
     </section>
 
     <section class="benefit-strip" aria-label="Reward benefits">
@@ -186,7 +198,11 @@
                     <p>{{ coupon.label }}. Minimum cart value Rs. {{ coupon.min_subtotal }}.</p>
                     <form method="POST" action="/rewards/redeem">
                         <input type="hidden" name="coupon_code" value="{{ coupon.code }}">
-                        <button class="btn {{ 'primary' if coupon.available else 'secondary' }}" type="submit">{{ "Activate Coupon" if coupon.available else "Earn More Points" }}</button>
+                        {% if coupon.available %}
+                            <button class="btn primary" type="submit">Activate Coupon</button>
+                        {% else %}
+                            <button class="btn secondary" type="submit">Earn More Points</button>
+                        {% endif %}
                     </form>
                 </article>
                 {% endfor %}
@@ -216,7 +232,7 @@
                 <div><span>Reward</span><strong>Rs. {{ referral.expected_reward }}</strong></div>
             </div>
             <div class="referral-list">
-                {% for item in referral.history[:3] %}
+                {% for item in referral.preview %}
                 <div class="referral-row">
                     <div>
                         <strong>{{ item.invitee_name or "Invited user" }}</strong>
@@ -282,5 +298,6 @@
     </section>
 </main>
 {% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

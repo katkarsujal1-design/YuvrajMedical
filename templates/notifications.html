@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notifications | Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         :root{--ink:#102033;--muted:#64748b;--line:#dbe4f0;--wine:#7f1d4e;--teal:#0f766e;--soft:#f8fafc;--amber:#a16207;--green:#047857;--red:#b91c1c;--shadow:0 24px 70px rgba(15,23,42,.11)}
         *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc 0%,#eef7f5 52%,#fdf2f8 100%)}body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(115deg,rgba(127,29,78,.055),transparent 30%,rgba(15,118,110,.06) 72%,transparent)}a{text-decoration:none;color:inherit}
@@ -15,8 +16,19 @@
         .side-panel{display:grid;gap:12px;align-content:start}.insight{padding:17px;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 16px 38px rgba(15,23,42,.07)}.insight h3{margin:0;font-size:18px}.insight p{margin:9px 0 0;color:var(--muted);font-weight:800;line-height:1.58}.quick-links{display:grid;gap:8px;margin-top:12px}.quick-links a{padding:11px;border-radius:8px;background:#f8fafc;border:1px solid var(--line);font-weight:1000}.empty{padding:38px;text-align:center;color:var(--muted);font-weight:800}.empty strong{display:block;margin-bottom:6px;color:var(--ink);font-size:21px}.is-hidden{display:none!important}
         @media(max-width:980px){.hero,.layout,.hero-main{grid-template-columns:1fr}.hero-side{grid-template-columns:180px minmax(0,1fr);align-items:center}.hero-visual img{height:260px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){.wrap{width:min(100% - 22px,1220px);margin-top:18px}.hero-side,.notice-card{grid-template-columns:1fr}.hero-visual img{height:210px}.toolbar{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr}.notice-actions{grid-template-columns:1fr 1fr}.icon{width:48px;height:48px}.status-ring{max-width:190px}}
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-notifications">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
 {% include "partials/site_header.html" %}
 <main class="wrap">
     <section class="hero">
@@ -143,5 +155,6 @@ filterButtons.forEach((button) => {
 });
 </script>
 {% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

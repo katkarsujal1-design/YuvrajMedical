@@ -1,5 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, g, jsonify, send_from_directory, abort, make_response
-#import pymysql
+from flask import Flask, render_template, request, redirect, session, g, jsonify, send_from_directory, abort, make_response, url_for
 import base64
 import hashlib
 import re
@@ -1173,6 +1172,284 @@ def medicine_detail_context(medicine):
 
 
 # ================= HOME (SEARCH + FILTER) =================
+HEALTH_ESSENTIALS_PRODUCTS = [
+    {"name": "Paracetamol 500 mg Tablet", "category": "Fever", "price": 10, "original_price": 15, "discount": 33, "stock": 100, "expiry": "2026-12-01", "image": "Paracetamol 500 mg Tablet.jpeg"},
+    {"name": "Crocin Advance", "category": "Fever", "price": 25, "original_price": 30, "discount": 17, "stock": 40, "expiry": "2026-05-30", "image": "Crocin Advance.jpeg"},
+    {"name": "Dolo 650", "category": "Fever", "price": 35, "original_price": 42, "discount": 17, "stock": 35, "expiry": "2026-08-31", "image": "Dolo 650.jpeg"},
+    {"name": "ORS Sachets", "category": "Immunity", "price": 20, "original_price": 25, "discount": 20, "stock": 150, "expiry": "2027-01-01", "image": "ORS Sachets.jpeg"},
+    {"name": "Vitamin C Tablets", "category": "Vitamins", "price": 35, "original_price": 45, "discount": 22, "stock": 100, "expiry": "2026-12-31", "image": "Vitamin C Tablets.jpeg"},
+    {"name": "Multivitamin Capsules", "category": "Vitamins", "price": 60, "original_price": 75, "discount": 20, "stock": 100, "expiry": "2026-12-31", "image": "Multivitamin Capsules.jpeg"},
+    {"name": "Revital H", "category": "Immunity", "price": 130, "original_price": 155, "discount": 16, "stock": 48, "expiry": "2026-11-30", "image": "Revital H.jpeg"},
+    {"name": "Zinc Tablets", "category": "Immunity", "price": 30, "original_price": 40, "discount": 25, "stock": 100, "expiry": "2026-12-31", "image": "Zinc Tablets.jpeg"},
+    {"name": "Dettol Antiseptic Liquid", "category": "First Aid", "price": 60, "original_price": 72, "discount": 17, "stock": 100, "expiry": "2026-12-31", "image": "Dettol Antiseptic Liquid.jpeg"},
+    {"name": "Savlon Sanitizer", "category": "Personal Care", "price": 55, "original_price": 70, "discount": 21, "stock": 64, "expiry": "2026-10-31", "image": "Savlon Sanitizer.jpeg"},
+    {"name": "Vicks VapoRub", "category": "Personal Care", "price": 95, "original_price": 115, "discount": 17, "stock": 52, "expiry": "2026-09-30", "image": "Vicks VapoRub.jpeg"},
+    {"name": "Digital Thermometer", "category": "Personal Care", "price": 180, "original_price": 220, "discount": 18, "stock": 28, "expiry": "2028-12-31", "image": "Digital Thermometer.jpeg"},
+    {"name": "Face Mask Pack", "category": "Personal Care", "price": 90, "original_price": 120, "discount": 25, "stock": 80, "expiry": "2027-04-30", "image": "Face Mask Pack.jpeg"},
+    {"name": "Cotton Roll", "category": "First Aid", "price": 45, "original_price": 55, "discount": 18, "stock": 72, "expiry": "2028-01-31", "image": "Cotton Roll.jpeg"},
+    {"name": "Bandages", "category": "First Aid", "price": 35, "original_price": 45, "discount": 22, "stock": 90, "expiry": "2028-01-31", "image": "Bandages.jpeg"},
+]
+
+
+def health_essentials_image_path(product):
+    image = product.get("image") or ""
+    if image.startswith("/static/"):
+        return image
+    if image:
+        return url_for("static", filename=f"images/{image}")
+    name = (product.get("name") or "").replace("/", "-").replace("%", "").replace(".", "")
+    return url_for("static", filename=f"images/{name}.jpeg")
+
+
+def ensure_health_essentials_products(db):
+    cursor = db.cursor(dictionary=True)
+    for product in HEALTH_ESSENTIALS_PRODUCTS:
+        image_path = f"/static/images/{product['image']}"
+        cursor.execute("SELECT id, image FROM medicines WHERE name=%s LIMIT 1", (product["name"],))
+        existing = cursor.fetchone()
+
+        if existing:
+            cursor.execute(
+                "UPDATE medicines SET image=%s WHERE id=%s",
+                (image_path, existing["id"])
+            )
+            continue
+
+        department, prescription_required = classify_medicine(product["name"])
+        cursor.execute("""
+            INSERT INTO medicines
+            (
+                name,
+                category,
+                department,
+                price,
+                prescription_required,
+                stock,
+                expiry_date,
+                image
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (
+            product["name"],
+            product["category"],
+            department,
+            product["price"],
+            prescription_required,
+            product["stock"],
+            product["expiry"],
+            image_path
+        ))
+    db.commit()
+    cursor.close()
+
+
+def build_health_essentials_products(db):
+    names = [product["name"] for product in HEALTH_ESSENTIALS_PRODUCTS]
+    cursor = db.cursor(dictionary=True)
+    placeholders = ",".join(["%s"] * len(names))
+    cursor.execute(f"""
+        SELECT *
+        FROM medicines
+        WHERE name IN ({placeholders})
+    """, tuple(names))
+    rows_by_name = {row["name"].lower(): row for row in cursor.fetchall()}
+    cursor.close()
+
+    products = []
+    for product in HEALTH_ESSENTIALS_PRODUCTS:
+        row = rows_by_name.get(product["name"].lower())
+        price = float((row or {}).get("price") or product["price"])
+        original_price = product["original_price"]
+        discount = product["discount"]
+        if original_price <= price:
+            original_price = round(price * 1.2)
+        if original_price:
+            discount = round(((original_price - price) / original_price) * 100)
+
+        merged = {
+            "id": (row or {}).get("id"),
+            "name": (row or {}).get("name") or product["name"],
+            "category": product["category"],
+            "price": int(price) if price.is_integer() else price,
+            "original_price": original_price,
+            "discount": discount,
+            "stock": (row or {}).get("stock", product["stock"]),
+            "expiry_date": (row or {}).get("expiry_date") or product["expiry"],
+            "image_path": health_essentials_image_path((row or {}) if (row or {}).get("image") else product),
+            "search_url": url_for("search_medicine", search=product["name"]),
+        }
+        products.append(merged)
+    return products
+
+
+def brand_slug_for(value):
+    return re.sub(r"[^a-z0-9]+", "-", (value or "").lower()).strip("-")
+
+
+def medicine_image_url(medicine):
+    image = (medicine or {}).get("image") or ""
+    if image.startswith("/static/"):
+        return image
+    if image and image != "default.jpg":
+        return url_for("static", filename=f"images/{image}")
+    name = ((medicine or {}).get("name") or "").replace("/", "-").replace("%", "").replace(".", "")
+    return url_for("static", filename=f"images/{name}.jpeg")
+
+
+def disease_category_image_url(disease):
+    image = (disease or {}).get("image") or ""
+    if image.startswith("/static/"):
+        return image
+    if image.startswith("images/"):
+        return url_for("static", filename=image)
+    if image.startswith("diseases/"):
+        return url_for("static", filename=f"images/{image}")
+    if image:
+        return url_for("static", filename=f"images/diseases/{image}")
+    return url_for("static", filename="images/diseases/general.jpg")
+
+
+BRAND_PAGE_DATA = {
+    "dolo": {
+        "name": "Dolo",
+        "tagline": "Trusted Fever & Pain Relief Medicines",
+        "description": "Dolo is widely known for paracetamol-based fever and pain relief medicines. Always use medicines as advised by a doctor or pharmacist.",
+        "categories": ["Fever Relief", "Pain Relief", "Cold & Flu"],
+        "similar": ["Crocin", "Calpol", "Combiflam"]
+    },
+    "crocin": {
+        "name": "Crocin",
+        "tagline": "Fever & Pain Relief Support",
+        "description": "Crocin is a popular paracetamol-based medicine brand used for fever and mild pain relief under proper guidance.",
+        "categories": ["Fever Relief", "Pain Relief"],
+        "similar": ["Dolo", "Calpol", "Vicks"]
+    },
+    "dettol": {
+        "name": "Dettol",
+        "tagline": "Trusted Hygiene & Protection",
+        "description": "Dettol offers hygiene and antiseptic products for everyday protection and cleanliness.",
+        "categories": ["Antiseptic", "Personal Care", "Hygiene"],
+        "similar": ["Savlon", "Lifebuoy", "Himalaya"]
+    },
+    "savlon": {
+        "name": "Savlon",
+        "tagline": "Everyday Antiseptic Care",
+        "description": "Savlon provides antiseptic and hygiene products used for personal care and protection.",
+        "categories": ["Antiseptic", "First Aid", "Hygiene"],
+        "similar": ["Dettol", "Himalaya"]
+    },
+    "vicks": {
+        "name": "Vicks",
+        "tagline": "Cold, Cough & Relief Products",
+        "description": "Vicks is known for cold, cough and congestion relief products used by families for everyday wellness.",
+        "categories": ["Cold & Flu", "Cough Relief"],
+        "similar": ["Dolo", "Crocin"]
+    },
+    "revital": {
+        "name": "Revital",
+        "tagline": "Daily Energy & Wellness Supplements",
+        "description": "Revital offers multivitamin and health supplement products for daily wellness support.",
+        "categories": ["Vitamins", "Supplements", "Energy"],
+        "similar": ["Vitamin C", "Zinc", "Multivitamin"]
+    }
+}
+
+
+HEALTH_CONCERN_CATEGORIES = [
+    {
+        "slug": "cough",
+        "name": "Cough & Cold",
+        "image": "diseases/cough.jpg",
+        "subtitle": "Cold, cough, throat and seasonal care",
+        "description": "Medicines and healthcare products for cough, cold, sore throat and seasonal symptoms.",
+        "keywords": ["cough", "cold", "throat", "vicks", "cetirizine"],
+    },
+    {
+        "slug": "diabetes",
+        "name": "Diabetes Care",
+        "image": "diseases/diabetes.jpg",
+        "subtitle": "Sugar monitoring and diabetes support",
+        "description": "Diabetes monitoring products, sugar control support and related healthcare essentials.",
+        "keywords": ["diabetes", "sugar", "glucose", "glucometer", "insulin"],
+    },
+    {
+        "slug": "gastric",
+        "name": "Gastric Care",
+        "image": "diseases/gastric.jpg",
+        "subtitle": "Acidity, digestion and stomach care",
+        "description": "Products for acidity, digestion, gas and stomach care.",
+        "keywords": ["gastric", "acidity", "digestion", "gas", "digene"],
+    },
+    {
+        "slug": "general",
+        "name": "General Medicines",
+        "image": "diseases/general.jpg",
+        "subtitle": "Daily medicines and essentials",
+        "description": "Common daily medicines and general healthcare essentials.",
+        "keywords": ["general", "tablet", "capsule", "syrup"],
+    },
+    {
+        "slug": "heart",
+        "name": "Heart Care",
+        "image": "diseases/heart.jpg",
+        "subtitle": "Heart and blood pressure support",
+        "description": "Heart health support products and related medicines under proper guidance.",
+        "keywords": ["heart", "cardiac", "bp", "blood pressure"],
+    },
+    {
+        "slug": "liver",
+        "name": "Liver Care",
+        "image": "diseases/liver.jpg",
+        "subtitle": "Liver wellness and hepatic support",
+        "description": "Liver health support and related wellness products.",
+        "keywords": ["liver", "hepatic", "liv"],
+    },
+    {
+        "slug": "pain",
+        "name": "Pain Relief",
+        "image": "diseases/pain.jpg",
+        "subtitle": "Pain relief tablets, gels and sprays",
+        "description": "Pain relief tablets, gels, sprays and related care products.",
+        "keywords": ["pain", "relief", "volini", "paracetamol", "ibuprofen"],
+    },
+    {
+        "slug": "respiratory",
+        "name": "Respiratory Care",
+        "image": "diseases/respiratory.jpg",
+        "subtitle": "Inhalers and breathing care",
+        "description": "Respiratory support products, inhalers and breathing care essentials.",
+        "keywords": ["respiratory", "breathing", "asthma", "inhaler"],
+    },
+    {
+        "slug": "skin",
+        "name": "Skin Care",
+        "image": "diseases/skin.jpg",
+        "subtitle": "Creams, ointments and hygiene",
+        "description": "Skin care creams, ointments, lotions and hygiene products.",
+        "keywords": ["skin", "cream", "ointment", "lotion"],
+    },
+    {
+        "slug": "vitamin",
+        "name": "Vitamins & Supplements",
+        "image": "diseases/vitamins.jpg",
+        "subtitle": "Vitamins, minerals and immunity boosters",
+        "description": "Vitamins, minerals, immunity boosters and daily wellness supplements.",
+        "keywords": ["vitamin", "supplement", "zinc", "calcium", "revital"],
+    },
+]
+
+HEALTH_CONCERN_MAP = {category["slug"]: category for category in HEALTH_CONCERN_CATEGORIES}
+
+
+def health_concern_view_items():
+    items = []
+    for concern in HEALTH_CONCERN_CATEGORIES:
+        item = dict(concern)
+        item["image_url"] = disease_category_image_url(concern)
+        items.append(item)
+    return items
+
+
 @app.route("/")
 def home():
 
@@ -1236,6 +1513,8 @@ def home():
 
     disease_cards = cursor.fetchall()
     cursor.close()
+    for disease in disease_cards:
+        disease["image_url"] = disease_category_image_url(disease)
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1272,8 +1551,206 @@ def home():
         search=search,
         sort=sort,
         category=category,
+        health_concerns=health_concern_view_items(),
         **dashboard_context
      )
+
+
+@app.route("/health-essentials")
+def health_essentials():
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] == "owner":
+        return redirect("/owner_dashboard")
+
+    elif session["user"]["role"] == "staff":
+        return redirect("/staff")
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+    cart_count = sum(cart.values())
+    ensure_health_essentials_products(db)
+    products = build_health_essentials_products(db)
+
+    return render_template(
+        "health_essentials.html",
+        products=products,
+        cart=cart,
+        cart_count=cart_count,
+        health_concerns=health_concern_view_items()
+    )
+
+
+@app.route("/category/<category_name>")
+def category_page(category_name):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] == "owner":
+        return redirect("/owner_dashboard")
+
+    elif session["user"]["role"] == "staff":
+        return redirect("/staff")
+
+    category_slug = brand_slug_for(category_name)
+    selected_category = HEALTH_CONCERN_MAP.get(category_slug)
+
+    if not selected_category:
+        selected_category = {
+            "slug": category_slug,
+            "name": category_name.replace("-", " ").title(),
+                "image": "diseases/general.jpg",
+            "subtitle": "Healthcare products and medicines",
+            "description": "Explore available healthcare products and medicines at Yuvraj Medical.",
+            "keywords": [category_name.replace("-", " ")],
+        }
+    selected_category = dict(selected_category)
+    selected_category["image_url"] = disease_category_image_url(selected_category)
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+    cart_count = sum(cart.values())
+
+    keywords = selected_category.get("keywords", [])
+    search_terms = [selected_category["name"], category_slug] + keywords
+    category_clauses = ["LOWER(category) LIKE %s"] * len(search_terms)
+    name_clauses = ["LOWER(name) LIKE %s"] * len(search_terms)
+    where_sql = " OR ".join(category_clauses + name_clauses)
+    params = tuple(f"%{term.lower()}%" for term in search_terms) * 2
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(f"""
+        SELECT *
+        FROM medicines
+        WHERE {where_sql}
+        ORDER BY name ASC
+        LIMIT 36
+    """, params)
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    for medicine in medicines:
+        medicine["image_url"] = medicine_image_url(medicine)
+
+    similar_concerns = [
+        dict(concern) for concern in HEALTH_CONCERN_CATEGORIES
+        if concern["slug"] != selected_category["slug"]
+    ][:5]
+    for concern in similar_concerns:
+        concern["image_url"] = disease_category_image_url(concern)
+
+    return render_template(
+        "category.html",
+        category=selected_category,
+        medicines=medicines,
+        similar_concerns=similar_concerns,
+        cart=cart,
+        cart_count=cart_count
+    )
+
+
+@app.route("/brand/<brand_name>")
+def brand_page(brand_name):
+
+    if "user" not in session:
+        return redirect("/login")
+
+    if session["user"]["role"] == "owner":
+        return redirect("/owner_dashboard")
+
+    elif session["user"]["role"] == "staff":
+        return redirect("/staff")
+
+    brand_slug = brand_slug_for(brand_name)
+    selected_brand = BRAND_PAGE_DATA.get(brand_slug)
+
+    if not selected_brand:
+        selected_brand = {
+            "name": brand_name.replace("-", " ").title(),
+            "tagline": "Trusted Healthcare Brand",
+            "description": "Explore available products from this healthcare brand at Yuvraj Medical.",
+            "categories": ["Healthcare", "Wellness"],
+            "similar": ["Dolo", "Crocin", "Dettol"]
+        }
+
+    db = get_db()
+    user_id = session["user"]["id"]
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicine_id, quantity
+        FROM cart
+        WHERE user_id=%s
+    """, (user_id,))
+    cart_rows = cursor.fetchall()
+    cursor.close()
+
+    cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
+    cart_count = sum(cart.values())
+
+    search_terms = [selected_brand["name"], brand_name.replace("-", " ")]
+    if brand_slug == "dolo":
+        search_terms.append("paracetamol 650")
+    elif brand_slug == "crocin":
+        search_terms.append("paracetamol")
+    elif brand_slug == "dettol":
+        search_terms.append("antiseptic")
+    elif brand_slug == "savlon":
+        search_terms.append("sanitizer")
+    elif brand_slug == "vicks":
+        search_terms.extend(["cough", "cold"])
+    elif brand_slug == "revital":
+        search_terms.extend(["multivitamin", "vitamin"])
+
+    like_clauses = " OR ".join(["LOWER(name) LIKE %s"] * len(search_terms))
+    params = tuple(f"%{term.lower()}%" for term in search_terms)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(f"""
+        SELECT *
+        FROM medicines
+        WHERE {like_clauses}
+        ORDER BY name ASC
+        LIMIT 24
+    """, params)
+    medicines = cursor.fetchall()
+    cursor.close()
+
+    for medicine in medicines:
+        medicine["image_url"] = medicine_image_url(medicine)
+
+    return render_template(
+        "brand.html",
+        brand=selected_brand,
+        medicines=medicines,
+        brand_slug=brand_slug,
+        cart=cart,
+        cart_count=cart_count
+    )
 # ========================== Department ====================
 @app.route("/department/<disease_name>")
 def department_page(disease_name):
@@ -3054,6 +3531,7 @@ def build_rewards_context(user_id):
         "tier": tier,
         "tier_progress": tier_progress,
         "next_tier_points": next_tier_points,
+        "next_tier_gap": max(next_tier_points - points, 0) if next_tier_points else None,
         "referral": {
             "code": referral_code,
             "link": referral_link,
@@ -3064,8 +3542,10 @@ def build_rewards_context(user_id):
             "max_bonus": 100,
             "expected_reward": sum(rupees_value(item.get("reward_amount")) for item in referral_rewards if item.get("status") == "Expected"),
             "history": referral_rewards,
+            "preview": referral_rewards[:3],
         },
         "coupons": coupons,
+        "available_coupon_count": len([coupon for coupon in coupons if coupon["available"]]),
         "cashback_history": cashback_history,
         "point_history": point_history,
     }
