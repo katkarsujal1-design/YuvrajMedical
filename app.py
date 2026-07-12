@@ -29,7 +29,7 @@ from family_health import (
 
 load_dotenv()
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY","my-super-secret")
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -60,7 +60,7 @@ def get_gemini_client():
 @app.teardown_appcontext
 def close_db(error):
 
-    db = g.pop("db", None)
+    db = flask.g.pop("db", None)
 
     if db is not None:
         db.close()
@@ -78,16 +78,16 @@ db_pool = pooling.MySQLConnectionPool(
 
 def get_db():
 
-    if "db" not in g:
+    if "db" not in flask.g:
 
-        g.db = db_pool.get_connection()
+        flask.g.db = db_pool.get_connection()
 
-    return g.db
+    return flask.g.db
 
 
 @app.context_processor
 def inject_site_header_context():
-    user = session.get("user")
+    user = flask.session.get("user")
     if not user:
         return {"cart_count": 0, "notifications": [], "notification_items": [], "notification_unread_count": 0}
 
@@ -630,14 +630,14 @@ def prepare_auth_security():
 
 
 def client_ip():
-    forwarded_for = request.headers.get("X-Forwarded-For", "")
+    forwarded_for = flask.request.headers.get("X-Forwarded-For", "")
     if forwarded_for:
         return forwarded_for.split(",")[0].strip()
-    return request.remote_addr or ""
+    return flask.request.remote_addr or ""
 
 
 def current_device_hash():
-    raw_device = f"{request.headers.get('User-Agent', '')}|{client_ip()}"
+    raw_device = f"{flask.request.headers.get('User-Agent', '')}|{client_ip()}"
     return hashlib.sha256(raw_device.encode("utf-8")).hexdigest()
 
 
@@ -755,7 +755,7 @@ def log_login_activity(db, user_id, email, status, reason):
         user_id,
         email,
         client_ip(),
-        request.headers.get("User-Agent", ""),
+        flask.request.headers.get("User-Agent", ""),
         status,
         reason
     ))
@@ -776,7 +776,7 @@ def record_device(db, user_id):
     """, (
         user_id,
         current_device_hash(),
-        request.headers.get("User-Agent", ""),
+        flask.request.headers.get("User-Agent", ""),
         client_ip(),
         datetime.now()
     ))
@@ -786,16 +786,16 @@ def record_device(db, user_id):
 
 def login_redirect_for(user):
     if user["role"] == "owner":
-        return redirect("/owner_dashboard")
+        return flask.redirect("/owner_dashboard")
     if user["role"] == "staff":
-        return redirect("/staff")
-    return redirect("/")
+        return flask.redirect("/staff")
+    return flask.redirect("/")
 
 
 def complete_login(db, user):
-    session.clear()
-    session.permanent = True
-    session["user"] = {
+    flask.session.clear()
+    flask.session.permanent = True
+    flask.session["user"] = {
         "id": user["id"],
         "name": user["name"],
         "email": user["email"],
@@ -821,7 +821,7 @@ def render_login(**context):
     activity = []
     devices = []
 
-    if "user" in session:
+    if "user" in flask.session:
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
             SELECT email, ip_address, status, reason, created_at
@@ -829,7 +829,7 @@ def render_login(**context):
             WHERE user_id=%s
             ORDER BY created_at DESC
             LIMIT 8
-        """, (session["user"]["id"],))
+        """, (flask.session["user"]["id"],))
         activity = cursor.fetchall()
 
         cursor.execute("""
@@ -838,11 +838,11 @@ def render_login(**context):
             WHERE user_id=%s
             ORDER BY last_seen DESC
             LIMIT 8
-        """, (session["user"]["id"],))
+        """, (flask.session["user"]["id"],))
         devices = cursor.fetchall()
         cursor.close()
 
-    return render_template("login.html", activity=activity, devices=devices, **context)
+    return flask.render_template("login.html", activity=activity, devices=devices, **context)
 
 # ================= Prescription upload ===============
 PRESCRIPTION_FOLDER = "static/prescriptions"
@@ -1225,9 +1225,9 @@ def health_essentials_image_path(product):
     if image.startswith("/static/"):
         return image
     if image:
-        return url_for("static", filename=f"images/{image}")
+        return flask.url_for("static", filename=f"images/{image}")
     name = (product.get("name") or "").replace("/", "-").replace("%", "").replace(".", "")
-    return url_for("static", filename=f"images/{name}.jpeg")
+    return flask.url_for("static", filename=f"images/{name}.jpeg")
 
 
 def ensure_health_essentials_products(db):
@@ -1305,7 +1305,7 @@ def build_health_essentials_products(db):
             "stock": (row or {}).get("stock", product["stock"]),
             "expiry_date": (row or {}).get("expiry_date") or product["expiry"],
             "image_path": health_essentials_image_path((row or {}) if (row or {}).get("image") else product),
-            "search_url": url_for("search_medicine", search=product["name"]),
+            "search_url": flask.url_for("search_medicine", search=product["name"]),
         }
         products.append(merged)
     return products
@@ -1320,9 +1320,9 @@ def medicine_image_url(medicine):
     if image.startswith("/static/"):
         return image
     if image and image != "default.jpg":
-        return url_for("static", filename=f"images/{image}")
+        return flask.url_for("static", filename=f"images/{image}")
     name = ((medicine or {}).get("name") or "").replace("/", "-").replace("%", "").replace(".", "")
-    return url_for("static", filename=f"images/{name}.jpeg")
+    return flask.url_for("static", filename=f"images/{name}.jpeg")
 
 
 def disease_category_image_url(disease):
@@ -1330,12 +1330,12 @@ def disease_category_image_url(disease):
     if image.startswith("/static/"):
         return image
     if image.startswith("images/"):
-        return url_for("static", filename=image)
+        return flask.url_for("static", filename=image)
     if image.startswith("diseases/"):
-        return url_for("static", filename=f"images/{image}")
+        return flask.url_for("static", filename=f"images/{image}")
     if image:
-        return url_for("static", filename=f"images/diseases/{image}")
-    return url_for("static", filename="images/diseases/general.jpg")
+        return flask.url_for("static", filename=f"images/diseases/{image}")
+    return flask.url_for("static", filename="images/diseases/general.jpg")
 
 
 BRAND_PAGE_DATA = {
@@ -1482,21 +1482,21 @@ def health_concern_view_items():
 @app.route("/")
 def home():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     # ROLE BASED REDIRECT
-    if session["user"]["role"] == "owner":
-        return redirect("/owner_dashboard")
+    if flask.session["user"]["role"] == "owner":
+        return flask.redirect("/owner_dashboard")
 
-    elif session["user"]["role"] == "staff":
-        return redirect("/staff")
+    elif flask.session["user"]["role"] == "staff":
+        return flask.redirect("/staff")
 
     db = get_db()
 
-    search = request.args.get("search", "")
-    sort = request.args.get("sort", "")
-    category = request.args.get("category", "")
+    search = flask.request.args.get("search", "")
+    sort = flask.request.args.get("sort", "")
+    category = flask.request.args.get("category", "")
 
     query = "SELECT * FROM medicines WHERE 1=1"
     params = []
@@ -1519,7 +1519,7 @@ def home():
     medicines = cursor.fetchall()
     cursor.close()
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1570,7 +1570,7 @@ def home():
 
     dashboard_context = build_customer_dashboard_context(db, user_id)
 
-    return render_template(
+    return flask.render_template(
         "index.html",
         medicines=medicines,
         disease_cards=disease_cards,
@@ -1588,17 +1588,17 @@ def home():
 @app.route("/health-essentials")
 def health_essentials():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] == "owner":
-        return redirect("/owner_dashboard")
+    if flask.session["user"]["role"] == "owner":
+        return flask.redirect("/owner_dashboard")
 
-    elif session["user"]["role"] == "staff":
-        return redirect("/staff")
+    elif flask.session["user"]["role"] == "staff":
+        return flask.redirect("/staff")
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1614,7 +1614,7 @@ def health_essentials():
     ensure_health_essentials_products(db)
     products = build_health_essentials_products(db)
 
-    return render_template(
+    return flask.render_template(
         "health_essentials.html",
         products=products,
         cart=cart,
@@ -1625,20 +1625,20 @@ def health_essentials():
 
 @app.route("/delivery-services")
 def delivery_services():
-    return render_template("delivery_services.html")
+    return flask.render_template("delivery_services.html")
 
 
 @app.route("/category/<category_name>")
 def category_page(category_name):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] == "owner":
-        return redirect("/owner_dashboard")
+    if flask.session["user"]["role"] == "owner":
+        return flask.redirect("/owner_dashboard")
 
-    elif session["user"]["role"] == "staff":
-        return redirect("/staff")
+    elif flask.session["user"]["role"] == "staff":
+        return flask.redirect("/staff")
 
     category_slug = brand_slug_for(category_name)
     selected_category = HEALTH_CONCERN_MAP.get(category_slug)
@@ -1656,7 +1656,7 @@ def category_page(category_name):
     selected_category["image_url"] = disease_category_image_url(selected_category)
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1698,7 +1698,7 @@ def category_page(category_name):
     for concern in similar_concerns:
         concern["image_url"] = disease_category_image_url(concern)
 
-    return render_template(
+    return flask.render_template(
         "category.html",
         category=selected_category,
         medicines=medicines,
@@ -1711,14 +1711,14 @@ def category_page(category_name):
 @app.route("/brand/<brand_name>")
 def brand_page(brand_name):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] == "owner":
-        return redirect("/owner_dashboard")
+    if flask.session["user"]["role"] == "owner":
+        return flask.redirect("/owner_dashboard")
 
-    elif session["user"]["role"] == "staff":
-        return redirect("/staff")
+    elif flask.session["user"]["role"] == "staff":
+        return flask.redirect("/staff")
 
     brand_slug = brand_slug_for(brand_name)
     selected_brand = BRAND_PAGE_DATA.get(brand_slug)
@@ -1733,7 +1733,7 @@ def brand_page(brand_name):
         }
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1777,7 +1777,7 @@ def brand_page(brand_name):
     for medicine in medicines:
         medicine["image_url"] = medicine_image_url(medicine)
 
-    return render_template(
+    return flask.render_template(
         "brand.html",
         brand=selected_brand,
         medicines=medicines,
@@ -1789,8 +1789,8 @@ def brand_page(brand_name):
 @app.route("/department/<disease_name>")
 def department_page(disease_name):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
 
@@ -1820,7 +1820,7 @@ def department_page(disease_name):
     medicines = cursor.fetchall()
     cursor.close()
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1834,7 +1834,7 @@ def department_page(disease_name):
     cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
     cart_count = sum(cart.values())
 
-    return render_template(
+    return flask.render_template(
         "department.html",
         dept_name=disease_name,
         medicines=medicines,
@@ -1845,13 +1845,13 @@ def department_page(disease_name):
 @app.route("/medicine_suggestions")
 def medicine_suggestions():
 
-    if "user" not in session:
-        return jsonify([])
+    if "user" not in flask.session:
+        return flask.jsonify([])
 
-    query = request.args.get("q", "").strip()[:100]
+    query = flask.request.args.get("q", "").strip()[:100]
 
     if not query:
-        return jsonify([])
+        return flask.jsonify([])
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -1868,18 +1868,18 @@ def medicine_suggestions():
     medicines = cursor.fetchall()
     cursor.close()
 
-    return jsonify([medicine["name"] for medicine in medicines])
+    return flask.jsonify([medicine["name"] for medicine in medicines])
 
 
 @app.route("/search_medicine")
 def search_medicine():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
 
-    search = request.args.get("search", "")
+    search = flask.request.args.get("search", "")
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1891,7 +1891,7 @@ def search_medicine():
     medicines = cursor.fetchall()
     cursor.close()
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1905,7 +1905,7 @@ def search_medicine():
     cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
     cart_count = sum(cart.values())
 
-    return render_template(
+    return flask.render_template(
         "department.html",
         dept_name=f"Search Results for '{search}'",
         medicines=medicines,
@@ -2265,11 +2265,11 @@ def call_ai_health_assistant(feature, user_text, medicine_context=None):
 
 @app.route("/ai_health_assistant")
 def ai_health_assistant():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -2281,29 +2281,29 @@ def ai_health_assistant():
     cursor.close()
 
     cart_count = sum(row["quantity"] for row in cart_rows)
-    return render_template("ai_health_assistant.html", cart_count=cart_count)
+    return flask.render_template("ai_health_assistant.html", cart_count=cart_count)
 
 
 @app.route("/ai_health_assistant/ask", methods=["POST"])
 def ai_health_assistant_ask():
-    if "user" not in session:
-        return jsonify({"error": "Please login to use AI Health Assistant."}), 401
+    if "user" not in flask.session:
+        return flask.jsonify({"error": "Please login to use AI Health Assistant."}), 401
 
-    data = request.get_json(silent=True) or {}
+    data = flask.request.get_json(silent=True) or {}
     feature = (data.get("feature") or "general").strip()
     user_text = (data.get("message") or "").strip()
 
     if feature not in AI_FEATURE_CONFIG:
-        return jsonify({"error": "Invalid AI feature selected."}), 400
+        return flask.jsonify({"error": "Invalid AI feature selected."}), 400
 
     if len(user_text) < 2:
-        return jsonify({"error": "Please enter your question."}), 400
+        return flask.jsonify({"error": "Please enter your question."}), 400
 
     if len(user_text) > 1200:
-        return jsonify({"error": "Please keep your question under 1200 characters."}), 400
+        return flask.jsonify({"error": "Please keep your question under 1200 characters."}), 400
 
     answer = call_ai_health_assistant(feature, user_text)
-    return jsonify({
+    return flask.jsonify({
         "answer": answer,
         "feature": AI_FEATURE_CONFIG[feature]["title"],
         "safety_note": "Manual guidance only. Please confirm treatment, dose, and prescription needs with a qualified doctor or pharmacist.",
@@ -2312,23 +2312,23 @@ def ai_health_assistant_ask():
 
 @app.route("/chatbot")
 def chatbot():
-    return render_template("chatbot.html")
+    return flask.render_template("chatbot.html")
 
 
 @app.route("/api/chatbot", methods=["POST"])
 def chatbot_api():
     try:
-        data = request.get_json(silent=True) or {}
+        data = flask.request.get_json(silent=True) or {}
         user_message = str(data.get("message", "")).strip()
 
         if not user_message:
-            return jsonify({
+            return flask.jsonify({
                 "success": False,
                 "error": "Please enter a message."
             }), 400
 
         if len(user_message) > 1000:
-            return jsonify({
+            return flask.jsonify({
                 "success": False,
                 "error": "Your message is too long. Maximum length is 1000 characters."
             }), 400
@@ -2373,14 +2373,14 @@ Respond as the Yuvraj Medical assistant.
                 "Please try again or contact the pharmacy."
             )
 
-        return jsonify({
+        return flask.jsonify({
             "success": True,
             "reply": reply
         })
 
     except Exception as error:
         app.logger.exception("Gemini chatbot error: %s", error)
-        return jsonify({
+        return flask.jsonify({
             "success": False,
             "error": (
                 "The AI assistant is temporarily unavailable. "
@@ -2391,8 +2391,8 @@ Respond as the Yuvraj Medical assistant.
 
 @app.route("/medicine/<int:id>")
 def medicine_details(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_reviews_feedback_schema()
     db = get_db()
@@ -2403,7 +2403,7 @@ def medicine_details(id):
 
     if not medicine:
         flash("Medicine not found.")
-        return redirect("/")
+        return flask.redirect("/")
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -2425,7 +2425,7 @@ def medicine_details(id):
         SELECT medicine_id, quantity
         FROM cart
         WHERE user_id=%s
-    """, (session["user"]["id"],))
+    """, (flask.session["user"]["id"],))
     cart_rows = cursor.fetchall()
     cursor.close()
 
@@ -2453,7 +2453,7 @@ def medicine_details(id):
     medicine_reviews = cursor.fetchall()
     cursor.close()
 
-    return render_template(
+    return flask.render_template(
         "medicine_details.html",
         medicine=medicine,
         details=medicine_detail_context(medicine),
@@ -2467,10 +2467,10 @@ def medicine_details(id):
 @app.route('/login', methods=['GET','POST'])
 def login():
 
-    if request.method == "POST":
+    if flask.request.method == "POST":
 
-        email = request.form["email"].strip().lower()
-        password = request.form["password"]
+        email = flask.request.form["email"].strip().lower()
+        password = flask.request.form["password"]
         db = get_db()
         cursor = db.cursor(dictionary=True)
 
@@ -2521,9 +2521,9 @@ def login():
             if pass_login:
                 if user.get("two_factor_enabled"):
                     otp = create_otp(db, user["id"], user["email"], "login_2fa")
-                    session.clear()
-                    session["pending_2fa_user_id"] = user["id"]
-                    session["pending_2fa_email"] = user["email"]
+                    flask.session.clear()
+                    flask.session["pending_2fa_user_id"] = user["id"]
+                    flask.session["pending_2fa_email"] = user["email"]
                     cursor.close()
                     log_login_activity(db, user["id"], email, "pending_2fa", "Password accepted, OTP required")
                     return render_login(
@@ -2566,24 +2566,24 @@ def login():
 
 @app.route("/two_factor", methods=["POST"])
 def two_factor():
-    if "pending_2fa_user_id" not in session:
-        return redirect("/login")
+    if "pending_2fa_user_id" not in flask.session:
+        return flask.redirect("/login")
 
-    email = session["pending_2fa_email"]
-    otp = request.form.get("otp", "")
+    email = flask.session["pending_2fa_email"]
+    otp = flask.request.form.get("otp", "")
     db = get_db()
 
     if not verify_otp(db, email, "login_2fa", otp):
-        log_login_activity(db, session["pending_2fa_user_id"], email, "failed", "Invalid 2FA OTP")
+        log_login_activity(db, flask.session["pending_2fa_user_id"], email, "failed", "Invalid 2FA OTP")
         return render_login(show_2fa=True, error="Invalid or expired 2FA code.")
 
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE id=%s", (session["pending_2fa_user_id"],))
+    cursor.execute("SELECT * FROM users WHERE id=%s", (flask.session["pending_2fa_user_id"],))
     user = cursor.fetchone()
     cursor.close()
 
     if not user:
-        session.clear()
+        flask.session.clear()
         return render_login(error="Account not found.")
 
     return complete_login(db, user)
@@ -2591,41 +2591,41 @@ def two_factor():
 
 @app.route("/two_factor/setup", methods=["POST"])
 def two_factor_setup():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    action = request.form.get("action")
+    action = flask.request.form.get("action")
     db = get_db()
 
     if action == "disable":
         cursor = db.cursor()
         cursor.execute(
             "UPDATE users SET two_factor_enabled=0 WHERE id=%s",
-            (session["user"]["id"],)
+            (flask.session["user"]["id"],)
         )
         db.commit()
         cursor.close()
         return render_login(message="Two-factor authentication disabled.")
 
-    otp = create_otp(db, session["user"]["id"], session["user"]["email"], "2fa_setup")
+    otp = create_otp(db, flask.session["user"]["id"], flask.session["user"]["email"], "2fa_setup")
     return render_login(message=f"Enter this setup code to enable 2FA: {otp}", show_2fa_setup=True)
 
 
 @app.route("/two_factor/enable", methods=["POST"])
 def two_factor_enable():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    otp = request.form.get("otp", "")
+    otp = flask.request.form.get("otp", "")
     db = get_db()
 
-    if not verify_otp(db, session["user"]["email"], "2fa_setup", otp):
+    if not verify_otp(db, flask.session["user"]["email"], "2fa_setup", otp):
         return render_login(error="Invalid or expired setup code.", show_2fa_setup=True)
 
     cursor = db.cursor()
     cursor.execute(
         "UPDATE users SET two_factor_enabled=1 WHERE id=%s",
-        (session["user"]["id"],)
+        (flask.session["user"]["id"],)
     )
     db.commit()
     cursor.close()
@@ -2634,22 +2634,22 @@ def two_factor_enable():
 
 @app.route("/login_activity")
 def login_activity():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
     return render_login(show_activity=True)
 
 
 @app.route("/devices")
 def devices():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
     return render_login(show_devices=True)
 
 
 @app.route("/devices/<int:device_id>/remove", methods=["POST"])
 def remove_device(device_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
     cursor = db.cursor()
@@ -2657,43 +2657,43 @@ def remove_device(device_id):
         UPDATE user_devices
         SET is_active=0
         WHERE id=%s AND user_id=%s
-    """, (device_id, session["user"]["id"]))
+    """, (device_id, flask.session["user"]["id"]))
     db.commit()
     cursor.close()
-    return redirect("/devices")
+    return flask.redirect("/devices")
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        country_code = request.form.get("country_code", "+91").strip()
-        phone_number = request.form.get("phone_number", request.form.get("phone", "")).strip()
+    if flask.request.method == "POST":
+        country_code = flask.request.form.get("country_code", "+91").strip()
+        phone_number = flask.request.form.get("phone_number", flask.request.form.get("phone", "")).strip()
         full_phone = f"{country_code}{phone_number}"
-        referral_code = request.form.get("referral_code", "").strip().upper()
+        referral_code = flask.request.form.get("referral_code", "").strip().upper()
         form_data = {
-            "name": request.form.get("name", "").strip(),
-            "email": request.form.get("email", "").strip().lower(),
+            "name": flask.request.form.get("name", "").strip(),
+            "email": flask.request.form.get("email", "").strip().lower(),
             "country_code": country_code,
             "phone_number": phone_number,
             "phone": full_phone,
-            "password": request.form.get("password", ""),
-            "role": request.form.get("role", "customer"),
-            "address": request.form.get("address", "").strip(),
-            "age": request.form.get("age", "").strip(),
-            "gender": request.form.get("gender", "").strip(),
-            "religion": request.form.get("religion", "").strip(),
-            "education": request.form.get("education", "").strip(),
-            "aadhar": request.form.get("aadhar", "").strip(),
-            "pan": request.form.get("pan", "").strip(),
+            "password": flask.request.form.get("password", ""),
+            "role": flask.request.form.get("role", "customer"),
+            "address": flask.request.form.get("address", "").strip(),
+            "age": flask.request.form.get("age", "").strip(),
+            "gender": flask.request.form.get("gender", "").strip(),
+            "religion": flask.request.form.get("religion", "").strip(),
+            "education": flask.request.form.get("education", "").strip(),
+            "aadhar": flask.request.form.get("aadhar", "").strip(),
+            "pan": flask.request.form.get("pan", "").strip(),
             "referral_code": referral_code,
         }
-        action = request.form.get("action", "create_account")
+        action = flask.request.form.get("action", "create_account")
         db = get_db()
 
         try:
             ensure_referral_schema()
             required_fields = ["name", "email", "phone", "password", "address"]
             if any(not form_data[field] for field in required_fields):
-                return render_template(
+                return flask.render_template(
                     "register.html",
                     error="Please fill all required fields.",
                     form=form_data
@@ -2708,7 +2708,7 @@ def register():
             cursor.close()
 
             if existing_user:
-                return render_template(
+                return flask.render_template(
                     "register.html",
                     error="An account with this email or phone already exists.",
                     form=form_data
@@ -2718,7 +2718,7 @@ def register():
             if referral_code:
                 inviter = find_user_by_referral_code(referral_code)
                 if not inviter:
-                    return render_template(
+                    return flask.render_template(
                         "register.html",
                         error="Invalid referral code. Please check it or leave the field blank.",
                         form=form_data
@@ -2730,7 +2730,7 @@ def register():
                 message = sms_message or "OTP sent to your phone number. Please enter it below."
                 if not sms_sent:
                     message = f"OTP could not be sent. {sms_message}"
-                return render_template(
+                return flask.render_template(
                     "register.html",
                     message=message if sms_sent else None,
                     error=None if sms_sent else message,
@@ -2739,16 +2739,16 @@ def register():
                     form=form_data
                 )
 
-            otp = request.form.get("otp", "").strip()
+            otp = flask.request.form.get("otp", "").strip()
             if not otp:
-                return render_template(
+                return flask.render_template(
                     "register.html",
                     error="Please send and enter the OTP before creating the account.",
                     form=form_data
                 )
 
             if not verify_otp(db, form_data["email"], "register_account", otp):
-                return render_template(
+                return flask.render_template(
                     "register.html",
                     error="Invalid or expired OTP. Please send a new OTP.",
                     otp_sent=True,
@@ -2831,27 +2831,27 @@ def register():
             db.commit()
             cursor.close()
 
-            return render_template(
+            return flask.render_template(
                 "register.html",
                 success="Account created successfully. You can login now."
             )
 
         except Exception as e:
             db.rollback()
-            return render_template(
+            return flask.render_template(
                 "register.html",
                 error=f"Registration failed: {e}",
                 form=form_data
             )
 
-    referral_code = request.args.get("ref", "").strip().upper()
+    referral_code = flask.request.args.get("ref", "").strip().upper()
     form = {"referral_code": referral_code, "country_code": "+91", "role": "customer"} if referral_code else None
-    return render_template("register.html", form=form)
+    return flask.render_template("register.html", form=form)
 # ================= LOGOUT =================
 @app.route("/logout")
 def logout():
-    session.clear()
-    return redirect("/login")
+    flask.session.clear()
+    return flask.redirect("/login")
 
 
 # ================= PROFILE =================
@@ -2985,11 +2985,11 @@ def get_family_member_options(user_id):
 
 @app.route("/profile")
 def profile():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    user, addresses, family_members = get_profile_context(session["user"]["id"])
-    return render_template(
+    user, addresses, family_members = get_profile_context(flask.session["user"]["id"])
+    return flask.render_template(
         "profile.html",
         user=user,
         addresses=addresses,
@@ -2999,20 +2999,20 @@ def profile():
 
 @app.route("/profile/photo", methods=["POST"])
 def update_profile_photo():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_profile_management_schema()
-    photo = request.files.get("profile_photo")
+    photo = flask.request.files.get("profile_photo")
 
     if not photo or not photo.filename:
-        return redirect("/profile")
+        return flask.redirect("/profile")
 
     allowed_extensions = {"jpg", "jpeg", "png", "webp"}
     extension = photo.filename.rsplit(".", 1)[-1].lower() if "." in photo.filename else ""
 
     if extension not in allowed_extensions:
-        return redirect("/profile")
+        return flask.redirect("/profile")
 
     host_static_root = os.environ.get("HOST_STATIC_ROOT")
     if not host_static_root and os.path.isdir("/home/admin/YuvrajMedical/static"):
@@ -3022,7 +3022,7 @@ def update_profile_photo():
     upload_dir = os.path.join(static_root, "profile_photos")
     os.makedirs(upload_dir, exist_ok=True)
 
-    filename = secure_filename(f"user_{session['user']['id']}_{secrets.token_hex(6)}.{extension}")
+    filename = secure_filename(f"user_{flask.session['user']['id']}_{secrets.token_hex(6)}.{extension}")
     photo.save(os.path.join(upload_dir, filename))
     image_path = f"profile_photos/{filename}"
 
@@ -3030,18 +3030,18 @@ def update_profile_photo():
     cursor = db.cursor()
     cursor.execute(
         "UPDATE users SET profile_image=%s WHERE id=%s",
-        (image_path, session["user"]["id"])
+        (image_path, flask.session["user"]["id"])
     )
     db.commit()
     cursor.close()
 
-    return redirect("/profile")
+    return flask.redirect("/profile")
 
 
 @app.route("/profile/manage/<section>", methods=["GET", "POST"])
 def profile_manage(section):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     valid_sections = {
         "change_password",
@@ -3053,21 +3053,21 @@ def profile_manage(section):
         "emergency",
     }
     if section not in valid_sections:
-        return redirect("/profile")
+        return flask.redirect("/profile")
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     db = get_db()
     message = None
     error = None
 
-    default_relation = (request.form.get("relation", "").strip() or request.args.get("relation", "").strip())
+    default_relation = (flask.request.form.get("relation", "").strip() or flask.request.args.get("relation", "").strip())
 
-    if request.method == "POST":
+    if flask.request.method == "POST":
         try:
             if section == "change_password":
-                current_password = request.form.get("current_password", "")
-                new_password = request.form.get("new_password", "")
-                confirm_password = request.form.get("confirm_password", "")
+                current_password = flask.request.form.get("current_password", "")
+                new_password = flask.request.form.get("new_password", "")
+                confirm_password = flask.request.form.get("confirm_password", "")
 
                 cursor = db.cursor(dictionary=True)
                 cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
@@ -3096,7 +3096,7 @@ def profile_manage(section):
                 cursor.close()
 
             elif section == "change_mobile":
-                phone = request.form.get("phone", "").strip()
+                phone = flask.request.form.get("phone", "").strip()
                 if not normalize_fast2sms_number(phone):
                     error = "Enter a valid 10 digit mobile number."
                 else:
@@ -3111,7 +3111,7 @@ def profile_manage(section):
                     message = "Mobile number updated. Please verify it."
 
             elif section == "verify_mobile":
-                action = request.form.get("action")
+                action = flask.request.form.get("action")
                 user, _, _ = get_profile_context(user_id)
                 if action == "send_otp":
                     otp = create_otp(db, user_id, user["email"], "verify_mobile")
@@ -3121,7 +3121,7 @@ def profile_manage(section):
                         error = sms_message or "Could not send OTP."
                         message = None
                 else:
-                    otp = request.form.get("otp", "").strip()
+                    otp = flask.request.form.get("otp", "").strip()
                     if verify_otp(db, user["email"], "verify_mobile", otp):
                         cursor = db.cursor()
                         cursor.execute("UPDATE users SET mobile_verified=1 WHERE id=%s", (user_id,))
@@ -3132,13 +3132,13 @@ def profile_manage(section):
                         error = "Invalid or expired mobile OTP."
 
             elif section == "verify_email":
-                action = request.form.get("action")
+                action = flask.request.form.get("action")
                 user, _, _ = get_profile_context(user_id)
                 if action == "send_otp":
                     otp = create_otp(db, user_id, user["email"], "verify_email")
                     message = f"Email verification OTP generated: {otp}"
                 else:
-                    otp = request.form.get("otp", "").strip()
+                    otp = flask.request.form.get("otp", "").strip()
                     if verify_otp(db, user["email"], "verify_email", otp):
                         cursor = db.cursor()
                         cursor.execute("UPDATE users SET email_verified=1 WHERE id=%s", (user_id,))
@@ -3149,11 +3149,11 @@ def profile_manage(section):
                         error = "Invalid or expired email OTP."
 
             elif section == "addresses":
-                label = request.form.get("label", "").strip() or "Home"
-                recipient_name = request.form.get("recipient_name", "").strip()
-                phone = request.form.get("phone", "").strip()
-                address = request.form.get("address", "").strip()
-                is_default = 1 if request.form.get("is_default") == "on" else 0
+                label = flask.request.form.get("label", "").strip() or "Home"
+                recipient_name = flask.request.form.get("recipient_name", "").strip()
+                phone = flask.request.form.get("phone", "").strip()
+                address = flask.request.form.get("address", "").strip()
+                is_default = 1 if flask.request.form.get("is_default") == "on" else 0
 
                 if not recipient_name or not phone or not address:
                     error = "Please fill recipient name, phone, and address."
@@ -3174,10 +3174,10 @@ def profile_manage(section):
                     message = "Delivery address added."
 
             elif section == "family":
-                name = request.form.get("name", "").strip()
-                relation = request.form.get("relation", "").strip().title() or "Other"
-                age = request.form.get("age", "").strip()
-                notes = request.form.get("notes", "").strip()
+                name = flask.request.form.get("name", "").strip()
+                relation = flask.request.form.get("relation", "").strip().title() or "Other"
+                age = flask.request.form.get("age", "").strip()
+                notes = flask.request.form.get("notes", "").strip()
 
                 if not name or not relation:
                     error = "Please fill family member name and relation."
@@ -3192,9 +3192,9 @@ def profile_manage(section):
                     message = "Family member profile added."
 
             elif section == "emergency":
-                name = request.form.get("name", "").strip()
-                phone = request.form.get("phone", "").strip()
-                relation = request.form.get("relation", "").strip()
+                name = flask.request.form.get("name", "").strip()
+                phone = flask.request.form.get("phone", "").strip()
+                relation = flask.request.form.get("relation", "").strip()
 
                 if not name or not phone:
                     error = "Please fill emergency contact name and phone."
@@ -3215,7 +3215,7 @@ def profile_manage(section):
             error = f"Could not save changes: {e}"
 
     user, addresses, family_members = get_profile_context(user_id)
-    return render_template(
+    return flask.render_template(
         "profile_manage.html",
         section=section,
         user=user,
@@ -3230,16 +3230,16 @@ def profile_manage(section):
 # ================= Edit Profile =========
 @app.route("/edit_profile", methods=["GET", "POST"])
 def edit_profile():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
-    if request.method == "POST":
-        name = request.form["name"]
-        phone = request.form["phone"]
-        address = request.form["address"]
+    if flask.request.method == "POST":
+        name = flask.request.form["name"]
+        phone = flask.request.form["phone"]
+        address = flask.request.form["address"]
 
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
@@ -3251,7 +3251,7 @@ def edit_profile():
         db.commit()
         cursor.close()
 
-        return redirect("/profile")
+        return flask.redirect("/profile")
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -3259,16 +3259,16 @@ def edit_profile():
     """, (user_id,))
     user = cursor.fetchone()
     cursor.close()
-    return render_template("edit_profile.html", user=user)
+    return flask.render_template("edit_profile.html", user=user)
 # ================= CART =================
 @app.route("/add/<int:id>")
 def add_to_cart(id):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -3280,14 +3280,14 @@ def add_to_cart(id):
     cursor.close()
 
     if medicine and medicine["prescription_required"]:
-        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-            return jsonify({
+        if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return flask.jsonify({
                 "ok": False,
                 "redirect": "/upload_prescription",
                 "message": f"{medicine['name']} requires prescription."
             }), 403
         flash(f"{medicine['name']} requires prescription. Please upload prescription first.")
-        return redirect("/upload_prescription")
+        return flask.redirect("/upload_prescription")
 
     try:
         cursor = db.cursor()
@@ -3317,11 +3317,11 @@ def add_to_cart(id):
 
     except Exception as e:
         db.rollback()
-        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-            return jsonify({"ok": False, "message": f"Cart Error: {e}"}), 500
+        if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return flask.jsonify({"ok": False, "message": f"Cart Error: {e}"}), 500
         return f"Cart Error: {e}"
 
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+    if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
         cursor = db.cursor(dictionary=True)
         cursor.execute(
             "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
@@ -3331,9 +3331,9 @@ def add_to_cart(id):
         cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user_id,))
         count_row = cursor.fetchone() or {"count": 0}
         cursor.close()
-        return jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
+        return flask.jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
 
-    return redirect(request.referrer or "/")
+    return flask.redirect(flask.request.referrer or "/")
 @app.route("/increase/<int:id>")
 def increase(id):
     db = get_db()
@@ -3348,17 +3348,17 @@ def increase(id):
     cursor.close()
 
     if medicine and medicine["prescription_required"]:
-        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-            return jsonify({
+        if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return flask.jsonify({
                 "ok": False,
                 "redirect": "/upload_prescription",
                 "message": f"{medicine['name']} requires prescription."
             }), 403
         flash(f"{medicine['name']} requires prescription. Please upload prescription first.")
-        return redirect("/upload_prescription")
-    if "user" not in session:
-        return redirect("/login")
-    user_id = session["user"]["id"]
+        return flask.redirect("/upload_prescription")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -3369,7 +3369,7 @@ def increase(id):
 
     db.commit()
     cursor.close()
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+    if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
         cursor = db.cursor(dictionary=True)
         cursor.execute(
             "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
@@ -3379,16 +3379,16 @@ def increase(id):
         cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user_id,))
         count_row = cursor.fetchone() or {"count": 0}
         cursor.close()
-        return jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
-    return redirect(request.referrer or "/")
+        return flask.jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
+    return flask.redirect(flask.request.referrer or "/")
 
 
 @app.route("/decrease/<int:id>")
 def decrease(id):
     db = get_db()
-    if "user" not in session:
-         return redirect("/login")
-    user_id = session["user"]["id"]
+    if "user" not in flask.session:
+         return flask.redirect("/login")
+    user_id = flask.session["user"]["id"]
 
     cursor=db.cursor()
     cursor.execute("""
@@ -3405,7 +3405,7 @@ def decrease(id):
 
     db.commit()
     cursor.close()
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+    if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
         cursor = db.cursor(dictionary=True)
         cursor.execute(
             "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
@@ -3415,8 +3415,8 @@ def decrease(id):
         cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (user_id,))
         count_row = cursor.fetchone() or {"count": 0}
         cursor.close()
-        return jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
-    return redirect(request.referrer or "/")
+        return flask.jsonify({"ok": True, "quantity": row["quantity"], "cart_count": count_row["count"]})
+    return flask.redirect(flask.request.referrer or "/")
 
 
 def ensure_cart_feature_schema():
@@ -3485,7 +3485,7 @@ REWARD_COUPON_COSTS = {
 
 
 def calculate_cart_totals(subtotal):
-    coupon_code = session.get("cart_coupon")
+    coupon_code = flask.session.get("cart_coupon")
     coupon = CART_COUPONS.get(coupon_code)
     delivery_charge = 0 if subtotal == 0 or subtotal >= 500 else 40
     discount = 0
@@ -3631,7 +3631,7 @@ def build_rewards_context(user_id):
     tier, tier_progress, next_tier_points = reward_tier_for_points(points)
 
     referral_code = referral_code_for_user(user)
-    host = request.host_url.rstrip("/")
+    host = flask.request.host_url.rstrip("/")
     referral_link = f"{host}/register?ref={referral_code}"
     whatsapp_message = (
         "Hi, I use Yuvraj Medical for online medicine orders. "
@@ -3713,55 +3713,55 @@ def build_rewards_context(user_id):
 
 @app.route("/rewards")
 def rewards():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    return render_template("rewards.html", **build_rewards_context(session["user"]["id"]))
+    return flask.render_template("rewards.html", **build_rewards_context(flask.session["user"]["id"]))
 
 
 @app.route("/rewards/redeem", methods=["POST"])
 def redeem_reward():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    code = (request.form.get("coupon_code") or "").strip().upper()
-    rewards_context = build_rewards_context(session["user"]["id"])
+    code = (flask.request.form.get("coupon_code") or "").strip().upper()
+    rewards_context = build_rewards_context(flask.session["user"]["id"])
     available_codes = {
         coupon["code"] for coupon in rewards_context["coupons"] if coupon["available"]
     }
     if code in available_codes:
-        session["cart_coupon"] = code
+        flask.session["cart_coupon"] = code
         flash(f"Reward coupon {code} is ready in your cart.")
-        return redirect("/cart")
+        return flask.redirect("/cart")
 
     flash("This reward coupon needs more loyalty points.")
-    return redirect("/rewards")
+    return flask.redirect("/rewards")
 
 
 @app.route("/cart/remove/<int:id>")
 def remove_from_cart(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
     cursor = db.cursor()
     cursor.execute(
         "DELETE FROM cart WHERE user_id=%s AND medicine_id=%s",
-        (session["user"]["id"], id)
+        (flask.session["user"]["id"], id)
     )
     db.commit()
     cursor.close()
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 @app.route("/cart/save_for_later/<int:id>")
 def save_for_later(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor(dictionary=True)
     cursor.execute(
         "SELECT quantity FROM cart WHERE user_id=%s AND medicine_id=%s",
@@ -3780,17 +3780,17 @@ def save_for_later(id):
         )
         db.commit()
     cursor.close()
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 @app.route("/cart/move_saved_to_cart/<int:id>")
 def move_saved_to_cart(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor(dictionary=True)
     cursor.execute(
         "SELECT quantity FROM cart_saved_later WHERE user_id=%s AND medicine_id=%s",
@@ -3809,39 +3809,39 @@ def move_saved_to_cart(id):
         )
         db.commit()
     cursor.close()
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 @app.route("/cart/remove_saved/<int:id>")
 def remove_saved_for_later(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
     cursor = db.cursor()
     cursor.execute(
         "DELETE FROM cart_saved_later WHERE user_id=%s AND medicine_id=%s",
-        (session["user"]["id"], id)
+        (flask.session["user"]["id"], id)
     )
     db.commit()
     cursor.close()
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 @app.route("/cart/move_to_wishlist/<int:id>")
 def move_to_wishlist(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     save_medicine_to_wishlist(id)
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 def save_medicine_to_wishlist(id):
     ensure_cart_feature_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor()
     cursor.execute("""
         INSERT INTO wishlist (user_id, medicine_id)
@@ -3858,8 +3858,8 @@ def save_medicine_to_wishlist(id):
 
 @app.route("/wishlist/add/<int:id>")
 def add_to_wishlist(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
@@ -3868,20 +3868,20 @@ def add_to_wishlist(id):
         INSERT INTO wishlist (user_id, medicine_id)
         VALUES (%s, %s)
         ON DUPLICATE KEY UPDATE created_at = CURRENT_TIMESTAMP
-    """, (session["user"]["id"], id))
+    """, (flask.session["user"]["id"], id))
     db.commit()
     cursor.close()
-    return redirect(request.referrer or "/wishlist")
+    return flask.redirect(flask.request.referrer or "/wishlist")
 
 
 @app.route("/cart/wishlist_to_cart/<int:id>")
 def wishlist_to_cart(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor()
     cursor.execute("""
         INSERT INTO cart (user_id, medicine_id, quantity)
@@ -3894,26 +3894,26 @@ def wishlist_to_cart(id):
     )
     db.commit()
     cursor.close()
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 @app.route("/wishlist/move_to_cart/<int:id>")
 def wishlist_page_to_cart(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     wishlist_to_cart(id)
-    return redirect("/wishlist")
+    return flask.redirect("/wishlist")
 
 
 @app.route("/wishlist/move_all_to_cart")
 def wishlist_move_all_to_cart():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         SELECT wishlist.medicine_id
@@ -3939,16 +3939,16 @@ def wishlist_move_all_to_cart():
         db.commit()
 
     cursor.close()
-    return redirect("/wishlist")
+    return flask.redirect("/wishlist")
 
 
 @app.route("/cart/remove_wishlist/<int:id>")
 def remove_wishlist(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     remove_wishlist_item(id)
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 def remove_wishlist_item(id):
@@ -3957,7 +3957,7 @@ def remove_wishlist_item(id):
     cursor = db.cursor()
     cursor.execute(
         "DELETE FROM wishlist WHERE user_id=%s AND medicine_id=%s",
-        (session["user"]["id"], id)
+        (flask.session["user"]["id"], id)
     )
     db.commit()
     cursor.close()
@@ -3965,17 +3965,17 @@ def remove_wishlist_item(id):
 
 @app.route("/wishlist/remove/<int:id>")
 def remove_from_wishlist_page(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     remove_wishlist_item(id)
-    return redirect("/wishlist")
+    return flask.redirect("/wishlist")
 
 
 @app.route("/wishlist/notify/<int:id>")
 def toggle_wishlist_notification(id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
@@ -3984,16 +3984,16 @@ def toggle_wishlist_notification(id):
         UPDATE wishlist
         SET notify_when_available = CASE WHEN notify_when_available = 1 THEN 0 ELSE 1 END
         WHERE user_id=%s AND medicine_id=%s
-    """, (session["user"]["id"], id))
+    """, (flask.session["user"]["id"], id))
     db.commit()
     cursor.close()
-    return redirect("/wishlist")
+    return flask.redirect("/wishlist")
 
 
 @app.route("/wishlist")
 def wishlist_page():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
@@ -4011,44 +4011,44 @@ def wishlist_page():
         JOIN medicines ON medicines.id = wishlist.medicine_id
         WHERE wishlist.user_id=%s
         ORDER BY wishlist.created_at DESC
-    """, (session["user"]["id"],))
+    """, (flask.session["user"]["id"],))
     wishlist_items = cursor.fetchall()
-    cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (session["user"]["id"],))
+    cursor.execute("SELECT COALESCE(SUM(quantity),0) AS count FROM cart WHERE user_id=%s", (flask.session["user"]["id"],))
     cart_count = (cursor.fetchone() or {}).get("count", 0)
     cursor.close()
-    return render_template("wishlist.html", wishlist_items=wishlist_items, cart_count=cart_count)
+    return flask.render_template("wishlist.html", wishlist_items=wishlist_items, cart_count=cart_count)
 
 
 @app.route("/cart/apply_coupon", methods=["POST"])
 def apply_coupon():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    code = request.form.get("coupon_code", "").strip().upper()
+    code = flask.request.form.get("coupon_code", "").strip().upper()
     if code in CART_COUPONS:
-        session["cart_coupon"] = code
+        flask.session["cart_coupon"] = code
         flash(f"Coupon {code} applied.")
     else:
-        session.pop("cart_coupon", None)
+        flask.session.pop("cart_coupon", None)
         flash("Invalid coupon code.")
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 @app.route("/cart/remove_coupon")
 def remove_coupon():
-    session.pop("cart_coupon", None)
-    return redirect("/cart")
+    flask.session.pop("cart_coupon", None)
+    return flask.redirect("/cart")
 
 
 # ================= CART PAGE =================
 @app.route("/cart")
 def cart():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_cart_feature_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
 
     cursor = db.cursor(dictionary=True)
@@ -4107,7 +4107,7 @@ def cart():
 
     cursor.close()
     totals = calculate_cart_totals(subtotal_total)
-    return render_template(
+    return flask.render_template(
         "cart.html",
         items=items,
         saved_items=saved_items,
@@ -4121,8 +4121,8 @@ def cart():
 # ================= CHECKOUT =================
 @app.route("/checkout")
 def checkout():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_payment_schema()
     ensure_family_health_schema()
@@ -4136,20 +4136,20 @@ def checkout():
         FROM cart
         JOIN medicines ON medicines.id = cart.medicine_id
         WHERE cart.user_id=%s
-    """, (session["user"]["id"],))
+    """, (flask.session["user"]["id"],))
     cart_items = cursor.fetchall()
     cursor.close()
 
     subtotal = sum(item["price"] * item["quantity"] for item in cart_items)
     totals = calculate_cart_totals(subtotal)
 
-    return render_template(
+    return flask.render_template(
         "checkout.html",
         cart_items=cart_items,
         totals=totals,
         payment_methods=PAYMENT_METHODS,
         manual_payment_methods=MANUAL_PAYMENT_METHODS,
-        family_members=get_family_member_options(session["user"]["id"])
+        family_members=get_family_member_options(flask.session["user"]["id"])
     )
 
 # ================= PLACE ORDER =================
@@ -4157,8 +4157,8 @@ def checkout():
 @app.route("/place_order", methods=["POST"])
 def place_order():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_payment_schema()
     ensure_family_health_schema()
@@ -4170,49 +4170,49 @@ def place_order():
         cursor = db.cursor(dictionary=True)
         cursor.execute("BEGIN")
 
-        user_id = session["user"]["id"]
-        delivery_address = (request.form.get("address") or "").strip()
-        delivery_notes = (request.form.get("delivery_notes") or "").strip()
+        user_id = flask.session["user"]["id"]
+        delivery_address = (flask.request.form.get("address") or "").strip()
+        delivery_notes = (flask.request.form.get("delivery_notes") or "").strip()
         delivery_otp = f"{secrets.randbelow(1000000):06d}"
-        payment_method = (request.form.get("payment_method") or "").strip()
-        transaction_id = (request.form.get("transaction_id") or "").strip()
-        payment_notes = (request.form.get("payment_notes") or "").strip()
-        payment_screenshot_file = request.files.get("payment_screenshot")
+        payment_method = (flask.request.form.get("payment_method") or "").strip()
+        transaction_id = (flask.request.form.get("transaction_id") or "").strip()
+        payment_notes = (flask.request.form.get("payment_notes") or "").strip()
+        payment_screenshot_file = flask.request.files.get("payment_screenshot")
         payment_screenshot_path = None
         family_members = get_family_members_for_user(user_id)
-        selected_family_member_id = (request.form.get("family_member_id") or "").strip()
+        selected_family_member_id = (flask.request.form.get("family_member_id") or "").strip()
         family_member_id = normalize_family_member_selection(selected_family_member_id, family_members)
 
         if payment_method not in PAYMENT_METHODS:
             db.rollback()
             flash("Please select a valid payment method.")
-            return redirect("/checkout")
+            return flask.redirect("/checkout")
 
         if payment_method in ["Debit Card", "Credit Card"]:
             db.rollback()
             flash("Card payments require a payment gateway and are not enabled yet.")
-            return redirect("/checkout")
+            return flask.redirect("/checkout")
 
         if payment_method in MANUAL_PAYMENT_METHODS:
             if not transaction_id:
                 db.rollback()
                 flash("Please enter the UPI transaction ID / UTR number.")
-                return redirect("/checkout")
+                return flask.redirect("/checkout")
             if not payment_screenshot_file or payment_screenshot_file.filename == "":
                 db.rollback()
                 flash("Please upload the payment screenshot for manual verification.")
-                return redirect("/checkout")
+                return flask.redirect("/checkout")
 
         if payment_screenshot_file and payment_screenshot_file.filename:
             extension = payment_screenshot_file.filename.rsplit(".", 1)[-1].lower()
             if extension not in {"jpg", "jpeg", "png", "webp"}:
                 db.rollback()
                 flash("Payment screenshot must be JPG, JPEG, PNG, or WEBP.")
-                return redirect("/checkout")
+                return flask.redirect("/checkout")
             upload_folder = os.path.join("static", "uploads", "payments")
             os.makedirs(upload_folder, exist_ok=True)
             filename = secure_filename(
-                f"payment_{session['user']['id']}_{secrets.token_hex(8)}.{extension}"
+                f"payment_{flask.session['user']['id']}_{secrets.token_hex(8)}.{extension}"
             )
             payment_screenshot_path = os.path.join(upload_folder, filename)
             payment_screenshot_file.save(payment_screenshot_path)
@@ -4223,7 +4223,7 @@ def place_order():
             delivery_address = user_row.get("address") or "Delivery address not provided"
 
         # ================= PRESCRIPTION UPLOAD =================
-        file = request.files.get("prescription")
+        file = flask.request.files.get("prescription")
         file_path = None
 
         if file and file.filename != "":
@@ -4259,7 +4259,7 @@ def place_order():
         if not cart_items:
             db.rollback()
             flash("Your cart is empty")
-            return redirect("/cart")
+            return flask.redirect("/cart")
 
         total = 0
 
@@ -4275,7 +4275,7 @@ def place_order():
                     f"{item['stock']} item(s) left in stock"
                 )
 
-                return redirect("/cart")
+                return flask.redirect("/cart")
 
         # ================= CREATE ORDER =================
 
@@ -4398,7 +4398,7 @@ def place_order():
             DELETE FROM cart
             WHERE user_id=%s
         """, (user_id,))
-        session.pop("cart_coupon", None)
+        flask.session.pop("cart_coupon", None)
 
         # ================= COMMIT =================
         db.commit()
@@ -4409,7 +4409,7 @@ def place_order():
         else:
             flash("Order placed successfully.")
 
-        return redirect("/my_orders")
+        return flask.redirect("/my_orders")
 
     except Exception as e:
 
@@ -4419,20 +4419,20 @@ def place_order():
 
         flash(f"Order Failed: {e}")
 
-        return redirect("/cart")
+        return flask.redirect("/cart")
 
 # ================= UPDATE MEDICINE IMAGE =================
 @app.route("/update_image/<int:id>", methods=["POST"])
 def update_image(id):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    file = request.files.get("image")
+    file = flask.request.files.get("image")
 
     if not file or file.filename == "":
         flash("No image selected")
-        return redirect("/staff")
+        return flask.redirect("/staff")
 
     try:
 
@@ -4440,7 +4440,7 @@ def update_image(id):
 
         if not image_url:
             flash("Cloudinary upload failed")
-            return redirect("/staff")
+            return flask.redirect("/staff")
 
         db = get_db()
 
@@ -4463,16 +4463,16 @@ def update_image(id):
 
         flash(f"Upload failed: {e}")
 
-    return redirect("/staff")
+    return flask.redirect("/staff")
 # ================= MY ORDERS =================
 @app.route("/my_orders")
 def my_orders():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_payment_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
 
     cursor = db.cursor(dictionary=True)
@@ -4538,7 +4538,7 @@ def my_orders():
         "refund_orders": len([o for o in orders if o["refund_status"] != "Not Applicable"]),
     }
 
-    return render_template(
+    return flask.render_template(
         "my_orders.html",
         orders=orders,
         order_statuses=ORDER_STATUSES,
@@ -4574,8 +4574,8 @@ def get_customer_order(order_id, user_id):
 
 @app.route("/payment_history")
 def payment_history():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_payment_schema()
     db = get_db()
@@ -4586,7 +4586,7 @@ def payment_history():
         JOIN orders ON orders.id = payments.order_id
         WHERE payments.user_id=%s
         ORDER BY payments.id DESC
-    """, (session["user"]["id"],))
+    """, (flask.session["user"]["id"],))
     payments = cursor.fetchall()
     cursor.close()
     summary = {
@@ -4595,27 +4595,27 @@ def payment_history():
         "pending": len([p for p in payments if p.get("status") in ["Pending Verification", "Pending COD"]]),
         "amount": sum(float(p.get("amount") or 0) for p in payments),
     }
-    return render_template("payment_history.html", payments=payments, summary=summary)
+    return flask.render_template("payment_history.html", payments=payments, summary=summary)
 
 
 @app.route("/notifications")
 def notifications_page():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    notifications, unread_count = get_user_notifications(session["user"]["id"])
+    notifications, unread_count = get_user_notifications(flask.session["user"]["id"])
     summary = {
         "total": len(notifications),
         "unread": unread_count,
         "types": NOTIFICATION_TYPES,
     }
-    return render_template("notifications.html", notifications=notifications, summary=summary)
+    return flask.render_template("notifications.html", notifications=notifications, summary=summary)
 
 
 @app.route("/notifications/mark_read/<int:notification_id>", methods=["POST"])
 def mark_notification_read(notification_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_notification_schema()
     db = get_db()
@@ -4624,16 +4624,16 @@ def mark_notification_read(notification_id):
         UPDATE notifications
         SET is_read=1
         WHERE id=%s AND user_id=%s
-    """, (notification_id, session["user"]["id"]))
+    """, (notification_id, flask.session["user"]["id"]))
     db.commit()
     cursor.close()
-    return redirect("/notifications")
+    return flask.redirect("/notifications")
 
 
 @app.route("/notifications/mark_all_read", methods=["POST"])
 def mark_all_notifications_read():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_notification_schema()
     db = get_db()
@@ -4642,33 +4642,33 @@ def mark_all_notifications_read():
         UPDATE notifications
         SET is_read=1
         WHERE user_id=%s
-    """, (session["user"]["id"],))
+    """, (flask.session["user"]["id"],))
     db.commit()
     cursor.close()
-    return redirect("/notifications")
+    return flask.redirect("/notifications")
 
 
 @app.route("/reviews_feedback", methods=["GET", "POST"])
 def reviews_feedback():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_reviews_feedback_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
-    if request.method == "POST":
-        review_type = request.form.get("review_type")
-        medicine_id = request.form.get("medicine_id") or None
-        order_id = request.form.get("order_id") or None
-        rating = request.form.get("rating") or None
-        title = (request.form.get("title") or "").strip()
-        message = (request.form.get("message") or "").strip()
-        issue_category = (request.form.get("issue_category") or "").strip() or None
+    if flask.request.method == "POST":
+        review_type = flask.request.form.get("review_type")
+        medicine_id = flask.request.form.get("medicine_id") or None
+        order_id = flask.request.form.get("order_id") or None
+        rating = flask.request.form.get("rating") or None
+        title = (flask.request.form.get("title") or "").strip()
+        message = (flask.request.form.get("message") or "").strip()
+        issue_category = (flask.request.form.get("issue_category") or "").strip() or None
 
         if review_type not in REVIEW_TYPES:
             flash("Please select a valid feedback type.")
-            return redirect("/reviews_feedback")
+            return flask.redirect("/reviews_feedback")
 
         if review_type != "Issue Report":
             try:
@@ -4677,13 +4677,13 @@ def reviews_feedback():
                 rating = 0
             if rating < 1 or rating > 5:
                 flash("Please select a rating from 1 to 5 stars.")
-                return redirect("/reviews_feedback")
+                return flask.redirect("/reviews_feedback")
         else:
             rating = None
 
         if not message:
             flash("Please write your review or issue details.")
-            return redirect("/reviews_feedback")
+            return flask.redirect("/reviews_feedback")
 
         cursor = db.cursor()
         cursor.execute("""
@@ -4714,7 +4714,7 @@ def reviews_feedback():
         db.commit()
         cursor.close()
         flash("Thank you. Your review or feedback has been submitted.")
-        return redirect("/reviews_feedback")
+        return flask.redirect("/reviews_feedback")
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -4757,7 +4757,7 @@ def reviews_feedback():
         "issues": len([item for item in feedback_items if item["review_type"] == "Issue Report"]),
     }
 
-    return render_template(
+    return flask.render_template(
         "reviews_feedback.html",
         review_types=REVIEW_TYPES,
         purchased_medicines=purchased_medicines,
@@ -4769,14 +4769,14 @@ def reviews_feedback():
 
 @app.route("/order_details/<int:order_id>")
 def order_details(order_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    order, items = get_customer_order(order_id, session["user"]["id"])
+    order, items = get_customer_order(order_id, flask.session["user"]["id"])
     if not order:
         abort(404)
 
-    return render_template(
+    return flask.render_template(
         "order_details.html",
         order=order,
         items=items,
@@ -4789,14 +4789,14 @@ def order_details(order_id):
 
 @app.route("/order_tracking/<int:order_id>")
 def order_tracking(order_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    order, items = get_customer_order(order_id, session["user"]["id"])
+    order, items = get_customer_order(order_id, flask.session["user"]["id"])
     if not order:
         abort(404)
 
-    return render_template(
+    return flask.render_template(
         "order_tracking.html",
         order=order,
         items=items,
@@ -4806,26 +4806,26 @@ def order_tracking(order_id):
 
 @app.route("/delivery_tracking/<int:order_id>")
 def delivery_tracking(order_id):
-    return redirect(f"/order_tracking/{order_id}")
+    return flask.redirect(f"/order_tracking/{order_id}")
 
 
 @app.route("/courier_tracking/<int:order_id>")
 def courier_tracking(order_id):
-    return redirect(f"/order_tracking/{order_id}")
+    return flask.redirect(f"/order_tracking/{order_id}")
 
 
 @app.route("/download_invoice/<int:order_id>")
 def download_invoice(order_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    order, items = get_customer_order(order_id, session["user"]["id"])
+    order, items = get_customer_order(order_id, flask.session["user"]["id"])
     if not order:
         abort(404)
 
     invoice_image = static_image_data_uri("images/order-card-visual-premium.png")
-    html = render_template("invoice.html", order=order, items=items, invoice_image=invoice_image)
-    response = make_response(html)
+    html = flask.render_template("invoice.html", order=order, items=items, invoice_image=invoice_image)
+    response = flask.make_response(html)
     response.headers["Content-Type"] = "text/html; charset=utf-8"
     response.headers["Content-Disposition"] = f"attachment; filename=invoice-{order_id}.html"
     return response
@@ -4833,15 +4833,15 @@ def download_invoice(order_id):
 
 @app.route("/reorder/<int:order_id>")
 def reorder(order_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    order, items = get_customer_order(order_id, session["user"]["id"])
+    order, items = get_customer_order(order_id, flask.session["user"]["id"])
     if not order:
         abort(404)
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor(dictionary=True)
     added = 0
 
@@ -4864,7 +4864,7 @@ def reorder(order_id):
     db.commit()
     cursor.close()
     flash("Previous order medicines were added to your cart." if added else "No medicines from this order are currently available.")
-    return redirect("/cart")
+    return flask.redirect("/cart")
 
 
 def ensure_subscription_schema():
@@ -5011,34 +5011,34 @@ def build_reorder_subscription_context(user_id):
 
 @app.route("/reorder_subscription")
 def reorder_subscription():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    return render_template(
+    return flask.render_template(
         "reorder_subscription.html",
-        **build_reorder_subscription_context(session["user"]["id"])
+        **build_reorder_subscription_context(flask.session["user"]["id"])
     )
 
 
 @app.route("/buy_again/<int:medicine_id>")
 def buy_again(medicine_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     try:
-        quantity = max(1, min(int(request.args.get("quantity") or 1), 24))
+        quantity = max(1, min(int(flask.request.args.get("quantity") or 1), 24))
     except (TypeError, ValueError):
         quantity = 1
 
-    added = add_medicine_to_customer_cart(session["user"]["id"], medicine_id, quantity)
+    added = add_medicine_to_customer_cart(flask.session["user"]["id"], medicine_id, quantity)
     flash("Medicine added to cart." if added else "This medicine is currently out of stock.")
-    return redirect("/cart" if added else "/reorder_subscription")
+    return flask.redirect("/cart" if added else "/reorder_subscription")
 
 
 @app.route("/buy_again_all")
 def buy_again_all():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -5053,55 +5053,55 @@ def buy_again_all():
         GROUP BY medicines.id
         ORDER BY MAX(orders.date) DESC, SUM(order_items.quantity) DESC
         LIMIT 5
-    """, (session["user"]["id"],))
+    """, (flask.session["user"]["id"],))
     medicine_ids = [row["id"] for row in cursor.fetchall()]
     cursor.close()
 
     added_count = 0
     for medicine_id in medicine_ids:
-        if add_medicine_to_customer_cart(session["user"]["id"], medicine_id, 1):
+        if add_medicine_to_customer_cart(flask.session["user"]["id"], medicine_id, 1):
             added_count += 1
 
     flash(f"{added_count} buy again item{'s' if added_count != 1 else ''} added to cart." if added_count else "No buy again medicines are currently available.")
-    return redirect("/cart" if added_count else "/reorder_subscription")
+    return flask.redirect("/cart" if added_count else "/reorder_subscription")
 
 
 @app.route("/subscriptions/create", methods=["POST"])
 def create_subscription():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_subscription_schema()
-    user_id = session["user"]["id"]
-    medicine_ids = [medicine_id for medicine_id in request.form.getlist("medicine_ids") if medicine_id]
+    user_id = flask.session["user"]["id"]
+    medicine_ids = [medicine_id for medicine_id in flask.request.form.getlist("medicine_ids") if medicine_id]
     if not medicine_ids:
-        single_medicine_id = request.form.get("medicine_id")
+        single_medicine_id = flask.request.form.get("medicine_id")
         medicine_ids = [single_medicine_id] if single_medicine_id else []
     if not medicine_ids:
         flash("Please select at least one medicine to subscribe.")
-        return redirect("/reorder_subscription")
+        return flask.redirect("/reorder_subscription")
 
     try:
-        quantity = max(1, int(request.form.get("quantity") or 1))
+        quantity = max(1, int(flask.request.form.get("quantity") or 1))
     except (TypeError, ValueError):
         quantity = 1
-    frequency_days = int(request.form.get("frequency_days") or 30)
+    frequency_days = int(flask.request.form.get("frequency_days") or 30)
     if frequency_days not in [15, 30, 45, 60, 90]:
         frequency_days = 30
-    next_refill_date = request.form.get("next_refill_date") or (datetime.now().date() + timedelta(days=frequency_days)).strftime("%Y-%m-%d")
-    auto_reorder = 1 if request.form.get("auto_reorder") == "on" else 0
-    refill_reminder = 1 if request.form.get("refill_reminder") == "on" else 0
-    repeat_prescription_request_id = request.form.get("prescription_request_id") or None
+    next_refill_date = flask.request.form.get("next_refill_date") or (datetime.now().date() + timedelta(days=frequency_days)).strftime("%Y-%m-%d")
+    auto_reorder = 1 if flask.request.form.get("auto_reorder") == "on" else 0
+    refill_reminder = 1 if flask.request.form.get("refill_reminder") == "on" else 0
+    repeat_prescription_request_id = flask.request.form.get("prescription_request_id") or None
 
     db = get_db()
     cursor = db.cursor()
     saved_count = 0
     for medicine_id in medicine_ids:
         try:
-            medicine_quantity = max(1, int(request.form.get(f"quantity_{medicine_id}") or quantity))
+            medicine_quantity = max(1, int(flask.request.form.get(f"quantity_{medicine_id}") or quantity))
         except (TypeError, ValueError):
             medicine_quantity = quantity
-        cycle_value = request.form.get(f"cycle_{medicine_id}") or str(frequency_days)
+        cycle_value = flask.request.form.get(f"cycle_{medicine_id}") or str(frequency_days)
         cycle_match = re.search(r"\d+", cycle_value)
         medicine_frequency_days = int(cycle_match.group(0)) if cycle_match else frequency_days
         if medicine_frequency_days not in [15, 30, 45, 60, 90]:
@@ -5146,16 +5146,16 @@ def create_subscription():
     db.commit()
     cursor.close()
     flash(f"{saved_count} monthly medicine subscription{'s' if saved_count != 1 else ''} saved.")
-    return redirect("/reorder_subscription")
+    return flask.redirect("/reorder_subscription")
 
 
 @app.route("/subscriptions/<int:subscription_id>/cart", methods=["POST"])
 def subscription_to_cart(subscription_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_subscription_schema()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     db = get_db()
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -5170,18 +5170,18 @@ def subscription_to_cart(subscription_id):
 
     added = add_medicine_to_customer_cart(user_id, subscription["medicine_id"], subscription["quantity"])
     flash("Subscription medicine added to cart." if added else "Subscription medicine is currently out of stock.")
-    return redirect("/cart" if added else "/reorder_subscription")
+    return flask.redirect("/cart" if added else "/reorder_subscription")
 
 
 @app.route("/subscriptions/<int:subscription_id>/status", methods=["POST"])
 def update_subscription_status(subscription_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    action = request.form.get("action")
+    action = flask.request.form.get("action")
     if action not in ["Active", "Paused", "Cancelled"]:
         flash("Invalid subscription action.")
-        return redirect("/reorder_subscription")
+        return flask.redirect("/reorder_subscription")
 
     ensure_subscription_schema()
     db = get_db()
@@ -5191,26 +5191,26 @@ def update_subscription_status(subscription_id):
         SET status=%s,
             updated_at=%s
         WHERE id=%s AND user_id=%s
-    """, (action, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), subscription_id, session["user"]["id"]))
+    """, (action, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), subscription_id, flask.session["user"]["id"]))
     db.commit()
     cursor.close()
     flash(f"Subscription marked as {action}.")
-    return redirect("/reorder_subscription")
+    return flask.redirect("/reorder_subscription")
 
 
 @app.route("/repeat_prescription_order/<int:request_id>")
 def repeat_prescription_order(request_id):
-    return redirect(f"/add_prescription_to_cart/{request_id}")
+    return flask.redirect(f"/add_prescription_to_cart/{request_id}")
 
 
 @app.route("/return_order/<int:order_id>")
 def return_order(order_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_payment_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         SELECT status, return_status
@@ -5226,7 +5226,7 @@ def return_order(order_id):
     if order["status"] != "Delivered":
         cursor.close()
         flash("Only delivered orders can be returned.")
-        return redirect("/my_orders")
+        return flask.redirect("/my_orders")
 
     cursor.execute("""
         UPDATE orders
@@ -5237,19 +5237,19 @@ def return_order(order_id):
     db.commit()
     cursor.close()
     flash("Return request submitted. Refund status is now Processing.")
-    return redirect(f"/order_details/{order_id}")
+    return flask.redirect(f"/order_details/{order_id}")
 
 
 @app.route("/verify_payment/<int:payment_id>", methods=["POST"])
 def verify_payment(payment_id):
-    if "user" not in session or session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/login")
+    if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/login")
 
     ensure_payment_schema()
-    action = request.form.get("action")
+    action = flask.request.form.get("action")
     if action not in ["Verified", "Rejected"]:
         flash("Invalid payment action.")
-        return redirect("/staff#orders")
+        return flask.redirect("/staff#orders")
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -5258,7 +5258,7 @@ def verify_payment(payment_id):
     if not payment:
         cursor.close()
         flash("Payment record not found.")
-        return redirect("/staff#orders")
+        return flask.redirect("/staff#orders")
 
     cursor.execute("""
         UPDATE payments
@@ -5269,7 +5269,7 @@ def verify_payment(payment_id):
     """, (
         action,
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        session["user"]["id"],
+        flask.session["user"]["id"],
         payment_id
     ))
     cursor.execute("""
@@ -5280,7 +5280,7 @@ def verify_payment(payment_id):
     db.commit()
     cursor.close()
     flash(f"Payment marked as {action}.")
-    return redirect("/staff#orders")
+    return flask.redirect("/staff#orders")
 
 
 def build_customer_dashboard_context(db, user_id):
@@ -5409,12 +5409,12 @@ def build_customer_dashboard_context(db, user_id):
 # ================= CANCEL ORDER =================
 @app.route("/cancel_order/<int:order_id>")
 def cancel_order(order_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     ensure_order_management_schema()
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
 
     cursor = db.cursor(dictionary=True)
@@ -5429,7 +5429,7 @@ def cancel_order(order_id):
 
     if order["status"] not in ["Pending", "Approved"]:
         flash("This order cannot be cancelled at the current status.")
-        return redirect("/my_orders")
+        return flask.redirect("/my_orders")
 
 
     cursor = db.cursor(dictionary=True)
@@ -5458,12 +5458,12 @@ def cancel_order(order_id):
 
     db.commit()
     cursor.close()
-    return redirect("/my_orders")
+    return flask.redirect("/my_orders")
 # ================= DELIVER ORDER (ADD HERE) =================
 @app.route("/deliver_order/<int:id>")
 def deliver_order(id):
-    if "user" not in session or session["user"]["role"] != "staff":
-        return redirect("/login")
+    if "user" not in flask.session or flask.session["user"]["role"] != "staff":
+        return flask.redirect("/login")
 
     ensure_delivery_feature_schema()
     db = get_db()
@@ -5480,19 +5480,19 @@ def deliver_order(id):
     db.commit()
     cursor.close()
 
-    return redirect("/staff")
+    return flask.redirect("/staff")
 
 
 @app.route("/update_order_status/<int:order_id>", methods=["POST"])
 def update_order_status(order_id):
-    if "user" not in session or session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/login")
+    if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/login")
 
     ensure_delivery_feature_schema()
-    status = request.form.get("status")
+    status = flask.request.form.get("status")
     if status not in ORDER_STATUSES:
         flash("Invalid order status.")
-        return redirect("/staff#orders")
+        return flask.redirect("/staff#orders")
 
     refund_status = "Not Applicable"
     return_status = "Not Requested"
@@ -5502,11 +5502,11 @@ def update_order_status(order_id):
     elif status == "Cancelled":
         refund_status = "Not Applicable"
 
-    courier_name = (request.form.get("courier_name") or "").strip()
-    courier_tracking_id = (request.form.get("courier_tracking_id") or "").strip()
-    courier_tracking_url = (request.form.get("courier_tracking_url") or "").strip()
-    delivery_notes = (request.form.get("delivery_notes") or "").strip()
-    submitted_delivery_otp = (request.form.get("delivery_otp") or "").strip()
+    courier_name = (flask.request.form.get("courier_name") or "").strip()
+    courier_tracking_id = (flask.request.form.get("courier_tracking_id") or "").strip()
+    courier_tracking_url = (flask.request.form.get("courier_tracking_url") or "").strip()
+    delivery_notes = (flask.request.form.get("delivery_notes") or "").strip()
+    submitted_delivery_otp = (flask.request.form.get("delivery_otp") or "").strip()
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -5516,7 +5516,7 @@ def update_order_status(order_id):
     if status == "Delivered" and existing_order.get("delivery_otp") and submitted_delivery_otp != existing_order["delivery_otp"]:
         cursor.close()
         flash("Delivery OTP is required to mark this order as Delivered.")
-        return redirect("/staff#orders")
+        return flask.redirect("/staff#orders")
 
     cursor.execute("""
         UPDATE orders
@@ -5548,13 +5548,13 @@ def update_order_status(order_id):
     db.commit()
     cursor.close()
     flash(f"Order #{order_id} updated to {status}.")
-    return redirect("/staff#orders")
+    return flask.redirect("/staff#orders")
 # ================= OWNER DASHBOARD =================
 @app.route("/owner_dashboard")
 def owner_dashboard():
 
-    if "user" not in session or session["user"]["role"] != "owner":
-        return redirect("/login")
+    if "user" not in flask.session or flask.session["user"]["role"] != "owner":
+        return flask.redirect("/login")
 
     db = get_db()
 
@@ -5574,7 +5574,7 @@ def owner_dashboard():
 
     # ================= USER SEARCH =================
 
-    user_search = request.args.get("user_search", "")
+    user_search = flask.request.args.get("user_search", "")
 
     if user_search:
 
@@ -5918,7 +5918,7 @@ def owner_dashboard():
 
     # ================= RENDER =================
 
-    response = make_response(render_template(
+    response = flask.make_response(flask.render_template(
 
         "owner_dashboard.html",
 
@@ -5956,12 +5956,12 @@ def owner_dashboard():
 @app.route("/staff")
 def staff_dashboard():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     # allow BOTH owner and staff
-    if session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
 
     ensure_payment_schema()
     db = get_db()
@@ -6032,7 +6032,7 @@ def staff_dashboard():
     total_medicines = cursor.fetchone()[0]
     cursor.close()
 
-    return render_template(
+    return flask.render_template(
         "staff.html",
         medicines=medicines,
         orders=orders,
@@ -6051,27 +6051,27 @@ def staff_dashboard():
 @app.route("/add_medicine", methods=["POST"])
 def add_medicine():
     
-    department = request.form.get("department") or "General"
-    if "user" not in session:
-        return redirect("/login")
+    department = flask.request.form.get("department") or "General"
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
 
     try:
 
-        name = request.form.get("name")
+        name = flask.request.form.get("name")
         department, prescription_required = classify_medicine(name)
-        category = normalize_category(request.form.get("category"))
-        price = request.form.get("price")
-        stock = request.form.get("stock")
-        expiry = request.form.get("expiry")
-        barcode_number = request.form.get("barcode")
+        category = normalize_category(flask.request.form.get("category"))
+        price = flask.request.form.get("price")
+        stock = flask.request.form.get("stock")
+        expiry = flask.request.form.get("expiry")
+        barcode_number = flask.request.form.get("barcode")
  
         image_url = None
 
         # ================= IMAGE UPLOAD =================
 
-        file = request.files.get("image")
+        file = flask.request.files.get("image")
 
         if file and file.filename != "":
 
@@ -6131,18 +6131,18 @@ def add_medicine():
 
         flash(f"Error: {e}")
 
-    return redirect("/staff")
+    return flask.redirect("/staff")
 #------------bulk upload medicine-----------
 @app.route("/bulk_upload", methods=["POST"])
 def bulk_upload():
     db = get_db()
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["owner","staff"]:
-       return redirect("/")
+    if flask.session["user"]["role"] not in ["owner","staff"]:
+       return flask.redirect("/")
     try:
-        file = request.files.get("file")
+        file = flask.request.files.get("file")
 
         if not file:
             return "No file selected"
@@ -6203,7 +6203,7 @@ def bulk_upload():
         # ---------------- MESSAGE ----------------
         flash(f"{inserted} medicines uploaded successfully, {skipped} skipped (duplicates)")
 
-        return redirect("/staff")
+        return flask.redirect("/staff")
 
     except Exception as e:
         db.rollback()
@@ -6212,9 +6212,9 @@ def bulk_upload():
 @app.route("/edit_medicine/<int:id>", methods=["POST"])
 def edit_medicine(id):
     db = get_db()
-    data = request.form
-    if "user" not in session:
-        return redirect("/login")
+    data = flask.request.form
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -6232,27 +6232,27 @@ def edit_medicine(id):
 
     db.commit()
     cursor.close()
-    return redirect("/staff")
+    return flask.redirect("/staff")
 #------------del medicine fuc---------
 @app.route("/delete_medicine/<int:id>")
 def delete_medicine(id):
     db = get_db()
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("DELETE FROM medicines WHERE id=%s", (id,))
     db.commit()
     cursor.close()
 
-    return redirect("/staff")
+    return flask.redirect("/staff")
 
 # ================= REMOVE STAFF =================
 @app.route("/remove_staff/<int:id>")
 def remove_staff(id):
 
-    if "user" not in session or session["user"]["role"] != "owner":
-        return redirect("/login")
+    if "user" not in flask.session or flask.session["user"]["role"] != "owner":
+        return flask.redirect("/login")
 
     db = get_db()
 
@@ -6283,28 +6283,28 @@ def remove_staff(id):
         db.commit()
         cursor.close()
 
-    return redirect("/owner_dashboard")
+    return flask.redirect("/owner_dashboard")
 # ================= BARCODE SCANNER =================
 @app.route("/scan_barcode")
 def scan_barcode():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
 
-    return render_template("scan_barcode.html")
+    return flask.render_template("scan_barcode.html")
 
 
 @app.route("/barcode_result/<barcode>")
 def barcode_result(barcode):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
 
     db = get_db()
 
@@ -6317,31 +6317,31 @@ def barcode_result(barcode):
     cursor.close()
 
     if medicine:
-        return render_template("barcode_result.html", medicine=medicine)
+        return flask.render_template("barcode_result.html", medicine=medicine)
 
-    return redirect(f"/add_scanned_medicine/{barcode}")
+    return flask.redirect(f"/add_scanned_medicine/{barcode}")
 
 
 @app.route("/add_scanned_medicine/<barcode>", methods=["GET", "POST"])
 def add_scanned_medicine(barcode):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
 
     db = get_db()
 
-    if request.method == "POST":
+    if flask.request.method == "POST":
 
         try:
-            name = request.form.get("name")
-            category = normalize_category(request.form.get("category"))
-            price = request.form.get("price")
-            stock = request.form.get("stock")
-            expiry = request.form.get("expiry")
-            barcode_number = request.form.get("barcode")
+            name = flask.request.form.get("name")
+            category = normalize_category(flask.request.form.get("category"))
+            price = flask.request.form.get("price")
+            stock = flask.request.form.get("stock")
+            expiry = flask.request.form.get("expiry")
+            barcode_number = flask.request.form.get("barcode")
 
             if barcode_number:
                 generate_barcode_image(barcode_number)
@@ -6371,23 +6371,23 @@ def add_scanned_medicine(barcode):
             cursor.close()
 
             flash("New scanned medicine added successfully")
-            return redirect("/staff")
+            return flask.redirect("/staff")
 
         except Exception as e:
             db.rollback()
             flash(f"Error: {e}")
-            return redirect(f"/add_scanned_medicine/{barcode}")
+            return flask.redirect(f"/add_scanned_medicine/{barcode}")
 
-    return render_template("add_scanned_medicine.html", barcode=barcode)
+    return flask.render_template("add_scanned_medicine.html", barcode=barcode)
 # ================= GENERATE BARCODES FOR EXISTING MEDICINES =================
 @app.route("/generate_all_barcodes")
 def generate_all_barcodes():
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["owner", "staff"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
 
     db = get_db()
 
@@ -6429,7 +6429,7 @@ def generate_all_barcodes():
         db.rollback()
         flash(f"Barcode generation failed: {e}")
 
-    return redirect("/staff#inventory")
+    return flask.redirect("/staff#inventory")
 
 GENERIC_MEDICINE_WORDS = {
     "tablet", "tablets", "tab", "tabs", "capsule", "capsules", "cap", "caps",
@@ -6534,17 +6534,17 @@ def detect_medicines_from_text(text, max_matches=5, min_score=72):
 
 @app.route("/upload_prescription", methods=["GET", "POST"])
 def upload_prescription():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
-    if request.method == "POST":
-        prescription = request.files.get("prescription")
+    if flask.request.method == "POST":
+        prescription = flask.request.files.get("prescription")
 
         if not prescription or prescription.filename == "":
             flash("Please upload a prescription file", "error")
-            return redirect("/upload_prescription")
+            return flask.redirect("/upload_prescription")
 
         allowed_extensions = {"png", "jpg", "jpeg", "webp", "pdf"}
 
@@ -6553,7 +6553,7 @@ def upload_prescription():
 
         if ext not in allowed_extensions:
             flash("Only PNG, JPG, JPEG, WEBP, and PDF files are allowed", "error")
-            return redirect("/upload_prescription")
+            return flask.redirect("/upload_prescription")
 
         os.makedirs(PRESCRIPTION_FOLDER, exist_ok=True)
 
@@ -6579,7 +6579,7 @@ def upload_prescription():
         db = get_db()
         cursor = db.cursor()
         family_members = get_family_members_for_user(user_id)
-        selected_family_member_id = (request.form.get("family_member_id") or "").strip()
+        selected_family_member_id = (flask.request.form.get("family_member_id") or "").strip()
         family_member_id = normalize_family_member_selection(selected_family_member_id, family_members)
 
         cursor.execute("""
@@ -6599,21 +6599,21 @@ def upload_prescription():
         cursor.close()
 
         flash("Prescription uploaded successfully. Staff will review it shortly.", "success")
-        return redirect("/my_prescriptions")
+        return flask.redirect("/my_prescriptions")
 
     family_members = get_family_member_options(user_id)
-    return render_template("upload_prescription.html", family_members=family_members)
+    return flask.render_template("upload_prescription.html", family_members=family_members)
 
 
 @app.route("/download_prescription/<int:request_id>")
 def download_prescription(request_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
-    if session["user"].get("role") in ["staff", "owner"]:
+    if flask.session["user"].get("role") in ["staff", "owner"]:
         cursor.execute("""
             SELECT prescription_image
             FROM prescription_requests
@@ -6624,7 +6624,7 @@ def download_prescription(request_id):
             SELECT prescription_image
             FROM prescription_requests
             WHERE id=%s AND user_id=%s
-        """, (request_id, session["user"]["id"]))
+        """, (request_id, flask.session["user"]["id"]))
 
     prescription = cursor.fetchone()
     cursor.close()
@@ -6649,8 +6649,8 @@ def download_prescription(request_id):
 
 @app.route("/delete_prescription/<int:request_id>", methods=["POST"])
 def delete_prescription(request_id):
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -6658,19 +6658,19 @@ def delete_prescription(request_id):
         SELECT prescription_image
         FROM prescription_requests
         WHERE id=%s AND user_id=%s
-    """, (request_id, session["user"]["id"]))
+    """, (request_id, flask.session["user"]["id"]))
 
     prescription = cursor.fetchone()
 
     if not prescription:
         cursor.close()
         flash("Prescription request not found", "error")
-        return redirect("/my_prescriptions")
+        return flask.redirect("/my_prescriptions")
 
     cursor.execute("""
         DELETE FROM prescription_requests
         WHERE id=%s AND user_id=%s
-    """, (request_id, session["user"]["id"]))
+    """, (request_id, flask.session["user"]["id"]))
     db.commit()
     cursor.close()
 
@@ -6684,14 +6684,14 @@ def delete_prescription(request_id):
             pass
 
     flash("Prescription deleted successfully", "success")
-    return redirect("/my_prescriptions")
+    return flask.redirect("/my_prescriptions")
 # ====================== customer prescription status =======================
 @app.route("/my_prescriptions")
 def my_prescriptions():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -6714,16 +6714,16 @@ def my_prescriptions():
             "For Myself"
         )
 
-    return render_template("my_prescriptions.html", requests_data=requests_data)
+    return flask.render_template("my_prescriptions.html", requests_data=requests_data)
 # ============================ checkout prescription ===============================
 @app.route("/checkout_prescription/<int:request_id>")
 def checkout_prescription(request_id):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -6739,9 +6739,9 @@ def checkout_prescription(request_id):
 
     if not prescription:
         flash("Invalid prescription checkout")
-        return redirect("/my_prescriptions")
+        return flask.redirect("/my_prescriptions")
 
-    return render_template(
+    return flask.render_template(
         "checkout_prescription.html",
         prescription=prescription
     )
@@ -6749,11 +6749,11 @@ def checkout_prescription(request_id):
 @app.route("/add_prescription_to_cart/<int:request_id>")
 def add_prescription_to_cart(request_id):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -6769,7 +6769,7 @@ def add_prescription_to_cart(request_id):
     if not prescription or not prescription["approved_medicines"]:
         flash("No approved medicines found")
         cursor.close()
-        return redirect("/my_prescriptions")
+        return flask.redirect("/my_prescriptions")
 
     medicine_names = [
         x.strip()
@@ -6822,15 +6822,15 @@ def add_prescription_to_cart(request_id):
     cursor.close()
 
     flash(f"{added} approved medicines added to cart")
-    return redirect("/cart")
+    return flask.redirect("/cart")
 # ========================== staff priscription request =============================
 @app.route("/staff_prescriptions")
 def staff_prescriptions():
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["staff", "owner"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["staff", "owner"]:
+        return flask.redirect("/")
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -6848,23 +6848,23 @@ def staff_prescriptions():
     requests_data = cursor.fetchall()
     cursor.close()
 
-    return render_template("staff_prescriptions.html", requests_data=requests_data)
+    return flask.render_template("staff_prescriptions.html", requests_data=requests_data)
 # ================================== approve/reject route ==============================
 @app.route("/review_prescription/<int:request_id>", methods=["POST"])
 def review_prescription(request_id):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
-    if session["user"]["role"] not in ["staff", "owner"]:
-        return redirect("/")
+    if flask.session["user"]["role"] not in ["staff", "owner"]:
+        return flask.redirect("/")
 
-    action = request.form.get("action")
-    staff_note = request.form.get("staff_note", "")
+    action = flask.request.form.get("action")
+    staff_note = flask.request.form.get("staff_note", "")
 
     if action not in ["Approved", "Rejected"]:
         flash("Invalid action", "error")
-        return redirect("/staff_prescriptions")
+        return flask.redirect("/staff_prescriptions")
 
     db = get_db()
 
@@ -6882,7 +6882,7 @@ def review_prescription(request_id):
         if not prescription:
             flash("Prescription request not found", "error")
             cursor.close()
-            return redirect("/staff_prescriptions")
+            return flask.redirect("/staff_prescriptions")
 
         if action == "Rejected":
             cursor.execute("""
@@ -6901,10 +6901,10 @@ def review_prescription(request_id):
             cursor.close()
 
             flash("Prescription rejected successfully", "success")
-            return redirect("/staff_prescriptions")
+            return flask.redirect("/staff_prescriptions")
 
-        selected_medicines = request.form.getlist("selected_medicines")
-        manual_medicines = request.form.get("manual_medicines", "")
+        selected_medicines = flask.request.form.getlist("selected_medicines")
+        manual_medicines = flask.request.form.get("manual_medicines", "")
 
         medicine_names = []
 
@@ -6926,7 +6926,7 @@ def review_prescription(request_id):
         if not medicine_names:
             flash("Please select at least one medicine before approval.", "error")
             cursor.close()
-            return redirect("/staff_prescriptions")
+            return flask.redirect("/staff_prescriptions")
 
         approved_text = ", ".join(medicine_names)
 
@@ -6948,18 +6948,18 @@ def review_prescription(request_id):
         cursor.close()
 
         flash("Prescription approved. Customer can now proceed to checkout.", "success")
-        return redirect("/staff_prescriptions")
+        return flask.redirect("/staff_prescriptions")
 
     except Exception as e:
         db.rollback()
         flash(f"Review failed: {e}", "error")
-        return redirect("/staff_prescriptions")
+        return flask.redirect("/staff_prescriptions")
 # ================= Types of medicines ================
 @app.route("/type/<medicine_type>")
 def medicine_type_page(medicine_type):
 
-    if "user" not in session:
-        return redirect("/login")
+    if "user" not in flask.session:
+        return flask.redirect("/login")
 
     db = get_db()
 
@@ -6996,7 +6996,7 @@ def medicine_type_page(medicine_type):
     medicines = cursor.fetchall()
     cursor.close()
 
-    user_id = session["user"]["id"]
+    user_id = flask.session["user"]["id"]
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -7010,7 +7010,7 @@ def medicine_type_page(medicine_type):
     cart = {str(r["medicine_id"]): r["quantity"] for r in cart_rows}
     cart_count = sum(cart.values())
 
-    return render_template(
+    return flask.render_template(
         "department.html",
         medicines=medicines,
         dept_name=medicine_type,
