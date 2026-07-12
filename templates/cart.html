@@ -4,344 +4,338 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart - Yuvraj Medical</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css', v='cart-menu-fix-20260708') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css', v='cart-menu-fix-20260708') }}">
     <style>
         *{box-sizing:border-box}
         :root{
-            --ink:#162033;
-            --muted:#667085;
-            --line:#e5e7eb;
-            --panel:#ffffff;
-            --soft:#f6f8fb;
-            --brand:#7f1d4e;
-            --brand-dark:#4c1d3d;
-            --teal:#0f766e;
-            --green:#16a34a;
-            --blue:#075985;
-            --red:#991b1b;
-            --amber:#92400e;
+            --cart-primary:#0E7C66;
+            --cart-success:#16A34A;
+            --cart-bg:#F7FAFC;
+            --cart-border:#E5E7EB;
+            --cart-ink:#0F172A;
+            --cart-muted:#64748B;
+            --cart-soft:#F1F5F9;
+            --cart-blue:#2563EB;
+            --cart-pink:#BE185D;
+            --cart-red:#DC2626;
+            --cart-shadow:0 18px 45px rgba(15,23,42,.08);
+            --cart-shadow-hover:0 26px 56px rgba(15,23,42,.12);
         }
         body{
             margin:0;
             font-family:"Segoe UI",Arial,sans-serif;
-            color:var(--ink);
+            color:var(--cart-ink);
             background:
-                radial-gradient(circle at 8% 0%,rgba(236,254,255,.72),transparent 34%),
-                radial-gradient(circle at 100% 14%,rgba(254,243,199,.62),transparent 30%),
-                linear-gradient(135deg,#fffaf0,#f7fafc 54%,#fff7ed);
+                radial-gradient(circle at 8% 4%,rgba(14,124,102,.10),transparent 28%),
+                radial-gradient(circle at 90% 14%,rgba(24,169,153,.08),transparent 24%),
+                var(--cart-bg) !important;
             background-attachment:fixed;
         }
+        body.yvm-pro-page::before{opacity:.35}
+        body.yvm-page-cart .wrap::before,
+        body.yvm-page-cart .panel::before,
+        body.yvm-page-cart .summary::before,
+        body.yvm-page-cart .cart-item::before,
+        body.yvm-page-cart .product-card::before,
+        body.yvm-page-cart .trust-card::before{display:none!important}
+        body.yvm-page-cart .panel,
+        body.yvm-page-cart .summary,
+        body.yvm-page-cart .cart-item,
+        body.yvm-page-cart .product-card,
+        body.yvm-page-cart .trust-card{background:#fff!important}
+        body.yvm-page-cart .yvm-side-overlay{display:block!important}
+        body.yvm-page-cart .yvm-side-panel{display:flex!important}
         a{text-decoration:none;color:inherit}
-        .header{
-            position:sticky;
-            top:0;
-            z-index:20;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:18px;
-            padding:12px 5vw;
-            color:#fff7ed;
-            background:
-                radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
-                linear-gradient(135deg,rgba(76,29,61,.96) 0%,rgba(127,29,78,.96) 52%,rgba(159,58,74,.96) 100%);
-            border-bottom:1px solid rgba(253,230,138,.32);
-            box-shadow:0 12px 34px rgba(76,29,61,.28);
+        .wrap{
+            width:min(1360px,calc(100% - 44px));
+            margin:26px auto 56px;
         }
-        .brand{display:flex;align-items:center;gap:12px;font-weight:950}
-        .brand img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 7px 12px rgba(0,0,0,.28))}
-        .brand strong{display:block;font-size:18px;letter-spacing:.2px}
-        .brand span{display:block;color:#fde68a;font-size:12px;font-weight:800}
-        .nav{display:flex;gap:9px;flex-wrap:wrap}
-        .nav a{
-            display:inline-flex;
-            min-height:38px;
-            align-items:center;
-            padding:8px 13px;
-            border-radius:999px;
-            background:rgba(255,255,255,.14);
-            border:1px solid rgba(253,230,138,.22);
-            font-weight:850;
-            transition:.2s ease;
+        @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+        .breadcrumb{display:flex;gap:8px;align-items:center;margin-bottom:10px;color:var(--cart-muted);font-size:13px;font-weight:750}
+        .breadcrumb a{color:var(--cart-primary)}
+        .page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:16px}
+        .page-title{display:flex;align-items:center;gap:12px;margin:0;font-size:34px;line-height:1.1;letter-spacing:0}
+        .item-badge,.stock-badge,.coupon-chip{
+            display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:6px 10px;border-radius:999px;
+            color:#047857;background:#ECFDF5;border:1px solid #BBF7D0;font-size:12px;font-weight:900;white-space:nowrap;
         }
-        .nav a:hover{background:#fff7ed;color:#6f1d49;transform:translateY(-1px)}
-        .wrap{width:min(1180px,calc(100% - 28px));margin:24px auto 52px}
-        .hero{
-            display:grid;
-            grid-template-columns:minmax(0,1fr) auto;
-            gap:18px;
-            align-items:end;
-            padding:24px;
-            border-radius:8px;
-            background:rgba(255,255,255,.92);
-            border:1px solid rgba(229,231,235,.95);
-            box-shadow:0 18px 44px rgba(15,23,42,.08);
+        .page-copy{margin:7px 0 0;color:var(--cart-muted);font-weight:700;line-height:1.45}
+        .top-metrics{display:grid;grid-template-columns:repeat(3,minmax(96px,1fr));gap:10px;min-width:360px}
+        .metric{padding:12px;border:1px solid var(--cart-border);border-radius:18px;background:#fff;box-shadow:0 10px 26px rgba(15,23,42,.05);text-align:center}
+        .metric b{display:block;color:var(--cart-primary);font-size:17px}
+        .metric span{display:block;margin-top:3px;color:var(--cart-muted);font-size:12px;font-weight:800}
+        .flash{margin:12px 0;padding:12px 14px;border-radius:16px;background:#ECFDF5;border:1px solid #BBF7D0;color:#14532D;font-weight:800}
+        .visual-hero{
+            position:relative;display:flex;align-items:center;min-height:320px;margin:0 0 18px;padding:42px 46px;
+            border:1px solid rgba(209,250,229,.9);border-radius:24px;
+            background-image:url("{{ url_for('static', filename='images/cart-ai-hero-wide.png') }}");
+            background-size:cover;background-position:center right;
+            box-shadow:0 18px 44px rgba(15,23,42,.08);overflow:hidden
         }
-        .eyebrow{
-            display:inline-flex;
-            margin-bottom:10px;
-            padding:7px 10px;
-            border-radius:999px;
-            color:#075985;
-            background:#ecfeff;
-            border:1px solid #bae6fd;
-            font-size:12px;
-            font-weight:950;
+        .visual-hero::before{
+            content:"";position:absolute;inset:0;
+            background:linear-gradient(90deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.88) 36%,rgba(255,255,255,.52) 58%,rgba(255,255,255,.08) 100%);
         }
-        .hero h1{margin:0;font-size:32px;line-height:1.15}
-        .hero p{margin:9px 0 0;color:var(--muted);font-weight:750;line-height:1.55}
-        .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-width:360px}
-        .stat{
-            padding:12px;
-            border-radius:8px;
-            background:#f8fafc;
-            border:1px solid var(--line);
-            text-align:center;
+        .visual-copy{position:relative;z-index:1;max-width:610px;padding-left:18px;border-left:5px solid #10B981}
+        .visual-copy::before{content:"";position:absolute;left:-5px;top:0;width:5px;height:52px;border-radius:999px;background:#F59E0B;box-shadow:0 12px 24px rgba(245,158,11,.22)}
+        .visual-copy h2{margin:12px 0 14px;font-size:40px;line-height:1.08;color:var(--cart-ink);text-wrap:balance}
+        .visual-copy h2 span{display:inline;color:#047857}
+        .visual-copy p{margin:0;max-width:520px;color:#334155;font-size:16px;line-height:1.65;font-weight:800}
+        .visual-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,251,235,.92);color:#92400E;font-size:12px;font-weight:950;border:1px solid #FDE68A;box-shadow:0 10px 24px rgba(146,64,14,.09)}
+        .visual-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 0 5px rgba(16,185,129,.14)}
+        .visual-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+        .visual-pills span{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.84);border:1px solid #D1FAE5;color:#0F766E;font-size:12px;font-weight:850;box-shadow:0 8px 18px rgba(15,23,42,.05)}
+        .visual-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+        .hero-action{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 15px;border-radius:999px;font-size:13px;font-weight:950;border:1px solid transparent;box-shadow:0 14px 28px rgba(15,23,42,.10);transition:.18s ease}
+        .hero-action.primary{color:#fff;background:linear-gradient(135deg,#047857,#16A34A)}
+        .hero-action.secondary{color:#065F46;background:rgba(255,255,255,.88);border-color:#A7F3D0}
+        .hero-action:hover{transform:translateY(-2px);box-shadow:0 18px 34px rgba(15,23,42,.14)}
+        .cart-hero-shell{
+            margin:0 0 24px;padding:18px 20px;border:1px solid var(--cart-border);border-radius:24px;background:rgba(255,255,255,.94);
+            box-shadow:0 18px 45px rgba(15,23,42,.08);backdrop-filter:blur(12px)
         }
-        .stat b{display:block;font-size:18px}
-        .stat span{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:850}
-        .flash{
-            margin-top:14px;
-            padding:12px 14px;
-            border-radius:8px;
-            background:#fef3c7;
-            color:#713f12;
-            border:1px solid #fde68a;
-            font-weight:850;
+        .cart-hero{display:grid;grid-template-columns:220px minmax(0,1fr) 220px;align-items:center;gap:16px}
+        .cart-brand a{display:flex;align-items:center;gap:12px}
+        .brand-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cart-primary),var(--cart-success));color:#fff;font-size:24px;font-weight:900;box-shadow:0 12px 24px rgba(14,124,102,.28)}
+        .brand-copy strong{display:block;font-size:15px;line-height:1.1}
+        .brand-copy small{display:block;margin-top:3px;color:var(--cart-muted);font-size:12px;font-weight:800}
+        .cart-search{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;border:1px solid #D1FAE5;border-radius:999px;background:#F8FFFC;box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
+        .cart-search svg{color:var(--cart-primary);flex-shrink:0}
+        .cart-search input{width:100%;border:0;outline:none;background:transparent;font-size:14px;color:var(--cart-ink)}
+        .cart-actions{display:flex;justify-content:flex-end;gap:10px}
+        .icon-pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--cart-border);border-radius:999px;background:#fff;color:var(--cart-ink);font-size:13px;font-weight:850;box-shadow:0 8px 18px rgba(15,23,42,.05)}
+        .icon-pill .icon-dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#ECFDF5;color:var(--cart-primary)}
+        .category-nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #E2E8F0}
+        .category-nav a{padding:8px 12px;border-radius:999px;font-size:13px;font-weight:850;color:#475569;background:#F8FAFC;border:1px solid var(--cart-border)}
+        .category-nav a:hover{color:var(--cart-primary);background:#ECFDF5;border-color:#BBF7D0}
+        .delivery-progress{
+            display:grid;gap:10px;margin-bottom:16px;padding:16px 18px;border:1px solid var(--cart-border);border-radius:18px;
+            background:#fff;box-shadow:var(--cart-shadow);animation:fadeUp .35s ease both;
         }
+        .progress-top{display:flex;justify-content:space-between;gap:14px;align-items:center;color:var(--cart-ink);font-weight:900}
+        .progress-top span{color:var(--cart-muted);font-size:13px;font-weight:750}
+        .progress-meter{width:100%;height:9px;border:0;border-radius:999px;overflow:hidden;background:#E2E8F0}
+        .progress-meter::-webkit-progress-bar{background:#E2E8F0;border-radius:999px}
+        .progress-meter::-webkit-progress-value{background:linear-gradient(90deg,var(--cart-primary),var(--cart-success));border-radius:999px}
+        .progress-meter::-moz-progress-bar{background:linear-gradient(90deg,var(--cart-primary),var(--cart-success));border-radius:999px}
         .layout{
             display:grid;
-            grid-template-columns:minmax(0,1fr) 354px;
-            gap:18px;
+            grid-template-columns:minmax(0,1fr) 390px;
+            gap:32px;
             align-items:start;
-            margin-top:18px;
         }
-        .panel{
-            background:rgba(255,255,255,.94);
-            border:1px solid var(--line);
-            border-radius:8px;
-            box-shadow:0 16px 40px rgba(15,23,42,.06);
-            overflow:hidden;
+        .cart-stack,.bottom-stack{display:grid;gap:16px}
+        .panel,.summary,.cart-item,.product-card,.trust-card{
+            border:1px solid var(--cart-border);border-radius:18px;background:#fff;box-shadow:var(--cart-shadow);animation:fadeUp .4s ease both;
         }
-        .stack{display:grid;gap:18px}
-        .panel-head{
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:12px;
-            padding:16px 18px;
-            border-bottom:1px solid var(--line);
-            background:#fbfdff;
-        }
-        .panel-head h2,.panel-head h3{margin:0;font-size:18px}
-        .chip{
-            display:inline-flex;
-            align-items:center;
-            white-space:nowrap;
-            padding:7px 10px;
-            border-radius:999px;
-            color:#0f766e;
-            background:#ccfbf1;
-            border:1px solid #99f6e4;
-            font-size:12px;
-            font-weight:950;
-        }
+        .panel{overflow:hidden}
+        .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--cart-border);background:#fff}
+        .panel-head h2,.panel-head h3{margin:0;font-size:18px;letter-spacing:0}
+        .section-note{margin:3px 0 0;color:var(--cart-muted);font-size:13px;font-weight:700}
         .cart-list{display:grid}
+        .cart-table-head{
+            display:grid;grid-template-columns:minmax(300px,1.9fr) 110px 142px 120px 44px;gap:14px;
+            padding:14px 18px;border-bottom:1px solid var(--cart-border);color:#64748B;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.02em;
+        }
         .cart-item{
             display:grid;
-            grid-template-columns:92px minmax(0,1fr) auto;
-            gap:16px;
-            padding:18px;
-            border-bottom:1px solid var(--line);
+            grid-template-columns:minmax(330px,1.9fr) 120px 150px 130px 48px;
+            gap:18px;
+            align-items:center;
+            padding:16px 20px;
+            border:0;
+            border-radius:0;
+            box-shadow:none;
+            border-bottom:1px solid var(--cart-border);
+            transition:.22s ease;
         }
         .cart-item:last-child{border-bottom:none}
-        .product-img,.mini-img{
-            display:grid;
-            place-items:center;
-            border-radius:8px;
-            background:#f8fafc;
-            border:1px solid var(--line);
-            overflow:hidden;
+        .cart-item:hover{transform:translateY(-3px);box-shadow:0 18px 36px rgba(15,23,42,.08);border-radius:16px}
+        .product-cell{display:grid;grid-template-columns:90px minmax(0,1fr);gap:16px;align-items:center}
+        .product-img,.mini-img,.rec-img{
+            display:grid;place-items:center;background:#fff;border:1px solid var(--cart-border);overflow:hidden;box-shadow:0 10px 24px rgba(15,23,42,.06);
         }
-        .product-img{width:92px;height:92px}
-        .product-img img,.mini-img img{width:100%;height:100%;object-fit:contain;padding:8px;background:white}
-        .item-copy h3{margin:0;font-size:17px;line-height:1.35}
-        .item-meta{
-            display:flex;
-            flex-wrap:wrap;
-            gap:8px;
-            margin:10px 0;
-            color:var(--muted);
-            font-size:13px;
-            font-weight:850;
-        }
-        .meta-pill{padding:6px 9px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0}
-        .price-line{margin:0;color:#047857;font-size:20px;font-weight:950}
-        .policy{margin:8px 0 0;color:var(--muted);font-size:13px;font-weight:700;line-height:1.45}
-        .item-side{display:grid;align-content:space-between;justify-items:end;gap:14px;min-width:170px}
-        .qty{
-            display:inline-grid;
-            grid-template-columns:38px 54px 38px;
-            min-height:38px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            overflow:hidden;
-            background:#fff;
-        }
+        .product-img{width:90px;height:90px;border-radius:18px}
+        .product-img img,.mini-img img,.rec-img img{width:100%;height:100%;object-fit:contain;padding:8px;transition:transform .2s ease}
+        .product-img:hover img,.mini-img:hover img,.rec-img:hover img{transform:scale(1.05)}
+        .item-copy h3{margin:0;font-size:17px;line-height:1.35;font-weight:900;letter-spacing:0}
+        .item-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+        .meta-pill{padding:5px 9px;border-radius:999px;background:#F8FAFC;border:1px solid var(--cart-border);color:#475569;font-size:12px;font-weight:800}
+        .stock-badge{padding:5px 9px}
+        .stock-badge.low{color:#92400E;background:#FFFBEB;border-color:#FDE68A}
+        .stock-badge.out{color:#991B1B;background:#FEF2F2;border-color:#FECACA}
+        .price-col,.total-col{display:grid;gap:5px;justify-items:start}
+        .total-col{justify-items:end}
+        .qty-col{display:grid;justify-items:center}
+        .remove-col{display:grid;justify-items:end}
+        .price-main{color:var(--cart-ink);font-size:17px;font-weight:950}
+        .total-col .price-main{color:var(--cart-success)}
+        .price-old{color:#94A3B8;font-size:13px;font-weight:800;text-decoration:line-through;text-decoration-thickness:2px}
+        .save-line{color:#047857;font-size:12px;font-weight:900}
+        .qty{display:inline-grid;grid-template-columns:34px 42px 34px;min-height:34px;border:1px solid #A7F3D0;border-radius:999px;background:#fff;overflow:hidden}
         .qty a,.qty span{display:grid;place-items:center;font-weight:950}
-        .qty a{background:#f8fafc;color:#0f172a}
-        .qty a:hover{background:#e0f2fe;color:#075985}
-        .qty span{border-left:1px solid var(--line);border-right:1px solid var(--line)}
-        .actions{display:flex;gap:8px;flex-wrap:wrap}
-        .item-side .actions{justify-content:flex-end}
-        .action-link,.checkout,.coupon button,.browse-btn{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-height:38px;
-            padding:9px 12px;
-            border-radius:8px;
-            border:1px solid transparent;
-            font-weight:950;
-            cursor:pointer;
-            transition:.2s ease;
+        .qty a{color:var(--cart-primary);background:#ECFDF5;transition:.18s ease}
+        .qty a:hover{color:#fff;background:var(--cart-primary);transform:scale(1.08)}
+        .qty span{border-left:1px solid #D1FAE5;border-right:1px solid #D1FAE5}
+        .actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+        .action-link,.checkout,.coupon button,.add-btn,.browse-btn{
+            display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:7px 11px;border:1px solid transparent;
+            border-radius:999px;font-size:12px;font-weight:900;cursor:pointer;transition:.18s ease;
         }
-        .action-link:hover,.checkout:hover,.coupon button:hover,.browse-btn:hover{transform:translateY(-1px)}
-        .danger{color:var(--red);background:#fee2e2;border-color:#fecaca}
-        .save{color:var(--blue);background:#ecfeff;border-color:#bae6fd}
-        .wish{color:#7f1d4e;background:#fce7f3;border-color:#fbcfe8}
-        .mini-list{display:grid;padding:8px 18px 18px}
-        .mini-item{
-            display:grid;
-            grid-template-columns:58px minmax(0,1fr) auto;
-            gap:12px;
-            align-items:center;
-            padding:12px 0;
-            border-bottom:1px solid var(--line);
+        .action-link:hover,.coupon button:hover,.add-btn:hover,.browse-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(15,23,42,.10)}
+        .save{color:var(--cart-blue);background:#EFF6FF;border-color:#BFDBFE}
+        .wish{color:var(--cart-pink);background:#FDF2F8;border-color:#FBCFE8}
+        .danger{color:var(--cart-red);background:#FEF2F2;border-color:#FECACA}
+        .item-copy .actions .danger{display:none}
+        .remove-icon{
+            display:grid;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid var(--cart-border);
+            color:#64748B;background:#fff;font-size:16px;font-weight:900;transition:.18s ease;
         }
-        .mini-item:last-child{border-bottom:none}
-        .mini-img{width:58px;height:58px}
-        .mini-item b{display:block;line-height:1.35}
-        .mini-item span{display:block;margin-top:4px;color:var(--muted);font-size:13px;font-weight:750}
-        .mini-item .actions{justify-content:flex-end}
+        .remove-icon:hover{color:var(--cart-red);border-color:#FECACA;background:#FEF2F2;transform:translateY(-1px)}
         .summary{
             position:sticky;
-            top:88px;
-            padding:18px;
+            top:110px;
+            padding:22px;
+            border-radius:24px;
+            background:#fff!important;
+            box-shadow:0 24px 60px rgba(15,23,42,.10);
         }
-        .summary h2{margin:0 0 14px;font-size:20px}
-        .summary-row{
-            display:flex;
-            justify-content:space-between;
-            gap:12px;
-            padding:11px 0;
-            border-bottom:1px solid var(--line);
-            color:#475569;
-            font-weight:850;
-        }
-        .summary-row.total{
-            border-bottom:none;
-            color:var(--ink);
-            font-size:21px;
-            font-weight:950;
-        }
-        .coupon{
-            margin:14px 0;
-            padding:14px;
-            border-radius:8px;
-            background:#f8fafc;
-            border:1px solid var(--line);
-        }
+        .summary-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--cart-border)}
+        .summary-head h2{margin:0;font-size:21px;letter-spacing:0}
+        .summary-head .section-note{margin-top:4px}
+        .summary-highlight{display:flex;align-items:flex-start;gap:10px;margin:14px 0 12px;padding:12px;border-radius:16px;background:linear-gradient(135deg,#ecfdf5,#f0fdf4);border:1px solid #A7F3D0}
+        .summary-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#fff;color:var(--cart-primary);box-shadow:0 10px 20px rgba(14,124,102,.14)}
+        .summary-highlight strong{display:block;font-size:14px;color:#065F46}
+        .summary-highlight span{display:block;margin-top:3px;color:#166534;font-size:12px;font-weight:750;line-height:1.4}
+        .summary-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--cart-border);color:#475569;font-weight:800}
+        .summary-row b{color:var(--cart-ink);text-align:right}
+        .summary-row.discount b,.saving-strip{color:var(--cart-success)}
+        .summary-row.total{align-items:flex-end;border-bottom:none;color:var(--cart-ink);font-weight:950}
+        .summary-row.total b{font-size:28px;color:var(--cart-primary)}
+        .saving-strip{margin:6px 0 14px;padding:11px 12px;border-radius:16px;background:#ECFDF5;border:1px solid #BBF7D0;font-weight:950;text-align:center}
+        .coupon,.delivery-box{display:grid;gap:10px;margin-top:13px;padding:13px;border-radius:18px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border:1px solid var(--cart-border)}
+        .coupon-head{display:flex;align-items:center;gap:8px;color:#0F766E;font-size:13px;font-weight:900}
         .coupon form{display:flex;gap:8px}
-        .coupon input{
-            min-width:0;
-            flex:1;
-            padding:10px;
-            border-radius:8px;
-            border:1px solid #cbd5e1;
-            color:var(--ink);
-            font-weight:850;
-            text-transform:uppercase;
-        }
-        .coupon button{color:white;background:var(--teal)}
-        .coupon small{display:block;margin-top:8px;color:var(--muted);font-weight:750;line-height:1.45}
-        .coupon a{color:var(--brand);font-weight:950}
-        .delivery-box{
-            display:grid;
-            gap:8px;
-            margin-top:14px;
-            padding:13px;
-            border-radius:8px;
-            color:#164e63;
-            background:#ecfeff;
-            border:1px solid #bae6fd;
-            font-weight:850;
-            line-height:1.45;
-        }
-        .delivery-box span{color:var(--muted);font-size:13px;font-weight:750}
+        .coupon input{min-width:0;flex:1;min-height:40px;padding:9px 12px;border-radius:999px;border:1px solid #CBD5E1;color:var(--cart-ink);font-weight:850;text-transform:uppercase;background:#fff}
+        .coupon button{min-height:40px;color:#fff;background:linear-gradient(135deg,var(--cart-primary),var(--cart-success))}
+        .coupon small,.delivery-box span{color:var(--cart-muted);font-size:12px;font-weight:750;line-height:1.45}
+        .coupon a{color:var(--cart-primary);font-weight:950}
+        .coupon-list{display:flex;flex-wrap:wrap;gap:7px}
+        .coupon-chip{color:var(--cart-primary);background:#ECFDF5;border-color:#BBF7D0}
+        .delivery-box b{color:#164E63}
+        .secure-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+        .secure-pill{display:grid;justify-items:center;gap:4px;min-height:70px;padding:8px;border-radius:16px;background:#fff;border:1px solid var(--cart-border);color:#475569;font-size:11px;font-weight:900;text-align:center;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+        .secure-pill .secure-icon{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:#ECFDF5;color:var(--cart-primary)}
+        .secure-pill strong{font-size:11px;color:var(--cart-primary);letter-spacing:.4px}
+        .checkout-zone{position:sticky;bottom:14px;padding-top:3px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 35%)}
         .checkout{
             width:100%;
-            margin-top:14px;
-            min-height:48px;
-            color:white;
-            background:linear-gradient(135deg,#0f766e,#16a34a);
-            box-shadow:0 14px 28px rgba(22,163,74,.22);
+            margin-top:16px;
+            min-height:54px;
+            color:#fff;
+            background:linear-gradient(135deg,#059669,#16A34A);
+            box-shadow:0 18px 36px rgba(22,163,74,.28);
+            font-size:16px;
+            border-radius:12px;
         }
-        .empty{
-            padding:36px 18px;
-            text-align:center;
-            color:var(--muted);
-            font-weight:800;
-        }
-        .empty h3{margin:0 0 8px;color:var(--ink)}
-        .empty p{margin:0 auto 14px;max-width:420px;line-height:1.5}
-        .browse-btn{color:white;background:var(--teal)}
-        @media(max-width:960px){
-            .hero{grid-template-columns:1fr}
-            .hero-stats{min-width:0}
+        .checkout:hover{box-shadow:0 0 0 5px rgba(22,163,74,.12),0 22px 42px rgba(14,124,102,.32)}
+        .empty,.compact-empty{padding:24px 18px;text-align:center;color:var(--cart-muted);font-weight:800}
+        .empty h3{margin:0 0 8px;color:var(--cart-ink)}
+        .empty p{margin:0 auto 14px;max-width:430px;line-height:1.5}
+        .empty-mark{display:inline-grid;place-items:center;width:38px;height:38px;margin-bottom:8px;border-radius:14px;background:#ECFDF5;color:var(--cart-primary);font-weight:950}
+        .browse-btn{color:#fff;background:var(--cart-primary)}
+        .mini-list{display:grid;padding:4px 18px 8px}
+        .mini-item{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--cart-border)}
+        .mini-item:last-child{border-bottom:none}
+        .mini-img{width:54px;height:54px;border-radius:16px}
+        .mini-item b{display:block;line-height:1.35}
+        .mini-item span{display:block;margin-top:3px;color:var(--cart-muted);font-size:13px;font-weight:750}
+        .bottom-stack{margin-top:22px}
+        .slider{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(190px,230px);gap:12px;overflow-x:auto;padding:16px;scroll-snap-type:x proximity}
+        .recommended-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding:16px}
+        .product-card{display:grid;gap:10px;padding:14px;border:1px solid var(--cart-border);border-radius:18px;background:linear-gradient(180deg,#ffffff,#fcfeff);box-shadow:0 12px 28px rgba(15,23,42,.06);transition:.2s ease}
+        .product-card:hover{transform:translateY(-6px);box-shadow:var(--cart-shadow-hover)}
+        .rec-img{width:76px;height:76px;border-radius:16px}
+        .product-card strong{line-height:1.35;font-size:14px}
+        .product-card .rec-price{color:var(--cart-success);font-weight:950}
+        .rec-bottom{display:flex;gap:8px;align-items:center;justify-content:space-between}
+        .stock-mini{padding:5px 8px;border-radius:999px;background:#ECFDF5;color:#047857;border:1px solid #BBF7D0;font-size:11px;font-weight:900}
+        .add-btn{color:#fff;background:var(--cart-primary)}
+        .trust-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:8px}
+        .trust-card{display:grid;grid-template-columns:52px 1fr;align-items:center;gap:12px;padding:16px 16px;border-radius:18px;background:linear-gradient(135deg,#ffffff,#ecfdf5)!important;border:1px solid #D1FAE5;box-shadow:0 10px 26px rgba(15,23,42,.05)}
+        .trust-card .trust-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:#fff;color:var(--cart-primary);box-shadow:0 10px 18px rgba(14,124,102,.12)}
+        .trust-card b{font-size:15px;color:var(--cart-ink)}
+        .trust-card span{color:var(--cart-muted);font-size:12px;font-weight:750;line-height:1.4}
+        @media(max-width:980px){
+            .page-head{display:grid}
+            .top-metrics{min-width:0}
             .layout{grid-template-columns:1fr}
             .summary{position:static}
+            .cart-hero{grid-template-columns:1fr}
+            .cart-actions{justify-content:flex-start}
+            .recommended-grid,.trust-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
         }
-        @media(max-width:720px){
-            .header{align-items:flex-start;flex-direction:column}
-            .hero-stats{grid-template-columns:1fr}
-            .cart-item{grid-template-columns:74px minmax(0,1fr)}
+        @media(max-width:760px){
+            .wrap{width:min(100% - 22px,1220px);margin-top:18px}
+            .page-title{font-size:30px}
+            .visual-hero{min-height:430px;padding:28px 22px;align-items:flex-start;background-position:64% center}
+            .visual-hero::before{background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.86) 48%,rgba(255,255,255,.22) 100%)}
+            .visual-copy h2{font-size:30px}
+            .visual-copy{padding-left:14px}
+            .top-metrics{grid-template-columns:1fr}
+            .cart-table-head{display:none}
+            .cart-item{grid-template-columns:1fr;align-items:start}
+            .product-cell{grid-template-columns:74px minmax(0,1fr)}
             .product-img{width:74px;height:74px}
-            .item-side{grid-column:1 / -1;justify-items:start;min-width:0}
-            .item-side .actions{justify-content:flex-start}
+            .price-col,.total-col,.qty-col,.remove-col{justify-items:start}
+            .remove-col{display:none}
+            .item-copy .actions .danger{display:inline-flex}
+            .actions{justify-content:flex-start;width:100%}
+            .action-link,.add-btn{width:100%}
+            .coupon form{flex-direction:column}
+            .secure-row,.recommended-grid,.trust-strip{grid-template-columns:1fr}
             .mini-item{grid-template-columns:50px minmax(0,1fr)}
             .mini-img{width:50px;height:50px}
             .mini-item .actions{grid-column:1 / -1;justify-content:flex-start}
-            .coupon form{flex-direction:column}
         }
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-cart">
- 
-<div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-    
+
 {% include "partials/site_header.html" %}
 
 <main class="wrap">
-    <section class="hero">
+    <section class="page-head">
         <div>
-            <span class="eyebrow">Cart Management</span>
-            <h1>Your Medicine Cart</h1>
-            <p>Review pack quantities, keep future medicines saved, and apply eligible delivery offers before checkout.</p>
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span>&gt;</span>
+                <span>Cart</span>
+            </nav>
+            <h1 class="page-title">My Cart <span class="item-badge">{{ items|length }} Item{% if items|length != 1 %}s{% endif %}</span></h1>
+            <p class="page-copy">Review medicines, apply savings, and checkout securely.</p>
         </div>
-        <div class="hero-stats">
-            <div class="stat"><b>{{ items|length }}</b><span>Active items</span></div>
-            <div class="stat"><b>Rs. {{ totals.payable_total }}</b><span>Payable total</span></div>
-            <div class="stat"><b>{{ totals.estimated_delivery }}</b><span>Delivery</span></div>
+    </section>
+
+    <section class="visual-hero" aria-label="Cart checkout hero">
+        <div class="visual-copy">
+            <span class="visual-eyebrow">Ready for checkout</span>
+            <h2>Trusted medicines, fast delivery, and <span>secure checkout</span>.</h2>
+            <p>Every order is packed with genuine products, verified stock, and support designed for a smoother pharmacy experience.</p>
+            <div class="visual-pills">
+                <span>Verified stock</span>
+                <span>Fast dispatch</span>
+                <span>Safe payments</span>
+            </div>
+            <div class="visual-actions">
+                {% if items %}
+                    <a class="hero-action primary" href="/checkout">Checkout now</a>
+                {% else %}
+                    <a class="hero-action primary" href="/">Browse medicines</a>
+                {% endif %}
+                <a class="hero-action secondary" href="/upload_prescription">Upload prescription</a>
+            </div>
         </div>
     </section>
 
@@ -353,53 +347,103 @@
         {% endif %}
     {% endwith %}
 
+    <section class="delivery-progress" aria-label="Free delivery progress">
+        <div class="progress-top">
+            {% if totals.subtotal >= 500 %}
+                <strong>Free Delivery Unlocked</strong>
+                <span>Your cart qualifies for free delivery.</span>
+            {% else %}
+                <strong>Add Rs. {{ 500 - totals.subtotal }} more for FREE delivery</strong>
+                <span>Free delivery starts at Rs. 500.</span>
+            {% endif %}
+        </div>
+        {% if totals.subtotal >= 500 %}
+            <progress class="progress-meter" max="500" value="500" aria-label="Free delivery unlocked"></progress>
+        {% else %}
+            <progress class="progress-meter" max="500" value="{{ totals.subtotal }}" aria-label="Free delivery progress"></progress>
+        {% endif %}
+    </section>
+
     <section class="layout">
-        <div class="stack">
+        <div class="cart-stack">
             <section class="panel">
                 <div class="panel-head">
-                    <h2>Active Cart</h2>
-                    <span class="chip">Pack-based orders</span>
+                    <h2>Cart Products</h2>
+                    <span class="item-badge">{{ items|length }} active</span>
                 </div>
 
                 {% if items %}
                     <div class="cart-list">
+                        <div class="cart-table-head" aria-hidden="true">
+                            <span>Product</span>
+                            <span>Price</span>
+                            <span>Quantity</span>
+                            <span>Total</span>
+                            <span></span>
+                        </div>
                         {% for item in items %}
+                            {% set stock = item.stock|default(0)|int %}
                             <article class="cart-item">
-                                <a class="product-img" href="{{ url_for('medicine_details', id=item.id) }}">
-                                    <img
-                                        src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
-                                        alt="{{ item.name }}"
-                                        data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
-                                        data-step="0"
-                                        onerror="swapMedicineImage(this)"
-                                    >
-                                </a>
-                                <div class="item-copy">
-                                    <h3>{{ item.name }}</h3>
-                                    <div class="item-meta">
-                                        <span class="meta-pill">{{ item.qty }} pack(s)</span>
-                                        <span class="meta-pill">Subtotal Rs. {{ item.subtotal }}</span>
+                                <div class="product-cell">
+                                    <a class="product-img" href="{{ url_for('medicine_details', id=item.id) }}">
+                                        <img
+                                            src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                            alt="{{ item.name }}"
+                                            data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                            data-step="0"
+                                            onerror="swapMedicineImage(this)"
+                                        >
+                                    </a>
+
+                                    <div class="item-copy">
+                                        <h3>{{ item.name }}</h3>
+                                        <div class="item-meta">
+                                            <span class="meta-pill">{{ item.category|default("General") }}</span>
+                                            <span class="meta-pill">{{ item.pack_size|default("Full pack") }}</span>
+                                            {% if stock > 10 %}
+                                                <span class="stock-badge">In stock</span>
+                                            {% elif stock > 0 %}
+                                                <span class="stock-badge low">Only {{ stock }} left</span>
+                                            {% else %}
+                                                <span class="stock-badge out">Out of stock</span>
+                                            {% endif %}
+                                            <span class="meta-pill">Expiry: {{ item.expiry_date|default('Not listed', true) }}</span>
+                                        </div>
+                                        <div class="actions">
+                                            <a class="action-link save" href="/cart/save_for_later/{{ item.id }}">Save for Later</a>
+                                            <a class="action-link wish" href="/cart/move_to_wishlist/{{ item.id }}">Wishlist</a>
+                                            <a class="action-link danger" href="/cart/remove/{{ item.id }}">Remove</a>
+                                        </div>
                                     </div>
-                                    <p class="price-line">Rs. {{ item.price }} per pack</p>
-                                    <p class="policy">Loose single tablets or partially opened packs are not sold separately online.</p>
                                 </div>
-                                <div class="item-side">
-                                    <div class="qty" aria-label="Quantity controls">
-                                        <a href="/decrease/{{ item.id }}">-</a>
+
+                                <div class="price-col">
+                                    <div class="price-main">Rs. {{ item.price }}</div>
+                                    <div class="price-old">Rs. {{ item.mrp|default(item.price) }}</div>
+                                </div>
+
+                                <div class="qty-col">
+                                    <div class="qty" aria-label="Quantity selector for {{ item.name }}">
+                                        <a href="/decrease/{{ item.id }}" aria-label="Decrease {{ item.name }}">-</a>
                                         <span>{{ item.qty }}</span>
-                                        <a href="/increase/{{ item.id }}">+</a>
+                                        <a href="/increase/{{ item.id }}" aria-label="Increase {{ item.name }}">+</a>
                                     </div>
-                                    <div class="actions">
-                                        <a class="action-link save" href="/cart/save_for_later/{{ item.id }}">Save Later</a>
-                                        <a class="action-link wish" href="/cart/move_to_wishlist/{{ item.id }}">Wishlist</a>
-                                        <a class="action-link danger" href="/cart/remove/{{ item.id }}">Remove</a>
-                                    </div>
+                                </div>
+
+                                <div class="total-col">
+                                    <div class="price-main">Rs. {{ item.subtotal|default(item.price) }}</div>
+                                    <div class="save-line">You save Rs. {{ item.discount|default(0) }}</div>
+                                </div>
+
+                                <div class="remove-col">
+                                    <a class="remove-icon" href="/cart/remove/{{ item.id }}" aria-label="Remove {{ item.name }}">x</a>
                                 </div>
                             </article>
                         {% endfor %}
                     </div>
                 {% else %}
                     <div class="empty">
+                        <span class="empty-mark">0</span>
                         <h3>Your cart is empty</h3>
                         <p>Add medicines from the catalog and they will appear here with pricing and checkout details.</p>
                         <a class="browse-btn" href="/">Browse Medicines</a>
@@ -410,7 +454,7 @@
             <section class="panel">
                 <div class="panel-head">
                     <h3>Saved For Later</h3>
-                    <span class="chip">{{ saved_items|length }} item(s)</span>
+                    <span class="item-badge">{{ saved_items|length }}</span>
                 </div>
                 <div class="mini-list">
                     {% for item in saved_items %}
@@ -426,7 +470,7 @@
                             </a>
                             <div>
                                 <b>{{ item.name }}</b>
-                                <span>Rs. {{ item.price }} · {{ item.quantity }} pack(s)</span>
+                                <span>Rs. {{ item.price }} - {{ item.quantity }} pack(s)</span>
                             </div>
                             <div class="actions">
                                 <a class="action-link save" href="/cart/move_saved_to_cart/{{ item.id }}">Move To Cart</a>
@@ -434,7 +478,7 @@
                             </div>
                         </div>
                     {% else %}
-                        <div class="empty">No saved items yet.</div>
+                        <div class="compact-empty"><span class="empty-mark">S</span><div>No saved medicines yet.</div></div>
                     {% endfor %}
                 </div>
             </section>
@@ -442,7 +486,7 @@
             <section class="panel">
                 <div class="panel-head">
                     <h3>Wishlist Preview</h3>
-                    <span class="chip">{{ wishlist_items|length }} item(s)</span>
+                    <span class="item-badge">{{ wishlist_items|length }}</span>
                 </div>
                 <div class="mini-list">
                     {% for item in wishlist_items %}
@@ -466,44 +510,209 @@
                             </div>
                         </div>
                     {% else %}
-                        <div class="empty">No wishlist items yet.</div>
+                        <div class="compact-empty"><span class="empty-mark">W</span><div>No wishlist medicines yet.</div></div>
                     {% endfor %}
                 </div>
             </section>
         </div>
 
-        <aside class="panel summary">
-            <h2>Order Summary</h2>
+        <aside class="summary">
+            <div class="summary-head">
+                <div>
+                    <h2>Order Summary</h2>
+                    <p class="section-note">Secure checkout with trusted delivery and savings.</p>
+                </div>
+                <span class="item-badge">Protected</span>
+            </div>
+            <div class="summary-highlight">
+                <div class="summary-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"></path><path d="M6 7v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7"></path><path d="M9 7V5a2 2 0 0 1 6 0v2"></path></svg>
+                </div>
+                <div>
+                    <strong>Save extra with this order</strong>
+                    <span>Free delivery, verified medicines, and smooth checkout in one place.</span>
+                </div>
+            </div>
             <div class="summary-row"><span>Subtotal</span><b>Rs. {{ totals.subtotal }}</b></div>
-            <div class="summary-row"><span>Discount</span><b>- Rs. {{ totals.discount }}</b></div>
+            <div class="summary-row discount"><span>Discount</span><b>- Rs. 0</b></div>
+            <div class="summary-row discount"><span>Coupon</span><b>- Rs. {{ totals.discount }}</b></div>
             <div class="summary-row"><span>Delivery</span><b>Rs. {{ totals.delivery_charge }}</b></div>
-            <div class="summary-row total"><span>Total</span><b>Rs. {{ totals.payable_total }}</b></div>
+            <div class="summary-row total"><span>Grand Total</span><b>Rs. {{ totals.payable_total }}</b></div>
+            <div class="saving-strip">You saved Rs. {{ totals.discount }} today</div>
 
             <div class="coupon">
+                <div class="coupon-head">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"></path><path d="M4 7v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7"></path><path d="M6 12v5a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-5"></path></svg>
+                    Apply coupon
+                </div>
                 <form method="POST" action="/cart/apply_coupon">
-                    <input name="coupon_code" placeholder="Coupon code" value="{{ totals.coupon_code or '' }}">
+                    <input name="coupon_code" placeholder="Enter coupon code" value="{{ totals.coupon_code or '' }}">
                     <button type="submit">Apply</button>
                 </form>
                 {% if totals.coupon_code %}
-                    <small>Applied: {{ totals.coupon_code }} · <a href="/cart/remove_coupon">Remove coupon</a></small>
+                    <small>Applied: {{ totals.coupon_code }} - <a href="/cart/remove_coupon">Remove coupon</a></small>
                 {% endif %}
                 {% if totals.coupon_message %}
                     <small>{{ totals.coupon_message }}</small>
                 {% endif %}
-                <small>Available offers: SAVE10, HEALTH50, FREESHIP</small>
+                {% if coupons %}
+                    <div class="coupon-list">
+                        {% for code, coupon in coupons.items() %}
+                            <span class="coupon-chip" title="{{ coupon.label }}">{{ code }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="delivery-box">
-                <b>Estimated delivery: {{ totals.estimated_delivery }}</b>
-                <span>Free delivery is available on cart subtotal Rs. 500 and above.</span>
+                <b>Delivery information</b>
+                <span>Estimated delivery: {{ totals.estimated_delivery }}. Free delivery on cart subtotal Rs. 500 and above.</span>
+            </div>
+
+            <div class="secure-row" aria-label="Secure payment options">
+                <div class="secure-pill">
+                    <span class="secure-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 5 3.5 8.4 8 9 4.5-.6 8-4 8-9V6l-8-3Z"></path></svg></span>
+                    <strong>UPI</strong>
+                    <span>Accepted</span>
+                </div>
+                <div class="secure-pill">
+                    <span class="secure-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path></svg></span>
+                    <strong>CARD</strong>
+                    <span>Protected</span>
+                </div>
+                <div class="secure-pill">
+                    <span class="secure-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16"></path><path d="M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"></path><rect x="5" y="8" width="14" height="10" rx="2"></rect></svg></span>
+                    <strong>COD</strong>
+                    <span>Available</span>
+                </div>
             </div>
 
             {% if items %}
-                <a href="/checkout" class="checkout">Proceed to Checkout</a>
+                <div class="checkout-zone">
+                    <a href="/checkout" class="checkout">Proceed to Checkout →</a>
+                </div>
             {% endif %}
         </aside>
     </section>
+
+    <section class="bottom-stack" aria-label="Cart extras">
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h3>Frequently Bought Together</h3>
+                    <p class="section-note">Useful products customers often keep with medicine orders.</p>
+                </div>
+                <span class="item-badge">Quick picks</span>
+            </div>
+            <div class="slider">
+                {% for item in (items + wishlist_items + saved_items)[:8] %}
+                    <article class="product-card">
+                        <a class="rec-img" href="{{ url_for('medicine_details', id=item.id) }}">
+                            <img
+                                src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                alt="{{ item.name }}"
+                                data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                data-step="0"
+                                onerror="swapMedicineImage(this)"
+                            >
+                        </a>
+                        <strong>{{ item.name }}</strong>
+                        <div class="rec-price">Rs. {{ item.price }}</div>
+                        <div class="rec-bottom">
+                            <span class="stock-mini">In stock</span>
+                            <a class="add-btn" href="{{ url_for('add_to_cart', id=item.id) }}">Add</a>
+                        </div>
+                    </article>
+                {% else %}
+                    <article class="product-card">
+                        <span class="rec-img"><img src="/static/images/yuvraj_logo.png" alt="Yuvraj Medical"></span>
+                        <strong>Browse essentials</strong>
+                        <div class="rec-price">Shop now</div>
+                        <a class="add-btn" href="/">View</a>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <h3>Recommended Medicines</h3>
+                    <p class="section-note">Compact recommendations from your cart, saved items, and wishlist.</p>
+                </div>
+                <span class="item-badge">For you</span>
+            </div>
+            <div class="recommended-grid">
+                {% for item in (wishlist_items + saved_items + items)[:8] %}
+                    <article class="product-card">
+                        <a class="rec-img" href="{{ url_for('medicine_details', id=item.id) }}">
+                            <img
+                                src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                alt="{{ item.name }}"
+                                data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                data-step="0"
+                                onerror="swapMedicineImage(this)"
+                            >
+                        </a>
+                        <strong>{{ item.name }}</strong>
+                        <div class="rec-price">Rs. {{ item.price }}</div>
+                        <div class="rec-bottom">
+                            <span class="stock-mini">In stock</span>
+                            <a class="add-btn" href="{{ url_for('add_to_cart', id=item.id) }}">Add</a>
+                        </div>
+                    </article>
+                {% else %}
+                    <article class="product-card">
+                        <span class="rec-img"><img src="/static/images/yuvraj_logo.png" alt="Yuvraj Medical"></span>
+                        <strong>Explore medicines</strong>
+                        <div class="rec-price">View catalog</div>
+                        <a class="add-btn" href="/">Open</a>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="trust-strip" aria-label="Yuvraj Medical service benefits">
+            <article class="trust-card">
+                <div class="trust-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"></path><path d="M7 7V4h10v3"></path><rect x="5" y="7" width="14" height="12" rx="2"></rect><path d="M9 12h6"></path></svg>
+                </div>
+                <div>
+                    <b>Fast Delivery</b>
+                    <span>Quick dispatch and trackable doorstep delivery.</span>
+                </div>
+            </article>
+            <article class="trust-card">
+                <div class="trust-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 5 3.5 8.4 8 9 4.5-.6 8-4 8-9V6l-8-3Z"></path><path d="m9.5 12 1.7 1.7 3.3-3.4"></path></svg>
+                </div>
+                <div>
+                    <b>100% Genuine</b>
+                    <span>Sealed packs sourced with pharmacy care.</span>
+                </div>
+            </article>
+            <article class="trust-card">
+                <div class="trust-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path></svg>
+                </div>
+                <div>
+                    <b>Secure Payments</b>
+                    <span>Protected checkout with UPI, cards, and COD.</span>
+                </div>
+            </article>
+            <article class="trust-card">
+                <div class="trust-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3"></path><path d="M7 15V8a3 3 0 0 1 6-2.2 3 3 0 0 1 6 2.2v7"></path><path d="M9 12h6"></path></svg>
+                </div>
+                <div>
+                    <b>Pharmacist Support</b>
+                    <span>Help with prescriptions, usage, and product guidance.</span>
+                </div>
+            </article>
+        </section>
+    </section>
 </main>
+
 <script>
     function swapMedicineImage(img) {
         const extensions = [".jpg", ".jpeg", ".png"];

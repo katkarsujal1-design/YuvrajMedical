@@ -10,6 +10,7 @@
 </head>
 
 <body class="yvm-pro-page yvm-page-login">
+<a class="public-chatbot-link" href="{{ url_for('chatbot') }}">AI Chatbot</a>
 
 <div class="bg-particles">
     <span></span>
@@ -107,6 +108,7 @@
             {% endif %}
 
             <p class="links">New user? <a href="/register">Create Account</a></p>
+            <p class="links">Need help? <a href="{{ url_for('chatbot') }}">Open AI Chatbot</a></p>
 
             <div class="security-panel">
                 <div class="security-title">Account security</div>

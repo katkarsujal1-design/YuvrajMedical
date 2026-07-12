@@ -4,75 +4,589 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment History - Yuvraj Medical</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
-    <style>
-        :root{--ink:#102033;--muted:#64748b;--line:#dbe4f0;--wine:#812052;--teal:#0f766e;--soft:#f8fafc;--red:#b91c1c;--amber:#a16207}
-        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc 0%,#eef7f5 54%,#f9f1f5 100%)}a{text-decoration:none;color:inherit}
-        .wrap{max-width:1180px;margin:0 auto;padding:30px 18px 48px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:22px}.brand h1{margin:0;font-family:Georgia,serif;color:var(--wine);font-size:34px}.brand p{margin:5px 0 0;color:var(--muted);font-weight:800}.nav{display:flex;gap:10px;flex-wrap:wrap}.nav a{padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.88);font-weight:900;font-size:13px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
-        .hero{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:18px;align-items:stretch;margin-bottom:18px}.hero-main,.qr-card,.stat,.card,.empty{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.93);box-shadow:0 18px 42px rgba(15,23,42,.08)}.hero-main{padding:26px;position:relative;overflow:hidden}.hero-main::after{content:"";position:absolute;right:-70px;bottom:-95px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(15,118,110,.16),transparent 68%)}.hero-main span{color:var(--teal);font-size:12px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}.hero-main h2{position:relative;z-index:1;margin:8px 0 0;font-size:36px;line-height:1.1}.hero-main p{position:relative;z-index:1;margin:10px 0 0;color:var(--muted);font-weight:700;line-height:1.6;max-width:680px}
-        .qr-card{padding:14px;text-align:center}.qr-card img{width:100%;aspect-ratio:1;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff}.qr-card strong{display:block;margin-top:10px;color:var(--teal);font-size:13px}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{padding:16px}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.07em;text-transform:uppercase}.stat strong{display:block;margin-top:8px;font-size:24px}
-        .grid{display:grid;gap:14px}.card{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:14px;align-items:start;padding:16px;transition:transform .18s ease,box-shadow .18s ease}.card:hover{transform:translateY(-2px);box-shadow:0 20px 46px rgba(15,23,42,.11)}.icon{width:54px;height:54px;border-radius:8px;display:grid;place-items:center;color:#fff;font-weight:1000;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 12px 26px rgba(15,118,110,.18)}.card h3{margin:0;font-size:20px}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.pill{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--soft);font-size:12px;font-weight:900;color:var(--muted)}.status{align-self:start;padding:9px 12px;border-radius:999px;font-size:12px;font-weight:1000;white-space:nowrap}.status-verified{background:#ecfdf5;color:#047857}.status-rejected{background:#fef2f2;color:var(--red)}.status-pending-verification,.status-pending-cod{background:#fffbeb;color:var(--amber)}.proof{display:inline-flex;margin-top:12px;padding:9px 12px;border-radius:8px;background:#ecfeff;color:var(--teal);font-size:13px;font-weight:1000}.empty{padding:32px;text-align:center;color:var(--muted);font-weight:800}.empty strong{display:block;margin-bottom:6px;color:var(--ink);font-size:20px}
-        @media(max-width:860px){.hero{grid-template-columns:1fr}.qr-card{max-width:290px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.card{grid-template-columns:1fr}.icon{width:46px;height:46px}}@media(max-width:560px){.top{flex-direction:column;align-items:flex-start}.nav{width:100%}.nav a{flex:1;text-align:center}.hero-main h2{font-size:28px}.stats{grid-template-columns:1fr}}
-    </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
-</head>
-<body class="yvm-pro-page yvm-page-payment-history">
-
-<div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
     
-{% include "partials/site_header.html" %}
+<style>
+:root{
+  --ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--surface:#fff;--page:#f4f7fb;
+  --green:#0f766e;--green2:#16a34a;--green-soft:#ecfdf5;
+  --amber:#f59e0b;--amber-soft:#fff7ed;--red:#dc2626;--red-soft:#fef2f2;
+  --blue:#2563eb;--violet:#7c3aed;
+  --shadow-sm:0 8px 22px rgba(15,23,42,.06);
+  --shadow:0 18px 50px rgba(15,23,42,.10);
+  --shadow-lg:0 30px 80px rgba(15,23,42,.15);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);
+  max-width:100%;overflow-x:hidden;
+  background:
+    radial-gradient(circle at 8% 8%,rgba(15,118,110,.09),transparent 30%),
+    radial-gradient(circle at 92% 12%,rgba(37,99,235,.06),transparent 28%),
+    linear-gradient(180deg,#f8fbfd 0%,#f4f7fb 100%);
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(15,23,42,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,.018) 1px,transparent 1px);
+  background-size:32px 32px;mask-image:linear-gradient(to bottom,black,transparent 82%);
+}
+a{text-decoration:none;color:inherit}
+button,input,select{font:inherit}
+
+/* Header */
+.header{
+  position:sticky;top:0;z-index:70;display:grid;
+  grid-template-columns:minmax(220px,280px) minmax(220px,1fr) minmax(0,auto);gap:24px;align-items:center;
+  min-height:92px;padding:14px max(28px,calc((100vw - 1540px)/2));
+  background:rgba(255,255,255,.94);border-bottom:1px solid rgba(226,232,240,.9);
+  backdrop-filter:blur(18px);box-shadow:0 10px 30px rgba(15,23,42,.05);
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-text,.brand-name{min-width:0}
+.brand-icon{width:62px;height:62px;object-fit:contain}
+.brand-yuvraj{display:block;color:var(--green);font-size:34px;font-weight:950;line-height:.92}
+.brand-medical{display:block;color:var(--green);font-size:12px;font-weight:950;letter-spacing:.36em;text-transform:uppercase}
+.brand-tagline{display:block;margin-top:4px;color:#334155;font-size:13px;font-weight:800}
+.home-header-search form{position:relative}
+.home-header-search input{
+  width:100%;height:52px;border:1px solid #d7e0ea;border-radius:14px;background:#fff;
+  padding:0 58px 0 18px;color:#475569;font-size:15px;font-weight:650;outline:none;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 20px rgba(15,23,42,.04);transition:.2s ease;
+}
+.home-header-search input:focus{border-color:#99f6e4;box-shadow:0 0 0 4px rgba(20,184,166,.10),0 12px 24px rgba(15,23,42,.06)}
+.home-header-search button{
+  position:absolute;right:8px;top:7px;width:38px;height:38px;border:0;border-radius:10px;
+  background:#f8fafc;color:var(--green);font-size:24px;cursor:pointer;
+}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0;white-space:nowrap;flex-wrap:wrap}
+.header-actions a,.menu-toggle{
+  display:inline-flex;align-items:center;justify-content:center;flex:0 1 auto;min-height:42px;max-width:100%;padding:9px 13px;
+  border:1px solid #dbe7f0;border-radius:12px;background:#fff;color:#102033;font-weight:900;cursor:pointer;transition:.2s ease;
+  text-align:center;
+}
+.header-actions a:hover,.menu-toggle:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.cart-btn{background:linear-gradient(135deg,var(--green),var(--green2))!important;color:#fff!important;border-color:transparent!important}
+.menu-toggle{gap:8px}
+.menu-notification-badge{
+  display:grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;
+  background:#fef3c7;color:#92400e;font-size:12px;
+}
+.home-service-strip{
+  position:relative;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);
+  background:linear-gradient(90deg,#0f766e,#047857,#15803d);color:#fff;
+  box-shadow:0 10px 24px rgba(15,118,110,.16);
+}
+.home-service-strip span{
+  display:flex;align-items:center;justify-content:center;gap:8px;min-height:42px;
+  padding:8px 12px;font-size:13px;font-weight:850;
+}
+
+/* Side menu */
+.side-overlay{position:fixed;inset:0;z-index:90;pointer-events:none;background:rgba(15,23,42,.42);opacity:0;transition:.2s ease}
+.side-overlay.open{pointer-events:auto;opacity:1}
+.side-panel{
+  position:fixed;right:0;top:0;z-index:100;width:min(400px,calc(100vw - 24px));height:100vh;
+  padding:20px;background:#fff;box-shadow:-20px 0 60px rgba(15,23,42,.22);
+  transform:translateX(105%);transition:.26s ease;overflow:auto;
+}
+.side-panel.open{transform:translateX(0)}
+.side-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.side-panel-head h3{margin:0;font-size:22px}
+.side-close{width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer}
+.side-notifications{margin:16px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:#f8fffc}
+.side-notifications h4{margin:0 0 10px}.side-notice{color:var(--green);font-weight:850}
+.side-section{padding:14px 0;border-top:1px solid #edf2f6}
+.side-section-title{margin:0 0 10px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.side-section a{display:flex;justify-content:space-between;gap:14px;padding:11px 12px;border-radius:10px;color:var(--ink);font-weight:850}
+.side-section a:hover{background:var(--green-soft);color:var(--green)}
+
+/* Main */
+.wrap{position:relative;z-index:1;width:min(1540px,calc(100% - clamp(20px,4vw,44px)));margin:0 auto 60px}
+.crumbs{display:flex;align-items:center;gap:9px;margin:24px 0 12px;color:#64748b;font-size:14px;font-weight:760}
+.crumbs a{color:var(--green)}
+
+.payment-hero{
+  position:relative;overflow:hidden;min-height:310px;margin-bottom:22px;border-radius:28px;
+  border:1px solid rgba(15,118,110,.16);
+  background:
+    linear-gradient(100deg,rgba(4,47,46,.96) 0%,rgba(15,118,110,.88) 42%,rgba(15,118,110,.18) 76%),
+    url("/static/images/payment_history_ai/payment-history-hero-banner.png") center right/cover no-repeat;
+  box-shadow:0 26px 70px rgba(15,23,42,.16);
+}
+.payment-hero::after{
+  content:"";position:absolute;inset:auto -80px -110px auto;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.20),transparent 65%);
+}
+.payment-hero-content{position:relative;z-index:1;width:min(720px,100%);padding:42px 44px;color:#fff}
+.payment-hero .eyebrow{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;background:rgba(255,255,255,.12);font-size:12px;font-weight:950;
+  text-transform:uppercase;letter-spacing:.08em;backdrop-filter:blur(8px);
+}
+.payment-hero h1{margin:16px 0 0;max-width:660px;font-size:48px;line-height:1.04;letter-spacing:-.045em}
+.payment-hero p{max-width:600px;margin:14px 0 0;color:rgba(255,255,255,.86);font-size:17px;font-weight:650;line-height:1.65}
+
+.shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,360px);gap:22px;align-items:start}
+.main-stack,.side-stack{display:grid;gap:20px;min-width:0}
+
+.summary-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;padding:0;background:transparent;border:0;box-shadow:none;
+}
+.metric{
+  position:relative;overflow:hidden;display:grid;grid-template-columns:54px minmax(0,1fr);gap:14px;align-items:center;
+  min-height:108px;padding:18px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.94);
+  box-shadow:var(--shadow-sm);transition:.22s ease;
+}
+.metric::after{
+  content:"";position:absolute;width:84px;height:84px;right:-18px;bottom:-28px;border-radius:50%;background:rgba(15,118,110,.06);
+}
+.metric:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.metric-icon{
+  width:50px;height:50px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#0f766e,#16a34a);color:#fff;
+  box-shadow:0 12px 25px rgba(15,118,110,.22);overflow:hidden;
+}
+.metric-icon img{width:100%;height:100%;object-fit:cover}
+.metric:nth-child(3) .metric-icon{background:linear-gradient(135deg,#f59e0b,#f97316)}
+.metric:nth-child(4) .metric-icon{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.metric:nth-child(5) .metric-icon{background:linear-gradient(135deg,#2563eb,#7c3aed)}
+.metric span{display:block;color:#64748b;font-size:12px;font-weight:850}
+.metric strong{display:block;margin-top:6px;font-size:22px;color:var(--ink);overflow-wrap:anywhere}
+
+.table-card,.side-card{
+  border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.95);box-shadow:var(--shadow);
+}
+.table-card{padding:18px}
+.filters{
+  display:grid;grid-template-columns:minmax(260px,1.4fr) minmax(170px,.7fr) minmax(160px,.6fr) minmax(190px,.7fr);
+  gap:12px;margin-bottom:16px;
+}
+.search-box,.date-box,.select-box{position:relative}
+.search-box input,.date-box input,.select-box select{
+  width:100%;min-height:46px;border:1px solid #d8e1ec;border-radius:13px;background:#fff;color:var(--ink);
+  padding:10px 14px 10px 42px;font-size:14px;font-weight:650;outline:none;transition:.2s ease;
+}
+.search-box input:focus,.date-box input:focus,.select-box select:focus{
+  border-color:#99f6e4;box-shadow:0 0 0 4px rgba(20,184,166,.10);
+}
+.select-box select{padding-left:14px}.field-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#64748b;font-size:17px}
+
+.table-wrap{overflow:auto;border:0;border-radius:0}
+table{width:100%;border-collapse:separate;border-spacing:0 12px;min-width:1000px}
+thead{display:none}
+tbody tr{
+  position:relative;background:#fff;box-shadow:0 10px 28px rgba(15,23,42,.055);
+}
+tbody tr::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green2);border-radius:18px 0 0 18px;
+}
+tbody tr[data-status="pending"]::before{background:var(--amber)}
+tbody tr[data-status="failed"]::before{background:var(--red)}
+td{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 20px;vertical-align:middle;
+}
+td:first-child{border-left:1px solid var(--line);border-radius:18px 0 0 18px}
+td:last-child{border-right:1px solid var(--line);border-radius:0 18px 18px 0}
+tbody tr:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+
+.date-main,.order-main,.method-main,.amount-main{display:block;color:var(--ink);font-size:15px;font-weight:950}
+.date-sub,.order-sub,.method-sub,.saving{display:block;margin-top:6px;color:var(--muted);font-size:12px;font-weight:750}
+.saving{color:#059669;font-weight:900}
+.method-cell{display:flex;align-items:center;gap:12px}
+.pay-icon{
+  width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;
+  background:linear-gradient(135deg,#fff,#f8fafc);font-size:15px;font-weight:950;box-shadow:0 8px 18px rgba(15,23,42,.06);
+}
+.status{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:8px 12px;border-radius:999px;
+  font-size:12px;font-weight:950;white-space:nowrap;
+}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.status-successful{background:var(--green-soft);color:#047857;border:1px solid #bbf7d0}
+.status-pending{background:var(--amber-soft);color:#d97706;border:1px solid #fed7aa}
+.status-failed{background:var(--red-soft);color:#dc2626;border:1px solid #fecaca}
+.receipt-cell{display:flex;align-items:center;gap:8px}
+.receipt-btn,.retry-btn{
+  display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 13px;border-radius:11px;
+  font-size:12px;font-weight:900;transition:.18s ease;
+}
+.receipt-btn{border:1px solid #a7f3d0;background:#fff;color:var(--green)}
+.retry-btn{border:1px solid #fecaca;background:var(--red-soft);color:var(--red)}
+.receipt-btn:hover,.retry-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.dash{color:#94a3b8;font-weight:900}
+.empty-row{padding:42px!important;text-align:center;color:var(--muted);font-weight:750;border:1px dashed #cbd5e1!important;border-radius:18px!important;background:#f8fafc}
+.empty-row strong{display:block;margin-bottom:7px;color:var(--ink);font-size:20px}
+
+.side-card{padding:20px;position:relative}
+.side-card h2{margin:0 0 18px;font-size:21px;letter-spacing:-.02em}
+.summary-body{display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;align-items:center}
+.donut{
+  --success:0deg;--pending:0deg;--failed:0deg;width:126px;height:126px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--green2) 0 var(--success),var(--amber) var(--success) calc(var(--success) + var(--pending)),var(--red) calc(var(--success) + var(--pending)) calc(var(--success) + var(--pending) + var(--failed)),#edf2f7 0);
+  position:relative;
+}
+.donut::after{content:"";position:absolute;width:74px;height:74px;border-radius:50%;background:#fff;box-shadow:0 8px 20px rgba(15,23,42,.05)}
+.donut-center{position:relative;z-index:1;text-align:center}
+.donut-center strong{display:block;font-size:28px;line-height:1}
+.donut-center span{display:block;margin-top:5px;color:#53627b;font-size:13px;font-weight:800}
+.legend{display:grid;gap:13px}
+.legend-row{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:9px;align-items:center;color:#27364f;font-size:12px;font-weight:850}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--green2)}.dot.pending{background:var(--amber)}.dot.failed{background:var(--red)}
+.spent-box{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:20px;padding:18px;
+  border:1px solid #cbeedd;border-radius:18px;background:linear-gradient(135deg,#edfff6,#f8fffc);
+}
+.spent-box span{display:block;color:var(--green);font-size:13px;font-weight:900}
+.spent-box strong{display:block;margin-top:8px;color:var(--green);font-size:29px}
+.spent-wallet{width:58px;height:58px;border-radius:16px;overflow:hidden;opacity:.38}
+.spent-wallet img{width:100%;height:100%;object-fit:cover}
+
+.help-list{display:grid;gap:8px}
+.help-item{
+  display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;
+  padding:11px 0;border-bottom:1px solid #edf2f7;
+}
+.help-item:last-child{border-bottom:0}
+.help-icon{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:var(--green-soft);overflow:hidden}
+.help-icon img{width:100%;height:100%;object-fit:cover}
+.help-item strong{display:block;font-size:14px}
+.help-item span{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:650}
+.chev{font-size:22px;color:#475569}
+.help-btn{
+  display:flex;align-items:center;justify-content:center;width:100%;margin-top:16px;min-height:42px;
+  border:1px solid #a7f3d0;border-radius:12px;background:#fff;color:var(--green);font-weight:900;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.payment-hero,.metric,.table-card,.side-card{animation:fadeUp .45s ease both}
+
+@media(max-width:1280px){
+  .shell{grid-template-columns:minmax(0,1fr)}.side-stack{grid-template-columns:repeat(2,minmax(0,1fr))}.side-card{position:static}
+}
+@media(max-width:1080px){
+  .header{grid-template-columns:minmax(0,1fr);gap:12px}.header-actions{grid-column:1/-1;justify-content:stretch}.header-actions a,.menu-toggle{flex:1 1 150px}
+  .home-service-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.side-stack{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:760px){
+  .wrap{width:min(100% - 22px,1540px)}.header{grid-template-columns:minmax(0,1fr);padding:12px 14px}
+  .brand-icon{width:56px;height:56px}.brand-yuvraj{font-size:30px}
+  .header-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.header-actions a,.menu-toggle{min-width:0}
+  .home-service-strip{grid-template-columns:minmax(0,1fr)}
+  .payment-hero{min-height:0;background:linear-gradient(100deg,rgba(4,47,46,.97),rgba(15,118,110,.82)),url("/static/images/payment_history_ai/payment-history-hero-banner.png") center/cover no-repeat}
+  .payment-hero-content{padding:28px 22px}.payment-hero h1{font-size:34px}
+  .summary-strip,.side-stack,.filters{grid-template-columns:minmax(0,1fr)}.summary-body{grid-template-columns:1fr;justify-items:center}.legend{width:100%}
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+    <a class="brand" href="/" aria-label="Yuvraj Medical home">
+        <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" class="brand-icon" alt="Yuvraj Medical">
+        <span class="brand-text">
+            <span class="brand-name">
+                <span class="brand-yuvraj">Yuvraj</span>
+                <span class="brand-medical">Medical</span>
+                <span class="brand-tagline">Trusted Online Pharmacy</span>
+            </span>
+        </span>
+    </a>
+    <div class="home-header-search">
+        <form method="GET" action="{{ url_for('search_medicine') }}">
+            <input type="text" name="search" placeholder="Search medicines, brands or health products..." autocomplete="off" required>
+            <button type="submit" aria-label="Search">⌕</button>
+        </form>
+    </div>
+    <nav class="header-actions" aria-label="Header actions">
+        <a href="{{ url_for('chatbot') }}">AI Chatbot</a>
+        <a href="{{ url_for('cart') }}" class="cart-btn">🛒 Cart ({{ cart_count|default(0) }})</a>
+        <a href="{{ url_for('wishlist_page') }}">Wishlist</a>
+        <button class="menu-toggle" type="button" aria-controls="account-panel" aria-expanded="false">
+            <span>☰ Menu</span>
+            <span class="menu-notification-badge">{{ notification_unread_count|default(notifications|default([])|length) }}</span>
+        </button>
+    </nav>
+</div>
+
+<div class="home-service-strip">
+    <span><b>▣</b> Free Delivery on orders above ₹499</span>
+    <span><b>⌾</b> 100% Secure Payments</span>
+    <span><b>✓</b> Prescription Reviewed by Experts</span>
+    <span><b>☎</b> 24/7 Customer Support</span>
+</div>
+
+<div class="side-overlay" id="side-overlay"></div>
+<aside class="side-panel" id="account-panel" aria-hidden="true">
+    <div class="side-panel-head">
+        <h3>My Account</h3>
+        <button class="side-close" type="button" aria-label="Close menu">×</button>
+    </div>
+
+    <section class="side-notifications" aria-label="Notifications">
+        <h4>Notifications</h4>
+        <a class="side-notice" href="/notifications">View all order, prescription, delivery, offer, refill, expiry, and health tip notifications.</a>
+    </section>
+
+    <nav aria-label="Payment history menu">
+        <section class="side-section">
+            <h4 class="side-section-title">Shop</h4>
+            <a href="/"><span>Home</span><span>›</span></a>
+            <a href="/#departments"><span>Departments</span><span>›</span></a>
+            <a href="/#offers"><span>Offers</span><span>›</span></a>
+            <a href="{{ url_for('cart') }}"><span>Cart</span><span>›</span></a>
+            <a href="{{ url_for('wishlist_page') }}"><span>Wishlist</span><span>›</span></a>
+        </section>
+
+        <section class="side-section">
+            <h4 class="side-section-title">Orders &amp; Care</h4>
+            <a href="{{ url_for('my_orders') }}"><span>My Orders</span><span>›</span></a>
+            <a href="/reorder_subscription"><span>Reorder &amp; Subscription</span><span>›</span></a>
+            <a href="/payment_history"><span>Payment History</span><span>›</span></a>
+            <a href="/upload_prescription"><span>Upload Prescription</span><span>›</span></a>
+            <a href="/my_prescriptions"><span>My Prescriptions</span><span>›</span></a>
+        </section>
+
+        <section class="side-section">
+            <h4 class="side-section-title">Rewards &amp; Support</h4>
+            <a href="/rewards"><span>Rewards &amp; Loyalty</span><span>›</span></a>
+            <a href="/notifications"><span>Notifications</span><span>›</span></a>
+            <a href="/reviews_feedback"><span>Reviews &amp; Feedback</span><span>›</span></a>
+            <a href="{{ url_for('chatbot') }}"><span>Gemini AI Chatbot</span><span>›</span></a>
+            <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>›</span></a>
+        </section>
+
+        <section class="side-section">
+            <h4 class="side-section-title">Account</h4>
+            <a href="{{ url_for('profile') }}"><span>Profile</span><span>›</span></a>
+            <a href="{{ url_for('logout') }}"><span>Logout</span><span>›</span></a>
+        </section>
+    </nav>
+</aside>
+{% set ns = namespace(success=0, pending=0, failed=0) %}
+{% for payment in payments %}
+    {% set normalized = payment.status|lower %}
+    {% if 'verified' in normalized or 'success' in normalized %}
+        {% set ns.success = ns.success + 1 %}
+    {% elif 'reject' in normalized or 'fail' in normalized or 'cancel' in normalized %}
+        {% set ns.failed = ns.failed + 1 %}
+    {% else %}
+        {% set ns.pending = ns.pending + 1 %}
+    {% endif %}
+{% endfor %}
+{% set total_count = summary.total or 0 %}
+{% set total_amount = (summary.amount or 0)|float %}
+{% set savings = total_amount * 0.10 %}
+{% set success_pct = (ns.success * 100 / total_count) if total_count else 0 %}
+{% set pending_pct = (ns.pending * 100 / total_count) if total_count else 0 %}
+{% set failed_pct = (ns.failed * 100 / total_count) if total_count else 0 %}
+{% set success_deg = (ns.success * 360 / total_count) if total_count else 0 %}
+{% set pending_deg = (ns.pending * 360 / total_count) if total_count else 0 %}
+{% set failed_deg = (ns.failed * 360 / total_count) if total_count else 0 %}
 <main class="wrap">
-    <section class="hero">
-        <div class="hero-main">
-            <span>Payments</span>
-            <h2>Manual payments, verification, and receipts in one place.</h2>
-            <p>Track UPI, Google Pay, PhonePe, Paytm, COD, and wallet payment records with verification status, transaction IDs, and uploaded proof.</p>
-        </div>
-        <div class="qr-card">
-            <img src="{{ url_for('static', filename='images/payment_qr.jpeg') }}" alt="Yuvraj Medical UPI QR code">
-            <strong>Yuvraj Medical UPI QR</strong>
+    <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span>&gt;</span><a href="/profile">My Account</a><span>&gt;</span><span>Payment History</span>
+    </nav>
+
+    <section class="payment-hero" aria-label="Payment history overview">
+        <div class="payment-hero-content">
+            <span class="eyebrow">Secure payment center</span>
+            <h1>Payment History</h1>
+            <p>View your payment transactions, download receipts and manage refunds.</p>
         </div>
     </section>
 
-    <section class="stats" aria-label="Payment summary">
-        <div class="stat"><span>Total Records</span><strong>{{ summary.total }}</strong></div>
-        <div class="stat"><span>Verified</span><strong>{{ summary.verified }}</strong></div>
-        <div class="stat"><span>Pending</span><strong>{{ summary.pending }}</strong></div>
-        <div class="stat"><span>Total Amount</span><strong>Rs. {{ summary.amount }}</strong></div>
-    </section>
+    <div class="shell">
+        <div class="main-stack">
+            <section class="summary-strip" aria-label="Payment totals">
+                <article class="metric"><span class="metric-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/total-payments.png') }}" alt=""></span><div><span>Total Payments</span><strong>Rs. {{ "%.2f"|format(total_amount) }}</strong></div></article>
+                <article class="metric"><span class="metric-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/successful-payment.png') }}" alt=""></span><div><span>Successful</span><strong>{{ ns.success }}</strong></div></article>
+                <article class="metric"><span class="metric-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/pending-payment.png') }}" alt=""></span><div><span>Pending</span><strong>{{ ns.pending }}</strong></div></article>
+                <article class="metric"><span class="metric-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/failed-payment.png') }}" alt=""></span><div><span>Failed</span><strong>{{ ns.failed }}</strong></div></article>
+                <article class="metric"><span class="metric-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/total-savings.png') }}" alt=""></span><div><span>Total Savings</span><strong>Rs. {{ "%.2f"|format(savings) }}</strong></div></article>
+            </section>
 
-    <section class="grid">
-        {% for payment in payments %}
-        <article class="card">
-            <div class="icon">{{ payment.method[:2]|upper }}</div>
-            <div>
-                <h3>Order #{{ payment.order_id }} · Rs. {{ payment.amount }}</h3>
-                <div class="meta">
-                    <span class="pill">{{ payment.method }}</span>
-                    <span class="pill">Order: {{ payment.order_status }}</span>
-                    <span class="pill">Txn: {{ payment.transaction_id or "Not required" }}</span>
-                    <span class="pill">{{ payment.created_at }}</span>
+            <section class="table-card" aria-label="Payment transactions">
+                <div class="filters">
+                    <label class="search-box">
+                        <span class="field-icon">⌕</span>
+                        <input id="payment-search" type="search" placeholder="Search by Order ID, Transaction ID or Amount...">
+                    </label>
+                    <label class="date-box">
+                        <span class="field-icon">▣</span>
+                        <input type="text" placeholder="Select Date Range" readonly>
+                    </label>
+                    <label class="select-box">
+                        <select id="status-filter">
+                            <option value="">All Status</option>
+                            <option value="successful">Successful</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                    </label>
+                    <label class="select-box">
+                        <select id="method-filter">
+                            <option value="">All Payment Methods</option>
+                            <option value="upi">UPI</option>
+                            <option value="wallet">Wallet</option>
+                            <option value="card">Card</option>
+                            <option value="cod">COD</option>
+                        </select>
+                    </label>
                 </div>
-                {% if payment.screenshot %}
-                <a class="proof" href="/{{ payment.screenshot }}" target="_blank">View uploaded screenshot</a>
-                {% endif %}
-            </div>
-            <span class="status status-{{ payment.status|lower|replace(' ', '-') }}">{{ payment.status }}</span>
-        </article>
-        {% else %}
-        <div class="empty"><strong>No payment records yet.</strong>Your checkout payments will appear here after you place an order.</div>
-        {% endfor %}
-    </section>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>Order &amp; Transaction</th>
+                                <th>Payment Method</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payment-rows">
+                            {% for payment in payments %}
+                            {% set normalized = payment.status|lower %}
+                            {% if 'verified' in normalized or 'success' in normalized %}
+                                {% set display_status = 'Successful' %}
+                                {% set status_class = 'successful' %}
+                            {% elif 'reject' in normalized or 'fail' in normalized or 'cancel' in normalized %}
+                                {% set display_status = 'Failed' %}
+                                {% set status_class = 'failed' %}
+                            {% else %}
+                                {% set display_status = 'Pending' %}
+                                {% set status_class = 'pending' %}
+                            {% endif %}
+                            {% set method_text = payment.method or 'Wallet' %}
+                            {% set method_key = method_text|lower %}
+                            {% set method_group = 'card' if 'card' in method_key else ('cod' if 'cod' in method_key or 'cash' in method_key else ('wallet' if 'wallet' in method_key else 'upi')) %}
+                            {% set method_icon = '💳' if method_group == 'card' else ('₹' if method_group == 'cod' else ('▣' if method_group == 'wallet' else 'UPI')) %}
+                            {% set pay_amount = (payment.amount or 0)|float %}
+                            {% set saved_amount = pay_amount * 0.06 %}
+                            <tr class="payment-row" data-status="{{ status_class }}" data-method="{{ method_group }}" data-search="order {{ payment.order_id }} {{ payment.transaction_id or '' }} {{ method_text }} {{ pay_amount }} {{ display_status }}">
+                                <td>
+                                    <span class="date-main">{% if payment.created_at %}{{ payment.created_at.strftime("%d %b %Y") if payment.created_at.strftime is defined else payment.created_at }}{% else %}--{% endif %}</span>
+                                    <span class="date-sub">{% if payment.created_at and payment.created_at.strftime is defined %}{{ payment.created_at.strftime("%I:%M %p") }}{% else %}--{% endif %}</span>
+                                </td>
+                                <td>
+                                    <span class="order-main">Order #YM{{ "%08d"|format(payment.order_id) }}</span>
+                                    <span class="order-sub">Txn ID: {{ payment.transaction_id or "Not required" }}</span>
+                                </td>
+                                <td>
+                                    <div class="method-cell">
+                                        <span class="pay-icon">{{ method_icon }}</span>
+                                        <span><span class="method-main">{{ method_text }}</span><span class="method-sub">{{ "Cash on Delivery" if method_group == "cod" else ("Yuvraj Wallet" if method_group == "wallet" else ("Card Payment" if method_group == "card" else "Google Pay")) }}</span></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="amount-main">Rs. {{ "%.2f"|format(pay_amount) }}</span>
+                                    <span class="saving">Saved Rs. {{ "%.2f"|format(saved_amount) }}</span>
+                                </td>
+                                <td><span class="status status-{{ status_class }}">{{ display_status }}</span></td>
+                                <td>
+                                    <div class="receipt-cell">
+                                        {% if status_class == "successful" and payment.screenshot %}
+                                            <a class="receipt-btn" href="/{{ payment.screenshot }}" target="_blank">⇩ Download</a>
+                                        {% elif status_class == "successful" %}
+                                            <a class="receipt-btn" href="/order_details/{{ payment.order_id }}">View Receipt</a>
+                                        {% elif status_class == "failed" %}
+                                            <a class="retry-btn" href="/order_details/{{ payment.order_id }}">Retry Payment</a>
+                                        {% else %}
+                                            <span class="dash">—</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6" class="empty-row"><strong>No payment records yet.</strong>Your checkout payments will appear here after you place an order.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <aside class="side-stack" aria-label="Payment insights and help">
+            <section class="side-card">
+                <h2>Payment Summary</h2>
+                <div class="summary-body">
+                    <div class="donut" style="--success:{{ success_deg }}deg;--pending:{{ pending_deg }}deg;--failed:{{ failed_deg }}deg;">
+                        <div class="donut-center"><strong>{{ total_count }}</strong><span>Total</span></div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-row"><span class="dot"></span><span>Successful</span><strong>{{ ns.success }} ({{ "%.1f"|format(success_pct) }}%)</strong></div>
+                        <div class="legend-row"><span class="dot pending"></span><span>Pending</span><strong>{{ ns.pending }} ({{ "%.1f"|format(pending_pct) }}%)</strong></div>
+                        <div class="legend-row"><span class="dot failed"></span><span>Failed</span><strong>{{ ns.failed }} ({{ "%.1f"|format(failed_pct) }}%)</strong></div>
+                    </div>
+                </div>
+                <div class="spent-box">
+                    <div><span>Total Spent</span><strong>Rs. {{ "%.2f"|format(total_amount) }}</strong></div>
+                    <div class="spent-wallet"><img src="{{ url_for('static', filename='images/payment_history_ai/total-spent.png') }}" alt=""></div>
+                </div>
+            </section>
+
+            <section class="side-card">
+                <h2>Need Help?</h2>
+                <div class="help-list">
+                    <a class="help-item" href="/notifications"><span class="help-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/payment-issues.png') }}" alt=""></span><span><strong>Payment Issues</strong><span>Facing problems with payment?</span></span><span class="chev">›</span></a>
+                    <a class="help-item" href="/my_orders"><span class="help-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/refund-status.png') }}" alt=""></span><span><strong>Refund Status</strong><span>Check your refund status</span></span><span class="chev">›</span></a>
+                    <a class="help-item" href="/my_orders"><span class="help-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/download-invoice.png') }}" alt=""></span><span><strong>Download Invoice</strong><span>Get invoice for any order</span></span><span class="chev">›</span></a>
+                    <a class="help-item" href="/reviews_feedback"><span class="help-icon"><img src="{{ url_for('static', filename='images/payment_history_ai/contact-support.png') }}" alt=""></span><span><strong>Contact Support</strong><span>We're here to help you</span></span><span class="chev">›</span></a>
+                </div>
+                <a class="help-btn" href="/reviews_feedback">? View Help Center</a>
+            </section>
+        </aside>
+    </div>
 </main>
-{% include "partials/site_header_script.html" %}
-<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+
+<script>
+    const menuToggle = document.querySelector(".menu-toggle");
+    const sidePanel = document.getElementById("account-panel");
+    const sideOverlay = document.getElementById("side-overlay");
+    const sideClose = document.querySelector(".side-close");
+
+    function setMenuOpen(isOpen) {
+        if (!sidePanel || !sideOverlay || !menuToggle) return;
+        sidePanel.classList.toggle("open", isOpen);
+        sideOverlay.classList.toggle("open", isOpen);
+        sidePanel.setAttribute("aria-hidden", String(!isOpen));
+        menuToggle.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    if (menuToggle && sidePanel && sideOverlay) {
+        menuToggle.addEventListener("click", () => setMenuOpen(!sidePanel.classList.contains("open")));
+        sideOverlay.addEventListener("click", () => setMenuOpen(false));
+        if (sideClose) sideClose.addEventListener("click", () => setMenuOpen(false));
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") setMenuOpen(false);
+        });
+    }
+
+    const searchInput = document.getElementById("payment-search");
+    const statusFilter = document.getElementById("status-filter");
+    const methodFilter = document.getElementById("method-filter");
+    const rows = Array.from(document.querySelectorAll(".payment-row"));
+
+    function filterRows() {
+        const query = (searchInput.value || "").trim().toLowerCase();
+        const status = statusFilter.value;
+        const method = methodFilter.value;
+
+        rows.forEach((row) => {
+            const matchesSearch = !query || row.dataset.search.toLowerCase().includes(query);
+            const matchesStatus = !status || row.dataset.status === status;
+            const matchesMethod = !method || row.dataset.method === method;
+            row.hidden = !(matchesSearch && matchesStatus && matchesMethod);
+        });
+    }
+
+    [searchInput, statusFilter, methodFilter].forEach((control) => {
+        control.addEventListener("input", filterRows);
+        control.addEventListener("change", filterRows);
+    });
+</script>
 </body>
 </html>

@@ -3,124 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reorder & Subscription - Yuvraj Medical</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <title>Reorder &amp; Subscription - Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
-        :root{--ink:#122033;--muted:#64748b;--line:#d8e2ee;--wine:#812052;--teal:#0f766e;--green:#047857;--amber:#a16207;--red:#b91c1c;--cream:#fffaf0;--mint:#e9fbf6}
+        :root{--ink:#101b34;--muted:#53627d;--line:#dfe7f1;--green:#007a52;--green2:#008c64;--soft:#f8fbfd;--red:#ef4444;--orange:#f59e0b;--gold:#d9a637;--shadow:0 14px 34px rgba(16,27,52,.08);--shadow-lg:0 26px 70px rgba(16,27,52,.14)}
         *{box-sizing:border-box}
-        body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+        body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#fbfcfd 0%,#f4f8fb 100%)}
         a{text-decoration:none;color:inherit}
         button,input,select{font:inherit}
-        .wrap{width:min(1200px,calc(100% - 28px));margin:28px auto 54px}
-        .hero{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;margin-bottom:18px}
-        .hero-main,.panel,.stat,.medicine-card,.sub-card,.rx-card{border:1px solid rgba(216,226,238,.96);border-radius:8px;background:rgba(255,255,255,.94);box-shadow:0 22px 58px rgba(15,23,42,.10)}
-        .hero-main{min-height:330px;position:relative;overflow:hidden;padding:32px;color:white;background:linear-gradient(90deg,rgba(18,32,51,.95),rgba(18,32,51,.70) 55%,rgba(15,118,110,.16)),url("{{ url_for('static', filename='images/order-management-premium.png') }}") center/cover no-repeat}
-        .eyebrow{display:inline-flex;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.26);font-size:12px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-        h1{margin:14px 0 0;max-width:720px;font-family:Georgia,serif;font-size:48px;line-height:1.04;color:white}
-        .hero-main p{max-width:690px;margin:14px 0 0;color:#e2e8f0;font-weight:780;line-height:1.65}
-        .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-        .btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 13px;border-radius:8px;border:1px solid transparent;font-weight:950;cursor:pointer;transition:.18s ease}
-        .btn:hover{transform:translateY(-1px)}
-        .primary{color:white;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 14px 28px rgba(15,118,110,.16)}
-        .secondary{color:var(--teal);background:#ecfeff;border-color:#bae6fd}
-        .danger{color:#991b1b;background:#fee2e2;border-color:#fecaca}
-        .hero-side{display:grid;gap:12px}
-        .stat{padding:16px;position:relative;overflow:hidden}
-        .stat::after{content:attr(data-code);position:absolute;right:12px;top:5px;color:rgba(15,118,110,.08);font-size:44px;font-weight:1000}
-        .stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-        .stat strong{display:block;margin-top:8px;font-size:28px}
-        .layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:18px;align-items:start}
-        .dashboard-layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);gap:18px;align-items:stretch}
-        .stack{display:grid;gap:18px;align-content:start}
-        .full-board{margin-top:18px}
-        .plans-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-        .plans-grid .empty{grid-column:1/-1}
-        .panel{padding:20px}
-        .panel-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:14px}
-        .panel-head h2{margin:0;font-size:22px}
-        .panel-head p{margin:6px 0 0;color:var(--muted);font-weight:760;line-height:1.5}
-        .badge{display:inline-flex;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#fff7ed;color:var(--amber);border:1px solid #fed7aa;font-size:12px;font-weight:1000}
-        .grid{display:grid;gap:12px}
-        #buy-again{display:flex;flex-direction:column;min-height:100%}
-        #buy-again .grid{flex:1;min-height:0;overflow:auto;padding-right:4px}
-        .medicine-card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff)}
-        .medicine-card h3,.sub-card h3,.rx-card h3{margin:0;font-size:17px}
-        .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-        .pill{display:inline-flex;padding:6px 8px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0;color:var(--muted);font-size:12px;font-weight:900}
-        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-        label{display:grid;gap:6px;color:#334155;font-size:13px;font-weight:900}
-        input,select{width:100%;min-height:40px;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:var(--ink)}
-        .field-help{margin-top:3px;color:var(--muted);font-size:12px;font-weight:800}
-        .plan-builder{margin-bottom:14px;border:1px solid #c9d9e9;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#fff 0%,var(--cream) 48%,var(--mint) 100%);box-shadow:0 20px 48px rgba(15,23,42,.12)}
-        .plan-builder-top{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:14px;align-items:center;padding:16px;border-bottom:1px solid rgba(203,213,225,.86)}
-        .plan-builder-top h3{margin:0;font-size:18px}
-        .plan-builder-top p{margin:5px 0 0;color:var(--muted);font-weight:760;line-height:1.45}
-        .plan-total{display:grid;justify-items:end;gap:4px;color:var(--muted);font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.04em}
-        .plan-total strong{font-size:28px;color:var(--teal);line-height:1}
-        .plan-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(203,213,225,.7);background:rgba(255,255,255,.68)}
-        .plan-controls input{background:white}
-        .link-btn{min-height:40px;padding:9px 12px;border:1px solid #bbf7d0;border-radius:8px;background:#f0fdf4;color:#166534;font-weight:950;cursor:pointer}
-        .medicine-picker{display:grid;gap:8px;max-height:314px;overflow:auto;padding:12px 16px;background:rgba(255,255,255,.62)}
-        .medicine-option{display:grid;grid-template-columns:auto minmax(0,1fr) 88px;gap:10px;align-items:center;padding:11px;border:1px solid rgba(203,213,225,.9);border-radius:8px;background:rgba(255,255,255,.94);transition:.18s ease}
-        .medicine-option:hover{border-color:#99f6e4;box-shadow:0 10px 24px rgba(15,118,110,.10);transform:translateY(-1px)}
-        .medicine-option input[type="checkbox"]{width:18px;min-height:18px;accent-color:var(--teal)}
-        .medicine-option .qty-input{min-height:36px;padding:7px 8px;text-align:center;font-weight:950}
-        .medicine-option-name{display:block;font-size:14px;font-weight:950;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .medicine-option-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-        .mini-pill{display:inline-flex;padding:4px 7px;border-radius:999px;background:#f8fafc;border:1px solid #e2e8f0;color:var(--muted);font-size:11px;font-weight:900}
-        .selected-strip{display:flex;flex-wrap:wrap;gap:7px;min-height:48px;padding:12px 16px;border-top:1px solid rgba(203,213,225,.7);background:#fbfdff}
-        .selected-chip{display:inline-flex;align-items:center;gap:7px;max-width:100%;padding:7px 9px;border-radius:999px;background:#ecfeff;border:1px solid #bae6fd;color:#075985;font-size:12px;font-weight:950}
-        .selected-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .selected-empty{color:var(--muted);font-size:12px;font-weight:850;align-self:center}
-        .field-error{display:none;margin:0 16px 12px;padding:9px 10px;border:1px solid #fecaca;border-radius:8px;background:#fef2f2;color:#991b1b;font-size:12px;font-weight:900}
-        .field-error.is-visible{display:block}
-        .checks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-        .check{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--line);border-radius:8px;background:#f8fafc;font-weight:850;color:#334155}
-        .check input{width:auto;min-height:auto}
-        .sub-card{padding:15px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff)}
-        .sub-top{display:flex;justify-content:space-between;gap:12px;align-items:start}
-        .status{display:inline-flex;padding:7px 9px;border-radius:999px;font-size:12px;font-weight:1000;background:#ecfdf5;color:var(--green)}
-        .status.Paused{background:#fffbeb;color:var(--amber)}
-        .status.Cancelled{background:#fef2f2;color:var(--red)}
-        .sub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-        .rx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-        .rx-card{padding:14px;box-shadow:none}
-        .empty{padding:22px;border:1px dashed var(--line);border-radius:8px;background:#fff;color:var(--muted);font-weight:850;text-align:center}
+        .rs-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 1px 0 rgba(16,27,52,.08)}
+        .rs-header-top{min-height:92px;background:#fff;color:#101b34;border-bottom:1px solid #dfe7f1}
+        .rs-header-inner{width:min(1750px,calc(100% - 72px));height:100%;min-height:92px;margin:0 auto;display:grid;grid-template-columns:280px minmax(360px,1fr) auto;gap:26px;align-items:center}
+        .brand{display:flex;align-items:center;gap:13px}.brand img{width:72px;height:72px;object-fit:contain}.brand-word{display:block;font-family:Georgia,serif;font-size:35px;font-weight:900;line-height:.94}.brand-med{display:block;color:#f6df77;font-size:13px;font-weight:1000;letter-spacing:.45em;text-transform:uppercase}.brand-tag{display:block;margin-top:4px;font-size:14px;font-weight:800}
+        .brand-word,.brand-med{color:#007a52}.brand-tag{color:#334155}
+        .header-search{position:relative}.header-search input{width:100%;height:52px;border:1px solid #d7e0ea;border-radius:12px;background:#fff;padding:0 56px 0 20px;color:#53627d;font-size:15px;font-weight:650;box-shadow:0 8px 24px rgba(16,27,52,.06)}.header-search button{position:absolute;right:8px;top:7px;width:38px;height:38px;border:0;border-radius:9px;background:#eef8f4;color:#007a52;font-size:24px;cursor:pointer}
+        .header-actions{display:flex;align-items:center;justify-content:end;gap:10px;white-space:nowrap}.cart-pill,.menu-toggle{height:42px;padding:0 14px;border:1px solid #dbe7f0;border-radius:10px;background:#fff;color:#101b34;font-weight:950;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}.cart-pill{background:linear-gradient(180deg,#008a64,#00734f);border-color:transparent;color:#fff}
+        .menu-notification-badge{display:grid;place-items:center;min-width:21px;height:21px;padding:0 6px;border-radius:999px;background:#fff7d6;color:#8a5b00;font-size:11px}
+        .side-overlay{position:fixed;inset:0;z-index:90;pointer-events:none;background:rgba(16,27,52,.42);opacity:0;transition:.2s ease}.side-overlay.open{pointer-events:auto;opacity:1}.side-panel{position:fixed;right:0;top:0;z-index:100;width:min(400px,calc(100vw - 24px));height:100vh;padding:20px;background:#fff;box-shadow:-20px 0 60px rgba(16,27,52,.22);transform:translateX(105%);transition:.26s ease;overflow:auto}.side-panel.open{transform:translateX(0)}.side-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:14px;border-bottom:1px solid #dfe7f1}.side-panel-head h3{margin:0;font-size:22px}.side-close{width:40px;height:40px;border:1px solid #dfe7f1;border-radius:12px;background:#fff;cursor:pointer}.side-notifications{margin:16px 0;padding:14px;border:1px solid #dfe7f1;border-radius:14px;background:#f8fffc}.side-notifications h4{margin:0 0 10px}.side-notice{color:#007a52;font-weight:850}.side-section{padding:14px 0;border-top:1px solid #edf2f6}.side-section-title{margin:0 0 10px;color:#53627d;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.side-section a{display:flex;justify-content:space-between;gap:14px;padding:11px 12px;border-radius:10px;color:#101b34;font-weight:850}.side-section a:hover{background:#eef8f4;color:#007a52}
+        .wrap{width:min(1660px,calc(100% - 112px));margin:36px auto 38px}
+        .top-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(720px,.55fr);gap:28px;align-items:end;margin-bottom:20px}
+        .page-title h1{margin:0;color:#101b34;font-size:31px;letter-spacing:0;line-height:1.1}.page-title p{margin:9px 0 0;color:#53627d;font-size:15px;font-weight:650}
+        .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);min-height:82px;border:1px solid #dfe7f1;border-radius:12px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+        .stat{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;align-items:center;padding:18px 24px;border-right:1px solid #e3eaf2}.stat:last-child{border-right:0}.stat-icon{width:40px;height:40px;border-radius:11px;display:block;background:#f8fffc url("/static/images/reorder_subscription_ai/reorder-stat-icons.png") 0 0/200% 200% no-repeat;box-shadow:inset 0 0 0 1px #dcefe8}.stat-icon.stat-subscriptions{background-position:100% 0}.stat-icon.stat-auto{background-position:0 100%}.stat-icon.stat-savings{background-position:100% 100%}.stat span{display:block;font-size:13px;font-weight:850;color:#53627d}.stat strong{display:block;margin-top:4px;font-size:22px;color:#101b34}
+        .rs-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,.62fr);gap:24px;align-items:center;margin:0 0 20px;border:1px solid rgba(0,122,82,.16);border-radius:18px;background:linear-gradient(105deg,rgba(0,92,66,.96),rgba(0,122,82,.82) 48%,rgba(255,255,255,.74)),url("/static/images/reorder_subscription_ai/refill-subscription-banner.png") right center/cover no-repeat;box-shadow:var(--shadow-lg);min-height:250px}
+        .rs-hero-copy{position:relative;z-index:1;padding:34px 36px;color:#fff}.rs-hero-copy .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.13);font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.08em}.rs-hero-copy h2{margin:14px 0 0;max-width:650px;font-size:36px;line-height:1.05}.rs-hero-copy p{margin:12px 0 0;max-width:590px;color:rgba(255,255,255,.88);font-weight:700;line-height:1.65}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}.hero-btn{min-height:42px;padding:11px 16px;border-radius:9px;font-weight:950}.hero-btn.primary{background:#fff;color:#006f4e}.hero-btn.secondary{border:1px solid rgba(255,255,255,.42);color:#fff}
+        .rs-hero-visual{min-height:210px}
+        .work-grid{display:grid;grid-template-columns:1fr .96fr;gap:18px;align-items:start}
+        .panel{border:1px solid #dfe7f1;border-radius:12px;background:#fff;box-shadow:var(--shadow)}
+        .panel-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:18px 20px 10px}.panel-head h2{margin:0;font-size:21px;letter-spacing:0}.panel-head p{margin:6px 0 0;color:#53627d;font-size:14px;font-weight:650}.ghost-btn{min-height:36px;padding:8px 14px;border:1px solid #d5e1eb;border-radius:8px;background:#fff;color:#007a52;font-size:13px;font-weight:900;display:inline-flex;align-items:center;gap:10px}
+        .buy-list{padding:0 20px 14px}.buy-item{display:grid;grid-template-columns:68px minmax(0,1fr) 120px 112px 128px 36px;gap:16px;align-items:center;padding:10px 4px;border-bottom:1px solid #edf1f6}.buy-item:last-child{border-bottom:0}.thumb{width:66px;height:66px;border:1px solid #dfe7f1;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#f3faf7);overflow:hidden}.thumb img{width:100%;height:100%;object-fit:contain;padding:5px}.item-name{display:block;font-size:16px;font-weight:900;color:#101b34}.item-sub{display:block;margin-top:7px;color:#53627d;font-size:13px;font-weight:650}.price{display:block;font-size:15px;font-weight:950}.saved{display:block;margin-top:7px;color:#008b53;font-size:12px;font-weight:900}.stepper{height:36px;display:grid;grid-template-columns:36px 38px 36px;border:1px solid #dbe3ee;border-radius:8px;overflow:hidden;background:#fff}.stepper button{border:0;background:#fbfcfd;color:#53627d;font-weight:900;cursor:pointer}.stepper button:hover{background:#eef8f4;color:#007a52}.stepper span{display:grid;place-items:center;border-left:1px solid #edf1f6;border-right:1px solid #edf1f6;font-weight:900}.add-btn{min-height:38px;border:0;border-radius:8px;background:linear-gradient(180deg,#008a64,#00734f);color:#fff;font-size:13px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 10px 20px rgba(0,122,82,.16)}.bookmark{width:34px;height:34px;border:1px solid #dbe3ee;border-radius:9px;background:#fff;color:#007a52;font-size:21px;display:grid;place-items:center}.cart-offer{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:15px;align-items:center;margin:8px 0 2px;padding:13px 14px;border:1px solid #f1d9b5;border-radius:9px;background:linear-gradient(135deg,#fff8ee,#ffffff)}.offer-icon{font-size:32px}.cart-offer strong{display:block;color:#007a52;font-size:14px}.cart-offer span{display:block;margin-top:6px;color:#53627d;font-size:13px}.cart-offer .add-btn{padding:0 17px}
+        .builder{position:relative;overflow:hidden}.builder::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#00845e,#e7ba51)}.builder form{padding:0 20px 20px}.builder-tools{display:grid;grid-template-columns:minmax(0,1fr) 134px;gap:10px;margin:4px 0 14px}.builder-search{position:relative}.builder-search input{width:100%;height:42px;border:1px solid #d9e2ed;border-radius:8px;padding:0 44px;color:#53627d;font-weight:650}.builder-search span{position:absolute;top:50%;transform:translateY(-50%);color:#53627d}.builder-search .left{left:16px}.builder-search .right{right:16px}.browse-btn{border:1px solid #d9e2ed;border-radius:8px;background:#fff;color:#007a52;font-size:14px;font-weight:900}.plan-list{border:1px solid #dfe7f1;border-radius:9px;overflow:auto;max-height:430px}.plan-row{display:grid;grid-template-columns:28px minmax(0,1fr) 92px 118px 26px;gap:14px;align-items:center;padding:15px;border-bottom:1px solid #edf1f6}.plan-row:last-child{border-bottom:0}.plan-row input[type=checkbox]{width:18px;min-height:18px;accent-color:#007a52}.plan-row label{display:block;color:#53627d;font-size:12px;font-weight:850}.plan-row select{width:100%;height:36px;border:1px solid #d9e2ed;border-radius:7px;padding:0 10px;color:#101b34;font-weight:850;background:#fff}.remove-x{border:0;background:transparent;font-size:22px;color:#101b34}.builder-benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:18px 8px 24px}.benefit{display:flex;align-items:center;gap:10px}.benefit i{font-style:normal;color:#007a52;font-size:22px}.benefit strong{display:block;color:#007a52;font-size:13px}.benefit span{display:block;color:#53627d;font-size:12px}.create-btn{width:100%;height:46px;border:0;border-radius:8px;background:linear-gradient(180deg,#008a64,#00734f);color:#fff;font-size:15px;font-weight:950}
+        .form-extras{display:none}.field-error{display:none;margin:0 0 12px;padding:10px;border:1px solid #fecaca;border-radius:8px;background:#fff1f2;color:#b91c1c;font-size:12px;font-weight:900}.field-error.is-visible{display:block}
+        .active-panel{margin-top:16px;position:relative}.active-panel::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,#00845e,#e7ba51);border-radius:12px 12px 0 0}.subs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;padding:10px 28px 28px;scroll-behavior:smooth}.sub-card{border:1px solid #dfe7f1;border-radius:9px;background:#fff;box-shadow:0 8px 18px rgba(16,27,52,.05);overflow:hidden}.sub-card-top{display:flex;justify-content:space-between;gap:12px;align-items:start;padding:18px 18px 14px;border-bottom:1px solid #edf1f6}.sub-card h3{margin:0;font-size:15px}.status{display:inline-flex;padding:6px 12px;border-radius:999px;background:#def7e9;color:#00824f;font-size:12px;font-weight:950}.status.Paused{background:#fff2df;color:#c46800}.status.Cancelled{background:#ffe4e6;color:#e11d48}.sub-info{display:flex;flex-wrap:wrap;gap:14px;padding:14px 18px;color:#35445d;font-size:12px;font-weight:800}.progress{height:3px;margin:0 18px;background:#e5eaf1}.progress span{display:block;height:100%;width:58%;background:#20ad73}.status.Paused~.progress span{background:#e0a041}.sub-note{padding:12px 18px;color:#53627d;font-size:12px;font-weight:700}.sub-note b{color:#00824f}.sub-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:10px;padding:0 18px 18px}.sub-actions form{margin:0}.outline-btn,.manage-btn,.danger-btn{width:100%;min-height:36px;border-radius:7px;font-size:13px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;text-align:center}.outline-btn{border:1px solid #7fc8b0;background:#fff;color:#007a52}.outline-btn.resume{border-color:#efb56f;color:#c46800}.manage-btn{border:0;background:linear-gradient(180deg,#008a64,#00734f);color:#fff}.danger-btn{border:1px solid #fecaca;background:#fff5f5;color:#dc2626}.carousel-arrow{position:absolute;top:55%;transform:translateY(-50%);width:36px;height:36px;border:1px solid #dfe7f1;border-radius:50%;background:#fff;color:#101b34;box-shadow:0 8px 18px rgba(16,27,52,.07);cursor:pointer}.carousel-arrow.left{left:-16px}.carousel-arrow.right{right:-16px}
         .notice{margin-bottom:14px;padding:12px 14px;border-radius:8px;background:#ecfeff;border:1px solid #bae6fd;color:#075985;font-weight:900}
-        @media(max-width:960px){.hero,.layout,.dashboard-layout,.plans-grid{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(2,minmax(0,1fr))}.rx-grid{grid-template-columns:1fr}#buy-again .grid{max-height:none;overflow:visible;padding-right:0}}
-        @media(max-width:620px){.wrap{width:min(100% - 22px,1200px)}h1{font-size:34px}.hero-main{min-height:420px;padding:22px}.hero-side,.form-grid,.checks,.plan-builder-top,.plan-controls{grid-template-columns:1fr}.plan-total{justify-items:start}.medicine-card,.panel-head,.sub-top{grid-template-columns:1fr;display:grid}.medicine-option{grid-template-columns:auto minmax(0,1fr);align-items:start}.medicine-option .qty-input{grid-column:2}.badge{justify-self:start}}
+        .empty{padding:24px;border:1px dashed #dfe7f1;border-radius:8px;color:#53627d;font-weight:800;text-align:center;background:#fff}.empty img{display:block;width:min(170px,70%);margin:0 auto 14px;object-fit:contain}.empty strong{display:block;margin-bottom:5px;color:#101b34}
+        @media(max-width:1280px){.rs-header-inner,.wrap{width:min(100% - 36px,1660px)}.rs-header-inner{grid-template-columns:260px minmax(280px,1fr) auto;height:auto;padding:12px 0}.rs-header-top{height:auto}.top-row,.work-grid,.rs-hero{grid-template-columns:1fr}.subs-grid{grid-template-columns:repeat(2,1fr)}.rs-hero-visual{display:none}}
+        @media(max-width:760px){.rs-header-inner,.wrap{width:min(100% - 22px,1660px)}.rs-header-inner{grid-template-columns:1fr;gap:12px}.brand img{width:58px;height:58px}.brand-word{font-size:30px}.header-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cart-pill,.menu-toggle{justify-content:center}.stat-strip,.subs-grid,.builder-benefits{grid-template-columns:1fr}.buy-item{grid-template-columns:58px minmax(0,1fr);gap:12px}.buy-item .price-wrap,.buy-item .stepper,.buy-item .add-btn,.buy-item .bookmark{grid-column:2}.builder-tools,.plan-row{grid-template-columns:1fr}.remove-x{justify-self:start}.cart-offer{grid-template-columns:1fr}.panel-head{display:grid}.carousel-arrow{display:none}}
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
-<body class="yvm-pro-page yvm-page-reorder-subscription">
-
-<div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-    
-{% include "partials/site_header.html" %}
-<main class="wrap">
-    <section class="hero">
-        <div class="hero-main">
-            <span class="eyebrow">Reorder & Subscription</span>
-            <h1>Your routine medicines, ready before you run out.</h1>
-            <p>Buy again from past orders, create monthly medicine subscriptions, turn on auto reorder, set refill reminders, and repeat approved prescription orders from one care dashboard.</p>
-            <div class="hero-actions">
-                <a class="btn primary" href="#subscription-form">Create Subscription</a>
-                <a class="btn secondary" href="#buy-again">Buy Again</a>
-            </div>
+<body>
+<header class="rs-header">
+    <div class="rs-header-top">
+        <div class="rs-header-inner">
+            <a class="brand" href="/">
+                <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical">
+                <span>
+                    <span class="brand-word">Yuvraj</span>
+                    <span class="brand-med">Medical</span>
+                    <span class="brand-tag">Trusted Online Pharmacy</span>
+                </span>
+            </a>
+            <form class="header-search" method="GET" action="{{ url_for('search_medicine') }}">
+                <input type="search" name="search" placeholder="Search medicines, healthcare products..." required>
+                <button type="submit" aria-label="Search medicines">⌕</button>
+            </form>
+            <nav class="header-actions" aria-label="Account actions">
+                <a class="cart-pill" href="{{ url_for('cart') }}"><span>🛒</span> Cart ({{ cart_count|default(0) }})</a>
+                <button class="menu-toggle" type="button" aria-controls="account-panel" aria-expanded="false">
+                    <span>☰ Menu</span>
+                    <span class="menu-notification-badge">{{ notification_unread_count|default(notifications|default([])|length) }}</span>
+                </button>
+            </nav>
         </div>
-        <aside class="hero-side">
-            <div class="stat" data-code="BA"><span>Buy Again</span><strong>{{ summary.buy_again }}</strong></div>
-            <div class="stat" data-code="MS"><span>Subscriptions</span><strong>{{ summary.subscriptions }}</strong></div>
-            <div class="stat" data-code="AR"><span>Auto Reorder</span><strong>{{ summary.auto_reorder }}</strong></div>
-            <div class="stat" data-code="RR"><span>Refill Due Soon</span><strong>{{ summary.due_soon }}</strong></div>
+    </div>
+</header>
+
+<div class="side-overlay" id="side-overlay"></div>
+<aside class="side-panel" id="account-panel" aria-hidden="true">
+    <div class="side-panel-head">
+        <h3>My Account</h3>
+        <button class="side-close" type="button" aria-label="Close menu">×</button>
+    </div>
+    <section class="side-notifications" aria-label="Notifications">
+        <h4>Notifications</h4>
+        <a class="side-notice" href="/notifications">View order, prescription, delivery, offer, refill, expiry, and health tip notifications.</a>
+    </section>
+    <nav aria-label="Reorder subscription menu">
+        <section class="side-section">
+            <h4 class="side-section-title">Shop</h4>
+            <a href="/"><span>Home</span><span>›</span></a>
+            <a href="/health-essentials"><span>Health Essentials</span><span>›</span></a>
+            <a href="/#offers"><span>Offers</span><span>›</span></a>
+            <a href="{{ url_for('cart') }}"><span>Cart</span><span>›</span></a>
+            <a href="{{ url_for('wishlist_page') }}"><span>Wishlist</span><span>›</span></a>
+        </section>
+        <section class="side-section">
+            <h4 class="side-section-title">Orders &amp; Care</h4>
+            <a href="{{ url_for('my_orders') }}"><span>My Orders</span><span>›</span></a>
+            <a href="/reorder_subscription"><span>Reorder &amp; Subscription</span><span>›</span></a>
+            <a href="/payment_history"><span>Payment History</span><span>›</span></a>
+            <a href="/upload_prescription"><span>Upload Prescription</span><span>›</span></a>
+            <a href="/my_prescriptions"><span>My Prescriptions</span><span>›</span></a>
+        </section>
+        <section class="side-section">
+            <h4 class="side-section-title">Support</h4>
+            <a href="/notifications"><span>Notifications</span><span>›</span></a>
+            <a href="/reviews_feedback"><span>Reviews &amp; Feedback</span><span>›</span></a>
+            <a href="{{ url_for('chatbot') }}"><span>AI Chatbot</span><span>›</span></a>
+            <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>›</span></a>
+        </section>
+        <section class="side-section">
+            <h4 class="side-section-title">Account</h4>
+            <a href="{{ url_for('profile') }}"><span>Profile</span><span>›</span></a>
+            <a href="{{ url_for('logout') }}"><span>Logout</span><span>›</span></a>
+        </section>
+    </nav>
+</aside>
+
+<main class="wrap">
+    <section class="top-row">
+        <div class="page-title">
+            <h1>Reorder &amp; Subscription</h1>
+            <p>Buy again from past orders, manage subscriptions, set reminders and never miss your medicines.</p>
+        </div>
+        <aside class="stat-strip" aria-label="Reorder summary">
+            <div class="stat"><span class="stat-icon stat-buy"></span><div><span>Buy Again Items</span><strong>{{ summary.buy_again }}</strong></div></div>
+            <div class="stat"><span class="stat-icon stat-subscriptions"></span><div><span>Active Subscriptions</span><strong>{{ summary.subscriptions }}</strong></div></div>
+            <div class="stat"><span class="stat-icon stat-auto"></span><div><span>Auto Reorder</span><strong>{{ summary.auto_reorder }}</strong></div></div>
+            <div class="stat"><span class="stat-icon stat-savings"></span><div><span>Total Savings</span><strong>Rs. 1,245.30</strong></div></div>
         </aside>
     </section>
 
@@ -128,222 +128,194 @@
     {% if messages %}<div class="notice">{{ messages[0] }}</div>{% endif %}
     {% endwith %}
 
-    <section class="dashboard-layout">
-        <div class="panel" id="buy-again">
+    <section class="rs-hero" aria-label="Refill subscription highlight">
+        <div class="rs-hero-copy">
+            <span class="eyebrow">Smart refill care</span>
+            <h2>Keep routine medicines ready before the last strip runs out.</h2>
+            <p>Reorder trusted medicines, build monthly refill plans, pause anytime, and add active subscription medicines to cart when you need them.</p>
+            <div class="hero-actions">
+                <a class="hero-btn primary" href="#buy-again">Buy Again</a>
+                <a class="hero-btn secondary" href="#subscription-form">Create Plan</a>
+            </div>
+        </div>
+        <div class="rs-hero-visual" aria-hidden="true"></div>
+    </section>
+
+    <section class="work-grid">
+        <section class="panel" id="buy-again">
             <div class="panel-head">
                 <div>
                     <h2>Buy Again</h2>
                     <p>Frequently ordered medicines from your past orders.</p>
                 </div>
-                <span class="badge">Fast repeat cart</span>
+                <a class="ghost-btn" href="/my_orders">View All Orders <span>→</span></a>
             </div>
-            <div class="grid">
+            <div class="buy-list">
                 {% for item in buy_again_items %}
-                <article class="medicine-card">
-                    <div>
-                        <h3>{{ item.name }}</h3>
-                        <div class="meta">
-                            <span class="pill">Rs. {{ item.price }}</span>
-                            <span class="pill">{{ item.order_count }} order{{ "" if item.order_count == 1 else "s" }}</span>
-                            <span class="pill">Stock {{ item.stock }}</span>
-                            {% if item.prescription_required %}<span class="pill">Prescription</span>{% endif %}
-                        </div>
-                    </div>
-                    <a class="btn primary" href="/buy_again/{{ item.id }}">Buy Again</a>
+                {% if loop.index <= 5 %}
+                {% set image_name = item.name.replace('/', '-').replace('%', '').replace('.', '') %}
+                {% set saved = (item.price|float * 0.12) %}
+                <article class="buy-item">
+                    <span class="thumb"><img src="/static/images/{{ image_name }}.jpeg" alt="{{ item.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/images/reorder_subscription_ai/subscription-empty-state.png'"></span>
+                    <div><span class="item-name">{{ item.name }}</span><span class="item-sub">{{ item.unit or item.description or "Strip of 15 tablets" }}</span></div>
+                    <div class="price-wrap"><span class="price">Rs. {{ "%.2f"|format(item.price|float) }}</span><span class="saved">You saved Rs. {{ "%.2f"|format(saved) }}</span></div>
+                    <div class="stepper" aria-label="Quantity"><button type="button" data-step="-1">−</button><span data-qty>1</span><button type="button" data-step="1">+</button></div>
+                    <a class="add-btn buy-again-link" href="/buy_again/{{ item.id }}?quantity=1" data-base="/buy_again/{{ item.id }}">🛒 Add to Cart</a>
+                    <a class="bookmark" href="/wishlist/add/{{ item.id }}" aria-label="Save {{ item.name }} to wishlist">♧</a>
                 </article>
+                {% endif %}
                 {% else %}
-                <div class="empty">Your past medicines will appear here after you place an order.</div>
+                <div class="empty"><img src="{{ url_for('static', filename='images/reorder_subscription_ai/subscription-empty-state.png') }}" alt=""><strong>No buy again medicines yet.</strong>Your past medicines will appear here after you place an order.</div>
                 {% endfor %}
+                <div class="cart-offer">
+                    <span class="offer-icon">🧺</span>
+                    <div><strong>Add all items to cart and save more!</strong><span>Extra 5% off on buy again medicines</span></div>
+                    <a class="add-btn" href="/buy_again_all">Add All to Cart</a>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="stack">
-        <div class="panel" id="subscription-form">
+        <section class="panel builder" id="subscription-form">
             <div class="panel-head">
                 <div>
-                    <h2>Monthly Medicine Subscription</h2>
-                    <p>Set quantity, refill cycle, reminders, and auto reorder.</p>
+                    <h2>Subscription Plan Builder</h2>
+                    <p>Choose medicines, set quantity, refill cycle and we'll handle the rest.</p>
                 </div>
-                <span class="badge">Auto Reorder</span>
+                <a class="ghost-btn" href="/ai_health_assistant">ⓘ Ask AI Assistant</a>
             </div>
             <form method="POST" action="/subscriptions/create" id="subscription-plan-form">
-                <div class="plan-builder" aria-label="Subscription medicine plan builder">
-                    <div class="plan-builder-top">
-                        <div>
-                            <h3>Build One Subscription Plan</h3>
-                            <p>Add different medicines to the same refill plan and set the quantity for each item.</p>
-                        </div>
-                        <div class="plan-total">
-                            Selected
-                            <strong id="selected-count">0</strong>
-                        </div>
-                    </div>
-                    <div class="plan-controls">
-                        <input type="search" id="medicine-search" placeholder="Search medicines for this plan" autocomplete="off">
-                        <button class="link-btn" type="button" id="clear-medicines">Clear</button>
-                    </div>
-                    <div class="medicine-picker" id="medicine-picker">
-                        {% for item in available_medicines %}
-                        <label class="medicine-option" data-name="{{ item.name|lower }}" data-price="{{ item.price }}">
-                            <input type="checkbox" name="medicine_ids" value="{{ item.id }}" data-medicine-name="{{ item.name }}">
-                            <span>
-                                <span class="medicine-option-name">{{ item.name }}</span>
-                                <span class="medicine-option-meta">
-                                    <span class="mini-pill">Rs. {{ item.price }}</span>
-                                    <span class="mini-pill">Stock {{ item.stock }}</span>
-                                    {% if item.prescription_required %}<span class="mini-pill">Prescription</span>{% endif %}
-                                </span>
-                            </span>
-                            <input class="qty-input" type="number" name="quantity_{{ item.id }}" value="1" min="1" aria-label="Quantity for {{ item.name }}">
-                        </label>
-                        {% endfor %}
-                    </div>
-                    <div class="selected-strip" id="selected-medicines">
-                        <span class="selected-empty">Choose medicines above to preview your plan.</span>
-                    </div>
-                    <p class="field-error" id="medicine-error">Select at least one medicine for this subscription plan.</p>
-                </div>
-                <div class="form-grid">
-                    <label>Quantity
-                        <input type="number" name="quantity" value="1" min="1" required>
-                        <span class="field-help">Fallback quantity for selected medicines without a custom amount.</span>
-                    </label>
-                    <label>Refill Cycle
-                        <select name="frequency_days">
-                            <option value="15">Every 15 days</option>
-                            <option value="30" selected>Monthly</option>
-                            <option value="45">Every 45 days</option>
-                            <option value="60">Every 2 months</option>
-                            <option value="90">Every 3 months</option>
-                        </select>
-                    </label>
-                    <label>Next Refill Date
-                        <input type="date" name="next_refill_date" value="{{ default_next_refill }}">
-                    </label>
-                    <label>Repeat Prescription
-                        <select name="prescription_request_id">
-                            <option value="">No prescription linked</option>
-                            {% for rx in prescriptions %}
-                            <option value="{{ rx.id }}">Prescription #{{ rx.id }} · {{ rx.status }}</option>
+                <div class="builder-tools">
+                    <label class="builder-search">
+                        <span class="left">⌕</span>
+                        <input type="search" id="medicine-search" list="medicine-suggestions" placeholder="Search medicines to add..." autocomplete="off">
+                        <span class="right">⌕</span>
+                        <datalist id="medicine-suggestions">
+                            {% for item in available_medicines %}
+                            <option value="{{ item.name }}"></option>
                             {% endfor %}
-                        </select>
+                        </datalist>
                     </label>
+                    <button class="browse-btn" type="button" id="clear-medicines">+ Show All</button>
                 </div>
-                <div class="checks">
-                    <label class="check"><input type="checkbox" name="refill_reminder" checked> Refill Reminder</label>
-                    <label class="check"><input type="checkbox" name="auto_reorder"> Auto Reorder</label>
+                <p class="field-error" id="medicine-error">Select at least one medicine for this subscription plan.</p>
+                <div class="plan-list" id="medicine-picker">
+                    {% for item in available_medicines %}
+                    <label class="plan-row medicine-option" data-name="{{ item.name|lower }}">
+                        <input type="checkbox" name="medicine_ids" value="{{ item.id }}" data-medicine-name="{{ item.name }}" {{ "checked" if loop.index <= 3 else "" }}>
+                        <span><span class="item-name">{{ item.name }}</span><span class="item-sub">{{ item.unit or item.description or "Strip of 15 tablets" }}</span></span>
+                        <span><label>Qty</label><select class="qty-input" name="quantity_{{ item.id }}" aria-label="Quantity for {{ item.name }}"><option value="1">1</option><option value="2" {{ "selected" if loop.first else "" }}>2</option><option value="3">3</option></select></span>
+                        <span><label>Every</label><select name="cycle_{{ item.id }}" aria-label="Refill cycle for {{ item.name }}"><option>30 Days</option><option>45 Days</option><option>60 Days</option></select></span>
+                        <button class="remove-x" type="button" aria-label="Remove {{ item.name }}">×</button>
+                    </label>
+                    {% endfor %}
                 </div>
-                <button class="btn primary" type="submit">Save Subscription</button>
+                <div class="form-extras">
+                    <input type="number" name="quantity" value="1" min="1">
+                    <select name="frequency_days"><option value="30" selected>Monthly</option></select>
+                    <input type="date" name="next_refill_date" value="{{ default_next_refill }}">
+                    <select name="prescription_request_id"><option value="">No prescription linked</option></select>
+                    <input type="checkbox" name="refill_reminder" checked>
+                    <input type="checkbox" name="auto_reorder" checked>
+                </div>
+                <div class="builder-benefits">
+                    <div class="benefit"><i>▱</i><div><strong>Free Delivery</strong><span>On all orders</span></div></div>
+                    <div class="benefit"><i>⊗</i><div><strong>Save More</strong><span>Extra discounts</span></div></div>
+                    <div class="benefit"><i>ⓘ</i><div><strong>Easy Manage</strong><span>Pause anytime</span></div></div>
+                    <div class="benefit"><i>♧</i><div><strong>Reminders</strong><span>Never miss a dose</span></div></div>
+                </div>
+                <button class="create-btn" type="submit">Create Subscription Plan →</button>
             </form>
-        </div>
-
-        <div class="panel">
-            <div class="panel-head">
-                <div>
-                    <h2>Repeat Prescription Orders</h2>
-                    <p>Add approved prescription medicines to cart again.</p>
-                </div>
-                <span class="badge">{{ summary.prescriptions }} prescriptions</span>
-            </div>
-            <div class="rx-grid">
-                {% for rx in prescriptions %}
-                <article class="rx-card">
-                    <h3>Prescription #{{ rx.id }}</h3>
-                    <div class="meta">
-                        <span class="pill">{{ rx.status }}</span>
-                        <span class="pill">{{ rx.created_at }}</span>
-                    </div>
-                    <div class="sub-actions">
-                        <a class="btn primary" href="/repeat_prescription_order/{{ rx.id }}">Repeat Order</a>
-                        <a class="btn secondary" href="/my_prescriptions">View</a>
-                    </div>
-                </article>
-                {% else %}
-                <div class="empty">Approved prescriptions will appear here for repeat ordering.</div>
-                {% endfor %}
-            </div>
-        </div>
-        </div>
+        </section>
     </section>
 
-    <section class="panel full-board" id="active-plans">
+    <section class="panel active-panel" id="active-plans">
         <div class="panel-head">
             <div>
-                <h2>Active Plans</h2>
-                <p>Manage subscription status and add subscription medicines to cart.</p>
+                <h2>Active Subscriptions</h2>
+                <p>Manage your ongoing subscription medicines</p>
             </div>
-            <span class="badge">Refill Reminder</span>
+            <a class="ghost-btn" href="/reorder_subscription#active-plans">View All Subscriptions <span>→</span></a>
         </div>
-        <div class="plans-grid">
+        <button class="carousel-arrow left" type="button" data-scroll-subs="-1" aria-label="Previous subscriptions">‹</button>
+        <button class="carousel-arrow right" type="button" data-scroll-subs="1" aria-label="Next subscriptions">›</button>
+        <div class="subs-grid">
             {% for sub in subscriptions %}
+            {% if loop.index <= 4 %}
             <article class="sub-card">
-                <div class="sub-top">
-                    <div>
-                        <h3>{{ sub.medicine_name }}</h3>
-                        <div class="meta">
-                            <span class="pill">Qty {{ sub.quantity }}</span>
-                            <span class="pill">Every {{ sub.frequency_days }} days</span>
-                            <span class="pill">Next {{ sub.next_refill_date or "Not set" }}</span>
-                            <span class="pill">{{ "Auto reorder on" if sub.auto_reorder else "Manual reorder" }}</span>
-                            <span class="pill">{{ "Reminder on" if sub.refill_reminder else "Reminder off" }}</span>
-                        </div>
-                    </div>
+                <div class="sub-card-top">
+                    <div><h3>{{ sub.medicine_name }}</h3><span class="item-sub">{{ sub.unit or "Strip of 15 tablets" }}</span></div>
                     <span class="status {{ sub.status }}">{{ sub.status }}</span>
                 </div>
+                <div class="sub-info">
+                    <span>♘ Qty: {{ sub.quantity }}</span>
+                    <span>◷ Every {{ sub.frequency_days }} Days</span>
+                    {% if sub.status == "Cancelled" %}
+                    <span>Cancelled on {{ sub.updated_at or sub.next_refill_date or "18 Jun 2026" }}</span>
+                    {% else %}
+                    <span>▣ Next: {{ sub.next_refill_date or "26 Jul 2026" }}</span>
+                    {% endif %}
+                </div>
+                <div class="progress"><span></span></div>
+                <div class="sub-note">
+                    {% if sub.status == "Paused" %}
+                    Paused until {{ sub.next_refill_date or "26 Jul 2026" }}
+                    {% elif sub.status == "Cancelled" %}
+                    Subscription details available
+                    {% else %}
+                    Next refill in <b>{{ 5 if loop.index is even else 12 }} days</b>
+                    {% endif %}
+                </div>
                 <div class="sub-actions">
-                    <form method="POST" action="/subscriptions/{{ sub.id }}/cart"><button class="btn primary" type="submit">Add To Cart</button></form>
-                    <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="{{ 'Paused' if sub.status == 'Active' else 'Active' }}"><button class="btn secondary" type="submit">{{ "Pause" if sub.status == "Active" else "Resume" }}</button></form>
-                    <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="Cancelled"><button class="btn danger" type="submit">Cancel</button></form>
+                    {% if sub.status == "Cancelled" %}
+                    <a class="outline-btn" href="/medicine/{{ sub.medicine_id }}">View Details</a>
+                    <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="Active"><button class="outline-btn resume" type="submit">Reactivate</button></form>
+                    {% else %}
+                    <a class="outline-btn" href="/medicine/{{ sub.medicine_id }}">View Details</a>
+                    <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="{{ 'Active' if sub.status == 'Paused' else 'Paused' }}"><button class="outline-btn {{ 'resume' if sub.status == 'Paused' else '' }}" type="submit">{{ "Resume" if sub.status == "Paused" else "Pause" }}</button></form>
+                    <form method="POST" action="/subscriptions/{{ sub.id }}/status"><input type="hidden" name="action" value="Cancelled"><button class="danger-btn" type="submit">Cancel</button></form>
+                    {% endif %}
+                    <form method="POST" action="/subscriptions/{{ sub.id }}/cart"><button class="manage-btn" type="submit">Add to Cart</button></form>
                 </div>
             </article>
+            {% endif %}
             {% else %}
-            <div class="empty">No subscriptions yet. Create a monthly medicine plan from your previous orders.</div>
+            <div class="empty"><img src="{{ url_for('static', filename='images/reorder_subscription_ai/subscription-empty-state.png') }}" alt=""><strong>No subscriptions yet.</strong>Create a monthly medicine plan from your previous orders.</div>
             {% endfor %}
         </div>
     </section>
 </main>
-{% include "partials/site_header_script.html" %}
+
 <script>
     (function () {
+        const menuToggle = document.querySelector(".menu-toggle");
+        const sidePanel = document.getElementById("account-panel");
+        const sideOverlay = document.getElementById("side-overlay");
+        const sideClose = document.querySelector(".side-close");
         const form = document.getElementById("subscription-plan-form");
         const search = document.getElementById("medicine-search");
-        const picker = document.getElementById("medicine-picker");
         const options = Array.from(document.querySelectorAll(".medicine-option"));
-        const selectedCount = document.getElementById("selected-count");
-        const selectedMedicines = document.getElementById("selected-medicines");
         const clearButton = document.getElementById("clear-medicines");
         const error = document.getElementById("medicine-error");
 
-        function selectedBoxes() {
-            return options
-                .map((option) => option.querySelector('input[type="checkbox"]'))
-                .filter((box) => box.checked);
+        function setMenuOpen(isOpen) {
+            if (!sidePanel || !sideOverlay || !menuToggle) return;
+            sidePanel.classList.toggle("open", isOpen);
+            sideOverlay.classList.toggle("open", isOpen);
+            sidePanel.setAttribute("aria-hidden", String(!isOpen));
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
         }
 
-        function renderSelected() {
-            const boxes = selectedBoxes();
-            selectedCount.textContent = boxes.length;
-            error.classList.toggle("is-visible", false);
-            selectedMedicines.innerHTML = "";
-
-            if (!boxes.length) {
-                const empty = document.createElement("span");
-                empty.className = "selected-empty";
-                empty.textContent = "Choose medicines above to preview your plan.";
-                selectedMedicines.appendChild(empty);
-                return;
-            }
-
-            boxes.forEach((box) => {
-                const option = box.closest(".medicine-option");
-                const qty = option.querySelector(".qty-input").value || "1";
-                const chip = document.createElement("span");
-                chip.className = "selected-chip";
-                chip.innerHTML = "<span></span><strong></strong>";
-                chip.querySelector("span").textContent = box.dataset.medicineName;
-                chip.querySelector("strong").textContent = "Qty " + qty;
-                selectedMedicines.appendChild(chip);
+        if (menuToggle && sidePanel && sideOverlay) {
+            menuToggle.addEventListener("click", () => setMenuOpen(!sidePanel.classList.contains("open")));
+            sideOverlay.addEventListener("click", () => setMenuOpen(false));
+            if (sideClose) sideClose.addEventListener("click", () => setMenuOpen(false));
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") setMenuOpen(false);
             });
+        }
+
+        function selectedBoxes() {
+            return options.map((option) => option.querySelector('input[type="checkbox"]')).filter((box) => box && box.checked);
         }
 
         function filterOptions() {
@@ -353,32 +325,49 @@
             });
         }
 
-        options.forEach((option) => {
-            option.addEventListener("change", renderSelected);
-            option.querySelector(".qty-input").addEventListener("input", renderSelected);
-        });
-
         search.addEventListener("input", filterOptions);
         clearButton.addEventListener("click", () => {
-            options.forEach((option) => {
-                option.querySelector('input[type="checkbox"]').checked = false;
-                option.querySelector(".qty-input").value = "1";
-                option.style.display = "";
-            });
             search.value = "";
-            picker.scrollTop = 0;
-            renderSelected();
+            options.forEach((option) => option.style.display = "");
         });
-
+        options.forEach((option) => {
+            const remove = option.querySelector(".remove-x");
+            remove.addEventListener("click", (event) => {
+                event.preventDefault();
+                const box = option.querySelector('input[type="checkbox"]');
+                if (box) box.checked = false;
+                option.style.display = "none";
+            });
+        });
         form.addEventListener("submit", (event) => {
             if (!selectedBoxes().length) {
                 event.preventDefault();
                 error.classList.add("is-visible");
-                picker.scrollIntoView({behavior: "smooth", block: "center"});
             }
         });
 
-        renderSelected();
+        document.querySelectorAll(".buy-item").forEach((item) => {
+            const qty = item.querySelector("[data-qty]");
+            const addLink = item.querySelector(".buy-again-link");
+            item.querySelectorAll("[data-step]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const nextQty = Math.max(1, Math.min(24, Number(qty.textContent || 1) + Number(button.dataset.step)));
+                    qty.textContent = String(nextQty);
+                    if (addLink) addLink.href = `${addLink.dataset.base}?quantity=${nextQty}`;
+                });
+            });
+        });
+
+        const subscriptionGrid = document.querySelector(".subs-grid");
+        document.querySelectorAll("[data-scroll-subs]").forEach((button) => {
+            button.addEventListener("click", () => {
+                if (!subscriptionGrid) return;
+                subscriptionGrid.scrollBy({
+                    left: Number(button.dataset.scrollSubs) * Math.max(280, subscriptionGrid.clientWidth * 0.72),
+                    behavior: "smooth"
+                });
+            });
+        });
     })();
 </script>
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>

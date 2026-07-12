@@ -4349,6 +4349,7 @@ body.yvm-page-home{
     </form>
 </div>
     <div class="header-actions">
+        <a href="{{ url_for('chatbot') }}">AI Chatbot</a>
         <a href="{{ url_for('cart') }}" class="cart-btn">🛒 Cart ({{ cart_count }})</a>
         <a href="{{ url_for('wishlist_page') }}">❤️ Wishlist</a>
         <button class="menu-toggle"
@@ -4404,6 +4405,7 @@ body.yvm-page-home{
             <a href="/rewards"><span>Rewards & Loyalty</span><span>›</span></a>
             <a href="/notifications"><span>Notifications</span><span>›</span></a>
             <a href="/reviews_feedback"><span>Reviews & Feedback</span><span>›</span></a>
+            <a href="{{ url_for('chatbot') }}"><span>Gemini AI Chatbot</span><span>›</span></a>
             <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>›</span></a>
         </section>
 
@@ -4642,14 +4644,14 @@ body.yvm-page-home{
     <section class="home-section">
         <div class="home-section-head">
             <h2>Health Tips & Articles</h2>
-            <a href="/ai_health_assistant">View All Articles →</a>
+            <a href="{{ url_for('chatbot') }}">View All Articles →</a>
         </div>
         <div class="article-grid">
-            <a class="article-card" href="/ai_health_assistant"><img src="{{ url_for('static', filename='images/offer-healthcare-ai.png') }}" alt=""><div><b>Boost Your Immunity Naturally</b><span>Read More →</span></div></a>
-            <a class="article-card" href="/ai_health_assistant"><img src="{{ url_for('static', filename='images/ai-feature-hero-premium.png') }}" alt=""><div><b>Benefits of Drinking Water Daily</b><span>Read More →</span></div></a>
-            <a class="article-card" href="/ai_health_assistant"><img src="{{ url_for('static', filename='images/order-management-premium.png') }}" alt=""><div><b>How to Maintain a Healthy Heart</b><span>Read More →</span></div></a>
-            <a class="article-card" href="/ai_health_assistant"><img src="{{ url_for('static', filename='images/dashboard-recent-orders-ai.png') }}" alt=""><div><b>Tips for Better Sleep at Night</b><span>Read More →</span></div></a>
-            <a class="article-card" href="/ai_health_assistant"><img src="{{ url_for('static', filename='images/offer-combo-ai.png') }}" alt=""><div><b>Ayurvedic Remedies for Everyday Health</b><span>Read More →</span></div></a>
+            <a class="article-card" href="{{ url_for('chatbot', prompt='Nutrition plan tips for Boost Your Immunity Naturally') }}"><img src="{{ url_for('static', filename='images/offer-healthcare-ai.png') }}" alt=""><div><b>Boost Your Immunity Naturally</b><span>Read More →</span></div></a>
+            <a class="article-card" href="{{ url_for('chatbot', prompt='Nutrition plan tips for Benefits of Drinking Water Daily') }}"><img src="{{ url_for('static', filename='images/ai-feature-hero-premium.png') }}" alt=""><div><b>Benefits of Drinking Water Daily</b><span>Read More →</span></div></a>
+            <a class="article-card" href="{{ url_for('chatbot', prompt='Nutrition plan tips for How to Maintain a Healthy Heart') }}"><img src="{{ url_for('static', filename='images/order-management-premium.png') }}" alt=""><div><b>How to Maintain a Healthy Heart</b><span>Read More →</span></div></a>
+            <a class="article-card" href="{{ url_for('chatbot', prompt='Nutrition plan tips for Tips for Better Sleep at Night') }}"><img src="{{ url_for('static', filename='images/dashboard-recent-orders-ai.png') }}" alt=""><div><b>Tips for Better Sleep at Night</b><span>Read More →</span></div></a>
+            <a class="article-card" href="{{ url_for('chatbot', prompt='Nutrition plan tips for Ayurvedic Remedies for Everyday Health') }}"><img src="{{ url_for('static', filename='images/offer-combo-ai.png') }}" alt=""><div><b>Ayurvedic Remedies for Everyday Health</b><span>Read More →</span></div></a>
         </div>
     </section>
 </main>
@@ -5047,8 +5049,8 @@ body.yvm-page-home{
 
 <div class="floating-contact" aria-label="Quick contact">
     <a class="ai-assistant-float"
-       href="/ai_health_assistant"
-       aria-label="Open AI Health Assistant">🤖</a>
+       href="{{ url_for('chatbot') }}"
+       aria-label="Open Gemini AI Chatbot">🤖</a>
     <a class="whatsapp-float"
        href="https://wa.me/919999999999"
        aria-label="Chat on WhatsApp">☎</a>

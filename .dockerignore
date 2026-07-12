@@ -1,6 +1,6 @@
+.env
+.git
 __pycache__/
 *.pyc
-.env
 .venv/
 venv/
-backup.sql

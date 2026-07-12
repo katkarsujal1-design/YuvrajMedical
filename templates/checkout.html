@@ -76,6 +76,14 @@
                     <textarea id="delivery_notes" name="delivery_notes" placeholder="Landmark, preferred time, or handover instructions"></textarea>
                 </div>
                 <div class="field wide">
+                    <label for="family_member_id">Family Profile</label>
+                    <select id="family_member_id" name="family_member_id">
+                        {% for option in family_members %}
+                            <option value="{{ option.value }}">{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="field wide">
                     <label for="prescription">Doctor Prescription</label>
                     <input id="prescription" type="file" name="prescription" accept="image/*,.pdf">
                 </div>

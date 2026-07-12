@@ -9,6 +9,8 @@ import hashlib
 import re
 import secrets
 import requests
+from dotenv import load_dotenv
+from google import genai
 from rapidfuzz import fuzz
 import pytesseract
 from PIL import Image
@@ -23,6 +25,15 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from urllib.parse import quote
+from family_health import (
+    COMMON_FAMILY_RELATIONS,
+    build_family_member_options,
+    format_family_member_label,
+    normalize_family_member_selection,
+)
+
+load_dotenv()
+
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY","my-super-secret")
@@ -33,6 +44,22 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 app.config["SESSION_PERMANENT"] = True
 app.permanent_session_lifetime = timedelta(days=7)
+
+gemini_client = None
+
+
+def get_gemini_client():
+    global gemini_client
+
+    if gemini_client is not None:
+        return gemini_client
+
+    gemini_api_key = os.getenv("GEMINI_API_KEY")
+    if not gemini_api_key:
+        raise RuntimeError("GEMINI_API_KEY is missing. Add it to the .env file.")
+
+    gemini_client = genai.Client(api_key=gemini_api_key)
+    return gemini_client
 
 #=================         ===========================
 @app.teardown_appcontext
@@ -2288,6 +2315,85 @@ def ai_health_assistant_ask():
     })
 
 
+@app.route("/chatbot")
+def chatbot():
+    return render_template("chatbot.html")
+
+
+@app.route("/api/chatbot", methods=["POST"])
+def chatbot_api():
+    try:
+        data = request.get_json(silent=True) or {}
+        user_message = str(data.get("message", "")).strip()
+
+        if not user_message:
+            return jsonify({
+                "success": False,
+                "error": "Please enter a message."
+            }), 400
+
+        if len(user_message) > 1000:
+            return jsonify({
+                "success": False,
+                "error": "Your message is too long. Maximum length is 1000 characters."
+            }), 400
+
+        system_instruction = """
+You are the AI assistant for Yuvraj Medical & Chemist.
+
+Your responsibilities:
+- Provide general information about medicines and pharmacy services.
+- Explain medicine-related terminology in simple language.
+- Help customers understand how to use the website.
+- Tell customers to consult a qualified doctor or pharmacist for diagnosis,
+  dosage changes, medicine interactions, pregnancy-related advice, allergies,
+  emergencies, or serious symptoms.
+- Never claim to diagnose a medical condition.
+- Never prescribe medicines.
+- Never guarantee that a medicine is safe for a specific user.
+- Do not invent medicine availability, stock, price, delivery status, or order status.
+- When database information is unavailable, clearly say that the user should
+  check the website inventory or contact the pharmacy.
+- Keep answers clear, concise, and professional.
+"""
+
+        complete_prompt = f"""
+{system_instruction}
+
+Customer message:
+{user_message}
+
+Respond as the Yuvraj Medical assistant.
+"""
+
+        response = get_gemini_client().models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=complete_prompt
+        )
+
+        reply = response.text.strip() if response.text else ""
+        if not reply:
+            reply = (
+                "I could not generate a response. "
+                "Please try again or contact the pharmacy."
+            )
+
+        return jsonify({
+            "success": True,
+            "reply": reply
+        })
+
+    except Exception as error:
+        app.logger.exception("Gemini chatbot error: %s", error)
+        return jsonify({
+            "success": False,
+            "error": (
+                "The AI assistant is temporarily unavailable. "
+                "Please try again later."
+            )
+        }), 500
+
+
 @app.route("/medicine/<int:id>")
 def medicine_details(id):
     if "user" not in session:
@@ -2754,6 +2860,29 @@ def logout():
 
 
 # ================= PROFILE =================
+def ensure_family_health_schema():
+    if app.config.get("FAMILY_HEALTH_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+
+    for table_name, column_sql in [
+        ("orders", "family_member_id INT NULL"),
+        ("prescription_requests", "family_member_id INT NULL"),
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_sql}")
+        except Exception as exc:
+            message = str(exc).lower()
+            if "duplicate column" not in message and "already exists" not in message and "1060" not in message:
+                pass
+
+    db.commit()
+    cursor.close()
+    app.config["FAMILY_HEALTH_SCHEMA_READY"] = True
+
+
 def ensure_profile_management_schema():
     if app.config.get("PROFILE_MANAGEMENT_SCHEMA_READY"):
         return
@@ -2839,6 +2968,26 @@ def get_profile_context(user_id):
     return user, addresses, family_members
 
 
+def get_family_members_for_user(user_id):
+    ensure_profile_management_schema()
+    ensure_family_health_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT id, name, relation
+        FROM family_members
+        WHERE user_id=%s
+        ORDER BY id DESC
+    """, (user_id,))
+    family_members = cursor.fetchall()
+    cursor.close()
+    return family_members
+
+
+def get_family_member_options(user_id):
+    return build_family_member_options(get_family_members_for_user(user_id))
+
+
 @app.route("/profile")
 def profile():
     if "user" not in session:
@@ -2915,6 +3064,8 @@ def profile_manage(section):
     db = get_db()
     message = None
     error = None
+
+    default_relation = (request.form.get("relation", "").strip() or request.args.get("relation", "").strip())
 
     if request.method == "POST":
         try:
@@ -3029,7 +3180,7 @@ def profile_manage(section):
 
             elif section == "family":
                 name = request.form.get("name", "").strip()
-                relation = request.form.get("relation", "").strip()
+                relation = request.form.get("relation", "").strip().title() or "Other"
                 age = request.form.get("age", "").strip()
                 notes = request.form.get("notes", "").strip()
 
@@ -3076,7 +3227,9 @@ def profile_manage(section):
         addresses=addresses,
         family_members=family_members,
         message=message,
-        error=error
+        error=error,
+        common_family_relations=COMMON_FAMILY_RELATIONS,
+        default_relation=default_relation,
     )
 
 # ================= Edit Profile =========
@@ -3758,6 +3911,42 @@ def wishlist_page_to_cart(id):
     return redirect("/wishlist")
 
 
+@app.route("/wishlist/move_all_to_cart")
+def wishlist_move_all_to_cart():
+    if "user" not in session:
+        return redirect("/login")
+
+    ensure_cart_feature_schema()
+    db = get_db()
+    user_id = session["user"]["id"]
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT wishlist.medicine_id
+        FROM wishlist
+        JOIN medicines ON medicines.id = wishlist.medicine_id
+        WHERE wishlist.user_id=%s AND medicines.stock > 0
+    """, (user_id,))
+    medicine_ids = [row["medicine_id"] for row in cursor.fetchall()]
+
+    if medicine_ids:
+        insert_values = [(user_id, medicine_id) for medicine_id in medicine_ids]
+        cursor.executemany("""
+            INSERT INTO cart (user_id, medicine_id, quantity)
+            VALUES (%s, %s, 1)
+            ON DUPLICATE KEY UPDATE quantity = quantity + 1
+        """, insert_values)
+        cursor.execute("""
+            DELETE wishlist
+            FROM wishlist
+            JOIN medicines ON medicines.id = wishlist.medicine_id
+            WHERE wishlist.user_id=%s AND medicines.stock > 0
+        """, (user_id,))
+        db.commit()
+
+    cursor.close()
+    return redirect("/wishlist")
+
+
 @app.route("/cart/remove_wishlist/<int:id>")
 def remove_wishlist(id):
     if "user" not in session:
@@ -3870,6 +4059,7 @@ def cart():
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         SELECT medicines.id, medicines.name, medicines.price,
+               medicines.category, medicines.stock, medicines.expiry_date,
                cart.quantity
         FROM cart
         JOIN medicines ON medicines.id = cart.medicine_id
@@ -3883,11 +4073,20 @@ def cart():
     for r in rows:
         subtotal = r["price"] * r["quantity"]
         subtotal_total += subtotal
+        package = medicine_package_context(r)
+        display_mrp = round(float(r["price"]) * 1.12, 2)
+        display_discount = round(display_mrp - float(r["price"]), 2)
 
         items.append({
             "id": r["id"],
             "name": r["name"],
             "price": r["price"],
+            "mrp": display_mrp,
+            "discount": display_discount,
+            "category": normalize_category(r.get("category")),
+            "stock": r.get("stock") or 0,
+            "expiry_date": r.get("expiry_date"),
+            "pack_size": package["selling_unit"],
             "qty": r["quantity"],
             "subtotal": subtotal
         })
@@ -3931,6 +4130,7 @@ def checkout():
         return redirect("/login")
 
     ensure_payment_schema()
+    ensure_family_health_schema()
     db = get_db()
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -3953,7 +4153,8 @@ def checkout():
         cart_items=cart_items,
         totals=totals,
         payment_methods=PAYMENT_METHODS,
-        manual_payment_methods=MANUAL_PAYMENT_METHODS
+        manual_payment_methods=MANUAL_PAYMENT_METHODS,
+        family_members=get_family_member_options(session["user"]["id"])
     )
 
 # ================= PLACE ORDER =================
@@ -3965,6 +4166,7 @@ def place_order():
         return redirect("/login")
 
     ensure_payment_schema()
+    ensure_family_health_schema()
     db = get_db()
 
     try:
@@ -3982,6 +4184,9 @@ def place_order():
         payment_notes = (request.form.get("payment_notes") or "").strip()
         payment_screenshot_file = request.files.get("payment_screenshot")
         payment_screenshot_path = None
+        family_members = get_family_members_for_user(user_id)
+        selected_family_member_id = (request.form.get("family_member_id") or "").strip()
+        family_member_id = normalize_family_member_selection(selected_family_member_id, family_members)
 
         if payment_method not in PAYMENT_METHODS:
             db.rollback()
@@ -4083,6 +4288,7 @@ def place_order():
         cursor.execute("""
             INSERT INTO orders (
                 user_id,
+                family_member_id,
                 total,
                 date,
                 status,
@@ -4097,10 +4303,10 @@ def place_order():
                 payment_reference,
                 payment_screenshot
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             user_id,
-            0,
+            family_member_id,
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "Pending",
             file_path,
@@ -4276,9 +4482,11 @@ def my_orders():
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
-        SELECT * FROM orders
-        WHERE user_id=%s
-        ORDER BY id DESC
+        SELECT orders.*, family_members.name AS family_member_name, family_members.relation AS family_member_relation
+        FROM orders
+        LEFT JOIN family_members ON family_members.id = orders.family_member_id
+        WHERE orders.user_id=%s
+        ORDER BY orders.id DESC
     """, (user_id,))
     orders_raw = cursor.fetchall()
     cursor.close()
@@ -4318,6 +4526,11 @@ def my_orders():
             "courier_tracking_url": o.get("courier_tracking_url") or "",
             "payment_method": o.get("payment_method") or "Cash On Delivery",
             "payment_status": o.get("payment_status") or "Pending",
+            "family_member_label": format_family_member_label(
+                o.get("family_member_name"),
+                o.get("family_member_relation"),
+                "For Myself"
+            ),
             "payment_reference": o.get("payment_reference") or "Not provided",
             "payment_screenshot": o.get("payment_screenshot"),
         })
@@ -4740,7 +4953,6 @@ def build_reorder_subscription_context(user_id):
         FROM medicines
         WHERE stock > 0
         ORDER BY name ASC
-        LIMIT 120
     """)
     available_medicines = cursor.fetchall()
 
@@ -4818,9 +5030,45 @@ def buy_again(medicine_id):
     if "user" not in session:
         return redirect("/login")
 
-    added = add_medicine_to_customer_cart(session["user"]["id"], medicine_id, 1)
+    try:
+        quantity = max(1, min(int(request.args.get("quantity") or 1), 24))
+    except (TypeError, ValueError):
+        quantity = 1
+
+    added = add_medicine_to_customer_cart(session["user"]["id"], medicine_id, quantity)
     flash("Medicine added to cart." if added else "This medicine is currently out of stock.")
     return redirect("/cart" if added else "/reorder_subscription")
+
+
+@app.route("/buy_again_all")
+def buy_again_all():
+    if "user" not in session:
+        return redirect("/login")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id
+        FROM order_items
+        JOIN orders ON orders.id = order_items.order_id
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.user_id=%s
+          AND orders.status != 'Cancelled'
+          AND medicines.stock > 0
+        GROUP BY medicines.id
+        ORDER BY MAX(orders.date) DESC, SUM(order_items.quantity) DESC
+        LIMIT 5
+    """, (session["user"]["id"],))
+    medicine_ids = [row["id"] for row in cursor.fetchall()]
+    cursor.close()
+
+    added_count = 0
+    for medicine_id in medicine_ids:
+        if add_medicine_to_customer_cart(session["user"]["id"], medicine_id, 1):
+            added_count += 1
+
+    flash(f"{added_count} buy again item{'s' if added_count != 1 else ''} added to cart." if added_count else "No buy again medicines are currently available.")
+    return redirect("/cart" if added_count else "/reorder_subscription")
 
 
 @app.route("/subscriptions/create", methods=["POST"])
@@ -4858,6 +5106,11 @@ def create_subscription():
             medicine_quantity = max(1, int(request.form.get(f"quantity_{medicine_id}") or quantity))
         except (TypeError, ValueError):
             medicine_quantity = quantity
+        cycle_value = request.form.get(f"cycle_{medicine_id}") or str(frequency_days)
+        cycle_match = re.search(r"\d+", cycle_value)
+        medicine_frequency_days = int(cycle_match.group(0)) if cycle_match else frequency_days
+        if medicine_frequency_days not in [15, 30, 45, 60, 90]:
+            medicine_frequency_days = frequency_days
         cursor.execute("""
             INSERT INTO medicine_subscriptions (
                 user_id,
@@ -4886,7 +5139,7 @@ def create_subscription():
             user_id,
             medicine_id,
             medicine_quantity,
-            frequency_days,
+            medicine_frequency_days,
             next_refill_date,
             auto_reorder,
             refill_reminder,
@@ -6330,13 +6583,17 @@ def upload_prescription():
 
         db = get_db()
         cursor = db.cursor()
+        family_members = get_family_members_for_user(user_id)
+        selected_family_member_id = (request.form.get("family_member_id") or "").strip()
+        family_member_id = normalize_family_member_selection(selected_family_member_id, family_members)
 
         cursor.execute("""
             INSERT INTO prescription_requests
-            (user_id, prescription_image, ocr_text, detected_medicines, status)
-            VALUES (%s, %s, %s, %s, %s)
+            (user_id, family_member_id, prescription_image, ocr_text, detected_medicines, status)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """, (
             user_id,
+            family_member_id,
             new_filename,
             ocr_text,
             detected_text,
@@ -6349,7 +6606,8 @@ def upload_prescription():
         flash("Prescription uploaded successfully. Staff will review it shortly.", "success")
         return redirect("/my_prescriptions")
 
-    return render_template("upload_prescription.html")
+    family_members = get_family_member_options(user_id)
+    return render_template("upload_prescription.html", family_members=family_members)
 
 
 @app.route("/download_prescription/<int:request_id>")
@@ -6444,14 +6702,22 @@ def my_prescriptions():
     cursor = db.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT *
+        SELECT prescription_requests.*, family_members.name AS family_member_name, family_members.relation AS family_member_relation
         FROM prescription_requests
-        WHERE user_id = %s
-        ORDER BY created_at DESC
+        LEFT JOIN family_members ON family_members.id = prescription_requests.family_member_id
+        WHERE prescription_requests.user_id = %s
+        ORDER BY prescription_requests.created_at DESC
     """, (user_id,))
 
     requests_data = cursor.fetchall()
     cursor.close()
+
+    for request_item in requests_data:
+        request_item["family_member_label"] = format_family_member_label(
+            request_item.get("family_member_name"),
+            request_item.get("family_member_relation"),
+            "For Myself"
+        )
 
     return render_template("my_prescriptions.html", requests_data=requests_data)
 # ============================ checkout prescription ===============================

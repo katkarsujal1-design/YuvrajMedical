@@ -31,6 +31,7 @@ services:
       DB_USER: root
       DB_PASSWORD: Root@123
       DB_NAME: medical_store
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       SMS_OTP_MODE: dev
       FAST2SMS_API_KEY: YgufeB7vxaEXhf8wBHjNOH2UfqWB1tzvB68ATIevJWC9151Rq4IauFBAckOI
     ports:

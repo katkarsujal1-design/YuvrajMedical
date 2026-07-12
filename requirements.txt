@@ -1,11 +1,12 @@
 Flask==3.1.3
+google-genai
 gunicorn==23.0.0
 mysql-connector-python==9.4.0
 PyMySQL==1.2.0
 pandas==2.3.3
 numpy==2.0.2
 openpyxl==3.1.5
-requests==2.25.1
+requests==2.32.5
 Werkzeug==3.1.8
 Jinja2==3.1.6
 itsdangerous==2.2.0
@@ -15,5 +16,5 @@ python-barcode
 pytesseract==0.3.13
 Pillow==10.4.0
 opencv-python-headless==4.10.0.84
+python-dotenv
 rapidfuzz
-requests

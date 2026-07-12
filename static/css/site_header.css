@@ -12,8 +12,11 @@ body {
 }
 
 .yvm-site-header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1200;
     display: flex;
     align-items: center;
@@ -22,10 +25,10 @@ body {
     padding: 12px clamp(16px, 5vw, 72px);
     color: #fff7ed;
     background:
-        radial-gradient(circle at 12% 0%, rgba(251,191,36,.15), transparent 28%),
-        linear-gradient(135deg, rgba(76,29,61,.96) 0%, rgba(127,29,78,.96) 52%, rgba(159,58,74,.96) 100%);
-    border-bottom: 1px solid rgba(253,230,138,.32);
-    box-shadow: 0 12px 34px rgba(76,29,61,.28);
+        radial-gradient(circle at 12% 0%, rgba(16,185,129,.16), transparent 28%),
+        linear-gradient(135deg, rgba(4,120,87,.98) 0%, rgba(5,150,105,.96) 52%, rgba(22,163,74,.96) 100%);
+    border-bottom: 1px solid rgba(209,250,229,.32);
+    box-shadow: 0 12px 34px rgba(4,120,87,.24);
 }
 
 .yvm-site-header a {
@@ -58,7 +61,7 @@ body {
     font-size: 26px;
     font-weight: 800;
     letter-spacing: 1.5px;
-    background: linear-gradient(90deg, #ecfeff, #67e8f9 42%, #fde68a);
+    background: linear-gradient(90deg, #ecfdf5, #6ee7b7 42%, #fef3c7);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -98,7 +101,7 @@ body {
     border-radius: 8px;
     color: #fff7ed;
     background: rgba(255,255,255,.14);
-    border: 1px solid rgba(253,230,138,.22);
+    border: 1px solid rgba(220,252,231,.22);
     font: inherit;
     font-size: 13px;
     font-weight: 900;
@@ -110,7 +113,7 @@ body {
 .yvm-menu-toggle:hover {
     transform: translateY(-1px);
     background: #fff7ed;
-    color: #7f1d4e;
+    color: #065f46;
 }
 
 .yvm-cart-link {
@@ -121,6 +124,8 @@ body {
 
 .yvm-menu-toggle {
     gap: 8px;
+    border-color: rgba(253,230,138,.52);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 10px 22px rgba(4,120,87,.16);
 }
 
 .yvm-menu-badge {
@@ -130,9 +135,21 @@ body {
     place-items: center;
     border-radius: 999px;
     background: #facc15;
-    color: #4c1d3d;
+    color: #065f46;
     font-size: 12px;
     font-weight: 1000;
+}
+
+.yvm-menu-toggle:focus-visible {
+    outline: 3px solid rgba(253,230,138,.72);
+    outline-offset: 3px;
+}
+
+html.yvm-menu-open .yvm-menu-toggle,
+body.yvm-menu-open .yvm-menu-toggle {
+    background: #fff7ed;
+    color: #065f46;
+    border-color: #fde68a;
 }
 
 .yvm-marquee-wrap {
@@ -145,7 +162,7 @@ body {
 .yvm-marquee {
     display: block;
     padding: 10px 0;
-    color: #4c1d3d;
+    color: #065f46;
     font-size: 14px;
     font-weight: 900;
 }
@@ -172,7 +189,7 @@ body {
     position: fixed;
     inset: 0;
     z-index: 1400;
-    background: rgba(31,8,24,.54);
+    background: rgba(6,95,70,.54);
     opacity: 0;
     pointer-events: none;
     transition: .28s ease;
@@ -190,10 +207,10 @@ body {
     display: flex;
     flex-direction: column;
     background:
-        radial-gradient(circle at 85% 0%, rgba(253,230,138,.14), transparent 30%),
-        linear-gradient(160deg, #4c1d3d, #7f1d4e 58%, #9f3a4a);
-    border-left: 1px solid rgba(253,230,138,.32);
-    box-shadow: -24px 0 60px rgba(31,8,24,.36);
+        radial-gradient(circle at 85% 0%, rgba(167,243,208,.16), transparent 30%),
+        linear-gradient(160deg, #065f46, #0f766e 58%, #16a34a);
+    border-left: 1px solid rgba(220,252,231,.24);
+    box-shadow: -24px 0 60px rgba(4,120,87,.24);
     transform: translateX(100%);
     transition: .32s ease;
     overflow-y: auto;
@@ -294,7 +311,7 @@ body {
 .yvm-side-panel nav a:hover,
 .yvm-side-close:hover {
     background: #fff7ed;
-    color: #7f1d4e;
+    color: #065f46;
 }
 
 .yvm-side-notifications {
@@ -302,8 +319,8 @@ body {
     margin-bottom: 18px;
     padding: 16px;
     border-radius: 8px;
-    background: linear-gradient(180deg, rgba(255,247,237,.16), rgba(255,255,255,.08));
-    border: 1px solid rgba(253,230,138,.28);
+    background: linear-gradient(180deg, rgba(236,253,245,.16), rgba(255,255,255,.08));
+    border: 1px solid rgba(220,252,231,.28);
 }
 
 html.yvm-menu-open,
@@ -414,7 +431,7 @@ body.yvm-pro-page {
     --yvm-ink: #102033;
     --yvm-muted: #64748b;
     --yvm-line: rgba(148, 163, 184, .28);
-    --yvm-wine: #7f1d4e;
+    --yvm-wine: #0f766e;
     --yvm-teal: #0f766e;
     --yvm-gold: #f4b63f;
     --yvm-page-image: url("/static/images/hero-doctor-clean.png");

@@ -9,6 +9,7 @@
     </a>
 
     <nav class="yvm-header-actions" aria-label="Main navigation">
+        <a href="{{ url_for('chatbot') }}">AI Chatbot</a>
         <a href="{{ url_for('cart') }}" class="yvm-cart-link">Cart ({{ cart_count|default(0) }})</a>
         <a href="{{ url_for('wishlist_page') }}">Wishlist</a>
         <button class="yvm-menu-toggle" type="button" aria-controls="yvm-account-panel" aria-expanded="false">
@@ -73,6 +74,7 @@
                 <a href="/rewards"><span>Rewards & Loyalty</span><span>&gt;</span></a>
                 <a href="/notifications"><span>Notifications</span><span>&gt;</span></a>
                 <a href="/reviews_feedback"><span>Reviews & Feedback</span><span>&gt;</span></a>
+                <a href="{{ url_for('chatbot') }}"><span>Gemini AI Chatbot</span><span>&gt;</span></a>
                 <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>&gt;</span></a>
             </section>
 

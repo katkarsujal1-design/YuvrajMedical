@@ -39,6 +39,26 @@ input{
         linear-gradient(135deg,var(--navy),var(--navy));
 }
 
+.public-chatbot-link{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:30;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:10px 16px;
+    border:1px solid rgba(255,255,255,.34);
+    border-radius:999px;
+    color:#ffffff;
+    background:linear-gradient(135deg,#7f1d4e,#0f766e);
+    font-size:14px;
+    font-weight:900;
+    text-decoration:none;
+    box-shadow:0 14px 32px rgba(15,23,42,.22);
+}
+
 .ambient-glow{
     position:absolute;
     left:50%;

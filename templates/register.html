@@ -236,6 +236,26 @@ body{
     text-decoration:none;
 }
 
+.public-chatbot-link{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:20;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:10px 16px;
+    border:1px solid rgba(255,255,255,.34);
+    border-radius:999px;
+    color:white;
+    background:linear-gradient(135deg,#7f1d4e,#0f766e);
+    font-size:14px;
+    font-weight:900;
+    text-decoration:none;
+    box-shadow:0 14px 32px rgba(15,23,42,.22);
+}
+
 @media(max-width:850px){
     .register-wrapper{
         grid-template-columns:1fr;
@@ -270,6 +290,7 @@ body{
 </head>
 
 <body class="yvm-pro-page yvm-page-register">
+<a class="public-chatbot-link" href="{{ url_for('chatbot') }}">AI Chatbot</a>
 
 <div class="bg-particles">
     <span></span>
@@ -425,6 +446,10 @@ body{
         <div class="login-link">
             Already have an account?
             <a href="/login">Login here</a>
+        </div>
+        <div class="login-link">
+            Need help?
+            <a href="{{ url_for('chatbot') }}">Open AI Chatbot</a>
         </div>
 
     </div>

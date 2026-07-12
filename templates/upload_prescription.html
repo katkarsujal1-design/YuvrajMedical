@@ -934,6 +934,14 @@
                 <p>Drag and drop a clear prescription image or PDF, or browse from your device.</p>
 
                 <form class="upload-form" method="POST" enctype="multipart/form-data">
+                    <div class="upload-field" style="margin-bottom: 14px;">
+                        <label for="family_member_id" style="display:block; margin-bottom: 6px; font-weight: 800; color: var(--rx-ink);">For which family profile?</label>
+                        <select id="family_member_id" name="family_member_id" style="width: 100%; border: 1px solid var(--rx-line); border-radius: 8px; padding: 12px 13px; background: #fff; color: var(--rx-ink);">
+                            {% for option in family_members %}
+                                <option value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <label class="upload-drop" id="upload-drop">
                         <input id="prescription-file" type="file" name="prescription" accept="image/*,.pdf" required>
                         <span>

@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
         :root{--ink:#12202f;--muted:#64748b;--line:rgba(15,23,42,.11);--wine:#7f1d4e;--wine-dark:#4c1d3d;--teal:#0f766e;--green:#15803d;--amber:#d97706;--red:#dc2626;--shadow:0 22px 60px rgba(15,23,42,.11)}
         *{box-sizing:border-box}
-        body{margin:0;min-height:100vh;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(248,250,252,.9)),url("{{ url_for('static', filename='images/order-management-premium.png') }}") center/cover fixed no-repeat}
+        body{margin:0;min-height:100vh;padding-top:112px;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(248,250,252,.9)),url("{{ url_for('static', filename='images/order-management-premium.png') }}") center/cover fixed no-repeat}
         body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.82) 50%,rgba(255,255,255,.7)),linear-gradient(180deg,rgba(127,29,78,.06),rgba(15,118,110,.08))}
         a{color:inherit;text-decoration:none}
         .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px clamp(16px,3vw,42px);color:#fff;background:linear-gradient(135deg,rgba(76,29,61,.97),rgba(127,29,78,.95) 55%,rgba(15,118,110,.92));border-bottom:1px solid rgba(253,230,138,.32);box-shadow:0 16px 42px rgba(76,29,61,.22);backdrop-filter:blur(18px)}
@@ -28,6 +28,10 @@
         .panel-head{display:flex;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fafc)}.panel-head h2{margin:0;font-size:22px}.panel-head p{margin:8px 0 0;color:var(--muted);font-weight:800}
         .content{padding:20px}.section-title{margin:0 0 12px;color:#334155;font-size:13px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
         table{width:100%;border-collapse:separate;border-spacing:0 9px}th{padding:0 12px 3px;color:var(--muted);font-size:11px;text-align:left;text-transform:uppercase;letter-spacing:.07em}td{padding:13px 12px;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}td:first-child{border-left:1px solid var(--line);border-radius:8px 0 0 8px}td:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0;font-weight:900}
+        .medicine-cell{display:flex;align-items:center;gap:12px;min-width:0}
+        .medicine-thumb{width:44px;height:44px;display:grid;place-items:center;flex:0 0 44px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;overflow:hidden}
+        .medicine-thumb img{width:100%;height:100%;object-fit:contain;padding:4px;background:#fff}
+        .medicine-name{font-weight:900;line-height:1.35}
         .facts{display:grid;gap:10px}.fact{padding:14px;border:1px solid var(--line);border-radius:8px;background:#f8fafc}.fact span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.07em;text-transform:uppercase}.fact strong{display:block;margin-top:8px;line-height:1.35}
         .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 12px;border-radius:8px;border:1px solid transparent;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));font-size:13px;font-weight:1000}.action.secondary{color:var(--ink);background:#fff;border-color:var(--line)}.action.danger{background:linear-gradient(135deg,var(--red),#991b1b)}.action.warn{background:linear-gradient(135deg,var(--amber),#f59e0b)}
         @media(max-width:820px){.topbar{align-items:stretch;flex-direction:column}.nav,.nav a{width:100%}.page{width:min(100% - 22px,1120px);padding-top:14px}.layout{grid-template-columns:1fr}.panel-head{flex-direction:column}.actions .action{width:100%}}
@@ -65,7 +69,20 @@
                     <thead><tr><th>Medicine</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
                     <tbody>
                         {% for item in items %}
-                        <tr><td>{{ item["name"] }}</td><td>{{ item["quantity"] }}</td><td>Rs. {{ item["price"] }}</td><td>Rs. {{ item["price"] * item["quantity"] }}</td></tr>
+                        {% set fallback_name = item["name"].replace('/', '-').replace('%', '').replace('.', '') %}
+                        <tr>
+                            <td>
+                                <div class="medicine-cell">
+                                    <span class="medicine-thumb">
+                                        <img src="/static/images/{{ fallback_name }}.jpeg" alt="{{ item['name'] }}" onerror="this.onerror=null; var fallbacks=['/static/images/{{ fallback_name }}.jpg','/static/images/{{ fallback_name }}.png','/static/images/yuvraj_logo.png']; for (var i=0;i<fallbacks.length;i++){ if (this.src !== fallbacks[i]) { this.src = fallbacks[i]; break; } }">
+                                    </span>
+                                    <span class="medicine-name">{{ item["name"] }}</span>
+                                </div>
+                            </td>
+                            <td>{{ item["quantity"] }}</td>
+                            <td>Rs. {{ item["price"] }}</td>
+                            <td>Rs. {{ item["price"] * item["quantity"] }}</td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>

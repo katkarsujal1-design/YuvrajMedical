@@ -4,36 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Management | Yuvraj Medical</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css', v='orders-redesign-20260708') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
 
         :root {
-            --ink:#12202f;
-            --muted:#64748b;
-            --line:rgba(15,23,42,.11);
-            --wine:#7f1d4e;
-            --wine-dark:#4c1d3d;
-            --teal:#0f766e;
-            --green:#15803d;
-            --amber:#d97706;
-            --red:#dc2626;
-            --panel:#ffffff;
-            --soft:#f8fafc;
-            --shadow:0 22px 60px rgba(15,23,42,.11);
+            --ink:#0F172A;
+            --muted:#64748B;
+            --border:#E5E7EB;
+            --panel:#FFFFFF;
+            --panel-soft:#F8FAFC;
+            --green:#0E7C66;
+            --green-soft:#E6F7F3;
+            --green-strong:#16A34A;
+            --danger:#DC2626;
+            --warning:#F59E0B;
+            --info:#2563EB;
+            --purple:#7C3AED;
+            --shadow:0 14px 36px rgba(15,23,42,.06);
+            --gold:#D6A94D;
+            --gold-soft:#FFF7E3;
+            --emerald-deep:#063C35;
         }
 
         * { box-sizing:border-box; }
+
+        html {
+            scroll-padding-top: 140px;
+        }
 
         body {
             margin:0;
             min-height:100vh;
             font-family:Inter, "Segoe UI", Arial, sans-serif;
             color:var(--ink);
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.94),rgba(248,250,252,.92)),
-                url("{{ url_for('static', filename='images/order-management-premium.png') }}") center/cover fixed no-repeat;
+            background:linear-gradient(135deg,#F7FAFC 0%,#F1F8F6 100%);
+            padding-top:132px;
         }
 
         body::before {
@@ -41,100 +48,37 @@
             position:fixed;
             inset:0;
             z-index:-1;
-            background:
-                linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.82) 48%,rgba(255,255,255,.68)),
-                linear-gradient(180deg,rgba(127,29,78,.06),rgba(15,118,110,.08));
+            pointer-events:none;
+            background:radial-gradient(circle at top left, rgba(14,124,102,.08), transparent 28%),
+                linear-gradient(180deg, rgba(255,255,255,.86), rgba(247,250,252,.95));
+        }
+
+        body.yvm-page-my-orders .yvm-side-overlay{display:block!important}
+        body.yvm-page-my-orders .yvm-side-panel{display:flex!important}
+
+        /* Keep the complete navigation shell visible while orders are scrolled. */
+        body.yvm-page-my-orders .yvm-site-header {
+            position:fixed !important;
+            inset:0 0 auto 0;
+            z-index:1200;
+        }
+
+        body.yvm-page-my-orders .yvm-marquee-wrap {
+            position:fixed;
+            top:82px;
+            left:0;
+            right:0;
+            z-index:1190;
         }
 
         a { color:inherit; text-decoration:none; }
 
-        .topbar {
-            position:sticky;
-            top:0;
-            z-index:20;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:18px;
-            padding:12px clamp(16px,3vw,42px);
-            color:white;
-            background:linear-gradient(135deg,rgba(76,29,61,.97),rgba(127,29,78,.95) 55%,rgba(15,118,110,.92));
-            border-bottom:1px solid rgba(253,230,138,.32);
-            box-shadow:0 16px 42px rgba(76,29,61,.22);
-            backdrop-filter:blur(18px);
-        }
-
-        .brand {
-            display:flex;
-            align-items:center;
-            gap:11px;
-            min-width:230px;
-        }
-
-        .brand-mark {
-            width:56px;
-            height:56px;
-            object-fit:contain;
-            filter:drop-shadow(0 7px 12px rgba(0,0,0,.28));
-        }
-
-        .brand-text {
-            display:grid;
-            gap:3px;
-            line-height:1;
-        }
-
-        .brand-yuvraj {
-            font-family:Cinzel, Georgia, serif;
-            font-size:23px;
-            font-weight:800;
-            letter-spacing:1.4px;
-            background:linear-gradient(90deg,#ecfeff 0%,#67e8f9 42%,#fde68a 100%);
-            -webkit-background-clip:text;
-            background-clip:text;
-            -webkit-text-fill-color:transparent;
-        }
-
-        .brand-medical {
-            color:#fde68a;
-            font-size:10px;
-            font-weight:900;
-            letter-spacing:4.3px;
-            text-transform:uppercase;
-        }
-
-        .nav-buttons {
-            display:flex;
-            flex-wrap:wrap;
-            justify-content:flex-end;
-            gap:10px;
-        }
-
-        .nav-buttons a {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-height:40px;
-            padding:9px 13px;
-            border-radius:8px;
-            color:#fff7ed;
-            background:rgba(255,255,255,.14);
-            border:1px solid rgba(253,230,138,.22);
-            font-size:13px;
-            font-weight:900;
-            transition:transform .18s ease, background .18s ease, color .18s ease;
-        }
-
-        .nav-buttons a:hover {
-            transform:translateY(-1px);
-            color:var(--wine-dark);
-            background:#fff7ed;
-        }
-
         .page {
-            width:min(1280px,calc(100% - 38px));
+            width:min(1360px,calc(100% - 32px));
             margin:0 auto;
-            padding:28px 0 44px;
+            padding:24px 0 48px;
+            position:relative;
+            z-index:1;
         }
 
         .hero {
@@ -143,19 +87,34 @@
             grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);
             min-height:370px;
             overflow:hidden;
-            border:1px solid rgba(255,255,255,.72);
-            border-radius:8px;
-            background:
-                linear-gradient(90deg,rgba(76,29,61,.88),rgba(15,118,110,.36)),
-                url("{{ url_for('static', filename='images/order-management-premium.png') }}") center right/cover no-repeat;
-            box-shadow:var(--shadow);
+            border:1px solid rgba(167,243,208,.82);
+            border-radius:32px;
+            background:url("{{ url_for('static', filename='images/order-management-premium.png') }}") center right/cover no-repeat;
+            box-shadow:0 24px 60px rgba(15,118,110,.11);
+            margin-bottom:32px;
         }
 
         .hero::after {
             content:"";
             position:absolute;
             inset:0;
-            background:linear-gradient(90deg,rgba(39,14,33,.74),rgba(39,14,33,.22) 58%,rgba(255,255,255,.04));
+            background:linear-gradient(
+                90deg,
+                rgba(255,255,255,.98) 0%,
+                rgba(247,255,252,.96) 36%,
+                rgba(240,253,250,.78) 58%,
+                rgba(255,255,255,.18) 100%
+            );
+            pointer-events:none;
+        }
+
+        .hero::before {
+            content:"";
+            position:absolute;
+            inset:12px;
+            z-index:1;
+            border:1px solid rgba(14,124,102,.10);
+            border-radius:23px;
             pointer-events:none;
         }
 
@@ -170,35 +129,39 @@
             display:flex;
             flex-direction:column;
             justify-content:center;
-            color:white;
+            color:var(--ink);
         }
 
         .eyebrow {
             width:fit-content;
             padding:8px 12px;
-            border:1px solid rgba(255,255,255,.34);
+            border:1px solid #A7F3D0;
             border-radius:999px;
-            color:#fef3c7;
-            background:rgba(255,255,255,.15);
+            color:#047857;
+            background:rgba(236,253,245,.92);
             font-size:12px;
             font-weight:900;
             letter-spacing:.1em;
             text-transform:uppercase;
-            backdrop-filter:blur(12px);
+            box-shadow:0 8px 20px rgba(15,118,110,.08);
         }
 
-        h1 {
+        .hero h1 {
             max-width:620px;
             margin:18px 0 12px;
             font-size:clamp(40px,5vw,66px);
             line-height:.98;
             letter-spacing:0;
+            color:#0F3D36;
+            font-family:Cinzel, Georgia, serif;
+            font-weight:700;
+            text-shadow:none;
         }
 
         .hero-copy p {
             max-width:560px;
             margin:0;
-            color:rgba(255,255,255,.88);
+            color:#475569;
             font-size:16px;
             line-height:1.75;
         }
@@ -218,16 +181,17 @@
         .summary-card {
             min-height:104px;
             padding:16px;
-            border:1px solid rgba(255,255,255,.22);
-            border-radius:8px;
-            color:white;
-            background:rgba(255,255,255,.15);
+            border:1px solid rgba(167,243,208,.82);
+            border-radius:20px;
+            color:var(--ink);
+            background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(236,253,245,.82));
             backdrop-filter:blur(16px);
+            box-shadow:inset 0 1px 0 #fff,0 12px 30px rgba(15,118,110,.09);
         }
 
         .summary-card span {
             display:block;
-            color:#dffdf6;
+            color:#0F766E;
             font-size:11px;
             font-weight:900;
             letter-spacing:.08em;
@@ -239,705 +203,672 @@
             margin-top:10px;
             font-size:34px;
             line-height:1;
+            color:#064E3B;
+            font-family:Cinzel, Georgia, serif;
         }
 
         .notice {
-            margin-top:16px;
+            margin:0 0 20px;
             padding:14px 16px;
-            border:1px solid rgba(15,118,110,.18);
-            border-radius:8px;
-            color:#0f766e;
-            background:#ecfdf5;
+            border:1px solid rgba(14,124,102,.16);
+            border-radius:14px;
+            color:var(--green);
+            background:#F3FCF8;
+            font-weight:800;
+        }
+
+        .om-page-head {
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:18px;
+            margin:0 0 20px;
+        }
+
+        .om-breadcrumb {
+            display:flex;
+            gap:8px;
+            align-items:center;
+            margin-bottom:10px;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .om-breadcrumb a {
+            color:var(--green);
             font-weight:900;
         }
 
-        .orders-section {
-            position:relative;
-            margin-top:28px;
-            padding:18px;
-            border:1px solid rgba(255,255,255,.72);
-            border-radius:8px;
-            background:rgba(255,255,255,.72);
-            box-shadow:0 18px 44px rgba(15,23,42,.08);
-            backdrop-filter:blur(18px);
-        }
-
-        .orders-section::before {
-            content:"";
-            position:absolute;
-            inset:0;
-            border-radius:8px;
-            background:
-                linear-gradient(90deg,rgba(127,29,78,.08),rgba(15,118,110,.08)),
-                linear-gradient(180deg,rgba(255,255,255,.52),rgba(255,255,255,0));
-            pointer-events:none;
-        }
-
-        .orders-head {
-            position:relative;
-            z-index:1;
+        .om-title-line {
             display:flex;
-            justify-content:space-between;
-            align-items:end;
-            gap:16px;
-            margin:0 0 16px;
+            align-items:center;
+            gap:12px;
+            flex-wrap:wrap;
         }
 
-        .orders-head h2 {
+        .om-page-head h2 {
             margin:0;
-            font-size:28px;
+            font-size:30px;
+            line-height:1.1;
+            color:var(--ink);
         }
 
-        .orders-head p {
-            max-width:560px;
-            margin:7px 0 0;
+        .om-badge {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:28px;
+            padding:6px 11px;
+            border-radius:999px;
+            color:var(--green);
+            background:var(--green-soft);
+            border:1px solid rgba(14,124,102,.18);
+            font-size:12px;
+            font-weight:900;
+            white-space:nowrap;
+        }
+
+        .om-page-head p {
+            margin:8px 0 0;
             color:var(--muted);
-            font-size:14px;
-            line-height:1.6;
+            font-size:15px;
             font-weight:700;
         }
 
-        .orders-tools {
-            position:relative;
-            z-index:1;
-            display:grid;
-            grid-template-columns:minmax(0,1fr) auto;
-            gap:12px;
+        .om-head-tools {
+            display:flex;
+            gap:10px;
             align-items:center;
-            padding:13px;
-            margin-bottom:16px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:rgba(255,255,255,.78);
-        }
-
-        .status-key {
-            display:flex;
-            flex-wrap:wrap;
             justify-content:flex-end;
-            gap:7px;
+            flex-wrap:wrap;
         }
 
-        .key-pill {
-            padding:7px 9px;
-            border:1px solid var(--line);
+        .om-search {
+            display:flex;
+            align-items:center;
+            gap:9px;
+            min-height:44px;
+            min-width:280px;
+            padding:0 12px;
+            border:1px solid var(--border);
             border-radius:999px;
+            background:var(--panel);
             color:var(--muted);
-            background:rgba(255,255,255,.84);
-            font-size:12px;
-            font-weight:900;
+            box-shadow:0 8px 20px rgba(15,23,42,.04);
         }
 
-        .filter-group {
-            display:flex;
-            flex-wrap:wrap;
-            gap:8px;
-        }
-
-        .filter-btn {
-            min-height:36px;
-            padding:8px 11px;
-            border:1px solid var(--line);
-            border-radius:999px;
+        .om-search input {
+            width:100%;
+            border:0;
+            outline:0;
+            background:transparent;
             color:var(--ink);
-            background:#ffffff;
-            cursor:pointer;
             font:inherit;
-            font-size:12px;
-            font-weight:1000;
-            transition:background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease;
+            font-size:13px;
         }
 
-        .filter-btn:hover,
-        .filter-btn.active {
-            transform:translateY(-1px);
-            color:#ffffff;
-            border-color:transparent;
-            background:linear-gradient(135deg,var(--wine),var(--teal));
-        }
-
-        .orders-mini-stats {
-            display:flex;
-            gap:8px;
-            flex-wrap:wrap;
-            justify-content:flex-end;
-        }
-
-        .mini-stat {
-            min-height:36px;
+        .om-filter-button {
             display:inline-flex;
             align-items:center;
-            gap:7px;
-            padding:8px 10px;
-            border:1px solid rgba(15,118,110,.16);
+            gap:8px;
+            min-height:44px;
+            padding:10px 14px;
+            border:1px solid var(--border);
             border-radius:999px;
-            color:var(--teal);
-            background:#ecfdf5;
+            background:var(--panel);
+            color:var(--ink);
+            font:inherit;
+            font-size:13px;
+            font-weight:900;
+            box-shadow:0 8px 20px rgba(15,23,42,.04);
+        }
+
+        .orders-layout {
+            display:grid;
+            grid-template-columns:minmax(0,1fr) 360px;
+            gap:28px;
+            align-items:start;
+        }
+
+        .orders-main,
+        .orders-sidebar {
+            min-width:0;
+        }
+
+        .om-toolbar {
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            padding:12px;
+            margin-bottom:14px;
+            border:1px solid var(--border);
+            border-radius:18px;
+            background:var(--panel);
+            box-shadow:var(--shadow);
+        }
+
+        .om-filter {
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            min-height:38px;
+            padding:8px 13px;
+            border:1px solid transparent;
+            border-radius:999px;
+            background:transparent;
+            color:var(--muted);
+            font:inherit;
             font-size:12px;
-            font-weight:1000;
-            white-space:nowrap;
+            font-weight:900;
+            cursor:pointer;
+            transition:all .2s ease;
+        }
+
+        .om-filter.active,
+        .om-filter:hover {
+            color:#fff;
+            background:linear-gradient(135deg,var(--emerald-deep),var(--green));
+            border-color:transparent;
+            box-shadow:0 8px 18px rgba(14,124,102,.18);
         }
 
         .orders-grid {
-            position:relative;
-            z-index:1;
             display:grid;
-            gap:16px;
+            gap:14px;
         }
 
-        .order-card {
+        .om-order-card {
+            display:grid;
+            grid-template-columns:minmax(0,1.2fr) minmax(0,.85fr) minmax(0,.85fr) auto auto;
+            gap:16px;
+            align-items:center;
+            padding:18px;
+            border:1px solid var(--border);
+            border-radius:22px;
+            background:var(--panel);
+            box-shadow:var(--shadow);
+            transition:transform .2s ease, box-shadow .2s ease;
             position:relative;
             overflow:hidden;
-            border:1px solid rgba(15,23,42,.09);
-            border-radius:8px;
-            background:rgba(255,255,255,.96);
-            box-shadow:0 18px 42px rgba(15,23,42,.09);
-            backdrop-filter:blur(18px);
         }
 
-        .order-card::before {
+        .om-order-card::before {
             content:"";
             position:absolute;
-            top:0;
-            left:0;
-            width:5px;
-            height:100%;
-            background:linear-gradient(180deg,var(--wine),var(--teal));
+            inset:0 auto 0 0;
+            width:4px;
+            background:linear-gradient(180deg,var(--gold),var(--green));
         }
 
-        .order-card.is-hidden {
+        .om-order-card:hover {
+            transform:translateY(-4px);
+            border-color:rgba(14,124,102,.20);
+            box-shadow:0 22px 45px rgba(15,23,42,.10);
+        }
+
+        .om-order-card.is-hidden {
             display:none;
         }
 
-        .order-top {
-            display:grid;
-            grid-template-columns:minmax(0,1fr) auto;
-            gap:16px;
-            align-items:start;
-            padding:18px 20px 18px 24px;
-            border-bottom:1px solid var(--line);
-            background:linear-gradient(180deg,#fff,#f8fafc);
-        }
-
-        .order-id {
-            display:flex;
-            flex-wrap:wrap;
-            align-items:center;
-            gap:10px;
-        }
-
-        .order-id h3 {
-            margin:0;
-            font-size:22px;
-        }
-
-        .latest-badge {
-            display:inline-flex;
-            align-items:center;
-            min-height:28px;
-            padding:6px 9px;
-            border:1px solid rgba(253,230,138,.55);
-            border-radius:999px;
-            color:#713f12;
-            background:#fef3c7;
-            font-size:11px;
-            font-weight:1000;
-            letter-spacing:.04em;
-            text-transform:uppercase;
-        }
-
-        .order-meta {
-            display:flex;
-            flex-wrap:wrap;
-            gap:8px;
-            margin-top:10px;
-            color:var(--muted);
-            font-size:13px;
-            font-weight:800;
-        }
-
-        .meta-pill {
-            display:inline-flex;
-            align-items:center;
-            min-height:28px;
-            padding:6px 9px;
-            border:1px solid #e2e8f0;
-            border-radius:999px;
-            background:#ffffff;
-        }
-
-        .status {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-height:34px;
-            padding:8px 12px;
-            border-radius:999px;
-            color:white;
-            font-size:12px;
-            font-weight:1000;
-            white-space:nowrap;
-            box-shadow:0 10px 20px rgba(15,23,42,.12);
-        }
-
-        .status-pending,
-        .status-approved,
-        .status-packed,
-        .status-out-for-delivery { background:linear-gradient(135deg,var(--amber),#facc15); }
-        .status-delivered { background:linear-gradient(135deg,var(--green),#22c55e); }
-        .status-cancelled,
-        .status-refunded { background:linear-gradient(135deg,var(--red),#991b1b); }
-
-        .order-body {
-            display:grid;
-            grid-template-columns:minmax(0,1fr) minmax(340px,.72fr);
-            gap:16px;
-            padding:16px 18px 18px 24px;
-            background:
-                linear-gradient(90deg,rgba(127,29,78,.035),rgba(15,118,110,.035)),
-                #ffffff;
-        }
-
-        .order-items-panel {
-            display:grid;
-            align-content:start;
-            gap:14px;
-            min-width:0;
-            padding:14px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:rgba(255,255,255,.92);
-        }
-
-        .order-showcase {
-            display:grid;
-            grid-template-columns:180px minmax(0,1fr);
-            gap:14px;
-            align-items:stretch;
-        }
-
-        .order-visual {
-            position:relative;
-            min-height:138px;
-            overflow:hidden;
-            border:1px solid rgba(15,118,110,.16);
-            border-radius:8px;
-            background:#f8fafc;
-        }
-
-        .order-visual img {
-            width:100%;
-            height:100%;
-            min-height:138px;
-            object-fit:cover;
-            display:block;
-        }
-
-        .order-visual::after {
-            content:"";
-            position:absolute;
-            inset:0;
-            background:linear-gradient(180deg,rgba(255,255,255,0),rgba(76,29,61,.22));
-            pointer-events:none;
-        }
-
-        .order-snapshot {
-            display:grid;
-            align-content:space-between;
-            gap:10px;
-            min-width:0;
-            padding:14px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:
-                linear-gradient(135deg,rgba(127,29,78,.06),rgba(15,118,110,.07)),
-                #ffffff;
-        }
-
-        .snapshot-label {
-            color:var(--muted);
-            font-size:11px;
-            font-weight:1000;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-        }
-
-        .snapshot-title {
-            margin:5px 0 0;
-            color:var(--ink);
-            font-size:20px;
-            font-weight:1000;
-            line-height:1.15;
-        }
-
-        .snapshot-grid {
-            display:grid;
-            grid-template-columns:repeat(3,minmax(0,1fr));
-            gap:8px;
-        }
-
-        .snapshot-stat {
-            min-height:56px;
-            padding:9px;
-            border:1px solid rgba(15,23,42,.08);
-            border-radius:8px;
-            background:rgba(255,255,255,.72);
-        }
-
-        .snapshot-stat span {
-            display:block;
-            color:var(--muted);
-            font-size:10px;
-            font-weight:1000;
-            letter-spacing:.06em;
-            text-transform:uppercase;
-        }
-
-        .snapshot-stat strong {
-            display:block;
-            margin-top:5px;
-            font-size:13px;
+        .om-order-title {
+            margin:0 0 6px;
+            font-size:16px;
             line-height:1.25;
-            overflow-wrap:anywhere;
+            color:var(--ink);
+            letter-spacing:-.01em;
         }
 
-        .details-toggle {
-            width:fit-content;
-            min-height:36px;
-            padding:8px 11px;
-            border:1px solid rgba(15,118,110,.24);
-            border-radius:8px;
-            color:var(--teal);
-            background:#ecfdf5;
-            cursor:pointer;
-            font:inherit;
-            font-size:12px;
-            font-weight:1000;
-        }
-
-        .items-wrap {
-            display:grid;
-            gap:10px;
-        }
-
-        .items-wrap.is-collapsed {
-            display:none;
-        }
-
-        .section-title {
-            margin:0 0 12px;
-            color:#334155;
+        .om-muted {
+            color:var(--muted);
             font-size:13px;
-            font-weight:1000;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-        }
-
-        .items {
-            display:grid;
-            gap:9px;
-            margin:0;
-            padding:0;
-            list-style:none;
-        }
-
-        .items li {
-            display:grid;
-            grid-template-columns:minmax(0,1fr) auto;
-            gap:12px;
-            align-items:center;
-            padding:14px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:
-                linear-gradient(90deg,rgba(15,118,110,.04),rgba(255,255,255,0)),
-                #ffffff;
+            font-weight:700;
             line-height:1.45;
-            box-shadow:0 8px 18px rgba(15,23,42,.04);
         }
 
-        .items strong {
-            white-space:nowrap;
-        }
-
-        .items small {
-            color:var(--muted);
-            font-weight:800;
-        }
-
-        .tracking-card,
-        .fact-grid {
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:#f8fafc;
-        }
-
-        .tracking-card {
-            position:relative;
-            overflow:hidden;
-            padding:16px;
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.96),rgba(248,250,252,.92));
-        }
-
-        .tracking-card::after {
-            content:"";
-            position:absolute;
-            inset:auto -48px -58px auto;
-            width:132px;
-            height:132px;
-            border-radius:50%;
-            background:radial-gradient(circle,rgba(15,118,110,.12),transparent 68%);
-        }
-
-        .tracking {
-            position:relative;
-            z-index:1;
-            display:grid;
-            gap:10px;
-        }
-
-        .track-step {
-            position:relative;
-            display:grid;
-            grid-template-columns:20px minmax(0,1fr);
-            gap:9px;
+        .om-status {
+            display:inline-flex;
             align-items:center;
-            color:var(--muted);
-            font-size:13px;
+            gap:7px;
+            margin-top:9px;
+            min-height:30px;
+            padding:7px 11px;
+            border-radius:999px;
+            font-size:12px;
             font-weight:900;
         }
 
-        .track-step::before {
+        .om-status::before {
             content:"";
-            position:absolute;
-            left:8px;
-            top:20px;
-            bottom:-10px;
-            width:2px;
-            background:#dbe4f0;
+            width:8px;
+            height:8px;
+            border-radius:50%;
         }
 
-        .track-step:last-child::before {
-            display:none;
+        .om-status-delivered {
+            color:var(--green-strong);
+            background:#ECFDF3;
+            border:1px solid #BBF7D0;
         }
 
-        .track-dot {
-            position:relative;
-            z-index:1;
-            width:18px;
-            height:18px;
-            border-radius:999px;
-            border:2px solid #cbd5e1;
-            background:#ffffff;
+        .om-status-delivered::before { background:var(--green-strong); }
+
+        .om-status-pending,
+        .om-status-approved {
+            color:var(--purple);
+            background:#F5F3FF;
+            border:1px solid #DDD6FE;
         }
 
-        .track-step.done { color:var(--teal); }
-        .track-step.done .track-dot {
-            border-color:var(--teal);
-            background:var(--teal);
+        .om-status-pending::before,
+        .om-status-approved::before { background:var(--purple); }
+
+        .om-status-packed {
+            color:#C2410C;
+            background:#FFF7ED;
+            border:1px solid #FED7AA;
         }
 
-        .track-step.active { color:var(--wine); }
-        .track-step.active .track-dot {
-            border-color:var(--wine);
-            background:#fde68a;
+        .om-status-packed::before { background:#F97316; }
+
+        .om-status-out-for-delivery {
+            color:var(--info);
+            background:#EFF6FF;
+            border:1px solid #BFDBFE;
         }
 
-        .fact-grid {
+        .om-status-out-for-delivery::before { background:var(--info); }
+
+        .om-status-cancelled,
+        .om-status-refunded {
+            color:var(--danger);
+            background:#FEF2F2;
+            border:1px solid #FECACA;
+        }
+
+        .om-status-cancelled::before,
+        .om-status-refunded::before { background:var(--danger); }
+
+        .om-money,
+        .om-items,
+        .om-date {
             display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:10px;
-            margin-top:12px;
+            gap:6px;
         }
 
-        .delivery-panel {
-            margin-top:12px;
-            padding:14px;
-            border:1px solid rgba(15,118,110,.18);
-            border-radius:8px;
-            background:
-                linear-gradient(135deg,rgba(15,118,110,.08),rgba(127,29,78,.05)),
-                #ffffff;
-            box-shadow:0 8px 18px rgba(15,23,42,.04);
-        }
-
-        .delivery-grid {
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:9px;
-        }
-
-        .delivery-item {
-            min-height:68px;
-            padding:10px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:rgba(255,255,255,.78);
-        }
-
-        .delivery-item.wide {
-            grid-column:1 / -1;
-        }
-
-        .payment-panel {
-            margin-top:12px;
-            padding:14px;
-            border:1px solid rgba(127,29,78,.18);
-            border-radius:8px;
-            background:
-                linear-gradient(135deg,rgba(127,29,78,.08),rgba(15,118,110,.06)),
-                #ffffff;
-            box-shadow:0 10px 22px rgba(15,23,42,.05);
-        }
-
-        .payment-grid {
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:9px;
-        }
-
-        .payment-item {
-            min-height:66px;
-            padding:10px;
-            border:1px solid rgba(219,228,240,.9);
-            border-radius:8px;
-            background:rgba(255,255,255,.84);
-        }
-
-        .payment-item.wide {
-            grid-column:1 / -1;
-        }
-
-        .payment-item span {
+        .om-money strong,
+        .om-items strong,
+        .om-date strong {
             display:block;
-            color:var(--muted);
-            font-size:11px;
-            font-weight:1000;
-            letter-spacing:.07em;
-            text-transform:uppercase;
-        }
-
-        .payment-item strong,
-        .payment-item a {
-            display:block;
-            margin-top:8px;
             color:var(--ink);
-            font-size:14px;
-            line-height:1.35;
+            font-size:15px;
+            line-height:1.25;
         }
 
-        .payment-item a {
-            color:var(--teal);
-            font-weight:1000;
-        }
-
-        .delivery-item span {
+        .om-save {
             display:block;
-            color:var(--muted);
-            font-size:10px;
-            font-weight:1000;
-            letter-spacing:.07em;
-            text-transform:uppercase;
+            color:var(--green);
+            font-size:12px;
+            font-weight:900;
         }
 
-        .delivery-item strong {
-            display:block;
-            margin-top:6px;
-            font-size:13px;
-            line-height:1.35;
-            overflow-wrap:anywhere;
-        }
-
-        .fact {
-            min-height:86px;
-            padding:14px;
-            border:1px solid var(--line);
-            border-radius:8px;
-            background:#ffffff;
-            box-shadow:0 8px 18px rgba(15,23,42,.04);
-        }
-
-        .fact span {
-            display:block;
-            color:var(--muted);
-            font-size:11px;
-            font-weight:1000;
-            letter-spacing:.07em;
-            text-transform:uppercase;
-        }
-
-        .fact strong {
-            display:block;
-            margin-top:8px;
-            font-size:14px;
-            line-height:1.35;
-        }
-
-        .actions {
+        .om-thumbs {
             display:flex;
+            align-items:center;
+            gap:8px;
             flex-wrap:wrap;
-            gap:9px;
-            padding:0;
+            margin-top:4px;
         }
 
-        .action {
+        .om-thumb {
+            width:38px;
+            height:38px;
+            display:grid;
+            place-items:center;
+            border:1px solid var(--border);
+            border-radius:10px;
+            background:var(--panel-soft);
+            overflow:hidden;
+        }
+
+        .om-thumb img {
+            width:100%;
+            height:100%;
+            object-fit:contain;
+            padding:4px;
+            background:var(--panel);
+        }
+
+        .om-more {
+            width:38px;
+            height:38px;
+            display:grid;
+            place-items:center;
+            border:1px solid var(--border);
+            border-radius:10px;
+            background:var(--panel-soft);
+            color:var(--muted);
+            font-size:12px;
+            font-weight:900;
+        }
+
+        .om-status-icon {
+            width:50px;
+            height:50px;
+            display:grid;
+            place-items:center;
+            justify-self:center;
+            border-radius:16px;
+            border:1px solid rgba(14,124,102,.18);
+            background:var(--green-soft);
+            color:var(--green);
+        }
+
+        .om-status-icon.pending,
+        .om-status-icon.approved {
+            border-color:#DDD6FE;
+            background:#F5F3FF;
+            color:var(--purple);
+        }
+
+        .om-status-icon.packed {
+            border-color:#FED7AA;
+            background:#FFF7ED;
+            color:#C2410C;
+        }
+
+        .om-status-icon.out-for-delivery {
+            border-color:#BFDBFE;
+            background:#EFF6FF;
+            color:var(--info);
+        }
+
+        .om-status-icon.cancelled,
+        .om-status-icon.refunded {
+            border-color:#FECACA;
+            background:#FEF2F2;
+            color:var(--danger);
+        }
+
+        .om-actions {
+            display:flex;
+            gap:8px;
+            justify-content:flex-end;
+            align-items:center;
+        }
+
+        .om-btn {
             display:inline-flex;
             align-items:center;
             justify-content:center;
-            gap:8px;
             min-height:40px;
-            padding:9px 12px;
-            border-radius:8px;
-            border:1px solid transparent;
-            color:white;
-            background:linear-gradient(135deg,var(--wine),var(--teal));
-            font-size:13px;
-            font-weight:1000;
-            transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+            padding:9px 14px;
+            border:1px solid rgba(14,124,102,.16);
+            border-radius:999px;
+            background:var(--panel);
+            color:var(--green);
+            font-size:12px;
+            font-weight:900;
+            white-space:nowrap;
+            transition:transform .2s ease, box-shadow .2s ease;
         }
 
-        .action-icon {
-            width:24px;
-            height:24px;
+        .om-actions .om-btn:first-child {
+            color:#fff;
+            border-color:transparent;
+            background:linear-gradient(135deg,var(--emerald-deep),var(--green));
+            box-shadow:0 10px 22px rgba(14,124,102,.18);
+        }
+
+        .om-btn:hover {
+            transform:translateY(-1px);
+            box-shadow:0 10px 22px rgba(15,23,42,.08);
+        }
+
+        .om-chevron {
+            width:42px;
+            height:42px;
+            padding:0;
+        }
+
+        .orders-sidebar {
+            display:grid;
+            gap:16px;
+            position:sticky;
+            top:146px;
+            align-self:start;
+        }
+
+        .om-side-card {
+            padding:18px;
+            border:1px solid var(--border);
+            border-radius:24px;
+            background:var(--panel);
+            box-shadow:var(--shadow);
+        }
+
+        .om-side-card:first-child {
+            color:var(--ink);
+            border-color:#A7F3D0;
+            background:
+                radial-gradient(circle at 100% 0,rgba(167,243,208,.42),transparent 34%),
+                linear-gradient(145deg,#FFFFFF,#ECFDF5);
+            box-shadow:0 20px 42px rgba(15,118,110,.10);
+        }
+
+        .om-side-card:first-child h3,
+        .om-side-card:first-child .om-summary-metric b {
+            color:#064E3B;
+        }
+
+        .om-side-card:first-child .om-select {
+            color:#065F46;
+            border-color:#A7F3D0;
+            background:rgba(255,255,255,.88);
+        }
+
+        .om-side-card:first-child .om-select option { color:var(--ink); }
+
+        .om-side-card:first-child .om-summary-metric {
+            border-color:#D1FAE5;
+            background:rgba(255,255,255,.82);
+            box-shadow:0 8px 20px rgba(15,118,110,.05);
+        }
+
+        .om-side-card:first-child .om-summary-metric span { color:#64748B; }
+
+        .om-side-card:first-child .om-savings {
+            color:#047857;
+            border-color:#A7F3D0;
+            background:linear-gradient(135deg,#ECFDF5,#F0FDF4);
+        }
+
+        .om-side-head {
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+            align-items:center;
+            margin-bottom:14px;
+        }
+
+        .om-side-card h3 {
+            margin:0;
+            font-size:18px;
+            color:var(--ink);
+        }
+
+        .om-select {
+            min-height:38px;
+            padding:8px 11px;
+            border:1px solid var(--border);
+            border-radius:999px;
+            background:var(--panel);
+            color:var(--ink);
+            font-weight:800;
+        }
+
+        .om-summary-grid {
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:10px;
+        }
+
+        .om-summary-metric {
+            min-height:78px;
+            padding:12px;
+            border:1px solid var(--border);
+            border-radius:14px;
+            background:var(--panel-soft);
+        }
+
+        .om-summary-metric b {
+            display:block;
+            margin-top:6px;
+            font-size:17px;
+            color:var(--ink);
+        }
+
+        .om-summary-metric span {
+            display:block;
+            margin-top:4px;
+            color:var(--muted);
+            font-size:12px;
+            font-weight:750;
+        }
+
+        .om-savings {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:14px;
+            border:1px solid #BBF7D0;
+            background:linear-gradient(135deg,#ECFDF3,#F0FDF4);
+            color:var(--green);
+        }
+
+        .om-savings strong {
+            font-size:20px;
+        }
+
+        .om-help-list {
+            display:grid;
+            gap:2px;
+        }
+
+        .om-help {
+            display:grid;
+            grid-template-columns:40px 1fr auto;
+            gap:12px;
+            align-items:center;
+            padding:12px 0;
+            border-bottom:1px solid var(--border);
+        }
+
+        .om-help:last-child {
+            border-bottom:0;
+        }
+
+        .om-help-icon {
+            width:38px;
+            height:38px;
             display:grid;
             place-items:center;
-            flex:0 0 24px;
-            border-radius:8px;
-            color:#ffffff;
-            background:linear-gradient(135deg,var(--wine),var(--teal));
-            font-size:12px;
-            line-height:1;
+            border-radius:50%;
+            background:var(--green-soft);
+            color:var(--green);
         }
 
-        .action:hover {
-            transform:translateY(-1px);
-            box-shadow:0 12px 24px rgba(15,23,42,.12);
-        }
-
-        .action.secondary {
+        .om-help b {
+            display:block;
+            font-size:14px;
             color:var(--ink);
-            background:#ffffff;
-            border-color:var(--line);
         }
 
-        .action.secondary .action-icon {
-            color:var(--teal);
-            background:#ecfdf5;
-        }
-
-        .action.danger {
-            background:linear-gradient(135deg,var(--red),#991b1b);
-        }
-
-        .action.warn {
-            background:linear-gradient(135deg,var(--amber),#f59e0b);
-        }
-
-        .empty-state {
-            padding:44px;
-            text-align:center;
+        .om-help span {
+            display:block;
+            margin-top:4px;
             color:var(--muted);
+            font-size:12px;
+            font-weight:750;
+        }
+
+        .om-reorder {
+            position:relative;
+            min-height:160px;
+            overflow:hidden;
+            background:linear-gradient(135deg,#EFFCF8,#F8FAFC);
+        }
+
+        .om-reorder p {
+            max-width:220px;
+            margin:8px 0 18px;
+            color:var(--muted);
+            font-size:14px;
+            font-weight:750;
+            line-height:1.5;
+        }
+
+        .om-reorder img {
+            position:absolute;
+            right:-8px;
+            bottom:-4px;
+            width:132px;
+            height:112px;
+            object-fit:contain;
+            opacity:.9;
+        }
+
+        .om-benefits {
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:16px;
+            margin-top:28px;
+            padding:0;
+        }
+
+        .om-benefit {
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            padding:16px;
+            border:1px solid var(--border);
+            border-radius:16px;
+            background:rgba(255,255,255,.86);
+            box-shadow:0 8px 20px rgba(15,23,42,.03);
+            transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+        }
+
+        .om-benefit:hover {
+            transform:translateY(-3px);
+            border-color:rgba(14,124,102,.22);
+            box-shadow:0 16px 34px rgba(15,23,42,.07);
+        }
+
+        .om-benefit-icon {
+            width:52px;
+            height:52px;
+            display:grid;
+            place-items:center;
+            flex:0 0 52px;
+            color:var(--green);
+        }
+
+        .om-benefit b {
+            display:block;
+            font-size:15px;
+            color:var(--ink);
+        }
+
+        .om-benefit span {
+            display:block;
+            margin-top:6px;
+            color:var(--muted);
+            font-size:14px;
+            font-weight:750;
+            line-height:1.45;
         }
 
         .filtered-empty {
@@ -945,90 +876,111 @@
             position:relative;
             z-index:1;
             padding:26px;
-            border:1px dashed rgba(15,118,110,.28);
-            border-radius:8px;
+            border:1px dashed rgba(14,124,102,.24);
+            border-radius:16px;
             color:var(--muted);
-            background:rgba(255,255,255,.78);
+            background:rgba(255,255,255,.82);
             text-align:center;
             font-weight:900;
         }
 
-        .filtered-empty.show {
+        .filtered-empty.show,
+        .filtered-empty.om-show {
             display:block;
         }
 
-        @media(max-width:920px) {
-            .hero,
-            .order-body,
-            .order-showcase {
+        .om-empty {
+            padding:48px 20px;
+            text-align:center;
+            color:var(--muted);
+        }
+
+        @media (max-width:1000px) {
+            .hero {
                 grid-template-columns:1fr;
             }
 
-            .hero-side {
-                padding-top:0;
+            .orders-layout {
+                grid-template-columns:1fr;
+            }
+
+            .orders-sidebar {
+                position:static;
+            }
+
+            .om-page-head {
+                flex-direction:column;
+            }
+
+            .om-head-tools {
+                justify-content:flex-start;
+            }
+
+            .om-benefits {
+                grid-template-columns:repeat(2,minmax(0,1fr));
             }
         }
 
-        @media(max-width:700px) {
-            .topbar {
-                align-items:stretch;
-                flex-direction:column;
-                padding:12px 16px;
+        @media (max-width:700px) {
+            body {
+                padding-top:196px;
             }
 
-            .brand {
-                min-width:0;
-            }
-
-            .nav-buttons,
-            .nav-buttons a {
-                width:100%;
-            }
+            body.yvm-page-my-orders .yvm-marquee-wrap { top:142px; }
 
             .page {
-                width:min(100% - 22px,1280px);
-                padding-top:14px;
+                width:min(100% - 20px,1360px);
             }
 
             .hero {
                 min-height:auto;
+                border-radius:24px;
             }
 
-            .summary,
-            .fact-grid,
-            .delivery-grid {
-                grid-template-columns:1fr;
+            .hero::before { inset:8px; border-radius:18px; }
+
+            .hero-copy,
+            .hero-side { padding:26px; }
+
+            .hero h1 { font-size:clamp(34px,11vw,48px); }
+
+            .summary {
+                grid-template-columns:1fr 1fr;
             }
 
-            .delivery-item.wide {
-                grid-column:auto;
-            }
-
-            .fact {
-                border-bottom:0;
-            }
-
-            .orders-head,
-            .orders-tools,
-            .order-top {
-                grid-template-columns:1fr;
-                align-items:start;
-            }
-
-            .orders-head {
-                flex-direction:column;
-            }
-
-            .status-key {
-                justify-content:flex-start;
-            }
-
-            .orders-mini-stats {
-                justify-content:flex-start;
-            }
-
-            .actions .action {
+            .om-head-tools {
                 width:100%;
+            }
+
+            .om-search {
+                min-width:0;
+                width:100%;
+            }
+
+            .om-toolbar {
+                border-radius:18px;
+            }
+
+            .om-order-card {
+                grid-template-columns:1fr;
+                gap:12px;
+            }
+
+            .om-actions {
+                justify-content:flex-start;
+            }
+
+            .om-btn {
+                flex:1;
+            }
+
+            .om-summary-grid,
+            .om-benefits {
+                grid-template-columns:1fr;
+            }
+
+            .om-reorder img {
+                opacity:.22;
             }
         }
     </style>
@@ -1072,229 +1024,225 @@
     {% endif %}
     {% endwith %}
 
-    <section class="orders-section" aria-label="Recent orders">
-        <div class="orders-head">
-            <div>
-                <h2>Recent Orders</h2>
-                <p>Review your latest medicine orders with quick filters, fulfillment progress, refund status, and fast repeat-order actions.</p>
+    {% set counts = namespace(pending=0, out=0, cancelled=0, refunded=0, savings=0) %}
+    {% for o in orders %}
+        {% if o['status'] == "Pending" %}{% set counts.pending = counts.pending + 1 %}{% endif %}
+        {% if o['status'] == "Out For Delivery" %}{% set counts.out = counts.out + 1 %}{% endif %}
+        {% if o['status'] == "Cancelled" %}{% set counts.cancelled = counts.cancelled + 1 %}{% endif %}
+        {% if o['refund_status'] != "Not Applicable" %}{% set counts.refunded = counts.refunded + 1 %}{% endif %}
+        {% set counts.savings = counts.savings + (o['total'] * 6 / 100) %}
+    {% endfor %}
+
+    <section class="om-page-head" aria-label="My orders heading">
+        <div>
+            <nav class="om-breadcrumb" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span>&gt;</span>
+                <span>My Orders</span>
+            </nav>
+            <div class="om-title-line">
+                <h2>My Orders</h2>
+                <span class="om-badge">{{ summary.total_orders }} Order{% if summary.total_orders != 1 %}s{% endif %}</span>
             </div>
-            <div class="status-key" aria-label="Order statuses">
+            <p>Track, manage and reorder your medicines easily.</p>
+        </div>
+        <div class="om-head-tools">
+            <label class="om-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
+                <input id="orderSearch" type="search" placeholder="Search in orders..." aria-label="Search in orders">
+            </label>
+            <button class="om-filter-button" type="button">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16l-6 7v5l-4 2v-7L4 5Z"></path></svg>
+                Filters
+            </button>
+        </div>
+    </section>
+
+    <section class="orders-layout om-shell">
+        <div class="orders-main om-main">
+            <div class="om-toolbar" aria-label="Order status filters">
+                <button class="om-filter active" type="button" data-filter="all">All Orders</button>
                 {% for status in order_statuses %}
-                    <span class="key-pill">{{ status }}</span>
+                    <button class="om-filter" type="button" data-filter="{{ status }}">{{ status }}</button>
                 {% endfor %}
             </div>
-        </div>
 
-        <div class="orders-tools">
-            <div class="filter-group" aria-label="Filter orders">
-                <button class="filter-btn active" type="button" data-filter="all">All Orders</button>
-                {% for status in order_statuses %}
-                    <button class="filter-btn" type="button" data-filter="{{ status }}">{{ status }}</button>
-                {% endfor %}
-            </div>
-            <div class="orders-mini-stats" aria-label="Recent order counts">
-                <span class="mini-stat">{{ summary.total_orders }} total</span>
-                <span class="mini-stat">{{ summary.active_orders }} active</span>
-                <span class="mini-stat">{{ summary.delivered_orders }} delivered</span>
-            </div>
-        </div>
-
-        {% if orders and orders|length > 0 %}
-        <section class="orders-grid" aria-label="My orders" id="orders-grid">
-            {% for o in orders %}
-            <article class="order-card" id="order-{{ o['order_id'] }}" data-status="{{ o['status'] }}">
-            <div class="order-top">
-                <div>
-                    <div class="order-id">
-                        <h3>Order #{{ o['order_id'] }}</h3>
-                        {% if loop.first %}
-                            <span class="latest-badge">Latest Order</span>
-                        {% endif %}
-                    </div>
-                    <div class="order-meta">
-                        <span class="meta-pill">Total: Rs. {{ o['total'] }}</span>
-                        <span class="meta-pill">Date: {{ o['date'] }}</span>
-                        <span class="meta-pill">{{ o['items']|length }} item{{ "" if o['items']|length == 1 else "s" }}</span>
-                    </div>
-                </div>
-                <span class="status status-{{ o['status']|lower|replace(' ', '-') }}">{{ o['status'] }}</span>
-            </div>
-
-            <div class="order-body">
-                <section class="order-items-panel">
-                    <div class="order-showcase">
-                        <div class="order-visual">
-                            <img src="{{ url_for('static', filename='images/order-card-visual-premium.png') }}" alt="Premium medicine order package">
-                        </div>
-                        <div class="order-snapshot">
+            {% if orders and orders|length > 0 %}
+                <section class="orders-grid" aria-label="My orders" id="orders-grid">
+                    {% for o in orders %}
+                        {% set status_class = o['status']|lower|replace(' ', '-') %}
+                        {% set display_date = o['date'].strftime("%d %b %Y, %I:%M %p") if o['date'].strftime is defined else o['date'] %}
+                        <article class="om-order-card" id="order-{{ o['order_id'] }}" data-status="{{ o['status'] }}" data-search="{{ o['order_id'] }} {{ o['status'] }} {% for i in o['items'] %}{{ i.name }} {% endfor %}">
                             <div>
-                                <span class="snapshot-label">Order Snapshot</span>
-                                <h4 class="snapshot-title">Medicines prepared for managed delivery</h4>
+                                <h3 class="om-order-title">Order #YM{{ "%08d"|format(o['order_id']) }}</h3>
+                                <div class="om-muted">{{ display_date }}</div>
+                                <span class="om-status om-status-{{ status_class }}">{{ o['status'] }}</span>
                             </div>
-                            <div class="snapshot-grid">
-                                <div class="snapshot-stat">
-                                    <span>Total</span>
-                                    <strong>Rs. {{ o['total'] }}</strong>
-                                </div>
-                                <div class="snapshot-stat">
-                                    <span>Items</span>
-                                    <strong>{{ o['items']|length }}</strong>
-                                </div>
-                                <div class="snapshot-stat">
-                                    <span>Status</span>
-                                    <strong>{{ o['status'] }}</strong>
-                                </div>
-                            </div>
-                            <button class="details-toggle" type="button" aria-expanded="true">Hide medicine details</button>
-                        </div>
-                    </div>
 
-                    <div class="items-wrap">
-                        <h4 class="section-title">Order Details</h4>
-                        <ul class="items">
-                            {% for i in o['items'] %}
-                            <li>
-                                <span>{{ i['name'] }}<br><small>Quantity: {{ i['quantity'] }}</small></span>
-                                <strong>Rs. {{ i['price'] }}</strong>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="actions">
-                        <a class="action secondary" href="/order_details/{{ o['order_id'] }}"><span class="action-icon">OD</span>Order Details</a>
-                        <a class="action secondary" href="/order_tracking/{{ o['order_id'] }}"><span class="action-icon">OT</span>Order Tracking</a>
-                        <a class="action secondary" href="/profile/manage/addresses"><span class="action-icon">AM</span>Address Management</a>
-                        <a class="action secondary" href="/payment_history"><span class="action-icon">PH</span>Payment History</a>
-                        <a class="action secondary" href="/rewards"><span class="action-icon">RL</span>Rewards & Loyalty</a>
-                        <a class="action secondary" href="/reorder_subscription"><span class="action-icon">RS</span>Reorder & Subscription</a>
-                        <a class="action secondary" href="/download_invoice/{{ o['order_id'] }}"><span class="action-icon">IN</span>Download Invoice</a>
-                        <a class="action" href="/reorder/{{ o['order_id'] }}"><span class="action-icon">RO</span>Reorder Medicines</a>
-                        {% if o['can_cancel'] %}
-                            <a class="action danger" href="/cancel_order/{{ o['order_id'] }}#order-{{ o['order_id'] }}"><span class="action-icon">CO</span>Cancel Order</a>
-                        {% endif %}
-                        {% if o['can_return'] %}
-                            <a class="action warn" href="/return_order/{{ o['order_id'] }}"><span class="action-icon">RT</span>Return Order</a>
-                        {% endif %}
-                    </div>
+                            <div class="om-money">
+                                <strong>Rs. {{ o['total'] }}</strong>
+                                <span class="om-muted">Total Amount</span>
+                                <span class="om-save">You saved Rs. {{ "%.2f"|format(o['total'] * 6 / 100) }}</span>
+                            </div>
+
+                            <div class="om-items">
+                                <strong>{{ o['items']|length }} Item{% if o['items']|length != 1 %}s{% endif %}</strong>
+                                <div class="om-thumbs">
+                                    {% for item in o['items'][:3] %}
+                                        {% set fallback_name = item.name.replace('/', '-').replace('%', '').replace('.', '') %}
+                                        <span class="om-thumb">
+                                            <img
+                                                src="/static/images/{{ fallback_name }}.JPG"
+                                                alt="{{ item.name }}"
+                                                data-base="/static/images/{{ fallback_name }}"
+                                                data-step="0"
+                                                loading="lazy"
+                                                onerror="swapMedicineImage(this)"
+                                            >
+                                        </span>
+                                    {% endfor %}
+                                    {% if o['items']|length > 3 %}
+                                        <span class="om-more">+{{ o['items']|length - 3 }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="om-date">
+                                <span class="om-muted">
+                                    {% if o['status'] == "Delivered" %}Delivered on{% elif o['status'] == "Cancelled" %}Cancelled on{% elif o['status'] == "Packed" %}Packed on{% elif o['status'] == "Out For Delivery" %}Expected Delivery{% else %}Updated on{% endif %}
+                                </span>
+                                <strong>{{ o['date'].strftime("%d %b %Y") if o['date'].strftime is defined else o['date'] }}</strong>
+                            </div>
+
+                            <span class="om-status-icon {{ status_class }}" aria-hidden="true">
+                                {% if o['status'] == "Delivered" %}
+                                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v10H3z"></path><path d="M14 11h4l3 3v3h-7"></path><circle cx="7" cy="19" r="1.5"></circle><circle cx="18" cy="19" r="1.5"></circle></svg>
+                                {% elif o['status'] == "Packed" %}
+                                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"></path><path d="m4 7.5 8 4.5 8-4.5"></path><path d="M12 12v9"></path></svg>
+                                {% elif o['status'] == "Cancelled" %}
+                                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                                {% else %}
+                                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="m9 12 2 2 4-4"></path></svg>
+                                {% endif %}
+                            </span>
+
+                            <div class="om-actions">
+                                <a class="om-btn" href="/order_details/{{ o['order_id'] }}">View Details</a>
+                                <a class="om-btn om-chevron" href="/order_tracking/{{ o['order_id'] }}" aria-label="Track order {{ o['order_id'] }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg>
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
                 </section>
+                <div class="filtered-empty" id="filtered-empty">No recent orders match this status filter.</div>
+            {% else %}
+                <div class="om-order-card om-empty">No orders found. Your future medicine orders will appear here.</div>
+            {% endif %}
+        </div>
 
-                <aside>
-                    <div class="tracking-card">
-                        <h4 class="section-title">Order Tracking</h4>
-                        <div class="tracking">
-                            {% for step in o['tracking_steps'] %}
-                            <div class="track-step {% if step.done %}done{% endif %} {% if step.active %}active{% endif %}">
-                                <span class="track-dot"></span>
-                                <span>{{ step.name }}</span>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+        <aside class="orders-sidebar om-side">
+            <section class="om-side-card">
+                <div class="om-side-head">
+                    <h3>Orders Summary</h3>
+                    <select class="om-select" aria-label="Summary period">
+                        <option>This Month</option>
+                        <option>All Time</option>
+                    </select>
+                </div>
+                <div class="om-summary-grid">
+                    <div class="om-summary-metric"><b>{{ summary.total_orders }}</b><span>Total Orders</span></div>
+                    <div class="om-summary-metric"><b>{{ counts.pending }}</b><span>Pending</span></div>
+                    <div class="om-summary-metric"><b>{{ counts.out }}</b><span>Out for Delivery</span></div>
+                    <div class="om-summary-metric"><b>{{ summary.delivered_orders }}</b><span>Delivered</span></div>
+                    <div class="om-summary-metric"><b>{{ counts.cancelled }}</b><span>Cancelled</span></div>
+                    <div class="om-summary-metric"><b>{{ counts.refunded }}</b><span>Refunded</span></div>
+                </div>
+                <div class="om-savings">
+                    <span>Total Savings</span>
+                    <strong>Rs. {{ "%.2f"|format(counts.savings) }}</strong>
+                </div>
+            </section>
 
-                    <div class="fact-grid">
-                        <div class="fact">
-                            <span>Return Order</span>
-                            <strong>{{ o['return_status'] }}</strong>
-                        </div>
-                        <div class="fact">
-                            <span>Refund Status</span>
-                            <strong>{{ o['refund_status'] }}</strong>
-                        </div>
-                    </div>
+            <section class="om-side-card">
+                <h3>Need Help?</h3>
+                <p class="om-muted">We are here to help you with your orders.</p>
+                <div class="om-help-list">
+                    <a class="om-help" href="/order_tracking/{{ orders[0]['order_id'] if orders else 0 }}">
+                        <span class="om-help-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v10H3z"></path><path d="M14 11h4l3 3v3h-7"></path></svg></span>
+                        <span><b>Track Order</b><span>Track your order in real-time</span></span>
+                        <span>&gt;</span>
+                    </a>
+                    <a class="om-help" href="/reviews_feedback">
+                        <span class="om-help-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 3-6.2"></path><path d="M4 4v5h5"></path></svg></span>
+                        <span><b>Returns & Refunds</b><span>View return and refund policy</span></span>
+                        <span>&gt;</span>
+                    </a>
+                    <a class="om-help" href="/ai_health_assistant">
+                        <span class="om-help-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 17h.01"></path><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4"></path></svg></span>
+                        <span><b>Help & Support</b><span>Contact our support team</span></span>
+                        <span>&gt;</span>
+                    </a>
+                </div>
+            </section>
 
-                    <div class="payment-panel">
-                        <h4 class="section-title">Payment</h4>
-                        <div class="payment-grid">
-                            <div class="payment-item">
-                                <span>Method</span>
-                                <strong>{{ o['payment_method'] }}</strong>
-                            </div>
-                            <div class="payment-item">
-                                <span>Status</span>
-                                <strong>{{ o['payment_status'] }}</strong>
-                            </div>
-                            <div class="payment-item wide">
-                                <span>Transaction ID</span>
-                                <strong>{{ o['payment_reference'] }}</strong>
-                            </div>
-                            {% if o['payment_screenshot'] %}
-                            <div class="payment-item wide">
-                                <span>Payment Proof</span>
-                                <strong><a href="/{{ o['payment_screenshot'] }}" target="_blank">View uploaded screenshot</a></strong>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
+            <section class="om-side-card om-reorder">
+                <h3>Reorder Medicine</h3>
+                <p>Quickly reorder your previous medicines.</p>
+                <a class="om-btn" href="/upload_prescription">Upload Prescription</a>
+                <img src="{{ url_for('static', filename='images/order-card-visual-premium.png') }}" alt="">
+            </section>
+        </aside>
+    </section>
 
-                    <div class="delivery-panel">
-                        <h4 class="section-title">Delivery Features</h4>
-                        <div class="delivery-grid">
-                            <div class="delivery-item">
-                                <span>Live Status</span>
-                                <strong>{{ o['delivery_status'] }}</strong>
-                            </div>
-                            <div class="delivery-item">
-                                <span>Delivery OTP</span>
-                                <strong>{{ o['delivery_otp'] }}</strong>
-                            </div>
-                            <div class="delivery-item">
-                                <span>Courier</span>
-                                <strong>{{ o['courier_name'] }}</strong>
-                            </div>
-                            <div class="delivery-item">
-                                <span>Courier Tracking</span>
-                                <strong>{{ o['courier_tracking_id'] }}</strong>
-                            </div>
-                            <div class="delivery-item wide">
-                                <span>Delivery Notes</span>
-                                <strong>{{ o['delivery_notes'] }}</strong>
-                            </div>
-                            <div class="delivery-item wide">
-                                <span>Delivery Address</span>
-                                <strong>{{ o['delivery_address'] }}</strong>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-            </div>
-        </article>
-            {% endfor %}
-        </section>
-        <div class="filtered-empty" id="filtered-empty">No recent orders match this status filter.</div>
-        {% else %}
-            <div class="order-card empty-state">
-                No orders found. Your future medicine orders will appear here.
-            </div>
-        {% endif %}
+    <section class="om-benefits" aria-label="Yuvraj Medical benefits">
+        <article class="om-benefit"><span class="om-benefit-icon"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7h11v10H3z"></path><path d="M14 11h4l3 3v3h-7"></path><circle cx="7" cy="19" r="1.5"></circle><circle cx="18" cy="19" r="1.5"></circle></svg></span><div><b>Fast Delivery</b><span>On time, every time. 1-2 days delivery.</span></div></article>
+        <article class="om-benefit"><span class="om-benefit-icon"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 4 6v6c0 5 3.5 8.4 8 9 4.5-.6 8-4 8-9V6l-8-3Z"></path><path d="m9.5 12 1.7 1.7 3.3-3.4"></path></svg></span><div><b>100% Genuine</b><span>Original products trusted by thousands.</span></div></article>
+        <article class="om-benefit"><span class="om-benefit-icon"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18"></path></svg></span><div><b>Secure Payments</b><span>Safe, encrypted and reliable.</span></div></article>
+        <article class="om-benefit"><span class="om-benefit-icon"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12a8 8 0 0 1 16 0v5a3 3 0 0 1-3 3h-2"></path><path d="M8 12v5"></path><path d="M16 12v5"></path></svg></span><div><b>Pharmacist Support</b><span>We are here to help you 24/7.</span></div></article>
     </section>
 </main>
 
 <script>
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const orderCards = document.querySelectorAll(".order-card[data-status]");
+    const filterButtons = document.querySelectorAll(".om-filter");
+    const orderCards = document.querySelectorAll(".om-order-card[data-status]");
     const filteredEmpty = document.getElementById("filtered-empty");
+    const orderSearch = document.getElementById("orderSearch");
+    let currentFilter = "all";
+
+    function applyOrderFilters() {
+        const query = (orderSearch?.value || "").trim().toLowerCase();
+        let visibleCount = 0;
+
+        orderCards.forEach((card) => {
+            const matchesStatus = currentFilter === "all" || card.dataset.status === currentFilter;
+            const matchesSearch = !query || (card.dataset.search || "").toLowerCase().includes(query);
+            const isVisible = matchesStatus && matchesSearch;
+            card.classList.toggle("is-hidden", !isVisible);
+            if (isVisible) {
+                visibleCount += 1;
+            }
+        });
+
+        if (filteredEmpty) {
+            filteredEmpty.classList.toggle("show", visibleCount === 0);
+            filteredEmpty.classList.toggle("om-show", visibleCount === 0);
+        }
+    }
 
     filterButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            const filter = button.dataset.filter;
-            let visibleCount = 0;
+            currentFilter = button.dataset.filter;
 
             filterButtons.forEach((item) => item.classList.remove("active"));
             button.classList.add("active");
-
-            orderCards.forEach((card) => {
-                const isVisible = filter === "all" || card.dataset.status === filter;
-                card.classList.toggle("is-hidden", !isVisible);
-                if (isVisible) {
-                    visibleCount += 1;
-                }
-            });
-
-            if (filteredEmpty) {
-                filteredEmpty.classList.toggle("show", visibleCount === 0);
-            }
+            applyOrderFilters();
         });
     });
+
+    if (orderSearch) {
+        orderSearch.addEventListener("input", applyOrderFilters);
+    }
 
     document.querySelectorAll(".details-toggle").forEach((button) => {
         button.addEventListener("click", () => {
@@ -1309,6 +1257,21 @@
             button.textContent = collapsed ? "Show medicine details" : "Hide medicine details";
         });
     });
+
+    function swapMedicineImage(img) {
+        const extensions = [".jpg", ".jpeg", ".png"];
+        const step = Number(img.dataset.step || 0);
+        const base = (img.dataset.base || "").trim();
+
+        if (base && step < extensions.length) {
+            img.dataset.step = step + 1;
+            img.src = base + extensions[step];
+            return;
+        }
+
+        img.onerror = null;
+        img.src = "/static/images/yuvraj_logo.png";
+    }
 </script>
 {% include "partials/site_header_script.html" %}
 
