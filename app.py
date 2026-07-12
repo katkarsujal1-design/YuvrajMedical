@@ -1,10 +1,18 @@
-<<<<<<< HEAD
-from flask import Flask, render_template, request, redirect, session, g, jsonify, make_response
-#import pymysql
-=======
-from flask import Flask, render_template, request, redirect, session, g, jsonify, send_from_directory, abort, make_response, url_for
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    session,
+    g,
+    jsonify,
+    send_from_directory,
+    abort,
+    make_response,
+    url_for,
+)
+
 import base64
->>>>>>> 765dd03b7749a2d2e946b7d98f3ebbf795739384
 import hashlib
 import re
 import secrets
