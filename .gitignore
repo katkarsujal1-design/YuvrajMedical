@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 venv/
 backup.sql
+__pycache__/
+*.pyc
