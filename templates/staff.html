@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yuvraj Medical - Staff Dashboard</title>
 
-<style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
 :root{
     --primary:#6366f1;
     --secondary:#8b5cf6;
@@ -38,19 +40,6 @@ body{
     #f8fafc;
     color:var(--text);
     overflow-x:hidden;
-}
-
-::-webkit-scrollbar{
-    width:10px;
-}
-
-::-webkit-scrollbar-track{
-    background:#e2e8f0;
-}
-
-::-webkit-scrollbar-thumb{
-    background:linear-gradient(var(--primary),var(--accent));
-    border-radius:20px;
 }
 
 .layout{
@@ -157,6 +146,7 @@ body{
     font-size:34px;
     font-weight:800;
     background:linear-gradient(135deg,var(--primary),var(--accent));
+    background-clip:text;
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
@@ -542,6 +532,120 @@ tr:hover{
     box-shadow:0 10px 20px rgba(34,197,94,0.2);
 }
 
+.status-form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    min-width:360px;
+}
+
+.status-form select,
+.status-form input{
+    min-height:38px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:8px 10px;
+    color:var(--dark);
+    background:#ffffff;
+    font-weight:700;
+}
+
+.status-form button{
+    grid-column:1 / -1;
+    min-height:38px;
+    border:0;
+    border-radius:12px;
+    padding:8px 12px;
+    color:#ffffff;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    font-weight:800;
+    cursor:pointer;
+}
+
+.payment-cell{
+    min-width:260px;
+    text-align:left;
+}
+
+.payment-card{
+    display:grid;
+    gap:8px;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:
+        linear-gradient(135deg,rgba(99,102,241,.07),rgba(6,182,212,.08)),
+        #ffffff;
+    box-shadow:0 12px 24px rgba(15,23,42,.07);
+}
+
+.payment-card strong{
+    color:var(--dark);
+}
+
+.payment-title{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+}
+
+.payment-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:6px 9px;
+    border-radius:999px;
+    background:#eef2ff;
+    color:var(--primary);
+    font-size:11px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.payment-proof{
+    display:inline-flex;
+    justify-content:center;
+    padding:8px 10px;
+    border-radius:10px;
+    background:#ecfeff;
+    color:#0f766e !important;
+}
+
+.payment-card span,
+.payment-card a{
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+}
+
+.payment-card a{
+    color:var(--primary);
+}
+
+.payment-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.payment-actions button{
+    border:0;
+    border-radius:10px;
+    padding:9px 10px;
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 10px 18px rgba(15,23,42,.08);
+}
+
+.payment-actions .verify{
+    background:linear-gradient(135deg,#16a34a,#22c55e);
+}
+
+.payment-actions .reject{
+    background:linear-gradient(135deg,#dc2626,#ef4444);
+}
+
 .action-btn:hover{
     transform:translateY(-3px) scale(1.05);
 }
@@ -586,9 +690,19 @@ tr:hover{
     }
 }
 </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
-<body>
+<body class="yvm-pro-page yvm-page-staff">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
 <div class="layout">
 
@@ -794,6 +908,7 @@ tr:hover{
                         <th>Total</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Payment</th>
                         <th>Action</th>
                     </tr>
 
@@ -809,19 +924,48 @@ tr:hover{
                                 <span class="pending">Pending</span>
                             {% elif o["status"]=="Delivered" %}
                                 <span class="delivered">Delivered</span>
-                            {% else %}
+                            {% elif o["status"]=="Cancelled" %}
                                 <span class="cancelled">Cancelled</span>
+                            {% elif o["status"]=="Refunded" %}
+                                <span class="cancelled">Refunded</span>
+                            {% else %}
+                                <span class="pending">{{ o["status"] }}</span>
                             {% endif %}
                         </td>
 
+                        <td class="payment-cell">
+                            <div class="payment-card">
+                                <div class="payment-title">
+                                    <strong>{{ o.get("payment_method") or "Cash On Delivery" }}</strong>
+                                    <span class="payment-badge">{{ o.get("payment_status") or "Pending" }}</span>
+                                </div>
+                                <span>Txn: {{ o.get("payment_transaction_id") or o.get("payment_reference") or "Not required" }}</span>
+                                {% if o.get("payment_screenshot") %}
+                                    <a class="payment-proof" href="/{{ o.get('payment_screenshot') }}" target="_blank">View payment screenshot</a>
+                                {% endif %}
+                                {% if o.get("payment_id") and o.get("payment_status") in ["Pending Verification", "Pending COD"] %}
+                                    <form class="payment-actions" method="POST" action="/verify_payment/{{ o.get('payment_id') }}">
+                                        <button class="verify" type="submit" name="action" value="Verified">Verify</button>
+                                        <button class="reject" type="submit" name="action" value="Rejected">Reject</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
+
                         <td>
-                            {% if o["status"]=="Pending" %}
-                                <a href="/deliver_order/{{ o['id'] }}" class="action-btn">
-                                    ✔ Deliver
-                                </a>
-                            {% else %}
-                                <span style="color:gray;">Done</span>
-                            {% endif %}
+                            <form class="status-form" method="POST" action="/update_order_status/{{ o['id'] }}">
+                                <select name="status" aria-label="Update order status">
+                                    {% for status in order_statuses %}
+                                        <option value="{{ status }}" {% if o["status"] == status %}selected{% endif %}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                                <input name="courier_name" placeholder="Courier" value="{{ o.get('courier_name') or '' }}">
+                                <input name="courier_tracking_id" placeholder="Tracking ID" value="{{ o.get('courier_tracking_id') or '' }}">
+                                <input name="courier_tracking_url" placeholder="Tracking URL" value="{{ o.get('courier_tracking_url') or '' }}">
+                                <input name="delivery_notes" placeholder="Delivery notes" value="{{ o.get('delivery_notes') or '' }}">
+                                <input name="delivery_otp" placeholder="Delivery OTP">
+                                <button type="submit">Update</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -833,5 +977,6 @@ tr:hover{
 
 </div>
 
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

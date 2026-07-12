@@ -1,138 +1,525 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Cart</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
-        body {
-            font-family: Arial;
-            margin: 0;
-            background: #f9f9f9;
+        *{box-sizing:border-box}
+        :root{
+            --ink:#162033;
+            --muted:#667085;
+            --line:#e5e7eb;
+            --panel:#ffffff;
+            --soft:#f6f8fb;
+            --brand:#7f1d4e;
+            --brand-dark:#4c1d3d;
+            --teal:#0f766e;
+            --green:#16a34a;
+            --blue:#075985;
+            --red:#991b1b;
+            --amber:#92400e;
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2c7be5;
-            color: white;
-            padding: 15px;
-            position: sticky;
-            top: 0;
+        body{
+            margin:0;
+            font-family:"Segoe UI",Arial,sans-serif;
+            color:var(--ink);
+            background:
+                radial-gradient(circle at 8% 0%,rgba(236,254,255,.72),transparent 34%),
+                radial-gradient(circle at 100% 14%,rgba(254,243,199,.62),transparent 30%),
+                linear-gradient(135deg,#fffaf0,#f7fafc 54%,#fff7ed);
+            background-attachment:fixed;
         }
-
-        .left {
-            font-size: 20px;
-            font-weight: bold;
+        a{text-decoration:none;color:inherit}
+        .header{
+            position:sticky;
+            top:0;
+            z-index:20;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            padding:12px 5vw;
+            color:#fff7ed;
+            background:
+                radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
+                linear-gradient(135deg,rgba(76,29,61,.96) 0%,rgba(127,29,78,.96) 52%,rgba(159,58,74,.96) 100%);
+            border-bottom:1px solid rgba(253,230,138,.32);
+            box-shadow:0 12px 34px rgba(76,29,61,.28);
         }
-
-        .right {
-            display: flex;
-            gap: 10px;
+        .brand{display:flex;align-items:center;gap:12px;font-weight:950}
+        .brand img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 7px 12px rgba(0,0,0,.28))}
+        .brand strong{display:block;font-size:18px;letter-spacing:.2px}
+        .brand span{display:block;color:#fde68a;font-size:12px;font-weight:800}
+        .nav{display:flex;gap:9px;flex-wrap:wrap}
+        .nav a{
+            display:inline-flex;
+            min-height:38px;
+            align-items:center;
+            padding:8px 13px;
+            border-radius:999px;
+            background:rgba(255,255,255,.14);
+            border:1px solid rgba(253,230,138,.22);
+            font-weight:850;
+            transition:.2s ease;
         }
-
-        .btn-link {
-            padding: 10px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
+        .nav a:hover{background:#fff7ed;color:#6f1d49;transform:translateY(-1px)}
+        .wrap{width:min(1180px,calc(100% - 28px));margin:24px auto 52px}
+        .hero{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:18px;
+            align-items:end;
+            padding:24px;
+            border-radius:8px;
+            background:rgba(255,255,255,.92);
+            border:1px solid rgba(229,231,235,.95);
+            box-shadow:0 18px 44px rgba(15,23,42,.08);
         }
-
-        .home-btn { background: green; }
-        .logout-btn { background: red; }
-
-        .container {
-            padding: 20px;
+        .eyebrow{
+            display:inline-flex;
+            margin-bottom:10px;
+            padding:7px 10px;
+            border-radius:999px;
+            color:#075985;
+            background:#ecfeff;
+            border:1px solid #bae6fd;
+            font-size:12px;
+            font-weight:950;
         }
-
-        .card {
-            background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
+        .hero h1{margin:0;font-size:32px;line-height:1.15}
+        .hero p{margin:9px 0 0;color:var(--muted);font-weight:750;line-height:1.55}
+        .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-width:360px}
+        .stat{
+            padding:12px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid var(--line);
+            text-align:center;
         }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
+        .stat b{display:block;font-size:18px}
+        .stat span{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:850}
+        .flash{
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:8px;
+            background:#fef3c7;
+            color:#713f12;
+            border:1px solid #fde68a;
+            font-weight:850;
         }
-
-        .btn {
-            padding: 5px 10px;
-            background: #ddd;
-            border-radius: 5px;
-            text-decoration: none;
+        .layout{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) 354px;
+            gap:18px;
+            align-items:start;
+            margin-top:18px;
         }
-
-        .total {
-            text-align: center;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
+        .panel{
+            background:rgba(255,255,255,.94);
+            border:1px solid var(--line);
+            border-radius:8px;
+            box-shadow:0 16px 40px rgba(15,23,42,.06);
+            overflow:hidden;
         }
-
-        .checkout-btn {
-    background: green;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-}
+        .stack{display:grid;gap:18px}
+        .panel-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            padding:16px 18px;
+            border-bottom:1px solid var(--line);
+            background:#fbfdff;
+        }
+        .panel-head h2,.panel-head h3{margin:0;font-size:18px}
+        .chip{
+            display:inline-flex;
+            align-items:center;
+            white-space:nowrap;
+            padding:7px 10px;
+            border-radius:999px;
+            color:#0f766e;
+            background:#ccfbf1;
+            border:1px solid #99f6e4;
+            font-size:12px;
+            font-weight:950;
+        }
+        .cart-list{display:grid}
+        .cart-item{
+            display:grid;
+            grid-template-columns:92px minmax(0,1fr) auto;
+            gap:16px;
+            padding:18px;
+            border-bottom:1px solid var(--line);
+        }
+        .cart-item:last-child{border-bottom:none}
+        .product-img,.mini-img{
+            display:grid;
+            place-items:center;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid var(--line);
+            overflow:hidden;
+        }
+        .product-img{width:92px;height:92px}
+        .product-img img,.mini-img img{width:100%;height:100%;object-fit:contain;padding:8px;background:white}
+        .item-copy h3{margin:0;font-size:17px;line-height:1.35}
+        .item-meta{
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin:10px 0;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:850;
+        }
+        .meta-pill{padding:6px 9px;border-radius:999px;background:#f1f5f9;border:1px solid #e2e8f0}
+        .price-line{margin:0;color:#047857;font-size:20px;font-weight:950}
+        .policy{margin:8px 0 0;color:var(--muted);font-size:13px;font-weight:700;line-height:1.45}
+        .item-side{display:grid;align-content:space-between;justify-items:end;gap:14px;min-width:170px}
+        .qty{
+            display:inline-grid;
+            grid-template-columns:38px 54px 38px;
+            min-height:38px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            overflow:hidden;
+            background:#fff;
+        }
+        .qty a,.qty span{display:grid;place-items:center;font-weight:950}
+        .qty a{background:#f8fafc;color:#0f172a}
+        .qty a:hover{background:#e0f2fe;color:#075985}
+        .qty span{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+        .actions{display:flex;gap:8px;flex-wrap:wrap}
+        .item-side .actions{justify-content:flex-end}
+        .action-link,.checkout,.coupon button,.browse-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:38px;
+            padding:9px 12px;
+            border-radius:8px;
+            border:1px solid transparent;
+            font-weight:950;
+            cursor:pointer;
+            transition:.2s ease;
+        }
+        .action-link:hover,.checkout:hover,.coupon button:hover,.browse-btn:hover{transform:translateY(-1px)}
+        .danger{color:var(--red);background:#fee2e2;border-color:#fecaca}
+        .save{color:var(--blue);background:#ecfeff;border-color:#bae6fd}
+        .wish{color:#7f1d4e;background:#fce7f3;border-color:#fbcfe8}
+        .mini-list{display:grid;padding:8px 18px 18px}
+        .mini-item{
+            display:grid;
+            grid-template-columns:58px minmax(0,1fr) auto;
+            gap:12px;
+            align-items:center;
+            padding:12px 0;
+            border-bottom:1px solid var(--line);
+        }
+        .mini-item:last-child{border-bottom:none}
+        .mini-img{width:58px;height:58px}
+        .mini-item b{display:block;line-height:1.35}
+        .mini-item span{display:block;margin-top:4px;color:var(--muted);font-size:13px;font-weight:750}
+        .mini-item .actions{justify-content:flex-end}
+        .summary{
+            position:sticky;
+            top:88px;
+            padding:18px;
+        }
+        .summary h2{margin:0 0 14px;font-size:20px}
+        .summary-row{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:11px 0;
+            border-bottom:1px solid var(--line);
+            color:#475569;
+            font-weight:850;
+        }
+        .summary-row.total{
+            border-bottom:none;
+            color:var(--ink);
+            font-size:21px;
+            font-weight:950;
+        }
+        .coupon{
+            margin:14px 0;
+            padding:14px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid var(--line);
+        }
+        .coupon form{display:flex;gap:8px}
+        .coupon input{
+            min-width:0;
+            flex:1;
+            padding:10px;
+            border-radius:8px;
+            border:1px solid #cbd5e1;
+            color:var(--ink);
+            font-weight:850;
+            text-transform:uppercase;
+        }
+        .coupon button{color:white;background:var(--teal)}
+        .coupon small{display:block;margin-top:8px;color:var(--muted);font-weight:750;line-height:1.45}
+        .coupon a{color:var(--brand);font-weight:950}
+        .delivery-box{
+            display:grid;
+            gap:8px;
+            margin-top:14px;
+            padding:13px;
+            border-radius:8px;
+            color:#164e63;
+            background:#ecfeff;
+            border:1px solid #bae6fd;
+            font-weight:850;
+            line-height:1.45;
+        }
+        .delivery-box span{color:var(--muted);font-size:13px;font-weight:750}
+        .checkout{
+            width:100%;
+            margin-top:14px;
+            min-height:48px;
+            color:white;
+            background:linear-gradient(135deg,#0f766e,#16a34a);
+            box-shadow:0 14px 28px rgba(22,163,74,.22);
+        }
+        .empty{
+            padding:36px 18px;
+            text-align:center;
+            color:var(--muted);
+            font-weight:800;
+        }
+        .empty h3{margin:0 0 8px;color:var(--ink)}
+        .empty p{margin:0 auto 14px;max-width:420px;line-height:1.5}
+        .browse-btn{color:white;background:var(--teal)}
+        @media(max-width:960px){
+            .hero{grid-template-columns:1fr}
+            .hero-stats{min-width:0}
+            .layout{grid-template-columns:1fr}
+            .summary{position:static}
+        }
+        @media(max-width:720px){
+            .header{align-items:flex-start;flex-direction:column}
+            .hero-stats{grid-template-columns:1fr}
+            .cart-item{grid-template-columns:74px minmax(0,1fr)}
+            .product-img{width:74px;height:74px}
+            .item-side{grid-column:1 / -1;justify-items:start;min-width:0}
+            .item-side .actions{justify-content:flex-start}
+            .mini-item{grid-template-columns:50px minmax(0,1fr)}
+            .mini-img{width:50px;height:50px}
+            .mini-item .actions{grid-column:1 / -1;justify-content:flex-start}
+            .coupon form{flex-direction:column}
+        }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
-
-<body>
-
-<div class="header">
-
-    <div class="left">🛒 Cart</div>
-
-    <div class="right">
-        <a href="/profile" class="btn-link home-btn" style="background:purple;">👤 Profile</a>
-        <a href="/" class="btn-link home-btn">🏠 Home</a>
-        <a href="/logout" class="btn-link logout-btn">🚪 Logout</a>
-    </div>
-
+<body class="yvm-pro-page yvm-page-cart">
+ 
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 </div>
+    
+{% include "partials/site_header.html" %}
 
-<div class="container">
-
-{% if items %}
-
-    {% for item in items %}
-    <div class="card">
-        <div class="row">
-            <div>
-                <h3>{{ item.name }}</h3>
-                <p>₹{{ item.price }}</p>
-                <p>Subtotal: ₹{{ item.subtotal }}</p>
-            </div>
-
-            <div>
-                <a href="/decrease/{{item.id}}" class="btn">➖</a>
-                {{ item.qty }}
-                <a href="/increase/{{item.id}}" class="btn">➕</a>
-            </div>
+<main class="wrap">
+    <section class="hero">
+        <div>
+            <span class="eyebrow">Cart Management</span>
+            <h1>Your Medicine Cart</h1>
+            <p>Review pack quantities, keep future medicines saved, and apply eligible delivery offers before checkout.</p>
         </div>
-    </div>
-    {% endfor %}
+        <div class="hero-stats">
+            <div class="stat"><b>{{ items|length }}</b><span>Active items</span></div>
+            <div class="stat"><b>Rs. {{ totals.payable_total }}</b><span>Payable total</span></div>
+            <div class="stat"><b>{{ totals.estimated_delivery }}</b><span>Delivery</span></div>
+        </div>
+    </section>
 
-    <div class="total">
-        <h2>Total: ₹{{ total }}</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-      <a href="/checkout" class="checkout-btn">
-    🧾 Proceed to Checkout
-      </a>
-    </div>
+    <section class="layout">
+        <div class="stack">
+            <section class="panel">
+                <div class="panel-head">
+                    <h2>Active Cart</h2>
+                    <span class="chip">Pack-based orders</span>
+                </div>
 
-{% else %}
-    <p style="text-align:center;">🛒 Cart is empty</p>
-{% endif %}
+                {% if items %}
+                    <div class="cart-list">
+                        {% for item in items %}
+                            <article class="cart-item">
+                                <a class="product-img" href="{{ url_for('medicine_details', id=item.id) }}">
+                                    <img
+                                        src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                        alt="{{ item.name }}"
+                                        data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                        data-step="0"
+                                        onerror="swapMedicineImage(this)"
+                                    >
+                                </a>
+                                <div class="item-copy">
+                                    <h3>{{ item.name }}</h3>
+                                    <div class="item-meta">
+                                        <span class="meta-pill">{{ item.qty }} pack(s)</span>
+                                        <span class="meta-pill">Subtotal Rs. {{ item.subtotal }}</span>
+                                    </div>
+                                    <p class="price-line">Rs. {{ item.price }} per pack</p>
+                                    <p class="policy">Loose single tablets or partially opened packs are not sold separately online.</p>
+                                </div>
+                                <div class="item-side">
+                                    <div class="qty" aria-label="Quantity controls">
+                                        <a href="/decrease/{{ item.id }}">-</a>
+                                        <span>{{ item.qty }}</span>
+                                        <a href="/increase/{{ item.id }}">+</a>
+                                    </div>
+                                    <div class="actions">
+                                        <a class="action-link save" href="/cart/save_for_later/{{ item.id }}">Save Later</a>
+                                        <a class="action-link wish" href="/cart/move_to_wishlist/{{ item.id }}">Wishlist</a>
+                                        <a class="action-link danger" href="/cart/remove/{{ item.id }}">Remove</a>
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty">
+                        <h3>Your cart is empty</h3>
+                        <p>Add medicines from the catalog and they will appear here with pricing and checkout details.</p>
+                        <a class="browse-btn" href="/">Browse Medicines</a>
+                    </div>
+                {% endif %}
+            </section>
 
-</div>
+            <section class="panel">
+                <div class="panel-head">
+                    <h3>Saved For Later</h3>
+                    <span class="chip">{{ saved_items|length }} item(s)</span>
+                </div>
+                <div class="mini-list">
+                    {% for item in saved_items %}
+                        <div class="mini-item">
+                            <a class="mini-img" href="{{ url_for('medicine_details', id=item.id) }}">
+                                <img
+                                    src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                    alt="{{ item.name }}"
+                                    data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                    data-step="0"
+                                    onerror="swapMedicineImage(this)"
+                                >
+                            </a>
+                            <div>
+                                <b>{{ item.name }}</b>
+                                <span>Rs. {{ item.price }} · {{ item.quantity }} pack(s)</span>
+                            </div>
+                            <div class="actions">
+                                <a class="action-link save" href="/cart/move_saved_to_cart/{{ item.id }}">Move To Cart</a>
+                                <a class="action-link danger" href="/cart/remove_saved/{{ item.id }}">Remove</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty">No saved items yet.</div>
+                    {% endfor %}
+                </div>
+            </section>
 
+            <section class="panel">
+                <div class="panel-head">
+                    <h3>Wishlist Preview</h3>
+                    <span class="chip">{{ wishlist_items|length }} item(s)</span>
+                </div>
+                <div class="mini-list">
+                    {% for item in wishlist_items %}
+                        <div class="mini-item">
+                            <a class="mini-img" href="{{ url_for('medicine_details', id=item.id) }}">
+                                <img
+                                    src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                    alt="{{ item.name }}"
+                                    data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                    data-step="0"
+                                    onerror="swapMedicineImage(this)"
+                                >
+                            </a>
+                            <div>
+                                <b>{{ item.name }}</b>
+                                <span>Rs. {{ item.price }} per pack</span>
+                            </div>
+                            <div class="actions">
+                                <a class="action-link wish" href="/cart/wishlist_to_cart/{{ item.id }}">Move To Cart</a>
+                                <a class="action-link danger" href="/cart/remove_wishlist/{{ item.id }}">Remove</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty">No wishlist items yet.</div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <aside class="panel summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row"><span>Subtotal</span><b>Rs. {{ totals.subtotal }}</b></div>
+            <div class="summary-row"><span>Discount</span><b>- Rs. {{ totals.discount }}</b></div>
+            <div class="summary-row"><span>Delivery</span><b>Rs. {{ totals.delivery_charge }}</b></div>
+            <div class="summary-row total"><span>Total</span><b>Rs. {{ totals.payable_total }}</b></div>
+
+            <div class="coupon">
+                <form method="POST" action="/cart/apply_coupon">
+                    <input name="coupon_code" placeholder="Coupon code" value="{{ totals.coupon_code or '' }}">
+                    <button type="submit">Apply</button>
+                </form>
+                {% if totals.coupon_code %}
+                    <small>Applied: {{ totals.coupon_code }} · <a href="/cart/remove_coupon">Remove coupon</a></small>
+                {% endif %}
+                {% if totals.coupon_message %}
+                    <small>{{ totals.coupon_message }}</small>
+                {% endif %}
+                <small>Available offers: SAVE10, HEALTH50, FREESHIP</small>
+            </div>
+
+            <div class="delivery-box">
+                <b>Estimated delivery: {{ totals.estimated_delivery }}</b>
+                <span>Free delivery is available on cart subtotal Rs. 500 and above.</span>
+            </div>
+
+            {% if items %}
+                <a href="/checkout" class="checkout">Proceed to Checkout</a>
+            {% endif %}
+        </aside>
+    </section>
+</main>
+<script>
+    function swapMedicineImage(img) {
+        const extensions = [".jpg", ".jpeg", ".png"];
+        const step = Number(img.dataset.step || 0);
+
+        if (step < extensions.length) {
+            img.dataset.step = step + 1;
+            img.src = img.dataset.base + extensions[step];
+            return;
+        }
+
+        img.onerror = null;
+        img.src = "/static/images/yuvraj_logo.png";
+    }
+</script>
+{% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

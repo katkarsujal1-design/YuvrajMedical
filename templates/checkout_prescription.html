@@ -2,9 +2,33 @@
 <html>
 <head>
     <title>Prescription Checkout</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
+        body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#eef7f5);color:#102033}
+        .card{width:min(720px,calc(100% - 32px));margin:32px auto;padding:24px;border:1px solid #dbe4f0;border-radius:8px;background:#fff;box-shadow:0 18px 42px rgba(15,23,42,.08)}
+        .card h2{margin:0 0 14px;color:#7f1d4e}
+        .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+        .actions a{padding:11px 14px;border-radius:8px;text-decoration:none;font-weight:900}
+        .primary{color:#fff;background:linear-gradient(135deg,#7f1d4e,#0f766e)}
+        .secondary{color:#102033;background:#f8fafc;border:1px solid #dbe4f0}
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
-<body>
+<body class="yvm-pro-page yvm-page-checkout-prescription">
 
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+{% include "partials/site_header.html" %}
+
+<main class="card">
 <h2>Approved Prescription</h2>
 
 <p><b>Status:</b> {{ prescription.status }}</p>
@@ -12,10 +36,13 @@
 <p><b>Medicines:</b></p>
 
 <p>{{ prescription.approved_medicines }}</p>
-<a href="/add_prescription_to_cart/{{ prescription.id }}">
-    🛒 Add Approved Medicines to Cart
-</a>
-<a href="/my_prescriptions">Back</a>
+<div class="actions">
+    <a class="primary" href="/add_prescription_to_cart/{{ prescription.id }}">Add Approved Medicines To Cart</a>
+    <a class="secondary" href="/my_prescriptions">Back</a>
+</div>
+</main>
 
+{% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

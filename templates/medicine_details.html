@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ medicine["name"] }} - Medicine Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Montserrat:wght@600;700&display=swap');
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:"Segoe UI",Arial,sans-serif;
+            color:#0f172a;
+            background:#f6f8fb;
+        }
+        a{text-decoration:none;color:inherit}
+        .header{
+            position:sticky;
+            top:0;
+            z-index:1000;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            padding:10px 24px;
+            background:
+                radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
+                linear-gradient(135deg,rgba(76,29,61,.96) 0%,rgba(127,29,78,.96) 52%,rgba(159,58,74,.96) 100%);
+            backdrop-filter:blur(18px);
+            border-bottom:1px solid rgba(253,230,138,.42);
+            box-shadow:0 12px 34px rgba(76,29,61,.30);
+            color:#ffffff;
+        }
+        .brand{
+            display:flex;
+            flex-direction:row;
+            align-items:center;
+            gap:12px;
+            min-width:245px;
+        }
+        .brand-icon{
+            width:74px;
+            height:74px;
+            object-fit:contain;
+            filter:drop-shadow(0 7px 12px rgba(0,0,0,.34));
+        }
+        .brand-name{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-start;
+            gap:5px;
+            line-height:1;
+        }
+        .brand-yuvraj{
+            position:relative;
+            font-family:"Cinzel",Georgia,serif;
+            font-size:23px;
+            font-weight:800;
+            letter-spacing:1.8px;
+            color:#67e8f9;
+            background:linear-gradient(90deg,#ecfeff 0%,#67e8f9 42%,#fde68a 100%);
+            -webkit-background-clip:text;
+            background-clip:text;
+            -webkit-text-fill-color:transparent;
+            text-shadow:0 2px 8px rgba(8,47,73,.22);
+        }
+        .brand-yuvraj::after{
+            content:"";
+            display:block;
+            width:72%;
+            height:2px;
+            margin:5px 0 0;
+            border-radius:99px;
+            background:linear-gradient(90deg,transparent,#fbbf24,#67e8f9,transparent);
+        }
+        .brand-medical{
+            font-family:"Montserrat","Segoe UI",sans-serif;
+            color:#fde68a;
+            font-size:9px;
+            font-weight:700;
+            letter-spacing:5px;
+            text-transform:uppercase;
+            text-shadow:0 2px 8px rgba(0,0,0,.45);
+            transform:translateX(2.5px);
+        }
+        .brand-tagline{
+            color:#fce7f3;
+            font-size:11px;
+            font-weight:800;
+            line-height:1.2;
+        }
+        .nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+        .nav a{
+            display:inline-flex;
+            align-items:center;
+            min-height:40px;
+            padding:9px 13px;
+            border-radius:999px;
+            color:#fff7ed;
+            background:rgba(255,255,255,.14);
+            border:1px solid rgba(253,230,138,.20);
+            font-size:14px;
+            font-weight:800;
+            transition:.25s;
+        }
+        .nav a:hover{
+            background:#fff7ed;
+            color:#6f1d49;
+            transform:translateY(-2px);
+        }
+        .cart-link{
+            position:relative;
+            background:rgba(15,118,110,.38)!important;
+            border-color:rgba(103,232,249,.30)!important;
+        }
+        .wrap{width:min(1180px,calc(100% - 32px));margin:24px auto 48px}
+        .breadcrumb{
+            display:flex;
+            gap:8px;
+            align-items:center;
+            color:#64748b;
+            font-size:13px;
+            font-weight:800;
+            margin-bottom:14px;
+        }
+        .breadcrumb a{color:#075985}
+        .product-shell{
+            display:grid;
+            grid-template-columns:360px minmax(0,1fr) 290px;
+            gap:18px;
+            align-items:start;
+        }
+        .panel{
+            background:#ffffff;
+            border:1px solid #e2e8f0;
+            border-radius:8px;
+            box-shadow:0 16px 40px rgba(15,23,42,.06);
+        }
+        .media-panel{padding:18px}
+        .image-box{
+            display:grid;
+            place-items:center;
+            min-height:330px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+        }
+        .image-box img{
+            width:min(280px,100%);
+            height:280px;
+            object-fit:contain;
+            border-radius:8px;
+            background:white;
+            padding:10px;
+        }
+        .trust-row{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:10px;
+            margin-top:14px;
+        }
+        .trust-row div{
+            padding:12px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+        }
+        .trust-row span{
+            display:block;
+            color:#64748b;
+            font-size:11px;
+            font-weight:900;
+            text-transform:uppercase;
+        }
+        .trust-row b{
+            display:block;
+            margin-top:5px;
+            color:#0f172a;
+            font-size:13px;
+        }
+        .summary{padding:24px}
+        .status-line{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            flex-wrap:wrap;
+            margin-bottom:12px;
+        }
+        .pill{
+            display:inline-flex;
+            align-items:center;
+            min-height:28px;
+            padding:6px 10px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:950;
+        }
+        .available{color:#047857;background:#dcfce7}
+        .unavailable{color:#991b1b;background:#fee2e2}
+        .rx{color:#7f1d1d;background:#fee2e2}
+        .otc{color:#075985;background:#e0f2fe}
+        .summary h2{
+            margin:0;
+            color:#0f172a;
+            font-size:31px;
+            line-height:1.15;
+        }
+        .summary-text{
+            margin:12px 0 0;
+            color:#475569;
+            line-height:1.65;
+            font-weight:700;
+        }
+        .fact-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:12px;
+            margin-top:20px;
+        }
+        .fact{
+            padding:14px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+            min-width:0;
+        }
+        .fact span,
+        .info-card span{
+            display:block;
+            color:#64748b;
+            font-size:11px;
+            font-weight:950;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+        }
+        .fact b,
+        .info-card p{
+            display:block;
+            margin:7px 0 0;
+            color:#0f172a;
+            font-weight:800;
+            line-height:1.55;
+            overflow-wrap:anywhere;
+        }
+        .purchase-panel{padding:18px;position:sticky;top:86px}
+        .price-label{
+            color:#64748b;
+            font-size:12px;
+            font-weight:950;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+        }
+        .price{
+            margin:6px 0 12px;
+            color:#075985;
+            font-size:34px;
+            font-weight:950;
+            line-height:1;
+        }
+        .package-note{
+            padding:13px;
+            border-radius:8px;
+            background:#ecfeff;
+            border:1px solid #a5f3fc;
+            color:#164e63;
+            font-size:13px;
+            font-weight:800;
+            line-height:1.5;
+        }
+        .actions{display:grid;gap:10px;margin-top:14px}
+        .action{
+            display:inline-flex;
+            justify-content:center;
+            align-items:center;
+            min-height:44px;
+            padding:12px 16px;
+            border-radius:8px;
+            border:1px solid transparent;
+            font-weight:950;
+            background:#0f766e;
+            color:white;
+        }
+        .action:hover{background:#0d9488}
+        .secondary{background:#ffffff;color:#075985;border-color:#bae6fd}
+        .secondary:hover{background:#ecfeff}
+        .disabled{background:#94a3b8;color:white;pointer-events:none}
+        .section-head{
+            display:flex;
+            align-items:end;
+            justify-content:space-between;
+            gap:12px;
+            margin:0 0 16px;
+            padding-bottom:14px;
+            border-bottom:1px solid #e2e8f0;
+        }
+        .section-head h2{
+            margin:0;
+            color:#0f172a;
+            font-size:24px;
+        }
+        .section-head p{
+            margin:4px 0 0;
+            color:#64748b;
+            font-weight:700;
+        }
+        .content-section{
+            margin-top:26px;
+            padding:22px;
+            border-radius:8px;
+            background:#ffffff;
+            border:1px solid #e2e8f0;
+            box-shadow:0 16px 40px rgba(15,23,42,.06);
+        }
+        .section-kicker{
+            display:inline-flex;
+            align-items:center;
+            min-height:28px;
+            margin-bottom:8px;
+            padding:6px 10px;
+            border-radius:999px;
+            color:#075985;
+            background:#ecfeff;
+            border:1px solid #bae6fd;
+            font-size:11px;
+            font-weight:950;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+        }
+        .details-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px;
+        }
+        .info-card{
+            position:relative;
+            padding:18px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+            overflow:hidden;
+        }
+        .info-card::before{
+            content:"";
+            position:absolute;
+            left:0;
+            top:0;
+            bottom:0;
+            width:4px;
+            background:#0f766e;
+        }
+        .info-card.full{grid-column:1/-1}
+        .info-card.important{
+            background:#fff7ed;
+            border-color:#fed7aa;
+        }
+        .info-card.important::before{background:#f59e0b}
+        .related-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:16px;
+        }
+        .related-card{
+            display:block;
+            min-height:340px;
+            padding:16px;
+            border-radius:8px;
+            background:
+                linear-gradient(180deg,#ffffff,#f8fafc);
+            border:1px solid #e2e8f0;
+            box-shadow:0 12px 28px rgba(15,23,42,.04);
+            transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+        }
+        .related-card:hover{
+            transform:translateY(-4px);
+            border-color:#67e8f9;
+            box-shadow:0 18px 36px rgba(14,116,144,.10);
+        }
+        .related-image{
+            display:grid;
+            place-items:center;
+            height:132px;
+            margin-bottom:14px;
+            border-radius:8px;
+            background:#f8fafc;
+            border:1px solid #e2e8f0;
+        }
+        .related-image img{
+            width:112px;
+            height:112px;
+            object-fit:contain;
+            border-radius:8px;
+            background:white;
+            padding:6px;
+        }
+        .related-card h3{
+            min-height:42px;
+            margin:0 0 10px;
+            font-size:16px;
+            line-height:1.3;
+        }
+        .related-card p{margin:0;color:#64748b;font-weight:800;line-height:1.45}
+        .related-price{
+            display:inline-flex;
+            margin:10px 0 8px;
+            padding:7px 10px;
+            border-radius:999px;
+            color:#075985;
+            background:#ecfeff;
+            font-weight:950;
+        }
+        .related-status{
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+            margin:10px 0 14px;
+        }
+        .related-status span{
+            display:inline-flex;
+            padding:6px 9px;
+            border-radius:999px;
+            font-size:11px;
+            font-weight:950;
+        }
+        .stock-ok{color:#047857;background:#dcfce7}
+        .stock-out{color:#991b1b;background:#fee2e2}
+        .rx-small{color:#7f1d1d;background:#fee2e2}
+        .otc-small{color:#075985;background:#e0f2fe}
+        .related-action{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:40px;
+            margin-top:auto;
+            border-radius:8px;
+            color:white;
+            background:#0f766e;
+            font-weight:950;
+        }
+        .review-box{
+            display:grid;
+            grid-template-columns:auto minmax(0,1fr);
+            gap:16px;
+            align-items:start;
+            padding:20px;
+            border-radius:8px;
+            background:
+                linear-gradient(135deg,#ffffff,#f8fafc);
+            border:1px solid #e2e8f0;
+            box-shadow:0 12px 28px rgba(15,23,42,.04);
+        }
+        .review-mark{
+            display:grid;
+            place-items:center;
+            width:52px;
+            height:52px;
+            border-radius:8px;
+            color:#0f766e;
+            background:#ccfbf1;
+            font-size:22px;
+            font-weight:950;
+        }
+        .review-box strong{display:block;color:#075985;margin-bottom:6px}
+        .review-box p{margin:0;color:#475569;line-height:1.6;font-weight:750}
+        @media(max-width:1080px){
+            .product-shell{grid-template-columns:320px minmax(0,1fr)}
+            .purchase-panel{grid-column:1/-1;position:static}
+            .actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+        }
+        @media(max-width:760px){
+            .header{align-items:flex-start;flex-direction:column}
+            .brand,
+            .nav{width:100%}
+            .nav{justify-content:flex-start}
+            .wrap{width:min(100% - 24px,1180px);margin-top:18px}
+            .product-shell,.fact-grid,.details-grid,.trust-row,.actions{grid-template-columns:1fr}
+            .summary h2{font-size:25px}
+            .image-box{min-height:260px}
+            .image-box img{height:220px}
+            .content-section{padding:16px}
+            .review-box{grid-template-columns:1fr}
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+</head>
+<body class="yvm-pro-page yvm-page-medicine-details">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+    {% include "partials/site_header.html" %}
+
+    <main class="wrap">
+        <div class="breadcrumb">
+            <a href="/">Medicines</a>
+            <span>/</span>
+            <span>{{ medicine.get("category") or "General" }}</span>
+            <span>/</span>
+            <span>{{ medicine["name"] }}</span>
+        </div>
+
+        <section class="product-shell">
+            <aside class="panel media-panel">
+                <div class="image-box">
+                    <img
+                        src="/static/images/{{ medicine['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                        alt="{{ medicine['name'] }}"
+                        data-base="/static/images/{{ medicine['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                        data-step="0"
+                        onerror="swapMedicineImage(this)"
+                    >
+                </div>
+                <div class="trust-row">
+                    <div><span>Availability</span><b>{{ medicine["stock"] }} pack(s)</b></div>
+                    <div><span>Expiry</span><b>{{ medicine.get("expiry_date") or "Not listed" }}</b></div>
+                </div>
+            </aside>
+
+            <section class="panel summary">
+                <div class="status-line">
+                    {% if medicine["stock"] > 0 %}
+                        <span class="pill available">In stock</span>
+                    {% else %}
+                        <span class="pill unavailable">Out of stock</span>
+                    {% endif %}
+                    {% if medicine.get("prescription_required") %}
+                        <span class="pill rx">Prescription required</span>
+                    {% else %}
+                        <span class="pill otc">Direct purchase</span>
+                    {% endif %}
+                </div>
+
+                <h2>{{ medicine["name"] }}</h2>
+                <p class="summary-text">{{ details.description }}</p>
+
+                <div class="fact-grid">
+                    <div class="fact"><span>Brand Name</span><b>{{ details.brand_name }}</b></div>
+                    <div class="fact"><span>Generic Alternative</span><b>{{ details.generic_alternative }}</b></div>
+                    <div class="fact"><span>Composition</span><b>{{ details.composition }}</b></div>
+                    <div class="fact"><span>Category</span><b>{{ medicine.get("category") or "General" }}</b></div>
+                    <div class="fact"><span>Selling Unit</span><b>{{ details.package.selling_unit }}</b></div>
+                    <div class="fact"><span>Package Contains</span><b>{{ details.package.contents }}</b></div>
+                </div>
+            </section>
+
+            <aside class="panel purchase-panel">
+                <div class="price-label">Pack Price</div>
+                <div class="price">Rs. {{ medicine["price"] }}</div>
+                <div class="package-note">
+                    {{ details.package.price_note }} {{ details.package.policy }}
+                </div>
+                <div class="actions">
+                    {% if medicine["stock"] > 0 %}
+                        <a class="action" href="{{ url_for('add_to_cart', id=medicine['id']) }}">Add Pack to Cart</a>
+                    {% else %}
+                        <span class="action disabled">Out of Stock</span>
+                    {% endif %}
+                    <a class="action secondary" href="{{ url_for('add_to_wishlist', id=medicine['id']) }}">Save Medicine</a>
+                    <a class="action secondary" href="/">Continue Shopping</a>
+                </div>
+            </aside>
+        </section>
+
+        <section class="content-section">
+            <div class="section-head">
+                <div>
+                    <span class="section-kicker">Clinical summary</span>
+                    <h2>Medicine Information</h2>
+                    <p>Important product, usage, and storage details.</p>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="info-card full"><span>Medicine Description</span><p>{{ details.description }}</p></div>
+                <div class="info-card important full"><span>Package Details</span><p>{{ details.package.contents }}. {{ details.package.price_note }} {{ details.package.policy }}</p></div>
+                <div class="info-card"><span>Uses</span><p>{{ details.uses }}</p></div>
+                <div class="info-card"><span>Side Effects</span><p>{{ details.side_effects }}</p></div>
+                <div class="info-card"><span>Dosage Information</span><p>{{ details.dosage }}</p></div>
+                <div class="info-card"><span>Storage Instructions</span><p>{{ details.storage }}</p></div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-head">
+                <div>
+                    <span class="section-kicker">Catalog matches</span>
+                    <h2>Related Medicines</h2>
+                    <p>Similar items from this catalog category.</p>
+                </div>
+            </div>
+
+            <div class="related-grid">
+                {% for item in related_medicines %}
+                    <a class="related-card" href="{{ url_for('medicine_details', id=item['id']) }}">
+                        <div class="related-image">
+                            <img
+                                src="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}.JPG"
+                                alt="{{ item['name'] }}"
+                                data-base="/static/images/{{ item['name'].replace('/', '-').replace('%', '').replace('.', '') }}"
+                                data-step="0"
+                                onerror="swapMedicineImage(this)"
+                            >
+                        </div>
+                        <h3>{{ item["name"] }}</h3>
+                        <span class="related-price">Rs. {{ item["price"] }} per pack</span>
+                        <div class="related-status">
+                            {% if item["stock"] > 0 %}
+                                <span class="stock-ok">{{ item["stock"] }} pack(s)</span>
+                            {% else %}
+                                <span class="stock-out">Out of stock</span>
+                            {% endif %}
+                            {% if item.get("prescription_required") %}
+                                <span class="rx-small">Prescription</span>
+                            {% else %}
+                                <span class="otc-small">Direct</span>
+                            {% endif %}
+                        </div>
+                        <span class="related-action">View Details</span>
+                    </a>
+                {% else %}
+                    <div class="related-card">
+                        <h3>No related medicines yet</h3>
+                        <p>More related catalog items will appear here when available.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-head">
+                <div>
+                    <span class="section-kicker">Customer feedback</span>
+                    <h2>Customer Reviews</h2>
+                    <p>Feedback and product ordering notes.</p>
+                </div>
+            </div>
+
+            <div class="review-box">
+                <div class="review-mark">★</div>
+                <div>
+                    <strong>{{ "%.1f"|format(review_summary.average_rating|float) }} / 5 · {{ review_summary.review_count }} review{{ "" if review_summary.review_count == 1 else "s" }}</strong>
+                    <p>{{ details.review_summary if review_summary.review_count == 0 else "Customer reviews are now available for this medicine." }}</p>
+                    <p><a href="/reviews_feedback" style="color:#0f766e;font-weight:950;">Rate this medicine</a></p>
+                </div>
+            </div>
+            {% for review in medicine_reviews %}
+            <div class="review-box" style="margin-top:12px;">
+                <div class="review-mark">{{ review.rating }}</div>
+                <div>
+                    <strong>{{ review.title or "Medicine review" }}</strong>
+                    <p>{{ review.message }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+<script>
+    function swapMedicineImage(img) {
+        const extensions = [".jpg", ".jpeg", ".png"];
+        const step = Number(img.dataset.step || 0);
+
+        if (step < extensions.length) {
+            img.dataset.step = step + 1;
+            img.src = img.dataset.base + extensions[step];
+            return;
+        }
+
+        img.onerror = null;
+        img.src = "/static/images/yuvraj_logo.png";
+    }
+</script>
+{% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+</body>
+</html>

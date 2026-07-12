@@ -1,80 +1,1140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Upload Prescription</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Prescription | Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
+        :root {
+            --rx-ink: #102134;
+            --rx-muted: #64748b;
+            --rx-soft: #f3f8fb;
+            --rx-panel: rgba(255, 255, 255, .92);
+            --rx-line: rgba(148, 163, 184, .28);
+            --rx-teal: #0f766e;
+            --rx-teal-dark: #0b4f4a;
+            --rx-emerald: #10b981;
+            --rx-blue: #e6f4ff;
+            --rx-wine: #8a2459;
+            --rx-gold: #b7791f;
+            --rx-shadow: 0 26px 70px rgba(15, 23, 42, .13);
+            --rx-shadow-soft: 0 16px 38px rgba(15, 23, 42, .09);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #eef4ff;
             margin: 0;
-            padding: 0;
-        }
-
-        .box {
-            width: 420px;
-            margin: 80px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            text-align: center;
-        }
-
-        h2 {
-            color: #2563eb;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #555;
-            font-size: 14px;
-        }
-
-        input[type="file"] {
-            margin: 20px 0;
-            width: 100%;
-            padding: 12px;
-            border: 1px dashed #2563eb;
-            border-radius: 10px;
-            background: #f8fbff;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            background: #2563eb;
-            color: white;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #1d4ed8;
+            min-height: 100vh;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--rx-ink);
+            background:
+                linear-gradient(rgba(15, 118, 110, .028) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 118, 110, .028) 1px, transparent 1px),
+                radial-gradient(circle at 10% 8%, rgba(16, 185, 129, .14), transparent 30rem),
+                radial-gradient(circle at 88% 4%, rgba(8, 145, 178, .13), transparent 26rem),
+                linear-gradient(180deg, #f8fcfd 0%, #ffffff 42%, #effaf8 100%);
+            background-size: 36px 36px, 36px 36px, auto, auto, auto;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
         a {
-            display: inline-block;
-            margin-top: 18px;
-            color: #2563eb;
+            color: inherit;
             text-decoration: none;
         }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .page-shell {
+            width: min(1220px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 34px 0 0;
+        }
+
+        .rx-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
+            gap: 28px;
+            align-items: center;
+            min-height: 590px;
+            padding: 42px;
+            border: 1px solid rgba(255, 255, 255, .72);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            background:
+                radial-gradient(circle at 76% 18%, rgba(16, 185, 129, .22), transparent 18rem),
+                radial-gradient(circle at 10% 18%, rgba(230, 244, 255, .24), transparent 18rem),
+                linear-gradient(135deg, rgba(5, 51, 68, .98), rgba(0, 99, 94, .96) 58%, rgba(14, 116, 144, .90));
+            box-shadow: var(--rx-shadow);
+        }
+
+        .rx-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(120deg, rgba(255, 255, 255, .16), transparent 34%),
+                linear-gradient(90deg, transparent, rgba(255, 255, 255, .08));
+        }
+
+        .hero-copy,
+        .hero-visual {
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 34px;
+            padding: 8px 13px;
+            border: 1px solid rgba(204, 251, 241, .34);
+            border-radius: 999px;
+            color: #e9fffb;
+            background: rgba(255, 255, 255, .12);
+            backdrop-filter: blur(16px);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 10px;
+            height: 13px;
+            border: 2px solid #a7f3d0;
+            border-radius: 3px;
+            box-shadow: inset -3px -3px 0 rgba(167, 243, 208, .20);
+        }
+
+        h1 {
+            margin: 18px 0 16px;
+            max-width: 650px;
+            color: #ffffff;
+            font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+            font-size: clamp(42px, 5.8vw, 76px);
+            line-height: 1.02;
+            letter-spacing: 0;
+            text-shadow: 0 16px 34px rgba(2, 6, 23, .28);
+        }
+
+        .hero-copy p {
+            max-width: 610px;
+            margin: 0;
+            color: #dffdf6;
+            font-size: 18px;
+            line-height: 1.72;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn,
+        .upload-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 48px;
+            padding: 13px 18px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+        }
+
+        .btn:hover,
+        .upload-submit:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary,
+        .upload-submit {
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--rx-wine), var(--rx-teal));
+            box-shadow: 0 18px 34px rgba(5, 51, 68, .26);
+        }
+
+        .btn-ghost {
+            color: #ecfeff;
+            background: rgba(255, 255, 255, .12);
+            border-color: rgba(204, 251, 241, .28);
+            backdrop-filter: blur(14px);
+        }
+
+        .btn-light {
+            color: var(--rx-teal-dark);
+            background: linear-gradient(180deg, #ffffff, #ecfeff);
+            border-color: rgba(8, 145, 178, .24);
+            box-shadow: 0 12px 28px rgba(8, 145, 178, .10);
+        }
+
+        .hero-visual {
+            min-height: 430px;
+            display: grid;
+            place-items: center;
+        }
+
+        .rx-illustration {
+            width: min(430px, 100%);
+            aspect-ratio: 1 / 1;
+            position: relative;
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, .20), rgba(255, 255, 255, .06)),
+                radial-gradient(circle at 28% 20%, rgba(236, 254, 255, .42), transparent 9rem);
+            border: 1px solid rgba(255, 255, 255, .22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), 0 32px 60px rgba(2, 6, 23, .22);
+            backdrop-filter: blur(18px);
+        }
+
+        .rx-illustration > span {
+            position: absolute;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 20px 36px rgba(2, 6, 23, .16);
+        }
+
+        .tablet {
+            inset: 13% 14% 10% 20%;
+            background: linear-gradient(145deg, #ecfeff, #dff6ff);
+            border: 9px solid #123544;
+        }
+
+        .tablet::before {
+            content: "";
+            position: absolute;
+            inset: 17px;
+            border-radius: 8px;
+            background:
+                linear-gradient(90deg, rgba(15, 118, 110, .14), transparent 54%),
+                repeating-linear-gradient(180deg, #cfe8ef 0 8px, transparent 8px 24px);
+        }
+
+        .prescription-sheet {
+            width: 42%;
+            height: 54%;
+            left: 7%;
+            top: 16%;
+            background: linear-gradient(180deg, #ffffff, #eef7fb);
+            border: 1px solid rgba(148, 163, 184, .44);
+            transform: rotate(-7deg);
+        }
+
+        .prescription-sheet::before {
+            content: "";
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            top: 44px;
+            height: 76px;
+            background: repeating-linear-gradient(180deg, #9fb7c6 0 4px, transparent 4px 16px);
+        }
+
+        .prescription-sheet::after {
+            content: "";
+            position: absolute;
+            top: 16px;
+            left: 18px;
+            width: 52px;
+            height: 18px;
+            border-radius: 999px;
+            background: #0f766e;
+        }
+
+        .clipboard {
+            width: 33%;
+            height: 42%;
+            right: 5%;
+            top: 11%;
+            background: linear-gradient(180deg, #ffffff, #edf7f5);
+            border: 1px solid rgba(204, 251, 241, .72);
+            transform: rotate(8deg);
+        }
+
+        .clipboard::before {
+            content: "";
+            position: absolute;
+            top: -12px;
+            left: 28%;
+            width: 44%;
+            height: 26px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #0f766e, #10b981);
+        }
+
+        .cross {
+            width: 64px;
+            height: 64px;
+            right: 20%;
+            top: 31%;
+            background: #ffffff;
+            border: 1px solid rgba(16, 185, 129, .28);
+        }
+
+        .cross::before,
+        .cross::after {
+            content: "";
+            position: absolute;
+            background: #10b981;
+            border-radius: 6px;
+        }
+
+        .cross::before {
+            width: 14px;
+            height: 42px;
+            left: 25px;
+            top: 11px;
+        }
+
+        .cross::after {
+            width: 42px;
+            height: 14px;
+            left: 11px;
+            top: 25px;
+        }
+
+        .medicine-box {
+            width: 36%;
+            height: 19%;
+            left: 13%;
+            bottom: 12%;
+            background: linear-gradient(135deg, #ffffff 0 54%, #d1fae5 54% 100%);
+            border: 1px solid rgba(16, 185, 129, .34);
+            transform: rotate(4deg);
+        }
+
+        .bottle {
+            width: 20%;
+            height: 31%;
+            right: 16%;
+            bottom: 9%;
+            background: linear-gradient(180deg, #ffffff 0 22%, #0f766e 22% 100%);
+            border: 1px solid rgba(204, 251, 241, .40);
+        }
+
+        .shield {
+            width: 78px;
+            height: 88px;
+            right: 33%;
+            bottom: 19%;
+            background: linear-gradient(145deg, #dcfce7, #ffffff);
+            clip-path: polygon(50% 0, 92% 16%, 84% 74%, 50% 100%, 16% 74%, 8% 16%);
+            border-radius: 0;
+        }
+
+        .stamp {
+            width: 112px;
+            height: 40px;
+            left: 45%;
+            bottom: 31%;
+            color: #0f766e;
+            background: rgba(255, 255, 255, .92);
+            border: 2px solid rgba(15, 118, 110, .62);
+            transform: rotate(-9deg);
+        }
+
+        .stamp::before {
+            content: "APPROVED";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-size: 12px;
+            font-weight: 950;
+            letter-spacing: .12em;
+        }
+
+        .qr {
+            width: 54px;
+            height: 54px;
+            right: 8%;
+            bottom: 38%;
+            background:
+                linear-gradient(90deg, #0f766e 50%, transparent 0) 0 0 / 14px 14px,
+                linear-gradient(#0f766e 50%, transparent 0) 0 0 / 14px 14px,
+                #ffffff;
+            border: 8px solid #ffffff;
+        }
+
+        .trust-row,
+        .features-grid,
+        .benefits-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .trust-row {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin: 22px 0 28px;
+        }
+
+        .trust-card,
+        .feature-box,
+        .benefit-card,
+        .step-card,
+        .upload-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--rx-line);
+            border-radius: 8px;
+            background: var(--rx-panel);
+            box-shadow: var(--rx-shadow-soft);
+            backdrop-filter: blur(16px);
+        }
+
+        .trust-card {
+            min-height: 118px;
+            padding: 18px;
+        }
+
+        .trust-card::before,
+        .feature-box::before,
+        .benefit-card::before,
+        .upload-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, var(--rx-wine), var(--rx-teal), var(--rx-gold));
+        }
+
+        .icon-mark {
+            width: 42px;
+            height: 42px;
+            display: inline-grid;
+            place-items: center;
+            margin-bottom: 13px;
+            border-radius: 8px;
+            color: #0f766e;
+            background: linear-gradient(180deg, #ecfeff, #d1fae5);
+            border: 1px solid rgba(15, 118, 110, .16);
+            font-weight: 950;
+        }
+
+        .trust-card h3,
+        .feature-box h3,
+        .benefit-card h3,
+        .step-card h3,
+        .upload-card h2,
+        .section-head h2 {
+            margin: 0;
+            color: var(--rx-ink);
+            letter-spacing: 0;
+        }
+
+        .trust-card h3 {
+            font-size: 16px;
+        }
+
+        .trust-card p,
+        .feature-box p,
+        .benefit-card p,
+        .step-card p,
+        .upload-card p,
+        .section-head p {
+            margin: 8px 0 0;
+            color: var(--rx-muted);
+            line-height: 1.6;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 390px;
+            gap: 24px;
+            align-items: start;
+            margin-top: 18px;
+        }
+
+        .upload-card {
+            padding: 28px;
+        }
+
+        .upload-card h2 {
+            font-size: 30px;
+        }
+
+        .upload-form {
+            margin-top: 22px;
+        }
+
+        .upload-drop {
+            display: grid;
+            place-items: center;
+            min-height: 278px;
+            padding: 26px;
+            border: 2px dashed rgba(15, 118, 110, .34);
+            border-radius: 8px;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(16, 185, 129, .12), transparent 17rem),
+                linear-gradient(180deg, #ffffff, #f1fbfb);
+            cursor: pointer;
+            text-align: center;
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+        }
+
+        .upload-drop:hover,
+        .upload-drop.is-dragging {
+            transform: translateY(-2px);
+            border-color: rgba(16, 185, 129, .72);
+            box-shadow: 0 20px 44px rgba(15, 118, 110, .12);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(16, 185, 129, .18), transparent 17rem),
+                linear-gradient(180deg, #ffffff, #ecfeff);
+        }
+
+        .upload-drop input[type="file"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .upload-icon {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 16px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #0f766e, #10b981);
+            box-shadow: 0 18px 34px rgba(15, 118, 110, .24);
+        }
+
+        .upload-icon::before {
+            content: "";
+            width: 28px;
+            height: 34px;
+            border: 3px solid #ffffff;
+            border-radius: 5px;
+            box-shadow: 11px -10px 0 -6px rgba(255, 255, 255, .88);
+        }
+
+        .upload-drop strong {
+            display: block;
+            color: #123544;
+            font-size: 21px;
+            line-height: 1.25;
+        }
+
+        .upload-drop span {
+            display: block;
+            margin-top: 8px;
+            color: var(--rx-muted);
+            font-weight: 700;
+        }
+
+        .browse-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 16px;
+            min-height: 40px;
+            padding: 9px 14px;
+            border-radius: 8px;
+            color: var(--rx-teal-dark);
+            background: #ffffff;
+            border: 1px solid rgba(15, 118, 110, .24);
+            font-weight: 950;
+            box-shadow: 0 10px 22px rgba(15, 118, 110, .08);
+        }
+
+        .file-status {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 14px 0 0;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: #315078;
+            background: #eef8ff;
+            border: 1px solid #cfe9f6;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .file-status strong {
+            color: var(--rx-teal-dark);
+        }
+
+        .format-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .format-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            color: #0f4f4a;
+            background: #f8fffd;
+            border: 1px solid rgba(15, 118, 110, .16);
+            font-size: 12px;
+            font-weight: 950;
+        }
+
+        .upload-submit {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .features-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-top: 18px;
+        }
+
+        .feature-box {
+            min-height: 150px;
+            padding: 18px;
+        }
+
+        .section-panel {
+            margin-top: 28px;
+        }
+
+        .section-head {
+            max-width: 680px;
+            margin-bottom: 18px;
+        }
+
+        .section-head h2 {
+            font-size: clamp(28px, 3vw, 42px);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .step-card {
+            min-height: 210px;
+            padding: 22px 18px;
+        }
+
+        .step-card:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 49px;
+            right: -21px;
+            z-index: 2;
+            width: 40px;
+            height: 14px;
+            background:
+                linear-gradient(90deg, rgba(15, 118, 110, .16), rgba(15, 118, 110, .72));
+            clip-path: polygon(0 32%, 72% 32%, 72% 0, 100% 50%, 72% 100%, 72% 68%, 0 68%);
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f766e, #10b981);
+            box-shadow: 0 14px 26px rgba(15, 118, 110, .20);
+            font-weight: 950;
+        }
+
+        .benefits-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin-bottom: 36px;
+        }
+
+        .benefit-card {
+            min-height: 132px;
+            padding: 20px;
+        }
+
+        .side-panel {
+            display: grid;
+            gap: 16px;
+        }
+
+        .side-card {
+            padding: 22px;
+            border: 1px solid var(--rx-line);
+            border-radius: 8px;
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, .96), rgba(236, 254, 255, .88));
+            box-shadow: var(--rx-shadow-soft);
+        }
+
+        .side-card h3 {
+            margin: 0 0 10px;
+            font-size: 19px;
+        }
+
+        .side-card ul {
+            display: grid;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .side-card li {
+            display: flex;
+            gap: 10px;
+            color: #36516a;
+            line-height: 1.5;
+        }
+
+        .side-card li::before {
+            content: "";
+            flex: 0 0 18px;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            border-radius: 50%;
+            background:
+                linear-gradient(135deg, #0f766e, #10b981);
+            box-shadow: inset 0 0 0 5px #dcfce7;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .footer {
+            margin-top: 42px;
+            background: linear-gradient(135deg, #053344, #00635e);
+            color: #ffffff;
+        }
+
+        .footer-container {
+            width: min(1180px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 28px 0;
+            display: grid;
+            grid-template-columns: 1.3fr .8fr 1fr;
+            gap: 24px;
+        }
+
+        .footer h2,
+        .footer h3 {
+            margin: 0 0 12px;
+        }
+
+        .footer p {
+            margin: 8px 0;
+            color: #dbeafe;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            display: block;
+            color: #dff8f4;
+            text-decoration: none;
+            margin: 8px 0;
+            font-weight: 800;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 14px;
+            border-top: 1px solid rgba(255, 255, 255, .16);
+            color: #dff8f4;
+            font-weight: 800;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand img {
+            height: 50px;
+            width: 50px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 1060px) {
+            .rx-hero,
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-visual {
+                min-height: 360px;
+            }
+
+            .rx-illustration {
+                width: min(370px, 100%);
+            }
+
+            .trust-row,
+            .steps {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .step-card:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .page-shell {
+                width: min(100% - 28px, 1220px);
+                padding-top: 20px;
+            }
+
+            .rx-hero,
+            .upload-card {
+                padding: 22px;
+            }
+
+            .rx-hero {
+                min-height: auto;
+            }
+
+            .hero-actions,
+            .hero-actions .btn {
+                width: 100%;
+            }
+
+            .hero-visual {
+                min-height: 300px;
+            }
+
+            .trust-row,
+            .features-grid,
+            .steps,
+            .benefits-grid,
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-drop {
+                min-height: 238px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 38px;
+            }
+
+            .rx-hero,
+            .upload-card,
+            .side-card {
+                padding: 18px;
+            }
+
+            .rx-illustration {
+                transform: scale(.94);
+            }
+        }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
-<body>
+<body class="yvm-pro-page yvm-page-upload-prescription">
 
-<div class="box">
-    <h2>Upload Prescription</h2>
-    <p>Upload your prescription image. Our staff will verify it before confirming medicines.</p>
-
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="prescription" accept="image/*" required>
-        <button type="submit">Upload Prescription</button>
-    </form>
-
-    <a href="/">Back to Home</a>
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 </div>
 
+{% include "partials/site_header.html" %}
+
+<main class="page-shell">
+    <section class="rx-hero" aria-labelledby="upload-prescription-title">
+        <div class="hero-copy">
+            <span class="eyebrow">Secure Digital Prescription</span>
+            <h1 id="upload-prescription-title">Upload Your Prescription</h1>
+            <p>
+                Upload your doctor's prescription securely. Our licensed pharmacist will review your
+                prescription and prepare your medicines for delivery.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#upload-card">Upload Prescription</a>
+                <a class="btn btn-ghost" href="#how-it-works">How it Works</a>
+            </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="rx-illustration">
+                <span class="tablet"></span>
+                <span class="prescription-sheet"></span>
+                <span class="clipboard"></span>
+                <span class="cross"></span>
+                <span class="medicine-box"></span>
+                <span class="bottle"></span>
+                <span class="shield"></span>
+                <span class="stamp"></span>
+                <span class="qr"></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust-row" aria-label="Prescription upload trust indicators">
+        <article class="trust-card">
+            <span class="icon-mark">S</span>
+            <h3>100% Secure Upload</h3>
+            <p>Files are submitted directly to your Yuvraj Medical account for staff review.</p>
+        </article>
+        <article class="trust-card">
+            <span class="icon-mark">Rx</span>
+            <h3>Licensed Pharmacist Review</h3>
+            <p>Your prescription is checked before eligible medicines move to checkout.</p>
+        </article>
+        <article class="trust-card">
+            <span class="icon-mark">24</span>
+            <h3>Fast Processing</h3>
+            <p>Clear prescriptions help the team identify medicines and prepare faster.</p>
+        </article>
+        <article class="trust-card">
+            <span class="icon-mark">P</span>
+            <h3>Privacy Protected</h3>
+            <p>Your health details remain tied to your secure prescription request.</p>
+        </article>
+    </section>
+
+    <section class="main-grid">
+        <div>
+            <article class="upload-card" id="upload-card">
+                <h2>Upload Prescription</h2>
+                <p>Drag and drop a clear prescription image or PDF, or browse from your device.</p>
+
+                <form class="upload-form" method="POST" enctype="multipart/form-data">
+                    <label class="upload-drop" id="upload-drop">
+                        <input id="prescription-file" type="file" name="prescription" accept="image/*,.pdf" required>
+                        <span>
+                            <span class="upload-icon"></span>
+                            <strong>Drag & Drop Prescription Here</strong>
+                            <span>or</span>
+                            <span class="browse-chip">Browse Files</span>
+                        </span>
+                    </label>
+
+                    <div class="file-status" id="file-status">
+                        <strong>Supported:</strong>
+                        <span>PNG, JPG, JPEG, WEBP, PDF. Maximum size 10 MB.</span>
+                    </div>
+
+                    <div class="format-row" aria-label="Supported formats and size">
+                        <span class="format-pill">PNG</span>
+                        <span class="format-pill">JPG</span>
+                        <span class="format-pill">JPEG</span>
+                        <span class="format-pill">WEBP</span>
+                        <span class="format-pill">PDF</span>
+                        <span class="format-pill">Max 10 MB</span>
+                    </div>
+
+                    <button class="upload-submit" type="submit">Upload Prescription</button>
+                </form>
+            </article>
+
+            <div class="features-grid" aria-label="Upload features">
+                <article class="feature-box">
+                    <span class="icon-mark">OCR</span>
+                    <h3>OCR Supported</h3>
+                    <p>Image prescriptions can be scanned to help identify medicine names.</p>
+                </article>
+                <article class="feature-box">
+                    <span class="icon-mark">Dr</span>
+                    <h3>Doctor Prescription</h3>
+                    <p>Designed for doctor-written prescriptions, scans, and pharmacy-ready PDFs.</p>
+                </article>
+                <article class="feature-box">
+                    <span class="icon-mark">HD</span>
+                    <h3>High Resolution Upload</h3>
+                    <p>Sharp, well-lit files make pharmacist verification smoother.</p>
+                </article>
+            </div>
+        </div>
+
+        <aside class="side-panel" aria-label="Prescription upload guidance">
+            <div class="side-card">
+                <h3>Before You Upload</h3>
+                <ul>
+                    <li>Keep the doctor name, date, and medicine names visible.</li>
+                    <li>Use a flat, well-lit photo without glare or heavy shadows.</li>
+                    <li>Upload one clear prescription file at a time.</li>
+                </ul>
+            </div>
+
+            <div class="side-card quick-actions">
+                <a href="/my_prescriptions" class="btn btn-light">View Uploaded</a>
+                <a href="/" class="btn btn-light">Back to Home</a>
+            </div>
+        </aside>
+    </section>
+
+    <section class="section-panel" id="how-it-works">
+        <div class="section-head">
+            <h2>How It Works</h2>
+            <p>From secure upload to doorstep delivery, the prescription flow stays simple and carefully reviewed.</p>
+        </div>
+        <div class="steps">
+            <article class="step-card">
+                <span class="step-number">1</span>
+                <h3>Upload Prescription</h3>
+                <p>Add your prescription image or PDF from the secure upload card.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">2</span>
+                <h3>Pharmacist Review</h3>
+                <p>The pharmacy team checks prescription clarity and medicine details.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">3</span>
+                <h3>Medicine Confirmation</h3>
+                <p>Approved medicines are confirmed before they are added for checkout.</p>
+            </article>
+            <article class="step-card">
+                <span class="step-number">4</span>
+                <h3>Doorstep Delivery</h3>
+                <p>Your order can move ahead for delivery once prescription review is complete.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section-panel">
+        <div class="section-head">
+            <h2>Why Use Prescription Upload</h2>
+            <p>A safer, faster way to order prescription medicines with expert verification.</p>
+        </div>
+        <div class="benefits-grid">
+            <article class="benefit-card">
+                <span class="icon-mark">01</span>
+                <h3>Avoid typing medicine names manually</h3>
+                <p>Upload the prescription directly so the staff can read the original medicine details.</p>
+            </article>
+            <article class="benefit-card">
+                <span class="icon-mark">02</span>
+                <h3>Expert pharmacist verification</h3>
+                <p>Prescription requests are reviewed before approved medicines continue.</p>
+            </article>
+            <article class="benefit-card">
+                <span class="icon-mark">03</span>
+                <h3>Fast medicine preparation</h3>
+                <p>Clear uploads help the Yuvraj Medical team prepare your order efficiently.</p>
+            </article>
+            <article class="benefit-card">
+                <span class="icon-mark">04</span>
+                <h3>Safer medicine ordering</h3>
+                <p>Prescription review adds an extra check before fulfillment.</p>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <div class="footer-brand">
+                <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical">
+                <h2>Yuvraj Medical</h2>
+            </div>
+            <p>Your trusted online pharmacy for medicines, healthcare products and prescription services.</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <a href="/">Home</a>
+            <a href="/cart">Cart</a>
+            <a href="/my_orders">My Orders</a>
+            <a href="/upload_prescription">Upload Prescription</a>
+        </div>
+
+        <div class="footer-section">
+            <h3>Contact Us</h3>
+            <p>+91 XXXXX XXXXX</p>
+            <p>support@yuvrajmedical.co.in</p>
+            <p>Virar, Maharashtra</p>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2026 Yuvraj Medical. All Rights Reserved.</div>
+</footer>
+
+{% include "partials/site_header_script.html" %}
+
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+<script>
+    const uploadDrop = document.getElementById("upload-drop");
+    const fileInput = document.getElementById("prescription-file");
+    const fileStatus = document.getElementById("file-status");
+    const maxFileSize = 10 * 1024 * 1024;
+
+    function updateFileStatus(file) {
+        if (!file) {
+            fileStatus.innerHTML = "<strong>Supported:</strong><span>PNG, JPG, JPEG, WEBP, PDF. Maximum size 10 MB.</span>";
+            return;
+        }
+
+        if (file.size > maxFileSize) {
+            fileInput.value = "";
+            fileStatus.innerHTML = "<strong>File too large:</strong><span>Please choose a file under 10 MB.</span>";
+            return;
+        }
+
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+        fileStatus.innerHTML = `<strong>Selected:</strong><span>${file.name} (${sizeMb} MB)</span>`;
+    }
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+        uploadDrop.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            uploadDrop.classList.add("is-dragging");
+        });
+    });
+
+    ["dragleave", "drop"].forEach((eventName) => {
+        uploadDrop.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            uploadDrop.classList.remove("is-dragging");
+        });
+    });
+
+    uploadDrop.addEventListener("drop", (event) => {
+        const file = event.dataTransfer.files[0];
+        if (!file) return;
+
+        fileInput.files = event.dataTransfer.files;
+        updateFileStatus(file);
+    });
+
+    fileInput.addEventListener("change", () => {
+        updateFileStatus(fileInput.files[0]);
+    });
+</script>
 </body>
 </html>

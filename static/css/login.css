@@ -1,0 +1,819 @@
+:root{
+    --primary:#2563EB;
+    --navy:#07111F;
+    --cyan:#06B6D4;
+    --white:#FFFFFF;
+    --gray:#F3F4F6;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    color:var(--white);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--navy);
+}
+
+button,
+input{
+    font:inherit;
+}
+
+.enterprise-login{
+    position:relative;
+    min-height:100vh;
+    overflow:hidden;
+    isolation:isolate;
+    background:
+        radial-gradient(circle at 50% 46%,rgba(37,99,235,.28),transparent 32%),
+        linear-gradient(135deg,var(--navy),var(--navy));
+}
+
+.ambient-glow{
+    position:absolute;
+    left:50%;
+    top:46%;
+    z-index:1;
+    width:min(560px,70vw);
+    aspect-ratio:1;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(6,182,212,.26),rgba(37,99,235,.12) 42%,transparent 70%);
+    filter:blur(18px);
+    opacity:0;
+    transform:translate3d(-50%,-50%,0) scale(.65);
+    animation:centerGlow 6s ease-in-out forwards, slowBreath 12s ease-in-out 6s infinite;
+}
+
+.particle-field{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+}
+
+.particle{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:var(--cyan);
+    opacity:.44;
+    box-shadow:0 0 12px rgba(6,182,212,.75);
+    animation:particleFloat var(--duration,9s) ease-in-out var(--delay,0s) infinite alternate;
+    will-change:transform,opacity;
+}
+
+.light-ray{
+    position:absolute;
+    top:-20vh;
+    z-index:2;
+    width:18vw;
+    height:140vh;
+    opacity:.1;
+    filter:blur(18px);
+    background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(37,99,235,.08),transparent);
+    pointer-events:none;
+    animation:rayDrift 14s ease-in-out infinite alternate;
+}
+
+.ray-left{
+    left:18vw;
+    transform:rotate(15deg);
+}
+
+.ray-right{
+    right:16vw;
+    transform:rotate(-15deg);
+    animation-delay:-5s;
+}
+
+.ambient-ecg{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:7vh;
+    z-index:2;
+    width:100%;
+    height:90px;
+    fill:none;
+    stroke:rgba(6,182,212,.42);
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    opacity:0;
+    animation:ecgReveal 1s ease-in-out .25s forwards, ecgPulse 5.5s ease-in-out 6s infinite;
+}
+
+.ambient-ecg path,
+.holo-ecg path{
+    stroke-dasharray:980;
+    stroke-dashoffset:980;
+}
+
+.intro-stage{
+    position:absolute;
+    inset:0;
+    z-index:5;
+    display:grid;
+    place-items:center;
+    pointer-events:none;
+    perspective:1200px;
+    animation:introExit .72s ease-in-out 5.8s forwards;
+}
+
+.hologram .holo-ecg path{
+    animation:holoEcg 1s ease-in-out 3.35s forwards;
+}
+
+.shield svg{
+    width:34px;
+    height:34px;
+    fill:none;
+    stroke:var(--cyan);
+    stroke-width:3;
+}
+
+.logo-formation{
+    position:absolute;
+    left:50%;
+    top:38%;
+    z-index:8;
+    display:grid;
+    justify-items:center;
+    gap:6px;
+    text-align:center;
+    opacity:0;
+    transform:translate3d(-50%,-50%,0) scale(.88);
+    animation:logoForm .8s ease-in-out 4.55s forwards, logoExit .56s ease-in-out 5.55s forwards;
+}
+
+.logo-formation img{
+    width:94px;
+    height:94px;
+    object-fit:contain;
+}
+
+.logo-formation h1{
+    margin:0;
+    color:var(--white);
+    font-size:clamp(32px,5vw,58px);
+    line-height:1;
+}
+
+.logo-formation p{
+    margin:0;
+    color:var(--cyan);
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+}
+
+.logo-light{
+    position:absolute;
+    left:-20%;
+    top:0;
+    width:28%;
+    height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.76),transparent);
+    transform:skewX(-18deg);
+    animation:logoSweep .8s ease-in-out 4.95s forwards;
+}
+
+.auth-shell{
+    position:relative;
+    z-index:9;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(280px,.78fr) minmax(320px,460px);
+    align-items:center;
+    gap:clamp(24px,6vw,90px);
+    width:min(1100px,92vw);
+    margin:0 auto;
+    opacity:0;
+    transform:translate3d(0,24px,0);
+    animation:authIn .8s ease-in-out 5.25s forwards;
+}
+
+.brand-lockup{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.brand-lockup img{
+    width:88px;
+    height:88px;
+    object-fit:contain;
+    border-radius:20px;
+    background:rgba(255,255,255,.08);
+    padding:10px;
+    backdrop-filter:blur(10px);
+}
+
+.brand-lockup h1{
+    margin:0;
+    color:var(--white);
+    font-size:clamp(34px,5vw,58px);
+    line-height:1.02;
+}
+
+.brand-lockup p{
+    margin:10px 0 0;
+    color:var(--gray);
+}
+
+.auth-card{
+    padding:32px;
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:20px;
+    background:rgba(255,255,255,.12);
+    box-shadow:0 30px 90px rgba(7,17,31,.44);
+    backdrop-filter:blur(22px);
+}
+
+.auth-card h2{
+    margin:0;
+    color:var(--white);
+    font-size:32px;
+}
+
+.subtitle{
+    margin:9px 0 24px;
+    color:var(--gray);
+    line-height:1.6;
+}
+
+.auth-form{
+    display:grid;
+    gap:12px;
+}
+
+.auth-form label,
+.remember-option,
+.links,
+.security-title,
+.data-row{
+    color:var(--gray);
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[inputmode="numeric"]{
+    width:100%;
+    min-height:52px;
+    padding:13px 15px;
+    border:1px solid rgba(255,255,255,.3);
+    border-radius:14px;
+    outline:none;
+    color:var(--white);
+    background:rgba(255,255,255,.08);
+}
+
+.auth-form input:focus{
+    border-color:var(--cyan);
+    box-shadow:0 0 0 4px rgba(6,182,212,.18);
+}
+
+.form-options{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    margin:2px 0 8px;
+    font-size:13px;
+}
+
+.remember-option{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+}
+
+.remember-option input{
+    accent-color:var(--primary);
+}
+
+.muted-link,
+.links a,
+.security-link{
+    color:var(--white);
+    text-decoration:none;
+    font-weight:700;
+}
+
+.login-btn,
+.mini-btn,
+.device-action{
+    min-height:52px;
+    border:0;
+    border-radius:14px;
+    color:var(--white);
+    background:linear-gradient(135deg,var(--primary),var(--cyan));
+    font-weight:800;
+    cursor:pointer;
+    transition:transform .2s ease,filter .2s ease;
+}
+
+.login-btn:hover,
+.mini-btn:hover{
+    filter:brightness(1.04);
+    transform:translate3d(0,-1px,0);
+}
+
+.links{
+    margin:18px 0 0;
+    text-align:center;
+}
+
+.alert{
+    margin-bottom:16px;
+    padding:12px 14px;
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:14px;
+    color:var(--white);
+    background:rgba(255,255,255,.08);
+    line-height:1.5;
+}
+
+.security-panel{
+    margin-top:20px;
+    padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.16);
+}
+
+.security-title{
+    margin-bottom:10px;
+    font-size:13px;
+    font-weight:800;
+}
+
+.security-grid,
+.inline-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.security-link,
+.mini-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:40px;
+    padding:9px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:12px;
+    background:rgba(255,255,255,.08);
+    font-size:12px;
+}
+
+.compact-form{
+    margin-top:12px;
+}
+
+.data-panel{
+    max-height:160px;
+    margin-top:12px;
+    overflow:auto;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:12px;
+}
+
+.data-row{
+    padding:10px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    font-size:12px;
+    line-height:1.5;
+}
+
+.data-row:last-child{
+    border-bottom:0;
+}
+
+.data-row strong{
+    display:block;
+    color:var(--white);
+}
+
+.device-action{
+    width:auto;
+    min-height:32px;
+    margin-top:8px;
+    padding:7px 10px;
+    background:var(--primary);
+    font-size:12px;
+}
+
+body.intro-complete{
+    overflow:auto;
+}
+
+
+@keyframes centerGlow{
+    to{opacity:1;transform:translate3d(-50%,-50%,0) scale(1)}
+}
+
+@keyframes slowBreath{
+    from{transform:translate3d(-50%,-50%,0) scale(1);opacity:.86}
+    to{transform:translate3d(-50%,-51%,0) scale(1.08);opacity:1}
+}
+
+@keyframes particleFloat{
+    from{transform:translate3d(0,0,0);opacity:.22}
+    to{transform:translate3d(var(--x,24px),var(--y,-42px),0);opacity:.72}
+}
+
+@keyframes rayDrift{
+    from{opacity:.06}
+    to{opacity:.16}
+}
+
+@keyframes ecgReveal{
+    to{opacity:1}
+}
+
+@keyframes ecgPulse{
+    0%,100%{opacity:.18}
+    45%,55%{opacity:.56}
+}
+
+@keyframes logoForm{
+    to{opacity:1;transform:translate3d(-50%,-50%,0) scale(1)}
+}
+
+@keyframes logoSweep{
+    to{left:110%}
+}
+
+@keyframes logoExit{
+    to{opacity:0;transform:translate3d(-50%,-64%,0) scale(.86)}
+}
+
+@keyframes introExit{
+    to{opacity:0;visibility:hidden}
+}
+
+@keyframes authIn{
+    to{opacity:1;transform:translate3d(0,0,0)}
+}
+
+@media(max-width:900px){
+    body{
+        overflow:hidden;
+    }
+
+    .hospital-doors{
+        width:min(300px,70vw);
+        height:min(360px,52vh);
+        bottom:24vh;
+    }
+
+    .doctor-figure{
+        width:150px;
+        height:280px;
+        bottom:20vh;
+    }
+
+    .hologram{
+        left:58%;
+        top:24%;
+        width:300px;
+        height:240px;
+        transform:translate3d(-50%,20px,0) scale(.75);
+    }
+
+    .logo-formation{
+        top:36%;
+    }
+
+    .auth-shell{
+        min-height:100vh;
+        grid-template-columns:1fr;
+        align-content:center;
+        padding:28px 0;
+        opacity:1;
+        transform:none;
+        animation:none;
+    }
+
+    .brand-lockup{
+        justify-content:center;
+        text-align:left;
+    }
+
+    .auth-card{
+        padding:26px;
+    }
+}
+
+@media(max-width:560px){
+    .brand-lockup{
+        align-items:flex-start;
+    }
+
+    .brand-lockup img{
+        width:68px;
+        height:68px;
+    }
+
+    .security-grid,
+    .inline-actions,
+    .form-options{
+        grid-template-columns:1fr;
+        flex-direction:column;
+        align-items:stretch;
+    }
+}
+
+.auth-card h2,
+.subtitle,
+.auth-form label,
+.auth-form input,
+.form-options,
+.login-btn,
+.links,
+.security-panel{
+    opacity:0;
+    transform:translateY(14px);
+    animation:fieldRise .55s ease forwards;
+}
+
+.auth-card h2{animation-delay:5.6s}
+.subtitle{animation-delay:5.75s}
+.auth-form label:nth-of-type(1){animation-delay:5.9s}
+.auth-form input:nth-of-type(1){animation-delay:6.05s}
+.auth-form label:nth-of-type(2){animation-delay:6.2s}
+.auth-form input:nth-of-type(2){animation-delay:6.35s}
+.form-options{animation-delay:6.5s}
+.login-btn{animation-delay:6.65s}
+.links{animation-delay:6.8s}
+.security-panel{animation-delay:6.95s}
+
+@keyframes fieldRise{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        scroll-behavior:auto !important;
+    }
+
+    body{
+        overflow:auto;
+    }
+
+    .intro-stage{
+        display:none;
+    }
+
+    .auth-shell{
+        opacity:1;
+        transform:none;
+        animation:none;
+    }
+}
+/* Premium Medical Logo + Moving ECG Animation */
+
+.intro-stage{
+    position:absolute;
+    inset:0;
+    z-index:5;
+    display:grid;
+    place-items:center;
+    pointer-events:none;
+    animation:introExit .8s ease-in-out 5.8s forwards;
+}
+
+.logo-formation{
+    position:absolute;
+    left:50%;
+    top:32%;
+    z-index:8;
+    display:grid;
+    justify-items:center;
+    gap:8px;
+    text-align:center;
+    opacity:0;
+    transform:translate3d(-50%,-50%,0) scale(.78);
+    animation:
+        logoReveal .9s ease forwards .25s,
+        logoBreath 2s ease-in-out 1.1s infinite,
+        logoMoveUp .8s ease-in-out 5s forwards;
+}
+
+.logo-formation img{
+    width:135px;
+    height:135px;
+    object-fit:contain;
+    filter:drop-shadow(0 0 34px rgba(6,182,212,.9));
+}
+
+.logo-formation h1{
+    margin:0;
+    color:#fff;
+    font-size:clamp(38px,5vw,64px);
+    letter-spacing:.09em;
+    text-shadow:0 0 28px rgba(6,182,212,.45);
+}
+
+.logo-formation p{
+    margin:0;
+    color:#06B6D4;
+    font-weight:800;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    text-shadow:0 0 18px rgba(6,182,212,.8);
+}
+
+.logo-light{
+    position:absolute;
+    left:-35%;
+    top:0;
+    width:30%;
+    height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
+    transform:skewX(-18deg);
+    animation:logoSweep 1.1s ease-in-out 1.9s forwards;
+}
+
+.orbit-ring{
+    position:absolute;
+    top:-28px;
+    width:190px;
+    height:190px;
+    border:1px solid rgba(6,182,212,.35);
+    border-radius:50%;
+    box-shadow:0 0 30px rgba(6,182,212,.28);
+}
+
+.ring-one{
+    animation:ringRotate 8s linear infinite;
+}
+
+.ring-two{
+    width:230px;
+    height:230px;
+    top:-48px;
+    opacity:.45;
+    animation:ringRotateReverse 12s linear infinite;
+}
+
+.hero-ecg{
+    position:absolute;
+    top:36%;
+    width:42vw;
+    height:120px;
+    z-index:6;
+    fill:none;
+    stroke:#06B6D4;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    filter:drop-shadow(0 0 16px rgba(6,182,212,.95));
+    opacity:0;
+}
+
+.hero-ecg-left{
+    left:4vw;
+}
+
+.hero-ecg-right{
+    right:4vw;
+}
+
+.hero-ecg path{
+    stroke-dasharray:900;
+    stroke-dashoffset:900;
+    animation:
+        ecgLineDraw 1.35s ease-in-out 1s forwards,
+        ecgLineMove 2.4s linear 2.4s infinite;
+}
+
+.hero-ecg-left{
+    animation:ecgShow .4s ease 1s forwards;
+}
+
+.hero-ecg-right{
+    animation:ecgShow .4s ease 1.15s forwards;
+}
+
+.medical-icons span{
+    position:absolute;
+    z-index:4;
+    width:74px;
+    height:74px;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(6,182,212,.42);
+    border-radius:22px;
+    color:#06B6D4;
+    font-size:30px;
+    background:rgba(255,255,255,.035);
+    box-shadow:0 0 22px rgba(6,182,212,.22);
+    animation:iconFloat 5s ease-in-out infinite;
+}
+
+.medical-icons span:nth-child(1){left:16%;top:29%;animation-delay:0s}
+.medical-icons span:nth-child(2){left:23%;top:48%;animation-delay:.6s}
+.medical-icons span:nth-child(3){right:18%;top:32%;animation-delay:1.1s}
+.medical-icons span:nth-child(4){right:24%;top:50%;animation-delay:1.7s}
+
+.auth-shell{
+    animation:authIn .8s ease-in-out 5.9s forwards;
+}
+
+@keyframes logoReveal{
+    to{
+        opacity:1;
+        transform:translate3d(-50%,-50%,0) scale(1);
+    }
+}
+
+@keyframes logoBreath{
+    0%,100%{
+        filter:drop-shadow(0 0 8px rgba(6,182,212,.25));
+    }
+    50%{
+        filter:drop-shadow(0 0 36px rgba(6,182,212,.95));
+    }
+}
+
+@keyframes logoMoveUp{
+    to{
+        top:20%;
+        transform:translate3d(-50%,-50%,0) scale(.82);
+    }
+}
+
+@keyframes ecgShow{
+    to{
+        opacity:1;
+    }
+}
+
+@keyframes ecgLineDraw{
+    to{
+        stroke-dashoffset:0;
+    }
+}
+
+@keyframes ecgLineMove{
+    0%{
+        stroke-dashoffset:0;
+        opacity:.35;
+    }
+    45%{
+        opacity:1;
+    }
+    100%{
+        stroke-dashoffset:-900;
+        opacity:.35;
+    }
+}
+
+@keyframes ringRotate{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes ringRotateReverse{
+    to{
+        transform:rotate(-360deg);
+    }
+}
+
+@keyframes iconFloat{
+    0%,100%{
+        transform:translateY(0);
+        opacity:.42;
+    }
+    50%{
+        transform:translateY(-14px);
+        opacity:.9;
+    }
+}
+
+@keyframes introExit{
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}

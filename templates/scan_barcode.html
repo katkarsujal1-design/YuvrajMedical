@@ -4,6 +4,8 @@
     <title>Scan Medicine Barcode</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         body{
             font-family:Arial;
@@ -82,8 +84,18 @@
             color:#16a34a;
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
-<body>
+<body class="yvm-pro-page yvm-page-scan-barcode">
+
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
 <div class="card">
 
@@ -174,5 +186,6 @@
     }
 </script>
 
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

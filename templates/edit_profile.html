@@ -2,15 +2,19 @@
 <html>
 <head>
     <title>Edit Profile</title>
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
-        body { font-family: Arial; background:#f4f4f4; }
+        body { margin:0; font-family: Arial; background:linear-gradient(135deg,#f8fafc,#eef7f5); }
         .card {
             width:400px;
-            margin:50px auto;
+            max-width:calc(100% - 32px);
+            margin:32px auto 50px;
             background:white;
             padding:20px;
-            border-radius:10px;
+            border-radius:8px;
+            border:1px solid #dbe4f0;
+            box-shadow:0 18px 42px rgba(15,23,42,.08);
         }
         input {
             width:100%;
@@ -29,9 +33,19 @@
             cursor:pointer;
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
-<body>
+<body class="yvm-pro-page yvm-page-edit-profile">
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+{% include "partials/site_header.html" %}
 
 <div class="card">
     <h2>Edit Profile</h2>
@@ -49,5 +63,7 @@
     </form>
 </div>
 
+{% include "partials/site_header_script.html" %}
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

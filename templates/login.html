@@ -3,526 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Yuvraj Medical & Chemist</title>
 
-<title>Login - Yuvraj Medical</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    min-height:100vh;
-    background:linear-gradient(135deg,#dff6ff,#eef7ff,#ffffff);
-    overflow:auto;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
-    padding:28px 0;
-}
-
-/* BACKGROUND */
-
-body::before{
-    content:'';
-    position:absolute;
-    width:450px;
-    height:450px;
-    background:#7dd3fc;
-    border-radius:50%;
-    top:-150px;
-    left:-120px;
-    filter:blur(120px);
-    opacity:0.5;
-}
-
-body::after{
-    content:'';
-    position:absolute;
-    width:500px;
-    height:500px;
-    background:#93c5fd;
-    border-radius:50%;
-    bottom:-180px;
-    right:-120px;
-    filter:blur(120px);
-    opacity:0.5;
-}
-
-/* GRID */
-
-.grid{
-    position:absolute;
-    inset:0;
-    background-image:
-        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
-    background-size:40px 40px;
-    opacity:0.5;
-}
-
-/* CONTAINER */
-
-.container{
-    position:relative;
-    width:95%;
-    max-width:1100px;
-    min-height:650px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    overflow:hidden;
-    border-radius:30px;
-    backdrop-filter:blur(18px);
-    background:rgba(255,255,255,0.55);
-    border:1px solid rgba(255,255,255,0.7);
-    box-shadow:
-        0 0 40px rgba(0,229,255,0.12),
-        0 0 100px rgba(37,99,235,0.08);
-    z-index:10;
-}
-
-/* LEFT SIDE */
-
-.left{
-    padding:60px;
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    background:linear-gradient(
-        135deg,
-        rgba(0,229,255,0.06),
-        rgba(37,99,235,0.05)
-    );
-    border-right:1px solid rgba(255,255,255,0.3);
-}
-
-/* LOGO */
-
-.logo-box{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.logo-icon{
-    width:90px;
-    height:90px;
-    border-radius:22px;
-    overflow:hidden;
-    background:none;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 0 20px rgba(0,229,255,0.15);
-}
-
-.logo-icon img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-/* BRAND */
-
-.brand h1{
-    color:#07111f;
-    font-size:32px;
-    font-weight:700;
-}
-
-.brand p{
-    color:#0f766e;
-    font-size:14px;
-    margin-top:5px;
-}
-
-/* HERO */
-
-.hero{
-    margin-top:40px;
-}
-
-.hero h2{
-    font-size:48px;
-    color:#07111f;
-    line-height:1.2;
-    margin-bottom:20px;
-}
-
-.hero h2 span{
-    color:#0284c7;
-}
-
-.hero p{
-    color:#475569;
-    line-height:1.8;
-    font-size:15px;
-    max-width:500px;
-}
-
-.features{
-    margin-top:35px;
-}
-
-.feature{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    color:#07111f;
-    margin-bottom:18px;
-    font-size:15px;
-}
-
-.feature-icon{
-    width:38px;
-    height:38px;
-    border-radius:12px;
-    background:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#0284c7;
-    box-shadow:0 4px 12px rgba(0,0,0,0.08);
-}
-
-/* RIGHT SIDE */
-
-.right{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:40px;
-}
-
-.login-box{
-    width:100%;
-    max-width:430px;
-}
-
-.login-title{
-    color:#07111f;
-    font-size:36px;
-    font-weight:700;
-    margin-bottom:10px;
-}
-
-.login-subtitle{
-    color:#475569;
-    margin-bottom:35px;
-}
-
-/* INPUTS */
-
-.input-group{
-    margin-bottom:18px;
-}
-
-.input-group label{
-    display:block;
-    color:#334155;
-    margin-bottom:10px;
-    font-size:14px;
-    font-weight:500;
-}
-
-.input-box input{
-    width:100%;
-    padding:16px 18px;
-    border-radius:16px;
-    border:1px solid #dbeafe;
-    background:white;
-    color:#07111f;
-    font-size:15px;
-    outline:none;
-    transition:0.3s;
-    box-shadow:0 4px 12px rgba(0,0,0,0.03);
-}
-
-.input-box input:focus{
-    border-color:#00b7ff;
-    box-shadow:
-        0 0 10px rgba(0,183,255,0.25),
-        0 0 25px rgba(0,183,255,0.1);
-}
-
-/* BUTTON */
-
-.login-btn{
-    width:100%;
-    padding:16px;
-    margin-top:10px;
-    border:none;
-    border-radius:18px;
-    background:linear-gradient(135deg,#00c6ff,#0072ff);
-    color:white;
-    font-size:17px;
-    font-weight:700;
-    cursor:pointer;
-    transition:0.35s;
-    box-shadow:
-        0 10px 25px rgba(0,114,255,0.25);
-}
-
-.login-btn:hover{
-    transform:translateY(-3px) scale(1.02);
-}
-
-/* LINKS */
-
-.links{
-    margin-top:22px;
-    text-align:center;
-    color:#475569;
-    font-size:14px;
-}
-
-.links a{
-    color:#0284c7;
-    text-decoration:none;
-    font-weight:600;
-}
-
-.footer{
-    margin-top:30px;
-    text-align:center;
-    color:#64748b;
-    font-size:13px;
-}
-
-.alert{
-    padding:12px 14px;
-    border-radius:14px;
-    margin-bottom:18px;
-    font-size:13px;
-    line-height:1.5;
-}
-
-.alert.success{
-    background:#ecfdf5;
-    border:1px solid #bbf7d0;
-    color:#166534;
-}
-
-.alert.error{
-    background:#fef2f2;
-    border:1px solid #fecaca;
-    color:#991b1b;
-}
-
-.security-panel{
-    margin-top:20px;
-    padding-top:18px;
-    border-top:1px solid #dbeafe;
-}
-
-.security-title{
-    color:#07111f;
-    font-size:15px;
-    font-weight:700;
-    margin-bottom:12px;
-}
-
-.security-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.security-link,
-.mini-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:42px;
-    padding:10px 12px;
-    border:1px solid #dbeafe;
-    border-radius:12px;
-    background:white;
-    color:#0284c7;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:600;
-    cursor:pointer;
-}
-
-.security-form{
-    display:grid;
-    gap:10px;
-    margin-top:12px;
-}
-
-.security-form input{
-    width:100%;
-    padding:12px 14px;
-    border-radius:12px;
-    border:1px solid #dbeafe;
-    outline:none;
-}
-
-.inline-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.data-panel{
-    margin-top:18px;
-    max-height:190px;
-    overflow:auto;
-    border:1px solid #dbeafe;
-    border-radius:12px;
-    background:white;
-}
-
-.data-row{
-    padding:12px;
-    border-bottom:1px solid #eaf2ff;
-    font-size:12px;
-    color:#475569;
-}
-
-.data-row:last-child{
-    border-bottom:none;
-}
-
-.data-row strong{
-    display:block;
-    color:#07111f;
-    font-size:13px;
-}
-
-.device-action{
-    width:auto;
-    margin-top:8px;
-    padding:8px 10px;
-    border-radius:10px;
-    font-size:12px;
-    background:#ef4444;
-    box-shadow:none;
-}
-
-/* MOBILE */
-
-@media(max-width:900px){
-
-    .container{
-        grid-template-columns:1fr;
-    }
-
-    .left{
-        display:none;
-    }
-
-    .right{
-        padding:30px 22px;
-    }
-
-    .login-title{
-        font-size:30px;
-    }
-
-    .security-grid,
-    .inline-actions{
-        grid-template-columns:1fr;
-    }
-}
-
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 
-<body>
+<body class="yvm-pro-page yvm-page-login">
 
-<div class="grid"></div>
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
-<div class="container">
+<main class="enterprise-login" data-has-server-state="{{ 'true' if message or error or show_2fa or show_2fa_setup or show_activity or show_devices else 'false' }}">
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <div class="particle-field" aria-hidden="true"></div>
+    <div class="light-ray ray-left" aria-hidden="true"></div>
+    <div class="light-ray ray-right" aria-hidden="true"></div>
 
-    <!-- LEFT SIDE -->
+    <svg class="ambient-ecg" viewBox="0 0 900 120" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 68 H150 L174 68 L196 32 L236 104 L272 68 H420 L444 68 L464 48 L488 68 H620 L646 68 L674 24 L716 106 L754 68 H900"/>
+    </svg>
 
-    <div class="left">
+    <section class="intro-stage" aria-label="Yuvraj Medical secure login intro">
 
-        <div>
-
-            <!-- LOGO -->
-
-            <div class="logo-box">
-
-                <div class="logo-icon">
-
-                    <img src="/static/images/yuvraj_logo.png" alt="Yuvraj Medical Logo">
-
-                </div>
-
-                <div class="brand">
-                    <h1>Yuvraj Medical</h1>
-                    <p>Advanced Healthcare Platform</p>
-                </div>
-
-            </div>
-
-            <div class="hero">
-
-                <h2>
-                    Smart Healthcare
-                    <br>
-                    Starts <span>Here.</span>
-                </h2>
-
-                <p>
-                    Secure medical management platform with
-                    fast ordering, stock monitoring, smart
-                    dashboards and seamless healthcare experience.
-                </p>
-
-                <div class="features">
-
-                    <div class="feature">
-                        <div class="feature-icon">✔</div>
-                        Fast & Secure Login
-                    </div>
-
-                    <div class="feature">
-                        <div class="feature-icon">⚡</div>
-                        Smart Inventory Management
-                    </div>
-
-                    <div class="feature">
-                        <div class="feature-icon">🚚</div>
-                        Instant Order Tracking
-                    </div>
-
-                </div>
-
-            </div>
-
+        <div class="medical-icons" aria-hidden="true">
+            <span>+</span>
+            <span>💊</span>
+            <span>🛡</span>
+            <span>🧬</span>
         </div>
 
-        <div style="color:#64748b; font-size:14px;">
-            © 2026 Yuvraj Medical • Trusted Healthcare System
+        <svg class="hero-ecg hero-ecg-left" viewBox="0 0 520 120" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 62 H185 L205 62 L222 38 L245 92 L268 62 H520"/>
+        </svg>
+
+        <svg class="hero-ecg hero-ecg-right" viewBox="0 0 520 120" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 62 H250 L270 62 L292 28 L316 98 L342 62 H520"/>
+        </svg>
+
+        <div class="logo-formation" aria-hidden="true">
+            <span class="orbit-ring ring-one"></span>
+            <span class="orbit-ring ring-two"></span>
+            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical & Chemist ">
+            <h1>Yuvraj Medical</h1>
+            <p>& Chemist</p>
+            <span class="logo-light"></span>
         </div>
 
-    </div>
+  </section> 
 
-    <!-- RIGHT SIDE -->
+    <section class="auth-shell" aria-label="Yuvraj Medical login">
+        
+        <div class="brand-lockup">
+            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical & Chemist">
+            <div>
+                <h1>Yuvraj Medical</h1>
+                <p>Secure healthcare platform</p>
+            </div>
+        </div>
 
-    <div class="right">
-
-        <div class="login-box">
-
-            <h1 class="login-title">
-                Welcome Back 👋
-            </h1>
-
-            <p class="login-subtitle">
-                Login to continue accessing your dashboard
-            </p>
+        <div class="auth-card">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Login to continue accessing your dashboard.</p>
 
             {% if message %}
             <div class="alert success">{{ message }}</div>
@@ -533,60 +81,35 @@ body::after{
             {% endif %}
 
             {% if show_2fa %}
-            <form method="POST" action="/two_factor" class="security-form">
-                <input name="otp" inputmode="numeric" maxlength="6" placeholder="Enter 2FA OTP" required>
+            <form method="POST" action="/two_factor" class="auth-form">
+                <label for="otp">Enter 2FA OTP</label>
+                <input id="otp" name="otp" inputmode="numeric" maxlength="6" required>
                 <button type="submit" class="login-btn">Verify 2FA</button>
             </form>
             {% else %}
-            <form method="POST">
+            <form method="POST" class="auth-form">
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" autocomplete="email" required>
 
-                <div class="input-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" autocomplete="current-password" required>
 
-                    <label>Email Address</label>
-
-                    <div class="input-box">
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Enter your email"
-                            required
-                        >
-                    </div>
-
+                <div class="form-options">
+                    <label class="remember-option">
+                        <input type="checkbox" name="remember">
+                        <span>Remember Me</span>
+                    </label>
+                    <a class="muted-link" href="/login">Forgot Password</a>
                 </div>
 
-                <div class="input-group">
-
-                    <label>Password</label>
-
-                    <div class="input-box">
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Enter your password"
-                            required
-                        >
-                    </div>
-
-                </div>
-
-                <button type="submit" class="login-btn">
-                    Login Securely
-                </button>
-
+                <button type="submit" class="login-btn">Login Securely</button>
             </form>
             {% endif %}
 
-            <div class="links">
-                New user?
-                <a href="/register">
-                    Create Account
-                </a>
-            </div>
+            <p class="links">New user? <a href="/register">Create Account</a></p>
 
             <div class="security-panel">
                 <div class="security-title">Account security</div>
-
                 <div class="security-grid">
                     <a class="security-link" href="/login_activity">Login activity</a>
                     <a class="security-link" href="/devices">Devices</a>
@@ -605,8 +128,9 @@ body::after{
                 </div>
 
                 {% if show_2fa_setup %}
-                <form method="POST" action="/two_factor/enable" class="security-form">
-                    <input name="otp" inputmode="numeric" maxlength="6" placeholder="2FA setup OTP" required>
+                <form method="POST" action="/two_factor/enable" class="auth-form compact-form">
+                    <label for="setup-otp">2FA setup OTP</label>
+                    <input id="setup-otp" name="otp" inputmode="numeric" maxlength="6" required>
                     <button type="submit" class="mini-btn">Enable 2FA</button>
                 </form>
                 {% endif %}
@@ -641,16 +165,10 @@ body::after{
                 </div>
                 {% endif %}
             </div>
-
-            <div class="footer">
-                Fast Delivery • Genuine Medicines • Trusted Care ❤️
-            </div>
-
         </div>
-
-    </div>
-
-</div>
-
+    </section>
+</main>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

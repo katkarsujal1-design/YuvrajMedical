@@ -1,0 +1,344 @@
+/* ======================================================
+   Yuvraj Medical - Safe Global Page Animations
+   Subtle effects only; no layout-changing global transforms.
+====================================================== */
+
+:root {
+    --anim-cyan: #06b6d4;
+    --anim-teal: #0f766e;
+    --anim-shadow: rgba(15, 23, 42, .12);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    animation: yvmPageFade .32s ease both;
+}
+
+@keyframes yvmPageFade {
+    from { opacity: .01; }
+    to { opacity: 1; }
+}
+
+.bg-particles {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+body.yvm-page-login .bg-particles,
+body.yvm-page-home .bg-particles {
+    display: block;
+}
+
+.bg-particles span {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--anim-cyan);
+    opacity: .08;
+    box-shadow: 0 0 18px rgba(6, 182, 212, .28);
+    animation: yvmParticleDrift 12s ease-in-out infinite;
+}
+
+.bg-particles span:nth-child(1) { left: 8%; top: 18%; animation-delay: 0s; }
+.bg-particles span:nth-child(2) { left: 22%; top: 76%; animation-delay: 1.5s; }
+.bg-particles span:nth-child(3) { left: 47%; top: 12%; animation-delay: 3s; }
+.bg-particles span:nth-child(4) { left: 68%; top: 82%; animation-delay: 2s; }
+.bg-particles span:nth-child(5) { left: 84%; top: 24%; animation-delay: 4s; }
+.bg-particles span:nth-child(6) { left: 92%; top: 66%; animation-delay: 5.5s; }
+
+@keyframes yvmParticleDrift {
+    0%, 100% {
+        transform: translate3d(0, 0, 0);
+        opacity: .06;
+    }
+    50% {
+        transform: translate3d(0, -16px, 0);
+        opacity: .14;
+    }
+}
+
+.card,
+.panel,
+.stat,
+.stat-card,
+.product-card,
+.order-card,
+.notice-card,
+.reward-card,
+.coupon-card,
+.history-card,
+.invoice,
+.scanner-card,
+.identity-card,
+.auth-card,
+.type-card,
+.toolbar,
+.empty,
+.prescription-card,
+.dashboard-card,
+.medicine-card,
+.sub-card,
+.rx-card {
+    animation: yvmContentIn .38s ease both;
+}
+
+@keyframes yvmContentIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.yvm-animate-ready .card,
+.yvm-animate-ready .panel,
+.yvm-animate-ready .stat,
+.yvm-animate-ready .stat-card,
+.yvm-animate-ready .product-card,
+.yvm-animate-ready .order-card,
+.yvm-animate-ready .notice-card,
+.yvm-animate-ready .reward-card,
+.yvm-animate-ready .coupon-card,
+.yvm-animate-ready .history-card,
+.yvm-animate-ready .dashboard-card {
+    will-change: transform, opacity;
+}
+
+.card,
+.product-card,
+.order-card,
+.reward-card,
+.coupon-card,
+.history-card,
+.notice-card,
+.stat-card,
+.dashboard-card,
+.medicine-card,
+.sub-card,
+.rx-card,
+.btn,
+button,
+.action,
+.primary,
+.secondary,
+.login-btn,
+.mini-btn {
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease,
+        background-color .18s ease,
+        filter .18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .card:hover,
+    .product-card:hover,
+    .order-card:hover,
+    .reward-card:hover,
+    .coupon-card:hover,
+    .history-card:hover,
+    .notice-card:hover,
+    .stat-card:hover,
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 42px var(--anim-shadow);
+    }
+
+    .btn:hover,
+    button:hover,
+    .action:hover,
+    .primary:hover,
+    .secondary:hover,
+    .login-btn:hover,
+    .mini-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+    }
+}
+
+.product-card img,
+.medicine-card img,
+.order-card img,
+.hero img,
+.hero-image-card img,
+.visual img,
+.product-image img,
+.medicine-image img,
+.wishlist-image img,
+.prescription-image img {
+    transition: transform .35s ease, filter .35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .product-card:hover img,
+    .medicine-card:hover img,
+    .order-card:hover img,
+    .hero-image-card:hover img,
+    .visual:hover img,
+    .product-image:hover img,
+    .medicine-image:hover img,
+    .wishlist-image:hover img,
+    .prescription-image:hover img {
+        transform: scale(1.035);
+        filter: saturate(1.04);
+    }
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--anim-cyan) !important;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, .14);
+}
+
+.yvm-site-header,
+.header,
+.topbar {
+    animation: yvmHeaderIn .34s ease both;
+}
+
+@keyframes yvmHeaderIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.yvm-menu-open .yvm-side-panel,
+.yvm-menu-open .yvm-side-overlay {
+    animation: none;
+}
+
+.yvm-page-notifications .notice-card.unread,
+.yvm-page-notifications .yvm-side-notice.is-unread {
+    animation: yvmNotificationPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes yvmNotificationPulse {
+    0%, 100% {
+        box-shadow: 0 18px 42px rgba(15, 23, 42, .10);
+    }
+    50% {
+        box-shadow: 0 22px 54px rgba(15, 118, 110, .18);
+    }
+}
+
+.yvm-page-order-tracking .step::after,
+.yvm-page-my-orders .track-step::after {
+    content: "";
+    position: absolute;
+    left: 22px;
+    top: 38px;
+    width: 2px;
+    height: calc(100% - 20px);
+    background: linear-gradient(180deg, var(--anim-teal), rgba(6, 182, 212, 0));
+    transform-origin: top;
+    animation: yvmTimelineSweep 1.3s ease both;
+    pointer-events: none;
+}
+
+.yvm-page-order-tracking .step:last-child::after,
+.yvm-page-my-orders .track-step:last-child::after {
+    display: none;
+}
+
+@keyframes yvmTimelineSweep {
+    from {
+        transform: scaleY(0);
+        opacity: .2;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: .9;
+    }
+}
+
+.yvm-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .42s ease, transform .42s ease;
+}
+
+.yvm-reveal.yvm-is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ripple {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .45);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: yvmRipple .55s ease forwards;
+}
+
+@keyframes yvmRipple {
+    from {
+        width: 0;
+        height: 0;
+        opacity: .65;
+    }
+    to {
+        width: 220px;
+        height: 220px;
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    body,
+    .card,
+    .panel,
+    .stat,
+    .stat-card,
+    .product-card,
+    .order-card,
+    .notice-card,
+    .reward-card,
+    .coupon-card,
+    .history-card,
+    .invoice,
+    .scanner-card,
+    .identity-card,
+    .auth-card,
+    .type-card,
+    .toolbar,
+    .empty,
+    .prescription-card,
+    .dashboard-card,
+    .medicine-card,
+    .sub-card,
+    .rx-card {
+        animation-duration: .2s;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

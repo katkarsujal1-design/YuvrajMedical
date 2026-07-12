@@ -1,164 +1,1317 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Orders</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management | Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --ink:#12202f;
+            --muted:#64748b;
+            --line:rgba(15,23,42,.11);
+            --wine:#7f1d4e;
+            --wine-dark:#4c1d3d;
+            --teal:#0f766e;
+            --green:#15803d;
+            --amber:#d97706;
+            --red:#dc2626;
+            --panel:#ffffff;
+            --soft:#f8fafc;
+            --shadow:0 22px 60px rgba(15,23,42,.11);
+        }
+
+        * { box-sizing:border-box; }
+
         body {
-            font-family: Arial;
-            background: #f4f4f4;
-            margin: 0;
+            margin:0;
+            min-height:100vh;
+            font-family:Inter, "Segoe UI", Arial, sans-serif;
+            color:var(--ink);
+            background:
+                linear-gradient(135deg,rgba(255,255,255,.94),rgba(248,250,252,.92)),
+                url("{{ url_for('static', filename='images/order-management-premium.png') }}") center/cover fixed no-repeat;
         }
 
-        .header {
-            background: #2c7be5;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        body::before {
+            content:"";
+            position:fixed;
+            inset:0;
+            z-index:-1;
+            background:
+                linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.82) 48%,rgba(255,255,255,.68)),
+                linear-gradient(180deg,rgba(127,29,78,.06),rgba(15,118,110,.08));
         }
 
-        .header h2 {
-            margin: 0;
+        a { color:inherit; text-decoration:none; }
+
+        .topbar {
+            position:sticky;
+            top:0;
+            z-index:20;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            padding:12px clamp(16px,3vw,42px);
+            color:white;
+            background:linear-gradient(135deg,rgba(76,29,61,.97),rgba(127,29,78,.95) 55%,rgba(15,118,110,.92));
+            border-bottom:1px solid rgba(253,230,138,.32);
+            box-shadow:0 16px 42px rgba(76,29,61,.22);
+            backdrop-filter:blur(18px);
+        }
+
+        .brand {
+            display:flex;
+            align-items:center;
+            gap:11px;
+            min-width:230px;
+        }
+
+        .brand-mark {
+            width:56px;
+            height:56px;
+            object-fit:contain;
+            filter:drop-shadow(0 7px 12px rgba(0,0,0,.28));
+        }
+
+        .brand-text {
+            display:grid;
+            gap:3px;
+            line-height:1;
+        }
+
+        .brand-yuvraj {
+            font-family:Cinzel, Georgia, serif;
+            font-size:23px;
+            font-weight:800;
+            letter-spacing:1.4px;
+            background:linear-gradient(90deg,#ecfeff 0%,#67e8f9 42%,#fde68a 100%);
+            -webkit-background-clip:text;
+            background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .brand-medical {
+            color:#fde68a;
+            font-size:10px;
+            font-weight:900;
+            letter-spacing:4.3px;
+            text-transform:uppercase;
         }
 
         .nav-buttons {
-            display: flex;
-            gap: 10px;
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+            gap:10px;
         }
 
         .nav-buttons a {
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-weight: bold;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:40px;
+            padding:9px 13px;
+            border-radius:8px;
+            color:#fff7ed;
+            background:rgba(255,255,255,.14);
+            border:1px solid rgba(253,230,138,.22);
+            font-size:13px;
+            font-weight:900;
+            transition:transform .18s ease, background .18s ease, color .18s ease;
         }
 
-        .home-btn {
-            background: white;
-            color: #2c7be5;
+        .nav-buttons a:hover {
+            transform:translateY(-1px);
+            color:var(--wine-dark);
+            background:#fff7ed;
         }
 
-        .logout-btn {
-            background: red;
-            color: white;
+        .page {
+            width:min(1280px,calc(100% - 38px));
+            margin:0 auto;
+            padding:28px 0 44px;
         }
 
-        .container {
-            padding: 20px;
+        .hero {
+            position:relative;
+            display:grid;
+            grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);
+            min-height:370px;
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,.72);
+            border-radius:8px;
+            background:
+                linear-gradient(90deg,rgba(76,29,61,.88),rgba(15,118,110,.36)),
+                url("{{ url_for('static', filename='images/order-management-premium.png') }}") center right/cover no-repeat;
+            box-shadow:var(--shadow);
+        }
+
+        .hero::after {
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(90deg,rgba(39,14,33,.74),rgba(39,14,33,.22) 58%,rgba(255,255,255,.04));
+            pointer-events:none;
+        }
+
+        .hero-copy,
+        .hero-side {
+            position:relative;
+            z-index:1;
+            padding:clamp(24px,3.6vw,42px);
+        }
+
+        .hero-copy {
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            color:white;
+        }
+
+        .eyebrow {
+            width:fit-content;
+            padding:8px 12px;
+            border:1px solid rgba(255,255,255,.34);
+            border-radius:999px;
+            color:#fef3c7;
+            background:rgba(255,255,255,.15);
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:.1em;
+            text-transform:uppercase;
+            backdrop-filter:blur(12px);
+        }
+
+        h1 {
+            max-width:620px;
+            margin:18px 0 12px;
+            font-size:clamp(40px,5vw,66px);
+            line-height:.98;
+            letter-spacing:0;
+        }
+
+        .hero-copy p {
+            max-width:560px;
+            margin:0;
+            color:rgba(255,255,255,.88);
+            font-size:16px;
+            line-height:1.75;
+        }
+
+        .hero-side {
+            display:grid;
+            align-content:end;
+            gap:12px;
+        }
+
+        .summary {
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:12px;
+        }
+
+        .summary-card {
+            min-height:104px;
+            padding:16px;
+            border:1px solid rgba(255,255,255,.22);
+            border-radius:8px;
+            color:white;
+            background:rgba(255,255,255,.15);
+            backdrop-filter:blur(16px);
+        }
+
+        .summary-card span {
+            display:block;
+            color:#dffdf6;
+            font-size:11px;
+            font-weight:900;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+
+        .summary-card strong {
+            display:block;
+            margin-top:10px;
+            font-size:34px;
+            line-height:1;
+        }
+
+        .notice {
+            margin-top:16px;
+            padding:14px 16px;
+            border:1px solid rgba(15,118,110,.18);
+            border-radius:8px;
+            color:#0f766e;
+            background:#ecfdf5;
+            font-weight:900;
+        }
+
+        .orders-section {
+            position:relative;
+            margin-top:28px;
+            padding:18px;
+            border:1px solid rgba(255,255,255,.72);
+            border-radius:8px;
+            background:rgba(255,255,255,.72);
+            box-shadow:0 18px 44px rgba(15,23,42,.08);
+            backdrop-filter:blur(18px);
+        }
+
+        .orders-section::before {
+            content:"";
+            position:absolute;
+            inset:0;
+            border-radius:8px;
+            background:
+                linear-gradient(90deg,rgba(127,29,78,.08),rgba(15,118,110,.08)),
+                linear-gradient(180deg,rgba(255,255,255,.52),rgba(255,255,255,0));
+            pointer-events:none;
+        }
+
+        .orders-head {
+            position:relative;
+            z-index:1;
+            display:flex;
+            justify-content:space-between;
+            align-items:end;
+            gap:16px;
+            margin:0 0 16px;
+        }
+
+        .orders-head h2 {
+            margin:0;
+            font-size:28px;
+        }
+
+        .orders-head p {
+            max-width:560px;
+            margin:7px 0 0;
+            color:var(--muted);
+            font-size:14px;
+            line-height:1.6;
+            font-weight:700;
+        }
+
+        .orders-tools {
+            position:relative;
+            z-index:1;
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:12px;
+            align-items:center;
+            padding:13px;
+            margin-bottom:16px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:rgba(255,255,255,.78);
+        }
+
+        .status-key {
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+            gap:7px;
+        }
+
+        .key-pill {
+            padding:7px 9px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            color:var(--muted);
+            background:rgba(255,255,255,.84);
+            font-size:12px;
+            font-weight:900;
+        }
+
+        .filter-group {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+        }
+
+        .filter-btn {
+            min-height:36px;
+            padding:8px 11px;
+            border:1px solid var(--line);
+            border-radius:999px;
+            color:var(--ink);
+            background:#ffffff;
+            cursor:pointer;
+            font:inherit;
+            font-size:12px;
+            font-weight:1000;
+            transition:background .18s ease, color .18s ease, transform .18s ease, border-color .18s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            transform:translateY(-1px);
+            color:#ffffff;
+            border-color:transparent;
+            background:linear-gradient(135deg,var(--wine),var(--teal));
+        }
+
+        .orders-mini-stats {
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+            justify-content:flex-end;
+        }
+
+        .mini-stat {
+            min-height:36px;
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            padding:8px 10px;
+            border:1px solid rgba(15,118,110,.16);
+            border-radius:999px;
+            color:var(--teal);
+            background:#ecfdf5;
+            font-size:12px;
+            font-weight:1000;
+            white-space:nowrap;
+        }
+
+        .orders-grid {
+            position:relative;
+            z-index:1;
+            display:grid;
+            gap:16px;
         }
 
         .order-card {
-            background: white;
-            margin-bottom: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position:relative;
+            overflow:hidden;
+            border:1px solid rgba(15,23,42,.09);
+            border-radius:8px;
+            background:rgba(255,255,255,.96);
+            box-shadow:0 18px 42px rgba(15,23,42,.09);
+            backdrop-filter:blur(18px);
         }
 
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .order-card::before {
+            content:"";
+            position:absolute;
+            top:0;
+            left:0;
+            width:5px;
+            height:100%;
+            background:linear-gradient(180deg,var(--wine),var(--teal));
+        }
+
+        .order-card.is-hidden {
+            display:none;
+        }
+
+        .order-top {
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:16px;
+            align-items:start;
+            padding:18px 20px 18px 24px;
+            border-bottom:1px solid var(--line);
+            background:linear-gradient(180deg,#fff,#f8fafc);
+        }
+
+        .order-id {
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            gap:10px;
+        }
+
+        .order-id h3 {
+            margin:0;
+            font-size:22px;
+        }
+
+        .latest-badge {
+            display:inline-flex;
+            align-items:center;
+            min-height:28px;
+            padding:6px 9px;
+            border:1px solid rgba(253,230,138,.55);
+            border-radius:999px;
+            color:#713f12;
+            background:#fef3c7;
+            font-size:11px;
+            font-weight:1000;
+            letter-spacing:.04em;
+            text-transform:uppercase;
+        }
+
+        .order-meta {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            margin-top:10px;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:800;
+        }
+
+        .meta-pill {
+            display:inline-flex;
+            align-items:center;
+            min-height:28px;
+            padding:6px 9px;
+            border:1px solid #e2e8f0;
+            border-radius:999px;
+            background:#ffffff;
         }
 
         .status {
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: white;
-            font-size: 12px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:34px;
+            padding:8px 12px;
+            border-radius:999px;
+            color:white;
+            font-size:12px;
+            font-weight:1000;
+            white-space:nowrap;
+            box-shadow:0 10px 20px rgba(15,23,42,.12);
         }
 
-        .pending { background: orange; }
-        .delivered { background: green; }
-        .cancelled { background: red; }
+        .status-pending,
+        .status-approved,
+        .status-packed,
+        .status-out-for-delivery { background:linear-gradient(135deg,var(--amber),#facc15); }
+        .status-delivered { background:linear-gradient(135deg,var(--green),#22c55e); }
+        .status-cancelled,
+        .status-refunded { background:linear-gradient(135deg,var(--red),#991b1b); }
 
-        ul {
-            padding-left: 20px;
+        .order-body {
+            display:grid;
+            grid-template-columns:minmax(0,1fr) minmax(340px,.72fr);
+            gap:16px;
+            padding:16px 18px 18px 24px;
+            background:
+                linear-gradient(90deg,rgba(127,29,78,.035),rgba(15,118,110,.035)),
+                #ffffff;
         }
 
-        .cancel-btn {
-            background: red;
-            color: white;
-            padding: 6px 10px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 12px;
+        .order-items-panel {
+            display:grid;
+            align-content:start;
+            gap:14px;
+            min-width:0;
+            padding:14px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:rgba(255,255,255,.92);
         }
 
-        .no-orders {
-            text-align: center;
-            padding: 20px;
-            color: gray;
+        .order-showcase {
+            display:grid;
+            grid-template-columns:180px minmax(0,1fr);
+            gap:14px;
+            align-items:stretch;
+        }
+
+        .order-visual {
+            position:relative;
+            min-height:138px;
+            overflow:hidden;
+            border:1px solid rgba(15,118,110,.16);
+            border-radius:8px;
+            background:#f8fafc;
+        }
+
+        .order-visual img {
+            width:100%;
+            height:100%;
+            min-height:138px;
+            object-fit:cover;
+            display:block;
+        }
+
+        .order-visual::after {
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(180deg,rgba(255,255,255,0),rgba(76,29,61,.22));
+            pointer-events:none;
+        }
+
+        .order-snapshot {
+            display:grid;
+            align-content:space-between;
+            gap:10px;
+            min-width:0;
+            padding:14px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:
+                linear-gradient(135deg,rgba(127,29,78,.06),rgba(15,118,110,.07)),
+                #ffffff;
+        }
+
+        .snapshot-label {
+            color:var(--muted);
+            font-size:11px;
+            font-weight:1000;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+
+        .snapshot-title {
+            margin:5px 0 0;
+            color:var(--ink);
+            font-size:20px;
+            font-weight:1000;
+            line-height:1.15;
+        }
+
+        .snapshot-grid {
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:8px;
+        }
+
+        .snapshot-stat {
+            min-height:56px;
+            padding:9px;
+            border:1px solid rgba(15,23,42,.08);
+            border-radius:8px;
+            background:rgba(255,255,255,.72);
+        }
+
+        .snapshot-stat span {
+            display:block;
+            color:var(--muted);
+            font-size:10px;
+            font-weight:1000;
+            letter-spacing:.06em;
+            text-transform:uppercase;
+        }
+
+        .snapshot-stat strong {
+            display:block;
+            margin-top:5px;
+            font-size:13px;
+            line-height:1.25;
+            overflow-wrap:anywhere;
+        }
+
+        .details-toggle {
+            width:fit-content;
+            min-height:36px;
+            padding:8px 11px;
+            border:1px solid rgba(15,118,110,.24);
+            border-radius:8px;
+            color:var(--teal);
+            background:#ecfdf5;
+            cursor:pointer;
+            font:inherit;
+            font-size:12px;
+            font-weight:1000;
+        }
+
+        .items-wrap {
+            display:grid;
+            gap:10px;
+        }
+
+        .items-wrap.is-collapsed {
+            display:none;
+        }
+
+        .section-title {
+            margin:0 0 12px;
+            color:#334155;
+            font-size:13px;
+            font-weight:1000;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+
+        .items {
+            display:grid;
+            gap:9px;
+            margin:0;
+            padding:0;
+            list-style:none;
+        }
+
+        .items li {
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:12px;
+            align-items:center;
+            padding:14px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:
+                linear-gradient(90deg,rgba(15,118,110,.04),rgba(255,255,255,0)),
+                #ffffff;
+            line-height:1.45;
+            box-shadow:0 8px 18px rgba(15,23,42,.04);
+        }
+
+        .items strong {
+            white-space:nowrap;
+        }
+
+        .items small {
+            color:var(--muted);
+            font-weight:800;
+        }
+
+        .tracking-card,
+        .fact-grid {
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:#f8fafc;
+        }
+
+        .tracking-card {
+            position:relative;
+            overflow:hidden;
+            padding:16px;
+            background:
+                linear-gradient(135deg,rgba(255,255,255,.96),rgba(248,250,252,.92));
+        }
+
+        .tracking-card::after {
+            content:"";
+            position:absolute;
+            inset:auto -48px -58px auto;
+            width:132px;
+            height:132px;
+            border-radius:50%;
+            background:radial-gradient(circle,rgba(15,118,110,.12),transparent 68%);
+        }
+
+        .tracking {
+            position:relative;
+            z-index:1;
+            display:grid;
+            gap:10px;
+        }
+
+        .track-step {
+            position:relative;
+            display:grid;
+            grid-template-columns:20px minmax(0,1fr);
+            gap:9px;
+            align-items:center;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:900;
+        }
+
+        .track-step::before {
+            content:"";
+            position:absolute;
+            left:8px;
+            top:20px;
+            bottom:-10px;
+            width:2px;
+            background:#dbe4f0;
+        }
+
+        .track-step:last-child::before {
+            display:none;
+        }
+
+        .track-dot {
+            position:relative;
+            z-index:1;
+            width:18px;
+            height:18px;
+            border-radius:999px;
+            border:2px solid #cbd5e1;
+            background:#ffffff;
+        }
+
+        .track-step.done { color:var(--teal); }
+        .track-step.done .track-dot {
+            border-color:var(--teal);
+            background:var(--teal);
+        }
+
+        .track-step.active { color:var(--wine); }
+        .track-step.active .track-dot {
+            border-color:var(--wine);
+            background:#fde68a;
+        }
+
+        .fact-grid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:10px;
+            margin-top:12px;
+        }
+
+        .delivery-panel {
+            margin-top:12px;
+            padding:14px;
+            border:1px solid rgba(15,118,110,.18);
+            border-radius:8px;
+            background:
+                linear-gradient(135deg,rgba(15,118,110,.08),rgba(127,29,78,.05)),
+                #ffffff;
+            box-shadow:0 8px 18px rgba(15,23,42,.04);
+        }
+
+        .delivery-grid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:9px;
+        }
+
+        .delivery-item {
+            min-height:68px;
+            padding:10px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:rgba(255,255,255,.78);
+        }
+
+        .delivery-item.wide {
+            grid-column:1 / -1;
+        }
+
+        .payment-panel {
+            margin-top:12px;
+            padding:14px;
+            border:1px solid rgba(127,29,78,.18);
+            border-radius:8px;
+            background:
+                linear-gradient(135deg,rgba(127,29,78,.08),rgba(15,118,110,.06)),
+                #ffffff;
+            box-shadow:0 10px 22px rgba(15,23,42,.05);
+        }
+
+        .payment-grid {
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:9px;
+        }
+
+        .payment-item {
+            min-height:66px;
+            padding:10px;
+            border:1px solid rgba(219,228,240,.9);
+            border-radius:8px;
+            background:rgba(255,255,255,.84);
+        }
+
+        .payment-item.wide {
+            grid-column:1 / -1;
+        }
+
+        .payment-item span {
+            display:block;
+            color:var(--muted);
+            font-size:11px;
+            font-weight:1000;
+            letter-spacing:.07em;
+            text-transform:uppercase;
+        }
+
+        .payment-item strong,
+        .payment-item a {
+            display:block;
+            margin-top:8px;
+            color:var(--ink);
+            font-size:14px;
+            line-height:1.35;
+        }
+
+        .payment-item a {
+            color:var(--teal);
+            font-weight:1000;
+        }
+
+        .delivery-item span {
+            display:block;
+            color:var(--muted);
+            font-size:10px;
+            font-weight:1000;
+            letter-spacing:.07em;
+            text-transform:uppercase;
+        }
+
+        .delivery-item strong {
+            display:block;
+            margin-top:6px;
+            font-size:13px;
+            line-height:1.35;
+            overflow-wrap:anywhere;
+        }
+
+        .fact {
+            min-height:86px;
+            padding:14px;
+            border:1px solid var(--line);
+            border-radius:8px;
+            background:#ffffff;
+            box-shadow:0 8px 18px rgba(15,23,42,.04);
+        }
+
+        .fact span {
+            display:block;
+            color:var(--muted);
+            font-size:11px;
+            font-weight:1000;
+            letter-spacing:.07em;
+            text-transform:uppercase;
+        }
+
+        .fact strong {
+            display:block;
+            margin-top:8px;
+            font-size:14px;
+            line-height:1.35;
+        }
+
+        .actions {
+            display:flex;
+            flex-wrap:wrap;
+            gap:9px;
+            padding:0;
+        }
+
+        .action {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            min-height:40px;
+            padding:9px 12px;
+            border-radius:8px;
+            border:1px solid transparent;
+            color:white;
+            background:linear-gradient(135deg,var(--wine),var(--teal));
+            font-size:13px;
+            font-weight:1000;
+            transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+        }
+
+        .action-icon {
+            width:24px;
+            height:24px;
+            display:grid;
+            place-items:center;
+            flex:0 0 24px;
+            border-radius:8px;
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--wine),var(--teal));
+            font-size:12px;
+            line-height:1;
+        }
+
+        .action:hover {
+            transform:translateY(-1px);
+            box-shadow:0 12px 24px rgba(15,23,42,.12);
+        }
+
+        .action.secondary {
+            color:var(--ink);
+            background:#ffffff;
+            border-color:var(--line);
+        }
+
+        .action.secondary .action-icon {
+            color:var(--teal);
+            background:#ecfdf5;
+        }
+
+        .action.danger {
+            background:linear-gradient(135deg,var(--red),#991b1b);
+        }
+
+        .action.warn {
+            background:linear-gradient(135deg,var(--amber),#f59e0b);
+        }
+
+        .empty-state {
+            padding:44px;
+            text-align:center;
+            color:var(--muted);
+        }
+
+        .filtered-empty {
+            display:none;
+            position:relative;
+            z-index:1;
+            padding:26px;
+            border:1px dashed rgba(15,118,110,.28);
+            border-radius:8px;
+            color:var(--muted);
+            background:rgba(255,255,255,.78);
+            text-align:center;
+            font-weight:900;
+        }
+
+        .filtered-empty.show {
+            display:block;
+        }
+
+        @media(max-width:920px) {
+            .hero,
+            .order-body,
+            .order-showcase {
+                grid-template-columns:1fr;
+            }
+
+            .hero-side {
+                padding-top:0;
+            }
+        }
+
+        @media(max-width:700px) {
+            .topbar {
+                align-items:stretch;
+                flex-direction:column;
+                padding:12px 16px;
+            }
+
+            .brand {
+                min-width:0;
+            }
+
+            .nav-buttons,
+            .nav-buttons a {
+                width:100%;
+            }
+
+            .page {
+                width:min(100% - 22px,1280px);
+                padding-top:14px;
+            }
+
+            .hero {
+                min-height:auto;
+            }
+
+            .summary,
+            .fact-grid,
+            .delivery-grid {
+                grid-template-columns:1fr;
+            }
+
+            .delivery-item.wide {
+                grid-column:auto;
+            }
+
+            .fact {
+                border-bottom:0;
+            }
+
+            .orders-head,
+            .orders-tools,
+            .order-top {
+                grid-template-columns:1fr;
+                align-items:start;
+            }
+
+            .orders-head {
+                flex-direction:column;
+            }
+
+            .status-key {
+                justify-content:flex-start;
+            }
+
+            .orders-mini-stats {
+                justify-content:flex-start;
+            }
+
+            .actions .action {
+                width:100%;
+            }
         }
     </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
-<body>
+<body class="yvm-pro-page yvm-page-my-orders">
 
-<div class="header">
-    <h2>📦 My Orders</h2>
-
-    <div class="nav-buttons">
-        <a href="/profile" class="home-btn" style="background:purple;">👤 Profile</a>
-        <a href="/" class="home-btn">🏠 Home</a>
-        <a href="/logout" class="logout-btn">🚪 Logout</a>
-    </div>
+<div class="bg-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 </div>
 
-<div class="container">
+{% include "partials/site_header.html" %}
 
-    {% if orders and orders|length > 0 %}
+<main class="page">
+    <section class="hero" aria-label="Order management overview">
+        <div class="hero-copy">
+            <span class="eyebrow">Order Management</span>
+            <h1>Your medicine orders, beautifully organized.</h1>
+            <p>Track active deliveries, download invoices, reorder essentials, and monitor returns or refunds from one premium dashboard.</p>
+        </div>
 
-        {% for o in orders %}
+        <div class="hero-side">
+            <section class="summary" aria-label="Order summary">
+                <div class="summary-card"><span>My Orders</span><strong>{{ summary.total_orders }}</strong></div>
+                <div class="summary-card"><span>In Progress</span><strong>{{ summary.active_orders }}</strong></div>
+                <div class="summary-card"><span>Delivered</span><strong>{{ summary.delivered_orders }}</strong></div>
+                <div class="summary-card"><span>Refund Status</span><strong>{{ summary.refund_orders }}</strong></div>
+            </section>
+        </div>
+    </section>
 
-        <!-- ✅ FIX: anchor added here -->
-        <div class="order-card" id="order-{{ o['order_id'] }}">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="notice">{{ messages[0] }}</div>
+    {% endif %}
+    {% endwith %}
 
-            <div class="order-header">
+    <section class="orders-section" aria-label="Recent orders">
+        <div class="orders-head">
+            <div>
+                <h2>Recent Orders</h2>
+                <p>Review your latest medicine orders with quick filters, fulfillment progress, refund status, and fast repeat-order actions.</p>
+            </div>
+            <div class="status-key" aria-label="Order statuses">
+                {% for status in order_statuses %}
+                    <span class="key-pill">{{ status }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="orders-tools">
+            <div class="filter-group" aria-label="Filter orders">
+                <button class="filter-btn active" type="button" data-filter="all">All Orders</button>
+                {% for status in order_statuses %}
+                    <button class="filter-btn" type="button" data-filter="{{ status }}">{{ status }}</button>
+                {% endfor %}
+            </div>
+            <div class="orders-mini-stats" aria-label="Recent order counts">
+                <span class="mini-stat">{{ summary.total_orders }} total</span>
+                <span class="mini-stat">{{ summary.active_orders }} active</span>
+                <span class="mini-stat">{{ summary.delivered_orders }} delivered</span>
+            </div>
+        </div>
+
+        {% if orders and orders|length > 0 %}
+        <section class="orders-grid" aria-label="My orders" id="orders-grid">
+            {% for o in orders %}
+            <article class="order-card" id="order-{{ o['order_id'] }}" data-status="{{ o['status'] }}">
+            <div class="order-top">
                 <div>
-                    <h3>Order ID: {{ o['order_id'] }}</h3>
-                    <p>Total: ₹{{ o['total'] }}</p>
-                    <p>Date: {{ o['date'] }}</p>
+                    <div class="order-id">
+                        <h3>Order #{{ o['order_id'] }}</h3>
+                        {% if loop.first %}
+                            <span class="latest-badge">Latest Order</span>
+                        {% endif %}
+                    </div>
+                    <div class="order-meta">
+                        <span class="meta-pill">Total: Rs. {{ o['total'] }}</span>
+                        <span class="meta-pill">Date: {{ o['date'] }}</span>
+                        <span class="meta-pill">{{ o['items']|length }} item{{ "" if o['items']|length == 1 else "s" }}</span>
+                    </div>
                 </div>
-
-                <div>
-                    {% if o['status'] == 'Delivered' %}
-                        <span class="status delivered">Delivered</span>
-                    {% elif o['status'] == 'Cancelled' %}
-                        <span class="status cancelled">Cancelled</span>
-                    {% else %}
-                        <span class="status pending">Pending</span>
-                    {% endif %}
-                </div>
+                <span class="status status-{{ o['status']|lower|replace(' ', '-') }}">{{ o['status'] }}</span>
             </div>
 
-            <h4>Items:</h4>
-	    <ul>
-    		    {% for i in o['items'] %}
-        	<li>{{ i['name'] }} | Qty: {{ i['quantity'] }} | ₹{{ i['price'] }}</li>
-   		    {% endfor %}
-             </ul>
+            <div class="order-body">
+                <section class="order-items-panel">
+                    <div class="order-showcase">
+                        <div class="order-visual">
+                            <img src="{{ url_for('static', filename='images/order-card-visual-premium.png') }}" alt="Premium medicine order package">
+                        </div>
+                        <div class="order-snapshot">
+                            <div>
+                                <span class="snapshot-label">Order Snapshot</span>
+                                <h4 class="snapshot-title">Medicines prepared for managed delivery</h4>
+                            </div>
+                            <div class="snapshot-grid">
+                                <div class="snapshot-stat">
+                                    <span>Total</span>
+                                    <strong>Rs. {{ o['total'] }}</strong>
+                                </div>
+                                <div class="snapshot-stat">
+                                    <span>Items</span>
+                                    <strong>{{ o['items']|length }}</strong>
+                                </div>
+                                <div class="snapshot-stat">
+                                    <span>Status</span>
+                                    <strong>{{ o['status'] }}</strong>
+                                </div>
+                            </div>
+                            <button class="details-toggle" type="button" aria-expanded="true">Hide medicine details</button>
+                        </div>
+                    </div>
 
-            {% if o['status'] == 'Pending' %}
-                <a href="/cancel_order/{{ o['order_id'] }}#order-{{ o['order_id'] }}"
-                   class="cancel-btn">
-                    ❌ Cancel Order
-                </a>
-            {% endif %}
+                    <div class="items-wrap">
+                        <h4 class="section-title">Order Details</h4>
+                        <ul class="items">
+                            {% for i in o['items'] %}
+                            <li>
+                                <span>{{ i['name'] }}<br><small>Quantity: {{ i['quantity'] }}</small></span>
+                                <strong>Rs. {{ i['price'] }}</strong>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="actions">
+                        <a class="action secondary" href="/order_details/{{ o['order_id'] }}"><span class="action-icon">OD</span>Order Details</a>
+                        <a class="action secondary" href="/order_tracking/{{ o['order_id'] }}"><span class="action-icon">OT</span>Order Tracking</a>
+                        <a class="action secondary" href="/profile/manage/addresses"><span class="action-icon">AM</span>Address Management</a>
+                        <a class="action secondary" href="/payment_history"><span class="action-icon">PH</span>Payment History</a>
+                        <a class="action secondary" href="/rewards"><span class="action-icon">RL</span>Rewards & Loyalty</a>
+                        <a class="action secondary" href="/reorder_subscription"><span class="action-icon">RS</span>Reorder & Subscription</a>
+                        <a class="action secondary" href="/download_invoice/{{ o['order_id'] }}"><span class="action-icon">IN</span>Download Invoice</a>
+                        <a class="action" href="/reorder/{{ o['order_id'] }}"><span class="action-icon">RO</span>Reorder Medicines</a>
+                        {% if o['can_cancel'] %}
+                            <a class="action danger" href="/cancel_order/{{ o['order_id'] }}#order-{{ o['order_id'] }}"><span class="action-icon">CO</span>Cancel Order</a>
+                        {% endif %}
+                        {% if o['can_return'] %}
+                            <a class="action warn" href="/return_order/{{ o['order_id'] }}"><span class="action-icon">RT</span>Return Order</a>
+                        {% endif %}
+                    </div>
+                </section>
 
-        </div>
+                <aside>
+                    <div class="tracking-card">
+                        <h4 class="section-title">Order Tracking</h4>
+                        <div class="tracking">
+                            {% for step in o['tracking_steps'] %}
+                            <div class="track-step {% if step.done %}done{% endif %} {% if step.active %}active{% endif %}">
+                                <span class="track-dot"></span>
+                                <span>{{ step.name }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-        {% endfor %}
+                    <div class="fact-grid">
+                        <div class="fact">
+                            <span>Return Order</span>
+                            <strong>{{ o['return_status'] }}</strong>
+                        </div>
+                        <div class="fact">
+                            <span>Refund Status</span>
+                            <strong>{{ o['refund_status'] }}</strong>
+                        </div>
+                    </div>
 
-    {% else %}
-        <div class="no-orders">
-            No orders found 🛒
-        </div>
-    {% endif %}
+                    <div class="payment-panel">
+                        <h4 class="section-title">Payment</h4>
+                        <div class="payment-grid">
+                            <div class="payment-item">
+                                <span>Method</span>
+                                <strong>{{ o['payment_method'] }}</strong>
+                            </div>
+                            <div class="payment-item">
+                                <span>Status</span>
+                                <strong>{{ o['payment_status'] }}</strong>
+                            </div>
+                            <div class="payment-item wide">
+                                <span>Transaction ID</span>
+                                <strong>{{ o['payment_reference'] }}</strong>
+                            </div>
+                            {% if o['payment_screenshot'] %}
+                            <div class="payment-item wide">
+                                <span>Payment Proof</span>
+                                <strong><a href="/{{ o['payment_screenshot'] }}" target="_blank">View uploaded screenshot</a></strong>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
 
-</div>
+                    <div class="delivery-panel">
+                        <h4 class="section-title">Delivery Features</h4>
+                        <div class="delivery-grid">
+                            <div class="delivery-item">
+                                <span>Live Status</span>
+                                <strong>{{ o['delivery_status'] }}</strong>
+                            </div>
+                            <div class="delivery-item">
+                                <span>Delivery OTP</span>
+                                <strong>{{ o['delivery_otp'] }}</strong>
+                            </div>
+                            <div class="delivery-item">
+                                <span>Courier</span>
+                                <strong>{{ o['courier_name'] }}</strong>
+                            </div>
+                            <div class="delivery-item">
+                                <span>Courier Tracking</span>
+                                <strong>{{ o['courier_tracking_id'] }}</strong>
+                            </div>
+                            <div class="delivery-item wide">
+                                <span>Delivery Notes</span>
+                                <strong>{{ o['delivery_notes'] }}</strong>
+                            </div>
+                            <div class="delivery-item wide">
+                                <span>Delivery Address</span>
+                                <strong>{{ o['delivery_address'] }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </article>
+            {% endfor %}
+        </section>
+        <div class="filtered-empty" id="filtered-empty">No recent orders match this status filter.</div>
+        {% else %}
+            <div class="order-card empty-state">
+                No orders found. Your future medicine orders will appear here.
+            </div>
+        {% endif %}
+    </section>
+</main>
 
+<script>
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const orderCards = document.querySelectorAll(".order-card[data-status]");
+    const filteredEmpty = document.getElementById("filtered-empty");
+
+    filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const filter = button.dataset.filter;
+            let visibleCount = 0;
+
+            filterButtons.forEach((item) => item.classList.remove("active"));
+            button.classList.add("active");
+
+            orderCards.forEach((card) => {
+                const isVisible = filter === "all" || card.dataset.status === filter;
+                card.classList.toggle("is-hidden", !isVisible);
+                if (isVisible) {
+                    visibleCount += 1;
+                }
+            });
+
+            if (filteredEmpty) {
+                filteredEmpty.classList.toggle("show", visibleCount === 0);
+            }
+        });
+    });
+
+    document.querySelectorAll(".details-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+            const panel = button.closest(".order-items-panel");
+            const details = panel ? panel.querySelector(".items-wrap") : null;
+            if (!details) {
+                return;
+            }
+
+            const collapsed = details.classList.toggle("is-collapsed");
+            button.setAttribute("aria-expanded", String(!collapsed));
+            button.textContent = collapsed ? "Show medicine details" : "Hide medicine details";
+        });
+    });
+</script>
+{% include "partials/site_header_script.html" %}
+
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>
