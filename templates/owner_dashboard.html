@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Owner Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
 
@@ -175,14 +177,17 @@
             background:white;
             border-radius:24px;
             padding:28px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.08);
+            box-shadow:0 10px 30px rgba(15,23,42,0.06);
             overflow-x:auto;
+            border:1px solid #e2e8f0;
         }
 
         .section h2{
-            margin-bottom:25px;
-            color:#111827;
+            margin-bottom:18px;
+            color:#0f172a;
             font-size:26px;
+            font-weight:800;
+            letter-spacing:-0.02em;
         }
 
         /* ================= GRID ================= */
@@ -217,6 +222,32 @@
             transform:translateY(-6px);
         }
 
+        .card-blue,
+        .card-orange,
+        .card-green{
+            padding:12px;
+            border-radius:12px;
+            box-shadow:0 8px 18px rgba(15,23,42,0.08);
+        }
+
+        .card-blue{
+            color:#1d4ed8;
+            background:#eff6ff;
+            border-left:4px solid #2563eb;
+        }
+
+        .card-orange{
+            color:#c2410c;
+            background:#fff7ed;
+            border-left:4px solid #f97316;
+        }
+
+        .card-green{
+            color:#047857;
+            background:#ecfdf5;
+            border-left:4px solid #10b981;
+        }
+
         .card h3{
             color:#6b7280;
             margin-bottom:12px;
@@ -227,6 +258,597 @@
             font-size:34px;
             font-weight:bold;
             color:#2563eb;
+        }
+
+        /* ================= SALES ANALYTICS GRID ================= */
+
+        .analytics-shell{
+            border:1px solid #dbeafe;
+            border-radius:24px;
+            background:linear-gradient(135deg,#f8fbff 0%,#eef6ff 100%);
+            padding:32px;
+            box-shadow:0 18px 45px rgba(37,99,235,0.08);
+        }
+
+        .analytics-heading{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+            gap:16px;
+            margin-bottom:24px;
+        }
+
+        .analytics-heading h2{
+            margin-bottom:6px;
+            color:#0f172a;
+            font-size:26px;
+            font-weight:800;
+        }
+
+        .analytics-subtitle{
+            color:#64748b;
+            font-size:14px;
+            margin:0;
+        }
+
+        .analytics-kicker{
+            color:#ffffff;
+            font-size:12px;
+            font-weight:700;
+            padding:8px 12px;
+            border:1px solid #2563eb;
+            border-radius:999px;
+            background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);
+            box-shadow:0 8px 18px rgba(37,99,235,0.16);
+        }
+
+        .sales-metrics-grid{
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:18px;
+        }
+
+        .sales-metric-card{
+            position:relative;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            gap:14px;
+            min-height:220px;
+            padding:24px;
+            border:1px solid #bfdbfe;
+            border-radius:20px;
+            background:linear-gradient(145deg,#ffffff 0%,#f2f8ff 100%);
+            transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .sales-metric-card:hover{
+            transform:translateY(-2px);
+            border-color:#bfdbfe;
+            box-shadow:0 12px 26px rgba(15,23,42,0.05);
+        }
+
+        .sales-metric-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:12px;
+        }
+
+        .sales-metric-label{
+            color:#0f172a;
+            font-size:13px;
+            font-weight:800;
+            letter-spacing:0.04em;
+            text-transform:uppercase;
+        }
+
+        .sales-metric-chip{
+            padding:6px 9px;
+            border-radius:999px;
+            font-size:11px;
+            font-weight:700;
+            background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%);
+            color:#1d4ed8;
+        }
+
+        .sales-metric-value{
+            display:flex;
+            align-items:flex-start;
+            gap:4px;
+            color:#0f172a;
+            font-size:30px;
+            line-height:1.02;
+            font-weight:800;
+            letter-spacing:-0.03em;
+        }
+
+        .sales-metric-value .currency{
+            font-size:16px;
+            color:#1d4ed8;
+            margin-top:4px;
+        }
+
+        .sales-metric-meta{
+            color:#64748b;
+            font-size:13px;
+            margin:0;
+        }
+
+        .sales-mini-chart{
+            width:100%;
+            height:54px;
+            border-radius:12px;
+            background:linear-gradient(180deg,#f8fbff 0%,#eef6ff 100%);
+            border:1px solid #dbeafe;
+            padding:8px 10px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .sales-mini-chart svg{
+            width:100%;
+            height:100%;
+        }
+
+        .sales-mini-chart path{
+            fill:none;
+            stroke:#1d4ed8;
+            stroke-width:2.4;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+        }
+
+        @media(max-width:1100px){
+            .sales-metrics-grid{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+        }
+
+        @media(max-width:640px){
+            .analytics-shell{
+                padding:22px;
+            }
+
+            .analytics-heading{
+                flex-direction:column;
+                align-items:flex-start;
+            }
+
+            .sales-metrics-grid{
+                grid-template-columns:1fr;
+            }
+
+            .sales-metric-card{
+                min-height:auto;
+            }
+        }
+
+        /* ================= REVENUE OVERVIEW ================= */
+
+        .analytics-shell{
+            position:relative;
+            overflow:hidden;
+            border:1px solid #e2e8f0;
+            border-radius:24px;
+            background:#f8fafc;
+            box-shadow:0 24px 70px rgba(15,23,42,0.08);
+            font-family:"Inter","Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+        }
+
+        .analytics-heading{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+            gap:18px;
+            margin-bottom:24px;
+        }
+
+        .analytics-heading h2{
+            margin-bottom:0;
+            color:#0f172a;
+            font-size:28px;
+            font-weight:800;
+            letter-spacing:0;
+        }
+
+        .analytics-kicker{
+            color:#64748b;
+            font-size:14px;
+            font-weight:700;
+            padding:8px 12px;
+            border:1px solid #e2e8f0;
+            border-radius:999px;
+            background:#ffffff;
+        }
+
+        .revenue-overview{
+            display:grid;
+            grid-template-columns:minmax(300px,1.2fr) minmax(280px,0.8fr);
+            gap:24px;
+            align-items:stretch;
+        }
+
+        .revenue-hero{
+            position:relative;
+            display:grid;
+            grid-template-columns:minmax(0,1fr) minmax(230px,320px);
+            column-gap:24px;
+            min-height:315px;
+            overflow:hidden;
+            padding:32px;
+            color:#ffffff;
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:22px;
+            background:#0a2540;
+            box-shadow:0 24px 55px rgba(15,23,42,0.22);
+            transition:0.25s;
+        }
+
+        .revenue-hero:hover{
+            transform:translateY(-2px);
+            box-shadow:0 28px 62px rgba(15,23,42,0.26);
+        }
+
+        .revenue-hero::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent 38%);
+            pointer-events:none;
+        }
+
+        .revenue-hero::after{
+            content:"";
+            position:absolute;
+            width:150px;
+            height:150px;
+            right:-60px;
+            top:-54px;
+            border-radius:50%;
+            background:rgba(37,99,235,0.18);
+            pointer-events:none;
+        }
+
+        .revenue-content{
+            position:relative;
+            z-index:1;
+            max-width:620px;
+        }
+
+        .revenue-label{
+            color:#ffffff;
+            font-size:13px;
+            font-weight:700;
+            letter-spacing:0;
+            text-transform:uppercase;
+            margin-bottom:14px;
+        }
+
+        .revenue-total{
+            display:flex;
+            align-items:flex-start;
+            gap:6px;
+            color:#ffffff;
+            font-size:52px;
+            line-height:1.02;
+            font-weight:800;
+            margin-bottom:14px;
+        }
+
+        .currency{
+            color:#ffffff;
+            font-size:0.58em;
+            line-height:1.15;
+            font-weight:600;
+            margin-top:4px;
+        }
+
+        .amount{
+            letter-spacing:-1px;
+        }
+
+        .revenue-note{
+            color:#ffffff;
+            max-width:500px;
+            line-height:1.65;
+            font-size:15px;
+        }
+
+        .trend-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:3px;
+            position:relative;
+            z-index:1;
+            width:max-content;
+            margin-top:10px;
+            padding:5px 8px;
+            color:#15803d;
+            background:#dcfce7;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:800;
+        }
+
+        .revenue-content .trend-badge{
+            margin:0 0 16px;
+        }
+
+        .revenue-chip .trend-badge{
+            margin-top:12px;
+        }
+
+        .revenue-visual{
+            position:relative;
+            align-self:end;
+            grid-column:2;
+            grid-row:1 / span 2;
+            z-index:1;
+            width:100%;
+            min-width:0;
+            padding:18px;
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:18px;
+            background:rgba(255,255,255,0.06);
+        }
+
+        .chart-top{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            color:#cbd5e1;
+            font-size:12px;
+            font-weight:700;
+            margin-bottom:18px;
+        }
+
+        .chart-pill{
+            color:#bfdbfe;
+            background:rgba(37,99,235,0.18);
+            border:1px solid rgba(147,197,253,0.18);
+            border-radius:999px;
+            padding:5px 9px;
+        }
+
+        .revenue-chart{
+            height:132px;
+            display:flex;
+            align-items:end;
+            gap:10px;
+            padding-top:10px;
+        }
+
+        .revenue-chart i{
+            flex:1;
+            min-width:10px;
+            border-radius:4px 4px 2px 2px;
+            background:linear-gradient(180deg,#60a5fa 0%,#2563eb 100%);
+            transform-origin:bottom;
+            transition:0.25s;
+        }
+
+        .revenue-chart i:hover{
+            transform:scaleY(1.05);
+            filter:brightness(1.08);
+        }
+
+        .chart-axis{
+            display:flex;
+            justify-content:space-between;
+            color:#94a3b8;
+            font-size:11px;
+            font-weight:700;
+            margin-top:12px;
+        }
+
+        .revenue-chip-row{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:14px;
+            margin-top:32px;
+            position:relative;
+            grid-column:1;
+            z-index:1;
+        }
+
+        .revenue-chip{
+            position:relative;
+            overflow:hidden;
+            background:#0a2540;
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:16px;
+            padding:18px;
+            box-shadow:0 18px 34px rgba(15,23,42,0.18);
+            transition:0.25s;
+        }
+
+        .revenue-chip::after,
+        .revenue-stat::after,
+        .ops-stat::after{
+            content:"";
+            position:absolute;
+            width:92px;
+            height:92px;
+            right:-38px;
+            top:-36px;
+            border-radius:50%;
+            background:rgba(37,99,235,0.18);
+            pointer-events:none;
+        }
+
+        .revenue-chip:hover{
+            transform:translateY(-2px);
+            border-color:rgba(147,197,253,0.22);
+            box-shadow:0 24px 42px rgba(15,23,42,0.24);
+        }
+
+        .revenue-chip > span:not(.trend-badge){
+            display:block;
+            position:relative;
+            z-index:1;
+            color:#ffffff;
+            font-size:12px;
+            font-weight:700;
+            margin-bottom:7px;
+        }
+
+        .revenue-chip strong,
+        .stat-copy strong{
+            display:flex;
+            align-items:flex-start;
+            gap:4px;
+            position:relative;
+            z-index:1;
+            color:#ffffff;
+            line-height:1.15;
+        }
+
+        .revenue-chip strong{
+            font-size:21px;
+        }
+
+        .revenue-side{
+            display:grid;
+            grid-template-columns:1fr;
+            gap:16px;
+        }
+
+        .revenue-stat,
+        .ops-stat{
+            position:relative;
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:16px;
+            padding:24px;
+            background:#0a2540;
+            box-shadow:0 18px 34px rgba(15,23,42,0.18);
+        }
+
+        .revenue-stat{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            min-height:104px;
+            transition:0.25s;
+        }
+
+        .revenue-stat:hover,
+        .ops-stat:hover{
+            transform:translateY(-2px);
+            border-color:rgba(147,197,253,0.22);
+            box-shadow:0 24px 42px rgba(15,23,42,0.24);
+        }
+
+        .stat-copy h3,
+        .ops-stat h3{
+            position:relative;
+            z-index:1;
+            color:#ffffff;
+            font-size:14px;
+            margin-bottom:8px;
+        }
+
+        .stat-copy strong{
+            font-size:27px;
+        }
+
+        .stat-copy > span{
+            display:block;
+            position:relative;
+            z-index:1;
+            color:#ffffff;
+            font-size:12px;
+            font-weight:700;
+            margin-top:5px;
+        }
+
+        .metric-line{
+            position:relative;
+            z-index:1;
+            width:132px;
+            height:7px;
+            margin-top:12px;
+            border-radius:999px;
+            background:rgba(148,163,184,0.22);
+            overflow:hidden;
+        }
+
+        .metric-line i{
+            display:block;
+            height:100%;
+            border-radius:999px;
+            background:#60a5fa;
+        }
+
+        .stat-icon{
+            width:48px;
+            height:48px;
+            border-radius:14px;
+            display:grid;
+            place-items:center;
+            font-size:22px;
+            color:#bfdbfe;
+            background:rgba(37,99,235,0.2);
+            flex:0 0 auto;
+            position:relative;
+            z-index:1;
+        }
+
+        .stat-icon.today{
+            color:#bbf7d0;
+            background:rgba(22,163,74,0.2);
+        }
+
+        .stat-icon.week{
+            color:#bfdbfe;
+            background:rgba(37,99,235,0.2);
+        }
+
+        .ops-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px;
+            margin-top:22px;
+        }
+
+        .ops-stat strong{
+            position:relative;
+            z-index:1;
+            display:block;
+            color:#ffffff;
+            font-size:30px;
+            margin-bottom:4px;
+        }
+
+        .ops-stat span{
+            position:relative;
+            z-index:1;
+            color:#ffffff;
+            font-size:13px;
+            font-weight:700;
+        }
+
+        @media(max-width:1180px){
+
+            .revenue-hero{
+                grid-template-columns:1fr;
+            }
+
+            .revenue-content{
+                max-width:none;
+            }
+
+            .revenue-visual{
+                grid-column:1;
+                grid-row:auto;
+                width:100%;
+                min-width:0;
+                margin-top:24px;
+            }
+
         }
 
         /* ================= SEARCH ================= */
@@ -259,29 +881,84 @@
 
         /* ================= TABLE ================= */
 
+        .section-box:has(table) {
+            background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+        }
+
         table{
             width:100%;
-            border-collapse:collapse;
+            border-collapse:separate;
+            border-spacing:0 10px;
             min-width:900px;
         }
 
         th{
-            background:#2563eb;
-            color:white;
+            background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);
+            color:#ffffff;
             padding:16px;
             text-align:center;
-            font-size:14px;
+            font-size:13px;
+            font-weight:800;
+            letter-spacing:0.04em;
+            text-transform:uppercase;
+            border:none;
+            box-shadow:0 10px 20px rgba(37,99,235,0.16);
+        }
+
+        th:first-child{
+            border-radius:14px 0 0 14px;
+        }
+
+        th:last-child{
+            border-radius:0 14px 14px 0;
         }
 
         td{
-            padding:14px;
-            border-bottom:1px solid #e5e7eb;
+            padding:16px 14px;
+            border-top:1px solid rgba(148,163,184,0.16);
+            border-bottom:1px solid rgba(148,163,184,0.16);
             text-align:center;
             font-size:14px;
+            background:#ffffff;
+            color:#1e293b;
+            transition:0.25s;
+        }
+
+        td:first-child{
+            border-left:1px solid rgba(148,163,184,0.18);
+            border-radius:14px 0 0 14px;
+        }
+
+        td:last-child{
+            border-right:1px solid rgba(148,163,184,0.18);
+            border-radius:0 14px 14px 0;
         }
 
         tr:hover{
-            background:#f1f5ff;
+            background:transparent;
+        }
+
+        tr:hover td,
+        tr.selected-row td{
+            border-color:rgba(37,99,235,0.28);
+            box-shadow:0 10px 24px rgba(37,99,235,0.12);
+            transform:translateY(-1px);
+            background:#f8fbff;
+        }
+
+        tr.selected-row td:first-child{
+            box-shadow:inset 5px 0 0 #4f46e5, 0 12px 30px rgba(79,70,229,0.12);
+        }
+
+        .selectable-row{
+            cursor:pointer;
+        }
+
+        .mono-token{
+            font-family:"Courier New",Consolas,monospace;
+            color:#334155;
+            font-size:13px;
+            letter-spacing:0;
         }
 
         /* ================= BADGES ================= */
@@ -309,6 +986,167 @@
             color:#d97706;
         }
 
+        .status-badge{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:86px;
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:0;
+            border:1px solid transparent;
+        }
+
+        .badge-vip{
+            color:#f5f3ff;
+            background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);
+            border-color:rgba(196,181,253,0.35);
+            box-shadow:0 8px 22px rgba(109,40,217,0.22);
+        }
+
+        .badge-gold{
+            color:#78350f;
+            background:linear-gradient(135deg,#fde68a 0%,#f59e0b 100%);
+            border-color:rgba(202,138,4,0.24);
+        }
+
+        .badge-platinum{
+            color:#0f172a;
+            background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);
+            border-color:rgba(59,130,246,0.2);
+        }
+
+        /* ================= DETAILS DRAWER ================= */
+
+        .drawer-backdrop{
+            position:fixed;
+            inset:0;
+            background:rgba(15,23,42,0.42);
+            backdrop-filter:blur(4px);
+            opacity:0;
+            pointer-events:none;
+            transition:0.25s;
+            z-index:1500;
+        }
+
+        .details-drawer{
+            position:fixed;
+            top:0;
+            right:0;
+            width:min(420px,100%);
+            height:100vh;
+            background:linear-gradient(145deg,#ffffff 0%,#f8fafc 100%);
+            color:#0f172a;
+            padding:28px;
+            box-shadow:-24px 0 55px rgba(15,23,42,0.18);
+            transform:translateX(105%);
+            transition:0.3s ease;
+            z-index:1600;
+            overflow-y:auto;
+            backdrop-filter:blur(18px);
+            font-family:"Inter","Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            border-left:4px solid #2563eb;
+        }
+
+        .drawer-open .drawer-backdrop{
+            opacity:1;
+            pointer-events:auto;
+        }
+
+        .drawer-open .details-drawer{
+            transform:translateX(0);
+        }
+
+        .drawer-top{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:16px;
+            margin-bottom:26px;
+        }
+
+        .drawer-kicker{
+            color:#2563eb;
+            font-size:12px;
+            font-weight:800;
+            letter-spacing:0.14em;
+            text-transform:uppercase;
+            margin-bottom:8px;
+        }
+
+        .details-drawer h3{
+            font-size:26px;
+            line-height:1.2;
+            margin-bottom:10px;
+            color:#0f172a;
+            font-weight:800;
+        }
+
+        .drawer-close{
+            width:38px;
+            height:38px;
+            border-radius:12px;
+            border:1px solid #dbeafe;
+            background:#eff6ff;
+            color:#2563eb;
+            font-size:22px;
+            cursor:pointer;
+        }
+
+        .drawer-fields{
+            display:grid;
+            gap:14px;
+        }
+
+        .drawer-field{
+            display:grid;
+            grid-template-columns:46px 1fr;
+            gap:12px;
+            align-items:center;
+            padding:15px 16px;
+            border-radius:16px;
+            background:#f8fbff;
+            border:1px solid #dbeafe;
+            box-shadow:0 10px 24px rgba(15,23,42,0.06);
+            transition:0.25s;
+        }
+
+        .drawer-field:hover{
+            transform:translateY(-1px);
+            border-color:#93c5fd;
+            background:#f1f8ff;
+        }
+
+        .drawer-icon{
+            width:46px;
+            height:46px;
+            border-radius:13px;
+            display:grid;
+            place-items:center;
+            background:linear-gradient(135deg,#2563eb,#60a5fa);
+            color:#eff6ff;
+            box-shadow:0 8px 20px rgba(37,99,235,0.18);
+        }
+
+        .drawer-field span{
+            display:block;
+            color:#64748b;
+            font-size:12px;
+            font-weight:700;
+            margin-bottom:4px;
+            letter-spacing:0.02em;
+        }
+
+        .drawer-field strong{
+            display:block;
+            color:#0f172a;
+            font-size:15px;
+            font-weight:700;
+            overflow-wrap:anywhere;
+        }
+
         /* ================= BUTTONS ================= */
 
         .remove-btn{
@@ -332,12 +1170,483 @@
 
         /* ================= RESPONSIVE ================= */
 
+        /* ================= PREMIUM OWNER THEME ================= */
+
+        :root{
+            --ink:#172033;
+            --muted:#6b7280;
+            --line:#dfe7f2;
+            --panel:#ffffff;
+            --panel-soft:#f8fbff;
+            --brand:#0f766e;
+            --brand-dark:#0f3f3b;
+            --accent:#d4af37;
+            --accent-soft:#fff7dd;
+            --danger:#dc2626;
+            --shadow-sm:0 10px 30px rgba(23,32,51,0.08);
+            --shadow-md:0 18px 50px rgba(23,32,51,0.12);
+            --shadow-lg:0 30px 80px rgba(15,23,42,0.18);
+        }
+
+        *{
+            font-family:"Inter","Segoe UI",Arial,sans-serif;
+        }
+
+        body{
+            color:var(--ink);
+            background:
+                linear-gradient(135deg,rgba(15,118,110,0.08) 0%,rgba(255,255,255,0) 32%),
+                linear-gradient(180deg,#f6f9fc 0%,#edf3f8 100%);
+        }
+
+        body::before{
+            content:"";
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            background-image:linear-gradient(rgba(15,23,42,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,0.04) 1px,transparent 1px);
+            background-size:34px 34px;
+            mask-image:linear-gradient(180deg,rgba(0,0,0,0.68),transparent 72%);
+        }
+
+        ::-webkit-scrollbar-thumb{
+            background:linear-gradient(180deg,var(--brand),#14b8a6);
+        }
+
+        .sidebar{
+            width:282px;
+            padding:24px 18px;
+            background:linear-gradient(180deg,#071f1d 0%,#0d2f2d 44%,#111827 100%);
+            border-right:1px solid rgba(255,255,255,0.1);
+            box-shadow:18px 0 55px rgba(6,31,29,0.26);
+        }
+
+        .sidebar h2{
+            position:relative;
+            margin:0 6px 28px;
+            padding:18px 14px 20px;
+            border-radius:18px;
+            color:#ffffff;
+            text-align:left;
+            font-size:22px;
+            line-height:1.2;
+            letter-spacing:0;
+            background:rgba(255,255,255,0.07);
+            border:1px solid rgba(255,255,255,0.12);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+        .sidebar h2::after{
+            content:"Owner Suite";
+            display:block;
+            width:max-content;
+            margin-top:10px;
+            padding:5px 9px;
+            border-radius:999px;
+            color:#182033;
+            background:linear-gradient(135deg,#f9e38e 0%,#d4af37 100%);
+            font-size:11px;
+            font-weight:900;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+        }
+
+        .sidebar a{
+            min-height:48px;
+            margin:0 2px 8px;
+            padding:13px 14px;
+            color:#cbd5e1;
+            border:1px solid transparent;
+            border-radius:12px;
+            font-size:14px;
+            font-weight:750;
+        }
+
+        .sidebar a:hover{
+            color:#ffffff;
+            background:rgba(255,255,255,0.1);
+            border-color:rgba(255,255,255,0.14);
+            box-shadow:0 12px 24px rgba(0,0,0,0.16);
+            transform:translateX(4px);
+        }
+
+        .main{
+            position:relative;
+            margin-left:282px;
+            min-height:100vh;
+        }
+
+        .header{
+            margin:18px 24px 0;
+            padding:18px 22px;
+            border:1px solid rgba(226,232,240,0.88);
+            border-radius:18px;
+            background:rgba(255,255,255,0.84);
+            backdrop-filter:blur(18px);
+            box-shadow:var(--shadow-sm);
+        }
+
+        .header h1{
+            color:var(--ink);
+            font-size:28px;
+            line-height:1.15;
+            font-weight:900;
+            letter-spacing:0;
+        }
+
+        .header h1::after{
+            content:"Live command center";
+            display:block;
+            margin-top:6px;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:750;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+        }
+
+        .header-right{
+            gap:10px;
+        }
+
+        .profile-btn,
+        .logout-btn,
+        .search-box button,
+        .remove-btn{
+            border-radius:10px;
+            box-shadow:0 10px 22px rgba(15,23,42,0.12);
+        }
+
+        .profile-btn{
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--brand) 0%,#14b8a6 100%);
+        }
+
+        .logout-btn,
+        .remove-btn{
+            background:linear-gradient(135deg,#ef4444 0%,#b91c1c 100%);
+        }
+
+        .section{
+            padding:18px 24px 8px;
+        }
+
+        .section-box{
+            position:relative;
+            border-radius:18px;
+            border:1px solid rgba(223,231,242,0.95);
+            background:rgba(255,255,255,0.92);
+            box-shadow:var(--shadow-sm);
+        }
+
+        .section-box:hover{
+            box-shadow:var(--shadow-md);
+        }
+
+        .section h2{
+            color:var(--ink);
+            font-size:24px;
+            font-weight:900;
+            letter-spacing:0;
+        }
+
+        .analytics-shell{
+            isolation:isolate;
+            overflow:hidden;
+            padding:34px;
+            border:1px solid rgba(148,163,184,0.14);
+            border-radius:22px;
+            background:
+                radial-gradient(circle at top left,rgba(59,130,246,0.12),transparent 34%),
+                linear-gradient(145deg,#1e293b 0%,#1a202c 100%);
+            box-shadow:0 28px 76px rgba(2,6,23,0.32);
+        }
+
+        .analytics-shell::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto;
+            height:1px;
+            background:linear-gradient(90deg,transparent,rgba(203,213,225,0.36),transparent);
+            z-index:0;
+        }
+
+        .analytics-shell::after{
+            content:"";
+            position:absolute;
+            inset:auto 28px 24px;
+            height:1px;
+            background:linear-gradient(90deg,transparent,rgba(148,163,184,0.18),transparent);
+            z-index:0;
+        }
+
+        .analytics-heading,
+        .sales-metrics-grid{
+            position:relative;
+            z-index:1;
+        }
+
+        .analytics-heading{
+            margin-bottom:28px;
+        }
+
+        .analytics-heading h2{
+            color:#f8fafc;
+            font-size:30px;
+            line-height:1.05;
+            font-weight:900;
+        }
+
+        .analytics-subtitle{
+            max-width:520px;
+            color:#94a3b8;
+            font-weight:650;
+            line-height:1.55;
+        }
+
+        .analytics-kicker{
+            display:inline-flex;
+            align-items:center;
+            min-height:34px;
+            color:#cbd5e1;
+            background:rgba(51,65,85,0.72);
+            border-color:rgba(148,163,184,0.16);
+            box-shadow:0 14px 26px rgba(2,6,23,0.2);
+        }
+
+        .sales-metrics-grid{
+            gap:20px;
+        }
+
+        .sales-metric-card{
+            overflow:hidden;
+            min-height:238px;
+            padding:24px;
+            border:1px solid rgba(148,163,184,0.15);
+            border-radius:14px;
+            background:
+                linear-gradient(145deg,rgba(51,65,85,0.92) 0%,rgba(30,41,59,0.88) 100%);
+            box-shadow:0 20px 48px rgba(2,6,23,0.28);
+            backdrop-filter:blur(10px);
+        }
+
+        .sales-metric-card::before{
+            content:"";
+            position:absolute;
+            inset:1px;
+            border-radius:13px;
+            background:linear-gradient(180deg,rgba(255,255,255,0.06),transparent 42%);
+            pointer-events:none;
+        }
+
+        .sales-metric-card::after{
+            content:"";
+            position:absolute;
+            inset:auto 22px 82px;
+            height:1px;
+            background:linear-gradient(90deg,rgba(148,163,184,0.18),transparent);
+            pointer-events:none;
+        }
+
+        .sales-metric-card:hover{
+            border-color:rgba(203,213,225,0.24);
+            box-shadow:0 28px 64px rgba(2,6,23,0.36);
+            transform:translateY(-4px);
+        }
+
+        .sales-metric-top{
+            position:relative;
+            z-index:1;
+        }
+
+        .sales-metric-label{
+            color:#cbd5e1;
+            font-size:12px;
+            letter-spacing:0.12em;
+            text-transform:uppercase;
+        }
+
+        .sales-metric-chip,
+        .trend-badge{
+            color:#dbeafe;
+            background:rgba(15,23,42,0.34);
+            border:1px solid rgba(148,163,184,0.18);
+        }
+
+        .sales-metric-value{
+            position:relative;
+            z-index:1;
+            color:#f8fafc;
+            font-size:35px;
+            line-height:1;
+            font-weight:900;
+        }
+
+        .sales-metric-value .currency{
+            color:#cbd5e1;
+            font-weight:900;
+        }
+
+        .sales-metric-meta{
+            position:relative;
+            z-index:1;
+            color:#94a3b8;
+            font-weight:650;
+        }
+
+        .sales-mini-chart{
+            position:relative;
+            z-index:1;
+            height:64px;
+            border:1px solid rgba(148,163,184,0.12);
+            background:rgba(15,23,42,0.28);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+
+        .sales-mini-chart .spark-area{
+            stroke:none;
+            opacity:0.9;
+        }
+
+        .sales-mini-chart .spark-line{
+            fill:none;
+            stroke-width:2.5;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+            filter:drop-shadow(0 0 5px currentColor);
+        }
+
+        .sales-mini-chart.today{
+            color:#2dd4bf;
+        }
+
+        .sales-mini-chart.weekly{
+            color:#3b82f6;
+        }
+
+        .sales-mini-chart.monthly{
+            color:#d946ef;
+        }
+
+        .sales-mini-chart.yearly{
+            color:#f5d06f;
+        }
+
+        .search-box{
+            align-items:center;
+            padding:14px;
+            border:1px solid var(--line);
+            border-radius:14px;
+            background:var(--panel-soft);
+        }
+
+        .search-box input,
+        .search-box select{
+            min-height:46px;
+            border-color:var(--line);
+            border-radius:10px;
+            background:#ffffff;
+            color:var(--ink);
+            font-weight:650;
+        }
+
+        .search-box input:focus,
+        .search-box select:focus{
+            border-color:var(--brand);
+            box-shadow:0 0 0 4px rgba(15,118,110,0.13);
+        }
+
+        .search-box button{
+            min-height:46px;
+            background:linear-gradient(135deg,var(--brand) 0%,#14b8a6 100%);
+        }
+
+        table{
+            border-spacing:0 12px;
+        }
+
+        th{
+            color:#ffffff;
+            background:linear-gradient(135deg,#0f3f3b 0%,#0f766e 100%);
+            box-shadow:none;
+        }
+
+        td{
+            color:#273449;
+            background:#ffffff;
+        }
+
+        tr:hover td,
+        tr.selected-row td{
+            border-color:rgba(15,118,110,0.22);
+            background:#f7fbfa;
+            box-shadow:0 12px 26px rgba(15,118,110,0.1);
+        }
+
+        tr.selected-row td:first-child{
+            box-shadow:inset 5px 0 0 var(--accent), 0 12px 30px rgba(212,175,55,0.13);
+        }
+
+        .badge-warning{
+            color:#7c4a03;
+            background:#fff3c4;
+        }
+
+        .badge-vip{
+            color:#241a04;
+            background:linear-gradient(135deg,#fff2b0 0%,#d4af37 100%);
+            border-color:rgba(212,175,55,0.4);
+            box-shadow:0 8px 22px rgba(212,175,55,0.18);
+        }
+
+        .badge-gold{
+            color:#064e3b;
+            background:linear-gradient(135deg,#dcfce7 0%,#86efac 100%);
+        }
+
+        .badge-platinum{
+            color:#12343b;
+            background:linear-gradient(135deg,#e7f8f4 0%,#d8eef2 100%);
+            border-color:rgba(15,118,110,0.16);
+        }
+
+        .details-drawer{
+            border-left:4px solid var(--accent);
+            background:linear-gradient(145deg,#ffffff 0%,#f8fbfa 100%);
+            box-shadow:-28px 0 70px rgba(15,23,42,0.22);
+        }
+
+        .drawer-kicker{
+            color:var(--brand);
+        }
+
+        .drawer-close{
+            border-color:rgba(15,118,110,0.16);
+            background:#ecfdf5;
+            color:var(--brand);
+        }
+
+        .drawer-field{
+            border-color:rgba(15,118,110,0.14);
+            background:#f8fbfa;
+        }
+
+        .drawer-icon{
+            background:linear-gradient(135deg,var(--brand),#14b8a6);
+            box-shadow:0 8px 20px rgba(15,118,110,0.18);
+        }
+
+        .danger{
+            color:var(--danger);
+        }
+
         @media(max-width:900px){
 
             .sidebar{
                 width:100%;
                 height:auto;
                 position:relative;
+                padding:18px 14px;
             }
 
             .main{
@@ -348,12 +1657,1178 @@
                 flex-direction:column;
                 gap:15px;
                 align-items:flex-start;
+                margin:14px;
             }
 
             .grid{
                 grid-template-columns:1fr;
             }
 
+            .revenue-overview{
+                grid-template-columns:1fr;
+            }
+
+            .analytics-heading{
+                align-items:flex-start;
+                flex-direction:column;
+                gap:8px;
+            }
+
+            .revenue-hero{
+                min-height:auto;
+                padding:24px;
+            }
+
+            .revenue-total{
+                font-size:36px;
+            }
+
+            .revenue-chip-row{
+                grid-template-columns:1fr;
+            }
+
+            .ops-grid{
+                grid-template-columns:1fr;
+            }
+
+            .details-drawer{
+                width:100%;
+                padding:22px;
+            }
+
+        }
+
+        @media(max-width:640px){
+            .section{
+                padding:12px 14px;
+            }
+
+            .section-box,
+            .analytics-shell{
+                padding:18px;
+            }
+
+            .header h1{
+                font-size:23px;
+            }
+
+            .sales-metric-card{
+                min-height:auto;
+            }
+
+            .sales-metric-value{
+                font-size:clamp(28px,8vw,35px);
+                min-width:0;
+                overflow-wrap:anywhere;
+            }
+
+            .header-right,
+            .profile-btn,
+            .logout-btn,
+            .search-box input,
+            .search-box select,
+            .search-box button{
+                width:100%;
+            }
+
+            .header-right,
+            .search-box{
+                align-items:stretch;
+                flex-direction:column;
+            }
+
+            .profile-btn,
+            .logout-btn{
+                text-align:center;
+            }
+        }
+
+        /* ================= ENTERPRISE OWNER DASHBOARD ================= */
+
+        body > .sidebar,
+        body > .main{
+            display:none;
+        }
+
+        body{
+            color:#0f172a;
+            background:#f8fafc;
+            font-family:Inter,"Segoe UI",Arial,sans-serif;
+        }
+
+        .enterprise-dashboard{
+            --blue:#2563eb;
+            --cyan:#06b6d4;
+            --emerald:#10b981;
+            --navy:#07111f;
+            --ink:#0f172a;
+            --muted:#64748b;
+            --soft:#f8fafc;
+            --line:rgba(148,163,184,0.22);
+            --glass:rgba(255,255,255,0.78);
+            --shadow:0 24px 70px rgba(15,23,42,0.09);
+            min-height:100vh;
+            background:
+                radial-gradient(circle at top left,rgba(37,99,235,0.12),transparent 30%),
+                radial-gradient(circle at 86% 10%,rgba(6,182,212,0.12),transparent 28%),
+                #f8fafc;
+        }
+
+        .enterprise-shell{
+            display:grid;
+            grid-template-columns:280px minmax(0,1fr) 320px;
+            min-height:100vh;
+        }
+
+        .enterprise-dashboard.sidebar-collapsed .enterprise-shell{
+            grid-template-columns:92px minmax(0,1fr) 320px;
+        }
+
+        .enterprise-dashboard.sidebar-collapsed .brand-copy,
+        .enterprise-dashboard.sidebar-collapsed .enterprise-nav a span:last-child{
+            display:none;
+        }
+
+        .enterprise-dashboard.sidebar-collapsed .brand-row{
+            justify-content:center;
+            padding-inline:0;
+        }
+
+        .enterprise-dashboard.sidebar-collapsed .sidebar-toggle{
+            margin-left:0;
+        }
+
+        .enterprise-dashboard.sidebar-collapsed .enterprise-nav a{
+            justify-content:center;
+        }
+
+        .enterprise-sidebar{
+            position:sticky;
+            top:0;
+            height:100vh;
+            padding:18px 14px;
+            overflow:auto;
+            color:#dbeafe;
+            background:linear-gradient(180deg,#07111f 0%,#0f172a 100%);
+            box-shadow:16px 0 48px rgba(7,17,31,0.18);
+            transition:width 0.25s ease;
+        }
+
+        .brand-row{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:12px 12px 20px;
+        }
+
+        .brand-mark,
+        .top-icon,
+        .nav-icon,
+        .metric-icon,
+        .action-icon{
+            display:grid;
+            place-items:center;
+            flex:0 0 auto;
+        }
+
+        .brand-mark{
+            width:42px;
+            height:42px;
+            border-radius:14px;
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            box-shadow:0 14px 34px rgba(37,99,235,0.36);
+            font-weight:900;
+        }
+
+        .brand-row h2{
+            color:#ffffff;
+            font-size:17px;
+            line-height:1.15;
+            margin:0;
+        }
+
+        .brand-row span{
+            display:block;
+            color:#93c5fd;
+            font-size:12px;
+            font-weight:700;
+            margin-top:4px;
+        }
+
+        .sidebar-toggle{
+            width:38px;
+            height:38px;
+            margin-left:auto;
+            border:1px solid rgba(148,163,184,0.16);
+            border-radius:12px;
+            color:#dbeafe;
+            background:rgba(255,255,255,0.06);
+            cursor:pointer;
+        }
+
+        .enterprise-nav{
+            display:grid;
+            gap:6px;
+        }
+
+        .enterprise-nav a{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            min-height:44px;
+            padding:10px 12px;
+            border-radius:14px;
+            color:#cbd5e1;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:750;
+            transition:0.2s ease;
+        }
+
+        .enterprise-nav a:hover,
+        .enterprise-nav a.active{
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            box-shadow:0 14px 30px rgba(37,99,235,0.24);
+            transform:translateX(3px);
+        }
+
+        .nav-icon{
+            width:24px;
+            height:24px;
+            border-radius:9px;
+            background:rgba(255,255,255,0.08);
+            font-size:11px;
+            font-weight:900;
+        }
+
+        .enterprise-main{
+            min-width:0;
+            padding:22px;
+        }
+
+        .topbar{
+            position:sticky;
+            top:0;
+            z-index:20;
+            display:flex;
+            align-items:center;
+            gap:14px;
+            margin-bottom:22px;
+            padding:14px;
+            border:1px solid var(--line);
+            border-radius:18px;
+            background:rgba(255,255,255,0.84);
+            backdrop-filter:blur(18px);
+            box-shadow:0 18px 48px rgba(15,23,42,0.08);
+        }
+
+        .top-search{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex:1;
+            min-width:180px;
+            padding:0 14px;
+            border:1px solid var(--line);
+            border-radius:14px;
+            background:#ffffff;
+        }
+
+        .top-search input{
+            width:100%;
+            min-height:44px;
+            border:0;
+            outline:0;
+            color:var(--ink);
+            font-weight:700;
+        }
+
+        .top-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .top-icon,
+        .quick-add,
+        .mode-toggle,
+        .owner-pill,
+        .ghost-btn,
+        .primary-btn,
+        .table-btn{
+            border:1px solid var(--line);
+            border-radius:14px;
+            text-decoration:none;
+            font-weight:850;
+            transition:0.2s ease;
+        }
+
+        .top-icon,
+        .mode-toggle{
+            width:44px;
+            height:44px;
+            color:var(--ink);
+            background:#ffffff;
+            cursor:pointer;
+        }
+
+        .notification-dot{
+            position:relative;
+        }
+
+        .notification-dot::after{
+            content:"";
+            position:absolute;
+            right:10px;
+            top:9px;
+            width:8px;
+            height:8px;
+            border-radius:50%;
+            background:#ef4444;
+            box-shadow:0 0 0 6px rgba(239,68,68,0.14);
+            animation:pulse 1.8s infinite;
+        }
+
+        .quick-add,
+        .primary-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            min-height:44px;
+            padding:0 15px;
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            box-shadow:0 14px 30px rgba(37,99,235,0.22);
+        }
+
+        .owner-pill{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            min-height:44px;
+            padding:7px 12px 7px 8px;
+            color:var(--ink);
+            background:#ffffff;
+        }
+
+        .avatar{
+            display:grid;
+            place-items:center;
+            width:32px;
+            height:32px;
+            border-radius:12px;
+            color:#ffffff;
+            background:linear-gradient(135deg,#0f172a,#2563eb);
+            font-size:12px;
+            font-weight:950;
+        }
+
+        .date-pill{
+            color:#475569;
+            font-size:13px;
+            font-weight:850;
+        }
+
+        .dashboard-section{
+            margin-bottom:22px;
+            animation:rise 0.55s ease both;
+        }
+
+        .section-heading{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+            gap:16px;
+            margin-bottom:14px;
+        }
+
+        .section-heading h2{
+            margin:0;
+            color:var(--ink);
+            font-size:22px;
+            font-weight:950;
+        }
+
+        .section-heading p{
+            margin:5px 0 0;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:650;
+        }
+
+        .welcome-card,
+        .glass-card{
+            border:1px solid rgba(226,232,240,0.92);
+            border-radius:18px;
+            background:var(--glass);
+            box-shadow:var(--shadow);
+            backdrop-filter:blur(18px);
+        }
+
+        .welcome-card{
+            position:relative;
+            overflow:hidden;
+            display:grid;
+            grid-template-columns:minmax(0,1fr) 280px;
+            gap:22px;
+            padding:28px;
+            color:#ffffff;
+            background:linear-gradient(135deg,#07111f 0%,#123b63 58%,#06b6d4 120%);
+        }
+
+        .welcome-card::before,
+        .welcome-card::after{
+            content:"";
+            position:absolute;
+            border-radius:50%;
+            background:rgba(255,255,255,0.12);
+        }
+
+        .welcome-card::before{
+            width:210px;
+            height:210px;
+            right:110px;
+            top:-80px;
+        }
+
+        .welcome-card::after{
+            width:130px;
+            height:130px;
+            right:-34px;
+            bottom:-44px;
+        }
+
+        .welcome-copy,
+        .medical-visual{
+            position:relative;
+            z-index:1;
+        }
+
+        .eyebrow{
+            color:#a5f3fc;
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:0.12em;
+            text-transform:uppercase;
+        }
+
+        .welcome-copy h1{
+            margin:8px 0 10px;
+            color:#ffffff;
+            font-size:34px;
+            line-height:1.05;
+            font-weight:950;
+        }
+
+        .welcome-copy p{
+            max-width:650px;
+            color:#dbeafe;
+            line-height:1.65;
+            font-weight:650;
+        }
+
+        .hero-actions,
+        .table-toolbar,
+        .chip-row{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+        }
+
+        .hero-actions{
+            margin-top:22px;
+        }
+
+        .ghost-btn{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            min-height:42px;
+            padding:0 14px;
+            color:#e0f2fe;
+            background:rgba(255,255,255,0.1);
+            border-color:rgba(255,255,255,0.16);
+        }
+
+        .medical-visual{
+            align-self:center;
+            display:grid;
+            gap:12px;
+            padding:18px;
+            border:1px solid rgba(255,255,255,0.14);
+            border-radius:18px;
+            background:rgba(255,255,255,0.08);
+        }
+
+        .visual-line{
+            height:12px;
+            border-radius:999px;
+            background:linear-gradient(90deg,#bfdbfe,#67e8f9);
+        }
+
+        .visual-card{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:14px;
+            border-radius:14px;
+            color:#dbeafe;
+            background:rgba(7,17,31,0.34);
+        }
+
+        .metric-grid{
+            display:grid;
+            grid-template-columns:repeat(6,minmax(150px,1fr));
+            gap:14px;
+        }
+
+        #overview{
+            isolation:isolate;
+            overflow:hidden;
+            padding:24px;
+            border:1px solid rgba(148,163,184,0.14);
+            border-radius:22px;
+            background:
+                radial-gradient(circle at top left,rgba(59,130,246,0.12),transparent 34%),
+                linear-gradient(145deg,#1e293b 0%,#1a202c 100%);
+            box-shadow:0 28px 76px rgba(2,6,23,0.28);
+        }
+
+        #overview .section-heading h2{
+            color:#f8fafc;
+        }
+
+        #overview .section-heading p{
+            color:#94a3b8;
+        }
+
+        #overview .metric-card{
+            border:1px solid rgba(148,163,184,0.15);
+            border-radius:14px;
+            background:linear-gradient(145deg,rgba(51,65,85,0.92) 0%,rgba(30,41,59,0.88) 100%);
+            box-shadow:0 20px 48px rgba(2,6,23,0.28);
+            backdrop-filter:blur(10px);
+        }
+
+        #overview .metric-card::before{
+            content:"";
+            position:absolute;
+            inset:1px;
+            border-radius:13px;
+            background:linear-gradient(180deg,rgba(255,255,255,0.06),transparent 42%);
+            pointer-events:none;
+        }
+
+        #overview .metric-card:hover{
+            border-color:rgba(203,213,225,0.24);
+            box-shadow:0 28px 64px rgba(2,6,23,0.36);
+        }
+
+        #overview .metric-card h3{
+            color:#cbd5e1;
+            letter-spacing:0.12em;
+        }
+
+        #overview .metric-value{
+            color:#f8fafc;
+        }
+
+        #overview .metric-note{
+            color:#94a3b8;
+        }
+
+        #overview .metric-icon{
+            background:linear-gradient(135deg,#6366f1,#2563eb);
+            box-shadow:0 14px 28px rgba(37,99,235,0.24);
+        }
+
+        #overview .trend,
+        #overview .blue-pill,
+        #overview .warning-pill{
+            color:#dbeafe;
+            background:rgba(15,23,42,0.34);
+            border:1px solid rgba(148,163,184,0.18);
+        }
+
+        #overview .progress-track{
+            background:rgba(15,23,42,0.34);
+        }
+
+        /* Section colour system: each workspace keeps the executive card language
+           while using a distinct, restrained operational accent. */
+        #analytics{--section-rgb:37,99,235;--section-accent:#2563eb;}
+        #orders{--section-rgb:6,182,212;--section-accent:#0891b2;}
+        #inventory{--section-rgb:16,185,129;--section-accent:#059669;}
+        #prescriptions{--section-rgb:139,92,246;--section-accent:#7c3aed;}
+        #customers{--section-rgb:14,165,233;--section-accent:#0284c7;}
+        #staff-hub{--section-rgb:99,102,241;--section-accent:#4f46e5;}
+        #delivery{--section-rgb:20,184,166;--section-accent:#0d9488;}
+        #payments{--section-rgb:245,158,11;--section-accent:#d97706;}
+        #reports{--section-rgb:236,72,153;--section-accent:#db2777;}
+        #notifications{--section-rgb:244,63,94;--section-accent:#e11d48;}
+        #quick-actions{--section-rgb:37,99,235;--section-accent:#2563eb;}
+        #brands{--section-rgb:14,165,233;--section-accent:#0284c7;}
+
+        #analytics,#orders,#inventory,#prescriptions,#customers,#staff-hub,
+        #delivery,#payments,#reports,#notifications,#quick-actions,#brands{
+            position:relative;
+            isolation:isolate;
+            overflow:hidden;
+            padding:22px;
+            border:1px solid rgba(var(--section-rgb),.18);
+            border-radius:22px;
+            background:
+                radial-gradient(circle at 96% 0,rgba(var(--section-rgb),.18),transparent 32%),
+                linear-gradient(145deg,rgba(var(--section-rgb),.10),rgba(255,255,255,.88) 54%);
+            box-shadow:0 20px 52px rgba(var(--section-rgb),.10);
+        }
+
+        #analytics::before,#orders::before,#inventory::before,#prescriptions::before,
+        #customers::before,#staff-hub::before,#delivery::before,#payments::before,
+        #reports::before,#notifications::before,#quick-actions::before,#brands::before{
+            content:"";
+            position:absolute;
+            inset:0 auto 0 0;
+            width:5px;
+            background:linear-gradient(180deg,var(--section-accent),rgba(var(--section-rgb),.25));
+        }
+
+        #analytics .glass-card,#orders .glass-card,#inventory .glass-card,
+        #prescriptions .glass-card,#customers .glass-card,#staff-hub .glass-card,
+        #delivery .glass-card,#payments .glass-card,#reports .quick-card,
+        #notifications .glass-card,#quick-actions .quick-card,#brands .glass-card,
+        #inventory .metric-card,#prescriptions .metric-card,#payments .metric-card{
+            border-color:rgba(var(--section-rgb),.20);
+            box-shadow:0 14px 34px rgba(var(--section-rgb),.10);
+        }
+
+        #analytics .glass-card h3,#delivery .glass-card h3,#notifications .glass-card h3,
+        #brands .glass-card h3,#inventory .metric-card h3,#prescriptions .metric-card h3,
+        #payments .metric-card h3{
+            color:var(--section-accent);
+        }
+
+        #reports .action-icon,#quick-actions .action-icon{
+            background:linear-gradient(135deg,var(--section-accent),rgba(var(--section-rgb),.72));
+            box-shadow:0 10px 24px rgba(var(--section-rgb),.22);
+        }
+
+        .metric-card{
+            position:relative;
+            overflow:hidden;
+            min-height:150px;
+            padding:18px;
+            border:1px solid rgba(226,232,240,0.92);
+            border-radius:18px;
+            background:rgba(255,255,255,0.84);
+            box-shadow:0 16px 42px rgba(15,23,42,0.07);
+            transition:0.2s ease;
+        }
+
+        .metric-card:hover,
+        .glass-card:hover,
+        .quick-card:hover{
+            transform:translateY(-3px);
+            box-shadow:0 22px 54px rgba(15,23,42,0.11);
+        }
+
+        .metric-top{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+        }
+
+        .metric-icon{
+            width:38px;
+            height:38px;
+            border-radius:14px;
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            font-size:12px;
+            font-weight:950;
+        }
+
+        .metric-card h3{
+            margin:12px 0 8px;
+            color:#64748b;
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+        }
+
+        .metric-value{
+            display:flex;
+            align-items:flex-start;
+            gap:4px;
+            color:#0f172a;
+            font-size:27px;
+            line-height:1;
+            font-weight:950;
+        }
+
+        .metric-note{
+            margin-top:8px;
+            color:#64748b;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .trend{
+            display:inline-flex;
+            align-items:center;
+            gap:4px;
+            padding:5px 8px;
+            border-radius:999px;
+            color:#047857;
+            background:#dcfce7;
+            font-size:11px;
+            font-weight:900;
+        }
+
+        .warning-pill{
+            color:#b45309;
+            background:#fef3c7;
+        }
+
+        .blue-pill{
+            color:#1d4ed8;
+            background:#dbeafe;
+        }
+
+        .progress-track{
+            height:8px;
+            margin-top:12px;
+            overflow:hidden;
+            border-radius:999px;
+            background:#e2e8f0;
+        }
+
+        .progress-track span{
+            display:block;
+            height:100%;
+            border-radius:999px;
+            background:linear-gradient(90deg,var(--blue),var(--emerald));
+        }
+
+        .content-grid{
+            display:grid;
+            grid-template-columns:minmax(0,1.5fr) minmax(280px,0.85fr);
+            gap:18px;
+        }
+
+        .panel-grid{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:14px;
+        }
+
+        .glass-card{
+            padding:20px;
+        }
+
+        .chart-bars{
+            display:flex;
+            align-items:end;
+            gap:10px;
+            height:180px;
+            padding-top:20px;
+        }
+
+        .chart-bars span{
+            flex:1;
+            min-width:12px;
+            border-radius:10px 10px 4px 4px;
+            background:linear-gradient(180deg,var(--cyan),var(--blue));
+            box-shadow:0 12px 24px rgba(37,99,235,0.18);
+            animation:grow 0.8s ease both;
+        }
+
+        .donut{
+            width:156px;
+            height:156px;
+            margin:12px auto;
+            border-radius:50%;
+            background:conic-gradient(var(--blue) 0 38%,var(--cyan) 38% 62%,var(--emerald) 62% 82%,#f59e0b 82% 100%);
+            position:relative;
+        }
+
+        .donut::after{
+            content:"";
+            position:absolute;
+            inset:34px;
+            border-radius:50%;
+            background:#ffffff;
+            box-shadow:inset 0 0 0 1px var(--line);
+        }
+
+        .list-stack{
+            display:grid;
+            gap:10px;
+        }
+
+        .list-item{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:12px;
+            border:1px solid var(--line);
+            border-radius:14px;
+            background:#ffffff;
+        }
+
+        .list-item strong{
+            display:block;
+            color:#0f172a;
+            font-size:13px;
+        }
+
+        .list-item span{
+            color:#64748b;
+            font-size:12px;
+            font-weight:700;
+        }
+
+        .table-card{
+            overflow:hidden;
+            padding:0;
+        }
+
+        .table-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:14px;
+            padding:18px 20px;
+            border-bottom:1px solid var(--line);
+        }
+
+        .table-header h2{
+            margin:0;
+            font-size:20px;
+            font-weight:950;
+        }
+
+        .table-btn{
+            display:inline-flex;
+            align-items:center;
+            min-height:36px;
+            padding:0 11px;
+            color:#334155;
+            background:#ffffff;
+            cursor:pointer;
+        }
+
+        .table-scroll{
+            overflow:auto;
+        }
+
+        .enterprise-table{
+            width:100%;
+            min-width:880px;
+            border-collapse:collapse;
+        }
+
+        .enterprise-table th{
+            padding:14px 16px;
+            color:#64748b;
+            background:#f8fafc;
+            text-align:left;
+            font-size:12px;
+            font-weight:950;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+        }
+
+        .enterprise-table td{
+            padding:15px 16px;
+            border-top:1px solid var(--line);
+            color:#334155;
+            background:#ffffff;
+            font-size:14px;
+            font-weight:650;
+            text-align:left;
+        }
+
+        .enterprise-table tr:hover td{
+            background:#f8fafc;
+        }
+
+        .status-badge,
+        .badge,
+        .pill{
+            display:inline-flex;
+            align-items:center;
+            width:max-content;
+            padding:6px 10px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:900;
+        }
+
+        .status-ok,
+        .badge-success{
+            color:#047857;
+            background:#dcfce7;
+        }
+
+        .status-warn,
+        .badge-warning{
+            color:#b45309;
+            background:#fef3c7;
+        }
+
+        .status-danger,
+        .badge-danger{
+            color:#b91c1c;
+            background:#fee2e2;
+        }
+
+        .status-info,
+        .badge-platinum{
+            color:#1d4ed8;
+            background:#dbeafe;
+        }
+
+        .remove-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:34px;
+            padding:0 12px;
+            border-radius:12px;
+            color:#ffffff;
+            background:linear-gradient(135deg,#ef4444,#b91c1c);
+            text-decoration:none;
+            font-size:12px;
+            font-weight:900;
+        }
+
+        .quick-grid{
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:14px;
+        }
+
+        .quick-card{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:16px;
+            border:1px solid var(--line);
+            border-radius:18px;
+            color:#0f172a;
+            background:#ffffff;
+            text-decoration:none;
+            box-shadow:0 14px 34px rgba(15,23,42,0.06);
+            transition:0.2s ease;
+        }
+
+        .action-icon{
+            width:42px;
+            height:42px;
+            border-radius:15px;
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--blue),var(--emerald));
+            font-weight:950;
+        }
+
+        .enterprise-aside{
+            position:sticky;
+            top:0;
+            height:100vh;
+            overflow:auto;
+            padding:22px 18px 22px 0;
+        }
+
+        .aside-stack{
+            display:grid;
+            gap:16px;
+        }
+
+        .target-row{
+            margin-top:12px;
+        }
+
+        .target-row strong{
+            display:flex;
+            justify-content:space-between;
+            color:#334155;
+            font-size:13px;
+            margin-bottom:8px;
+        }
+
+        .mini-calendar{
+            display:grid;
+            grid-template-columns:repeat(7,1fr);
+            gap:6px;
+            margin-top:12px;
+        }
+
+        .mini-calendar span{
+            display:grid;
+            place-items:center;
+            aspect-ratio:1;
+            border-radius:10px;
+            color:#64748b;
+            background:#f1f5f9;
+            font-size:12px;
+            font-weight:850;
+        }
+
+        .mini-calendar .active-day{
+            color:#ffffff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+        }
+
+        .dashboard-footer{
+            display:flex;
+            justify-content:space-between;
+            gap:12px;
+            padding:16px 0 4px;
+            color:#64748b;
+            font-size:12px;
+            font-weight:800;
+        }
+
+        .dark-enterprise .enterprise-dashboard{
+            background:#0f172a;
+        }
+
+        .dark-enterprise .topbar,
+        .dark-enterprise .glass-card,
+        .dark-enterprise .metric-card,
+        .dark-enterprise .quick-card,
+        .dark-enterprise .list-item,
+        .dark-enterprise .enterprise-table td,
+        .dark-enterprise .top-search,
+        .dark-enterprise .top-icon,
+        .dark-enterprise .mode-toggle,
+        .dark-enterprise .owner-pill{
+            color:#e2e8f0;
+            background:#1e293b;
+            border-color:rgba(148,163,184,0.18);
+        }
+
+        .dark-enterprise .section-heading h2,
+        .dark-enterprise .metric-value,
+        .dark-enterprise .list-item strong,
+        .dark-enterprise .table-header h2{
+            color:#f8fafc;
+        }
+
+        .dark-enterprise .enterprise-table th{
+            color:#cbd5e1;
+            background:#0f172a;
+        }
+
+        .dark-enterprise #analytics,.dark-enterprise #orders,.dark-enterprise #inventory,
+        .dark-enterprise #prescriptions,.dark-enterprise #customers,.dark-enterprise #staff-hub,
+        .dark-enterprise #delivery,.dark-enterprise #payments,.dark-enterprise #reports,
+        .dark-enterprise #notifications,.dark-enterprise #quick-actions,.dark-enterprise #brands{
+            background:
+                radial-gradient(circle at 96% 0,rgba(var(--section-rgb),.20),transparent 34%),
+                linear-gradient(145deg,#172033,#111827 64%);
+            border-color:rgba(var(--section-rgb),.26);
+        }
+
+        @keyframes rise{
+            from{opacity:0; transform:translateY(12px);}
+            to{opacity:1; transform:translateY(0);}
+        }
+
+        @keyframes grow{
+            from{transform:scaleY(0.3); opacity:0.35;}
+            to{transform:scaleY(1); opacity:1;}
+        }
+
+        @keyframes pulse{
+            0%,100%{transform:scale(1);}
+            50%{transform:scale(1.18);}
+        }
+
+        @media(max-width:1320px){
+            .enterprise-shell{
+                grid-template-columns:250px minmax(0,1fr);
+            }
+
+            .enterprise-aside{
+                grid-column:2;
+                position:relative;
+                height:auto;
+                padding:0 22px 22px;
+            }
+
+            .aside-stack{
+                grid-template-columns:repeat(3,minmax(0,1fr));
+            }
+
+            .metric-grid{
+                grid-template-columns:repeat(3,minmax(0,1fr));
+            }
+        }
+
+        @media(max-width:980px){
+            .enterprise-shell{
+                grid-template-columns:1fr;
+            }
+
+            .enterprise-sidebar{
+                position:relative;
+                height:auto;
+            }
+
+            .enterprise-nav{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+
+            .enterprise-main,
+            .enterprise-aside{
+                padding:16px;
+            }
+
+            .welcome-card,
+            .content-grid{
+                grid-template-columns:1fr;
+            }
+
+            .metric-grid,
+            .panel-grid,
+            .quick-grid,
+            .aside-stack{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+
+            .topbar{
+                flex-wrap:wrap;
+            }
+        }
+
+        @media(max-width:640px){
+            .enterprise-nav,
+            .metric-grid,
+            .panel-grid,
+            .quick-grid,
+            .aside-stack{
+                grid-template-columns:1fr;
+            }
+
+            .welcome-copy h1{
+                font-size:28px;
+            }
+
+            .top-actions,
+            .top-search,
+            .quick-add,
+            .owner-pill{
+                width:100%;
+            }
+
+            .dashboard-footer{
+                flex-direction:column;
+            }
         }
 
     </style>
@@ -361,345 +2836,468 @@
 
 <body>
 
-<div class="sidebar">
-
-    <h2>💊 Pharmacy Admin</h2>
-
-    <a href="#sales">📊 Analytics</a>
-
-    <a href="/staff">💊 Inventory</a>
-
-    <a href="#users">👥 Users</a>
-
-    <a href="#staff">👨‍⚕️ Staff</a>
-
-    <a href="#stock">⚠ Low Stock</a>
-
-    <a href="#expiry">⏰ Expiry Alerts</a>
-
-    <a href="/profile">👤 Profile</a>
-
-    <a href="/logout">🚪 Logout</a>
-
-</div>
-
-<div class="main">
-
-    <!-- HEADER -->
-
-    <div class="header">
-
-        <h1>🧑‍💼 Owner Dashboard</h1>
-
-        <div class="header-right">
-
-            <a href="/profile" class="profile-btn">
-                👤 Profile
-            </a>
-
-            <a href="/logout" class="logout-btn">
-                🚪 Logout
-            </a>
-
-        </div>
-
-    </div>
-
-    <!-- SALES -->
-
-    <div class="section" id="sales">
-
-        <div class="section-box">
-
-            <h2>📊 Sales Analytics</h2>
-
-            <div class="grid">
-
-                <div class="card">
-                    <h3>Today Sales</h3>
-                    <div class="value">₹{{ today_sales }}</div>
+<div class="enterprise-dashboard" id="enterpriseDashboard">
+    <div class="enterprise-shell">
+        <aside class="enterprise-sidebar" aria-label="Owner dashboard navigation">
+            <div class="brand-row">
+                <div class="brand-mark">YM</div>
+                <div class="brand-copy">
+                    <h2>Yuvraj Medical</h2>
+                    <span>Pharmacy OS</span>
                 </div>
-
-                <div class="card">
-                    <h3>Weekly Sales</h3>
-                    <div class="value">₹{{ weekly_sales }}</div>
-                </div>
-
-                <div class="card">
-                    <h3>Monthly Sales</h3>
-                    <div class="value">₹{{ monthly_sales }}</div>
-                </div>
-
-                <div class="card">
-                    <h3>Yearly Sales</h3>
-                    <div class="value">₹{{ yearly_sales }}</div>
-                </div>
-
-                <div class="card">
-                    <h3>Pending Orders</h3>
-                    <div class="value">{{ pending_orders }}</div>
-                </div>
-
-                <div class="card">
-                    <h3>Delivered Orders</h3>
-                    <div class="value">{{ success_orders }}</div>
-                </div>
-
-                <div class="card">
-                    <h3>Total Users</h3>
-                    <div class="value">{{ total_users }}</div>
-                </div>
-
-                <div class="card">
-                    <h3>Total Medicines</h3>
-                    <div class="value">{{ total_medicines }}</div>
-                </div>
-
+                <button class="sidebar-toggle" type="button" data-toggle-sidebar aria-label="Collapse sidebar">=</button>
             </div>
 
-        </div>
+            <nav class="enterprise-nav">
+                <a class="active" href="#dashboard"><span class="nav-icon">DB</span><span>Dashboard</span></a>
+                <a href="#analytics"><span class="nav-icon">AN</span><span>Analytics</span></a>
+                <a href="#orders"><span class="nav-icon">OR</span><span>Orders</span></a>
+                <a href="#inventory"><span class="nav-icon">RX</span><span>Medicines</span></a>
+                <a href="#inventory"><span class="nav-icon">IN</span><span>Inventory</span></a>
+                <a href="#prescriptions"><span class="nav-icon">PR</span><span>Prescriptions</span></a>
+                <a href="#customers"><span class="nav-icon">CU</span><span>Customers</span></a>
+                <a href="#staff-hub"><span class="nav-icon">ST</span><span>Staff</span></a>
+                <a href="#delivery"><span class="nav-icon">DL</span><span>Delivery</span></a>
+                <a href="#brands"><span class="nav-icon">BR</span><span>Brands</span></a>
+                <a href="#categories"><span class="nav-icon">HC</span><span>Health Categories</span></a>
+                <a href="#offers"><span class="nav-icon">OF</span><span>Offers</span></a>
+                <a href="#payments"><span class="nav-icon">PY</span><span>Payments</span></a>
+                <a href="#reviews"><span class="nav-icon">RV</span><span>Reviews</span></a>
+                <a href="#notifications"><span class="nav-icon">NO</span><span>Notifications</span></a>
+                <a href="#reports"><span class="nav-icon">RP</span><span>Reports</span></a>
+                <a href="/profile"><span class="nav-icon">SE</span><span>Settings</span></a>
+                <a href="#security"><span class="nav-icon">SC</span><span>Security</span></a>
+                <a href="#support"><span class="nav-icon">SP</span><span>Support</span></a>
+                <a href="/logout"><span class="nav-icon">LO</span><span>Logout</span></a>
+            </nav>
+        </aside>
 
+        <main class="enterprise-main">
+            <header class="topbar">
+                <form class="top-search" method="GET" action="#customers">
+                    <span>Search</span>
+                    <input type="text" name="user_search" placeholder="Search customers, staff, orders..." value="{{ request.args.get('user_search','') }}">
+                </form>
+
+                <div class="top-actions">
+                    <button class="top-icon notification-dot" type="button" aria-label="Notifications">N</button>
+                    <a class="quick-add" href="/staff">+ Quick Add</a>
+                    <span class="date-pill" id="currentDate">Today</span>
+                    <button class="mode-toggle" type="button" data-toggle-theme aria-label="Toggle dark mode">DM</button>
+                    <a class="owner-pill" href="/profile">
+                        <span class="avatar">OW</span>
+                        <span>{{ session["user"]["name"] if session.get("user") and session["user"].get("name") else "Owner" }}</span>
+                    </a>
+                </div>
+            </header>
+
+            <section class="dashboard-section" id="dashboard">
+                <div class="welcome-card">
+                    <div class="welcome-copy">
+                        <span class="eyebrow">Good Morning</span>
+                        <h1>{{ session["user"]["name"] if session.get("user") and session["user"].get("name") else "Owner" }}</h1>
+                        <p>Manage your pharmacy efficiently with real-time insights, inventory alerts, prescription verification, and daily operational visibility.</p>
+                        <div class="hero-actions">
+                            <a class="primary-btn" href="/staff">Add Medicine</a>
+                            <a class="ghost-btn" href="/staff_prescriptions">Verify Prescription</a>
+                            <button class="ghost-btn" type="button" onclick="window.print()">Generate Report</button>
+                        </div>
+                    </div>
+
+                    <div class="medical-visual" aria-hidden="true">
+                        <div class="visual-line" style="width:86%"></div>
+                        <div class="visual-card"><strong>Live orders</strong><span>{{ total_orders }}</span></div>
+                        <div class="visual-card"><strong>Inventory health</strong><span>{{ total_medicines }}</span></div>
+                        <div class="visual-line" style="width:64%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="overview">
+                <div class="section-heading">
+                    <div>
+                        <h2>Executive Overview</h2>
+                        <p>Revenue, order flow, inventory risk, prescriptions, and customers.</p>
+                    </div>
+                </div>
+
+                <div class="metric-grid">
+                    <article class="metric-card">
+                        <div class="metric-top"><span class="metric-icon">TR</span><span class="trend">+ healthy</span></div>
+                        <h3>Total Revenue</h3>
+                        <div class="metric-value"><span>&#8377;</span><span>{{ yearly_sales }}</span></div>
+                        <div class="metric-note">Today: &#8377;{{ today_sales }}</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top"><span class="metric-icon">OT</span><span class="pill blue-pill">{{ success_orders }} completed</span></div>
+                        <h3>Orders Today</h3>
+                        <div class="metric-value"><span>{{ total_orders }}</span></div>
+                        <div class="metric-note">{{ pending_orders }} pending orders</div>
+                        <div class="progress-track"><span style="width:72%"></span></div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top"><span class="metric-icon">LS</span><span class="pill warning-pill">Alert</span></div>
+                        <h3>Low Stock</h3>
+                        <div class="metric-value"><span>{{ low_stock|length }}</span></div>
+                        <div class="metric-note">Medicines need replenishment</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top"><span class="metric-icon">EX</span><span class="pill warning-pill">30 days</span></div>
+                        <h3>Expiring Medicines</h3>
+                        <div class="metric-value"><span>{{ expiring|length }}</span></div>
+                        <div class="metric-note">Review and rotate stock</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top"><span class="metric-icon">PR</span><span class="pill blue-pill">Queue</span></div>
+                        <h3>Pending Prescriptions</h3>
+                        <div class="metric-value"><span>{{ prescription_summary["pending"] }}</span></div>
+                        <div class="metric-note">Waiting verification</div>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top"><span class="metric-icon">CU</span><span class="trend">+ growth</span></div>
+                        <h3>Registered Customers</h3>
+                        <div class="metric-value"><span>{{ total_users }}</span></div>
+                        <div class="metric-note">Customer accounts tracked</div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="analytics">
+                <div class="section-heading">
+                    <div>
+                        <h2>Sales Analytics</h2>
+                        <p>High-velocity revenue snapshots across the business.</p>
+                    </div>
+                    <span class="pill status-info">Enterprise view</span>
+                </div>
+
+                <div class="sales-metrics-grid">
+                    <article class="sales-metric-card">
+                        <div class="sales-metric-top"><span class="sales-metric-label">Today</span><span class="sales-metric-chip">+8.2%</span></div>
+                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ today_sales }}</span></div>
+                        <p class="sales-metric-meta">Daily sales velocity</p>
+                        <div class="sales-mini-chart today" aria-hidden="true">
+                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eTodayLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6ee7b7" /><stop offset="100%" stop-color="#14b8a6" /></linearGradient><linearGradient id="eTodayArea" x1="0" y1="10" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#14b8a6" stop-opacity="0.34" /><stop offset="100%" stop-color="#14b8a6" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eTodayArea)" d="M0 36 C16 31, 24 28, 34 30 S56 38, 66 28 S98 18, 120 10 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eTodayLine)" d="M0 36 C16 31, 24 28, 34 30 S56 38, 66 28 S98 18, 120 10" /></svg>
+                        </div>
+                    </article>
+                    <article class="sales-metric-card">
+                        <div class="sales-metric-top"><span class="sales-metric-label">Weekly</span><span class="sales-metric-chip">+6.4%</span></div>
+                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ weekly_sales }}</span></div>
+                        <p class="sales-metric-meta">Current week momentum</p>
+                        <div class="sales-mini-chart weekly" aria-hidden="true">
+                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eWeeklyLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6366f1" /><stop offset="100%" stop-color="#2563eb" /></linearGradient><linearGradient id="eWeeklyArea" x1="0" y1="12" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.34" /><stop offset="100%" stop-color="#3b82f6" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eWeeklyArea)" d="M0 30 C18 26, 28 24, 42 26 S68 34, 82 24 S104 14, 120 12 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eWeeklyLine)" d="M0 30 C18 26, 28 24, 42 26 S68 34, 82 24 S104 14, 120 12" /></svg>
+                        </div>
+                    </article>
+                    <article class="sales-metric-card">
+                        <div class="sales-metric-top"><span class="sales-metric-label">Monthly</span><span class="sales-metric-chip">+12.1%</span></div>
+                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ monthly_sales }}</span></div>
+                        <p class="sales-metric-meta">Month-to-date revenue</p>
+                        <div class="sales-mini-chart monthly" aria-hidden="true">
+                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eMonthlyLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9333ea" /><stop offset="100%" stop-color="#e879f9" /></linearGradient><linearGradient id="eMonthlyArea" x1="0" y1="10" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d946ef" stop-opacity="0.32" /><stop offset="100%" stop-color="#d946ef" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eMonthlyArea)" d="M0 28 C16 24, 28 20, 42 22 S66 32, 82 24 S104 12, 120 10 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eMonthlyLine)" d="M0 28 C16 24, 28 20, 42 22 S66 32, 82 24 S104 12, 120 10" /></svg>
+                        </div>
+                    </article>
+                    <article class="sales-metric-card">
+                        <div class="sales-metric-top"><span class="sales-metric-label">Yearly</span><span class="sales-metric-chip">+4.9%</span></div>
+                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ yearly_sales }}</span></div>
+                        <p class="sales-metric-meta">Annual run-rate</p>
+                        <div class="sales-mini-chart yearly" aria-hidden="true">
+                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eYearlyLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b45309" /><stop offset="100%" stop-color="#fde68a" /></linearGradient><linearGradient id="eYearlyArea" x1="0" y1="8" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#fbbf24" stop-opacity="0.3" /><stop offset="100%" stop-color="#fbbf24" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eYearlyArea)" d="M0 34 C18 28, 30 26, 44 28 S68 36, 82 24 S104 16, 120 8 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eYearlyLine)" d="M0 34 C18 28, 30 26, 44 28 S68 36, 82 24 S104 16, 120 8" /></svg>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="content-grid" style="margin-top:18px">
+                    <div class="glass-card">
+                        <div class="section-heading"><div><h2>Revenue Chart</h2><p>Monthly revenue movement</p></div></div>
+                        <div class="chart-bars" aria-hidden="true"><span style="height:42%"></span><span style="height:56%"></span><span style="height:48%"></span><span style="height:74%"></span><span style="height:62%"></span><span style="height:88%"></span><span style="height:70%"></span><span style="height:96%"></span></div>
+                    </div>
+                    <div class="panel-grid">
+                        <div class="glass-card"><h3>Monthly Orders Chart</h3><div class="chart-bars" style="height:120px"><span style="height:50%"></span><span style="height:70%"></span><span style="height:44%"></span><span style="height:82%"></span></div></div>
+                        <div class="glass-card"><h3>Medicine Category Pie Chart</h3><div class="donut"></div></div>
+                        <div class="glass-card"><h3>Top Selling Brands</h3><div class="list-stack">{% for m in medicines[:4] %}<div class="list-item"><strong>{{ m["name"] }}</strong><span>{{ m["category"] }}</span></div>{% endfor %}</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="orders">
+                <div class="glass-card table-card">
+                    <div class="table-header">
+                        <div><h2>Recent Orders</h2><p>Premium operational table</p></div>
+                        <div class="table-toolbar"><button class="table-btn" type="button">Search</button><button class="table-btn" type="button">Filter</button><button class="table-btn" type="button" onclick="window.print()">Export</button></div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="enterprise-table">
+                            <tr><th>Order ID</th><th>Customer</th><th>Medicines</th><th>Amount</th><th>Payment</th><th>Status</th><th>Delivery</th><th>Action</th></tr>
+                            {% for o in recent_orders %}
+                            <tr class="selectable-row" data-title="Order #{{ o['id']|e }}" data-subtitle="{{ o['customer_name']|e }}" data-id="{{ o['id']|e }}" data-status="{{ o['status']|e }}">
+                                <td>#{{ o["id"] }}</td>
+                                <td>{{ o["customer_name"] }}</td>
+                                <td>{{ "Prescription order" if o["prescription"] else "Order items" }}</td>
+                                <td>&#8377;{{ o["total"] }}</td>
+                                <td><span class="pill status-info">Recorded</span></td>
+                                <td><span class="pill {% if o['status'] == 'Delivered' %}status-ok{% elif o['status'] == 'Cancelled' %}status-danger{% else %}status-warn{% endif %}">{{ o["status"] }}</span></td>
+                                <td>{{ "Completed" if o["status"] == "Delivered" else "In progress" }}</td>
+                                <td><button class="table-btn" type="button">View</button> <button class="table-btn" type="button">Invoice</button> <button class="table-btn" type="button">Update</button></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="8">No recent orders found.</td></tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="inventory">
+                <div class="section-heading"><div><h2>Medicine Inventory</h2><p>Stock, expiry, category, pricing, and availability.</p></div><a class="primary-btn" href="/staff">Manage Inventory</a></div>
+                <div class="metric-grid">
+                    <article class="metric-card"><h3>Total Medicines</h3><div class="metric-value">{{ total_medicines }}</div><div class="metric-note">Catalog records</div></article>
+                    <article class="metric-card"><h3>Available Stock</h3><div class="metric-value">{{ total_medicines - out_of_stock }}</div><div class="metric-note">Items with stock</div></article>
+                    <article class="metric-card"><h3>Low Stock</h3><div class="metric-value">{{ low_stock|length }}</div><div class="metric-note">Needs reorder</div></article>
+                    <article class="metric-card"><h3>Out of Stock</h3><div class="metric-value">{{ out_of_stock }}</div><div class="metric-note">Unavailable items</div></article>
+                    <article class="metric-card"><h3>Expired</h3><div class="metric-value">0</div><div class="metric-note">Tracked through expiry audits</div></article>
+                    <article class="metric-card"><h3>Near Expiry</h3><div class="metric-value">{{ expiring|length }}</div><div class="metric-note">Next review window</div></article>
+                </div>
+
+                <div class="glass-card table-card" style="margin-top:18px">
+                    <div class="table-header"><div><h2>Inventory Table</h2><p>Latest medicine catalog view</p></div></div>
+                    <div class="table-scroll">
+                        <table class="enterprise-table">
+                            <tr><th>Medicine</th><th>Brand</th><th>Category</th><th>Batch</th><th>Expiry</th><th>Quantity</th><th>MRP</th><th>Selling Price</th><th>Status</th><th>Action</th></tr>
+                            {% for m in medicines[:14] %}
+                            <tr>
+                                <td>{{ m["name"] }}</td>
+                                <td>Yuvraj Medical</td>
+                                <td>{{ m["category"] }}</td>
+                                <td>{{ m["barcode"] }}</td>
+                                <td>{{ m["expiry_date"] }}</td>
+                                <td>{{ m["stock"] }}</td>
+                                <td>&#8377;{{ m["price"] }}</td>
+                                <td>&#8377;{{ m["price"] }}</td>
+                                <td><span class="pill {% if m['stock'] == 0 %}status-danger{% elif m['stock'] < 10 %}status-warn{% else %}status-ok{% endif %}">{% if m["stock"] == 0 %}Out{% elif m["stock"] < 10 %}Low{% else %}Available{% endif %}</span></td>
+                                <td><a class="table-btn" href="/staff">Edit</a></td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="prescriptions">
+                <div class="section-heading"><div><h2>Prescription Verification</h2><p>Review queue for prescription based orders.</p></div><a class="primary-btn" href="/staff_prescriptions">Open Queue</a></div>
+                <div class="metric-grid">
+                    <article class="metric-card"><h3>Pending</h3><div class="metric-value">{{ prescription_summary["pending"] }}</div></article>
+                    <article class="metric-card"><h3>Approved</h3><div class="metric-value">{{ prescription_summary["approved"] }}</div></article>
+                    <article class="metric-card"><h3>Rejected</h3><div class="metric-value">{{ prescription_summary["rejected"] }}</div></article>
+                </div>
+                <div class="glass-card table-card" style="margin-top:18px">
+                    <div class="table-header"><div><h2>Verification Table</h2><p>Prescription preview, customer, doctor, upload date, status.</p></div></div>
+                    <div class="table-scroll">
+                        <table class="enterprise-table">
+                            <tr><th>Prescription Preview</th><th>Customer</th><th>Doctor</th><th>Upload Date</th><th>Status</th><th>Buttons</th></tr>
+                            {% for p in recent_prescriptions %}
+                            <tr>
+                                <td>{{ p["prescription_image"] }}</td>
+                                <td>{{ p["customer_name"] }}</td>
+                                <td>Manual review</td>
+                                <td>{{ p["created_at"] }}</td>
+                                <td><span class="pill {% if p['status'] == 'Approved' %}status-ok{% elif p['status'] == 'Rejected' %}status-danger{% else %}status-warn{% endif %}">{{ p["status"] }}</span></td>
+                                <td><a class="table-btn" href="/staff_prescriptions">Approve</a> <a class="table-btn" href="/staff_prescriptions">Reject</a> <a class="table-btn" href="/static/prescriptions/{{ p['prescription_image'] }}">Download</a></td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="6">No prescription requests found.</td></tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="customers">
+                <div class="glass-card table-card">
+                    <div class="table-header">
+                        <div><h2>Customer Insights</h2><p>Newest customers, loyalty candidates, frequent buyers, and growth.</p></div>
+                        <form class="table-toolbar" method="GET" action="#customers">
+                            <input name="user_search" placeholder="Search users" value="{{ request.args.get('user_search','') }}" style="min-height:36px;border:1px solid var(--line);border-radius:12px;padding:0 12px">
+                            <button class="table-btn" type="submit">Search</button>
+                        </form>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="enterprise-table">
+                            <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Address</th><th>Role</th></tr>
+                            {% for u in users_list %}
+                            <tr class="selectable-row" data-title="{{ u['name']|e }}" data-subtitle="{{ u['role']|title }} Profile" data-id="{{ u['id']|e }}" data-email="{{ u['email']|e }}" data-contact="{{ (u['phone'] if u['phone'] else u['contact'])|e }}" data-address="{{ u['address']|e }}" data-status="{{ u['role']|title }}">
+                                <td>#{{ u["id"] }}</td><td>{{ u["name"] }}</td><td>{{ u["email"] }}</td><td>{{ u["phone"] if u["phone"] else u["contact"] }}</td><td>{{ u["address"] }}</td><td><span class="pill status-info">{{ u["role"] }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="staff-hub">
+                <div class="glass-card table-card">
+                    <div class="table-header"><div><h2>Staff</h2><p>Staff details and owner controls.</p></div></div>
+                    <div class="table-scroll">
+                        <table class="enterprise-table">
+                            <tr><th>Name</th><th>Contact</th><th>Address</th><th>Email</th><th>Age</th><th>Gender</th><th>Education</th><th>Action</th></tr>
+                            {% for s in staff_list %}
+                            <tr class="selectable-row" data-title="{{ s['name']|e }}" data-subtitle="Staff Profile" data-id="{{ s['id']|e }}" data-email="{{ s['email']|e }}" data-contact="{{ s['contact']|e }}" data-address="{{ s['address']|e }}" data-status="Staff" data-age="{{ s['age']|e }}" data-gender="{{ s['gender']|e }}" data-education="{{ s['education']|e }}">
+                                <td>{{ s["name"] }}</td><td>{{ s["contact"] }}</td><td>{{ s["address"] }}</td><td>{{ s["email"] }}</td><td>{{ s["age"] }}</td><td>{{ s["gender"] }}</td><td>{{ s["education"] }}</td>
+                                <td><a href="/remove_staff/{{ s['id'] }}" class="remove-btn" onclick="return confirm('Remove this staff member?')">Remove</a></td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="delivery">
+                <div class="section-heading"><div><h2>Delivery Dashboard</h2><p>Today delivery status, zones, and partners.</p></div></div>
+                <div class="panel-grid">
+                    <div class="glass-card"><h3>Today's Deliveries</h3><div class="metric-value">{{ total_orders }}</div></div>
+                    <div class="glass-card"><h3>In Transit</h3><div class="metric-value">{{ pending_orders }}</div></div>
+                    <div class="glass-card"><h3>Completed</h3><div class="metric-value">{{ success_orders }}</div></div>
+                    <div class="glass-card"><h3>Cancelled</h3><div class="metric-value">{{ cancelled_orders }}</div></div>
+                    <div class="glass-card"><h3>Map Card</h3><p class="metric-note">Delivery zone placeholder ready for map integration.</p></div>
+                    <div class="glass-card"><h3>Delivery Partners</h3><p class="metric-note">Assign partners from the orders workflow.</p></div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="payments">
+                <div class="section-heading"><div><h2>Payments</h2><p>Revenue, payment mix, refunds, and pending transactions.</p></div></div>
+                <div class="metric-grid">
+                    <article class="metric-card"><h3>Revenue</h3><div class="metric-value">&#8377;{{ monthly_sales }}</div></article>
+                    <article class="metric-card"><h3>Online</h3><div class="metric-value">&#8377;{{ weekly_sales }}</div></article>
+                    <article class="metric-card"><h3>Cash</h3><div class="metric-value">&#8377;{{ today_sales }}</div></article>
+                    <article class="metric-card"><h3>UPI</h3><div class="metric-value">{{ success_orders }}</div></article>
+                    <article class="metric-card"><h3>Refunds</h3><div class="metric-value">{{ cancelled_orders }}</div></article>
+                    <article class="metric-card"><h3>Pending Payments</h3><div class="metric-value">{{ pending_orders }}</div></article>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="reports">
+                <div class="section-heading"><div><h2>Reports</h2><p>Download or generate operational reports.</p></div></div>
+                <div class="quick-grid">
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">SR</span><strong>Sales Report</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">IR</span><strong>Inventory Report</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">TX</span><strong>Tax Report</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">PF</span><strong>Profit Report</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">CR</span><strong>Customer Report</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">PDF</span><strong>Download PDF</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">XLS</span><strong>Download Excel</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">GEN</span><strong>Generate Report</strong></button>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="notifications">
+                <div class="section-heading"><div><h2>Notifications</h2><p>Operational alerts and system updates.</p></div></div>
+                <div class="panel-grid">
+                    <div class="glass-card"><h3>Low Stock Alerts</h3><div class="metric-value">{{ low_stock|length }}</div></div>
+                    <div class="glass-card"><h3>Expired Medicines</h3><div class="metric-value">{{ expiring|length }}</div></div>
+                    <div class="glass-card"><h3>New Orders</h3><div class="metric-value">{{ pending_orders }}</div></div>
+                    <div class="glass-card"><h3>Customer Messages</h3><div class="metric-value">0</div></div>
+                    <div class="glass-card"><h3>System Updates</h3><p class="metric-note">Database connected. Dashboard active.</p></div>
+                    <div class="glass-card" id="security"><h3>Security</h3><p class="metric-note">Owner-only protected route.</p></div>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="quick-actions">
+                <div class="section-heading"><div><h2>Quick Actions</h2><p>Fast access to common owner workflows.</p></div></div>
+                <div class="quick-grid">
+                    <a class="quick-card" href="/staff"><span class="action-icon">AM</span><strong>Add Medicine</strong></a>
+                    <a class="quick-card" href="/staff_prescriptions"><span class="action-icon">VP</span><strong>Verify Prescription</strong></a>
+                    <a class="quick-card" href="#brands"><span class="action-icon">AB</span><strong>Add Brand</strong></a>
+                    <a class="quick-card" href="#categories"><span class="action-icon">AC</span><strong>Add Category</strong></a>
+                    <a class="quick-card" href="#offers"><span class="action-icon">OF</span><strong>Create Offer</strong></a>
+                    <a class="quick-card" href="#delivery"><span class="action-icon">DL</span><strong>Manage Delivery</strong></a>
+                    <button class="quick-card" type="button"><span class="action-icon">BK</span><strong>Backup Database</strong></button>
+                    <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">EX</span><strong>Export Inventory</strong></button>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="brands">
+                <div class="panel-grid">
+                    <div class="glass-card"><h3>Brands</h3><p class="metric-note">Brand management surface prepared for inventory grouping.</p></div>
+                    <div class="glass-card" id="categories"><h3>Health Categories</h3><div class="list-stack">{% for m in medicines[:5] %}<div class="list-item"><strong>{{ m["category"] }}</strong><span>{{ m["name"] }}</span></div>{% endfor %}</div></div>
+                    <div class="glass-card" id="offers"><h3>Offers</h3><p class="metric-note">Promotional campaigns can be connected here.</p></div>
+                    <div class="glass-card" id="reviews"><h3>Reviews</h3><p class="metric-note">Customer review feed ready for feedback integration.</p></div>
+                    <div class="glass-card" id="support"><h3>Support</h3><p class="metric-note">Owner support and issue tracking panel.</p></div>
+                </div>
+            </section>
+
+            <footer class="dashboard-footer">
+                <span>Yuvraj Medical Pharmacy Management System</span>
+                <span>System Version 2.0</span>
+                <span>Database Status: Connected</span>
+                <span>Last Backup: Manual</span>
+            </footer>
+        </main>
+
+        <aside class="enterprise-aside">
+            <div class="aside-stack">
+                <div class="glass-card targets-card">
+                    <h3>Today's Targets</h3>
+                    <div class="target-row"><strong><span>Revenue Goal</span><span>&#8377;{{ today_sales }}</span></strong><div class="progress-track"><span style="width:68%"></span></div></div>
+                    <div class="target-row"><strong><span>Sales Goal</span><span>{{ success_orders }}</span></strong><div class="progress-track"><span style="width:74%"></span></div></div>
+                    <div class="target-row"><strong><span>Orders Goal</span><span>{{ total_orders }}</span></strong><div class="progress-track"><span style="width:62%"></span></div></div>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Weekly Summary</h3>
+                    <div class="list-stack">
+                        <div class="list-item"><strong>Weekly sales</strong><span>&#8377;{{ weekly_sales }}</span></div>
+                        <div class="list-item"><strong>Pending orders</strong><span>{{ pending_orders }}</span></div>
+                        <div class="list-item"><strong>Low stock</strong><span>{{ low_stock|length }}</span></div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Calendar</h3>
+                    <div class="mini-calendar">
+                        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span class="active-day">5</span><span>6</span><span>7</span>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Upcoming Tasks</h3>
+                    <div class="list-stack">
+                        <div class="list-item"><strong>Verify prescriptions</strong><span>{{ prescription_summary["pending"] }} pending</span></div>
+                        <div class="list-item"><strong>Reorder stock</strong><span>{{ low_stock|length }} alerts</span></div>
+                        <div class="list-item"><strong>Expiry audit</strong><span>{{ expiring|length }} items</span></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
-
-    <!-- USERS -->
-
-    <div class="section" id="users">
-
-        <div class="section-box">
-
-            <h2>👥 Users Details</h2>
-
-            <form class="search-box" method="GET" action="#users">
-
-    <input
-        type="text"
-        name="user_search"
-        placeholder="🔍 Search Users..."
-        value="{{ request.args.get('user_search','') }}"
-    >
-
-    <select name="role">
-
-        <option value="">All Roles</option>
-
-        <option value="customer"
-        {% if request.args.get('role') == 'customer' %}
-        selected
-        {% endif %}
-        >
-            Customer
-        </option>
-
-        <option value="staff"
-        {% if request.args.get('role') == 'staff' %}
-        selected
-        {% endif %}
-        >
-            Staff
-        </option>
-
-        <option value="owner"
-        {% if request.args.get('role') == 'owner' %}
-        selected
-        {% endif %}
-        >
-            Owner
-        </option>
-
-    </select>
-
-    <button type="submit">
-        🔍 Search
-    </button>
-
-</form>
-
-            <table>
-
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                    <th>Role</th>
-                </tr>
-
-                {% for u in users_list %}
-
-                <tr>
-
-                    <td>{{ u["id"] }}</td>
-                    <td>{{ u["name"] }}</td>
-                    <td>{{ u["email"] }}</td>
-
-                    <td>
-                        {{ u["phone"] if u["phone"] else u["contact"] }}
-                    </td>
-
-                    <td>{{ u["address"] }}</td>
-
-                    <td>
-                        <span class="badge badge-success">
-                            {{ u["role"] }}
-                        </span>
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
-        </div>
-
-    </div>
-
-    <!-- STAFF -->
-
-    <div class="section" id="staff">
-
-        <div class="section-box">
-
-            <h2>👨‍⚕️ Staff Details</h2>
-
-            <table>
-
-                <tr>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>Address</th>
-                    <th>Email</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Education</th>
-                    <th>Action</th>
-                </tr>
-
-                {% for s in staff_list %}
-
-                <tr>
-
-                    <td>{{ s["name"] }}</td>
-                    <td>{{ s["contact"] }}</td>
-                    <td>{{ s["address"] }}</td>
-                    <td>{{ s["email"] }}</td>
-                    <td>{{ s["age"] }}</td>
-                    <td>{{ s["gender"] }}</td>
-                    <td>{{ s["education"] }}</td>
-
-                    <td>
-
-                        <a
-                            href="/remove_staff/{{ s['id'] }}"
-                            class="remove-btn"
-                            onclick="return confirm('Remove this staff member?')"
-                        >
-                            ❌ Remove
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
-        </div>
-
-    </div>
-
-    <!-- LOW STOCK -->
-
-    <div class="section" id="stock">
-
-        <div class="section-box">
-
-            <h2 class="danger">
-                ⚠ Low Stock Medicines
-            </h2>
-
-            <table>
-
-                <tr>
-                    <th>ID</th>
-                    <th>Medicine Name</th>
-                    <th>Stock</th>
-                    <th>Status</th>
-                </tr>
-
-                {% for m in low_stock %}
-
-                <tr>
-
-                    <td>{{ m["id"] }}</td>
-
-                    <td>{{ m["name"] }}</td>
-
-                    <td class="danger">
-                        {{ m["stock"] }}
-                    </td>
-
-                    <td>
-
-                        <span class="badge badge-warning">
-                            Low Stock
-                        </span>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
-        </div>
-
-    </div>
-
-    <!-- EXPIRY -->
-
-    <div class="section" id="expiry">
-
-        <div class="section-box">
-
-            <h2 class="danger">
-                ⏰ Expiring Medicines
-            </h2>
-
-            <table>
-
-                <tr>
-                    <th>ID</th>
-                    <th>Medicine Name</th>
-                    <th>Expiry Date</th>
-                </tr>
-
-                {% for m in expiring %}
-
-                <tr>
-
-                    <td>{{ m["id"] }}</td>
-
-                    <td>{{ m["name"] }}</td>
-
-                    <td class="danger">
-                        {{ m["expiry_date"] }}
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
-        </div>
-
-    </div>
-
 </div>
 
+<script>
+    (() => {
+        const dashboard = document.getElementById("enterpriseDashboard");
+        const dateTarget = document.getElementById("currentDate");
+        if(dateTarget){
+            dateTarget.textContent = new Date().toLocaleDateString(undefined, {
+                weekday:"short",
+                month:"short",
+                day:"numeric",
+                year:"numeric"
+            });
+        }
+
+        document.querySelector("[data-toggle-sidebar]")?.addEventListener("click", () => {
+            dashboard.classList.toggle("sidebar-collapsed");
+        });
+
+        document.querySelector("[data-toggle-theme]")?.addEventListener("click", () => {
+            document.body.classList.toggle("dark-enterprise");
+        });
+    })();
+</script>
+<!-- Legacy duplicate dashboard removed: the enterprise shell above is the single owner UI. -->
 </body>
 </html>

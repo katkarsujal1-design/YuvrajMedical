@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, g, jsonify
+from flask import Flask, render_template, request, redirect, session, g, jsonify, make_response
 #import pymysql
 import hashlib
 import re
@@ -20,7 +20,9 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY","my-super-secret")
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 31536000
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.jinja_env.auto_reload = True
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 
 app.config["SESSION_PERMANENT"] = True
@@ -2477,9 +2479,63 @@ def owner_dashboard():
     recent_orders = cursor.fetchall()
     cursor.close()
 
+    # ================= PRESCRIPTIONS =================
+
+    prescription_summary = {
+        "total": 0,
+        "pending": 0,
+        "approved": 0,
+        "rejected": 0
+    }
+    recent_prescriptions = []
+
+    try:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+
+            SELECT pr.*,
+                   users.name AS customer_name
+
+            FROM prescription_requests pr
+
+            LEFT JOIN users
+            ON users.id = pr.user_id
+
+            ORDER BY pr.created_at DESC
+
+            LIMIT 8
+
+        """)
+        recent_prescriptions = cursor.fetchall()
+        cursor.close()
+
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""
+
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN status = 'Pending Review' THEN 1 ELSE 0 END) AS pending,
+                SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) AS approved,
+                SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) AS rejected
+
+            FROM prescription_requests
+
+        """)
+        prescription_counts = cursor.fetchone() or {}
+        cursor.close()
+
+        prescription_summary = {
+            "total": prescription_counts.get("total") or 0,
+            "pending": prescription_counts.get("pending") or 0,
+            "approved": prescription_counts.get("approved") or 0,
+            "rejected": prescription_counts.get("rejected") or 0
+        }
+    except Exception:
+        recent_prescriptions = []
+
     # ================= RENDER =================
 
-    return render_template(
+    response = make_response(render_template(
 
         "owner_dashboard.html",
 
@@ -2505,8 +2561,14 @@ def owner_dashboard():
         staff_list=staff_list,
         total_staff=total_staff,
 
-        recent_orders=recent_orders
-    )
+        recent_orders=recent_orders,
+        recent_prescriptions=recent_prescriptions,
+        prescription_summary=prescription_summary
+    ))
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 # ================= STAFF DASHBOARD =================
 @app.route("/staff")
 def staff_dashboard():
