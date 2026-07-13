@@ -1,3 +1,4 @@
+import flask
 from flask import Flask, render_template, request, redirect, session, g, jsonify, make_response
 #import pymysql
 import hashlib
@@ -29,7 +30,7 @@ from family_health import (
 
 load_dotenv()
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 app.secret_key = os.environ.get("SECRET_KEY","my-super-secret")
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -60,27 +61,34 @@ def get_gemini_client():
 @app.teardown_appcontext
 def close_db(error):
 
-    db = flask.g.pop("db", None)
+    db = g.pop("db", None)
 
     if db is not None:
         db.close()
 
 # ================= DB CONNECTION =================
-db_pool = pooling.MySQLConnectionPool(
-    pool_name="mypool",
-    pool_size=10,
-    host=os.environ.get("DB_HOST"),
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD"),
-    database=os.environ.get("DB_NAME")
-)
+db_pool = None
+
+
+def get_db_pool():
+    global db_pool
+    if db_pool is None:
+        db_pool = pooling.MySQLConnectionPool(
+            pool_name="mypool",
+            pool_size=10,
+            host=os.environ.get("DB_HOST"),
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD"),
+            database=os.environ.get("DB_NAME")
+        )
+    return db_pool
 
 
 def get_db():
 
     if "db" not in flask.g:
 
-        flask.g.db = db_pool.get_connection()
+        flask.g.db = get_db_pool().get_connection()
 
     return flask.g.db
 

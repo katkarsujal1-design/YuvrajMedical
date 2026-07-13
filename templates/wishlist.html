@@ -5,31 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wishlist - Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css', v='wishlist-redesign-20260708') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css', v='wishlist-premium-20260712') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         *{box-sizing:border-box}
         :root{
-            --wish-primary:#047857;
-            --wish-primary-dark:#065F46;
-            --wish-accent:#10B981;
-            --wish-ink:#0F172A;
+            --wish-primary:#0F766E;
+            --wish-primary-dark:#134E4A;
+            --wish-accent:#B7791F;
+            --wish-rose:#8A2459;
+            --wish-ink:#122033;
             --wish-muted:#64748B;
-            --wish-border:#E2E8F0;
-            --wish-soft:#F8FAFC;
+            --wish-border:rgba(148,163,184,.28);
+            --wish-soft:#F8FBFD;
             --wish-green:#16A34A;
             --wish-red:#E11D48;
             --wish-amber:#F59E0B;
-            --wish-shadow:0 18px 44px rgba(15,23,42,.08);
+            --wish-shadow:0 24px 70px rgba(15,23,42,.11);
+            --wish-soft-shadow:0 14px 34px rgba(15,23,42,.08);
         }
         body{
             margin:0;
             font-family:"Segoe UI",Arial,sans-serif;
             color:var(--wish-ink);
             background:
-                linear-gradient(135deg,rgba(248,250,252,.94),rgba(236,253,245,.88) 52%,rgba(255,247,237,.90)),
-                radial-gradient(circle at 8% 6%,rgba(16,185,129,.14),transparent 28%),
-                radial-gradient(circle at 92% 16%,rgba(14,165,233,.10),transparent 28%),
-                #F8FAFC!important;
+                radial-gradient(circle at 8% 8%,rgba(8,145,178,.18),transparent 29%),
+                radial-gradient(circle at 88% 12%,rgba(138,36,89,.14),transparent 25%),
+                linear-gradient(180deg,#F8FBFD 0%,#FFFFFF 48%,#F3FAF8 100%)!important;
             background-attachment:fixed;
         }
         body.yvm-page-wishlist::before{
@@ -39,10 +41,10 @@
             z-index:-3;
             pointer-events:none;
             background:
-                linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.86) 42%,rgba(255,255,255,.94) 100%),
-                linear-gradient(180deg,rgba(248,250,252,.15),rgba(248,250,252,.94) 86%),
+                linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.78) 44%,rgba(255,255,255,.92) 100%),
+                linear-gradient(180deg,rgba(248,250,252,.12),rgba(248,250,252,.96) 88%),
                 url("/static/images/offer-healthcare-ai.png") center center / cover no-repeat;
-            opacity:.72;
+            opacity:.78;
         }
         body.yvm-page-wishlist::after{
             content:"";
@@ -51,27 +53,27 @@
             z-index:-2;
             pointer-events:none;
             background-image:
-                linear-gradient(rgba(4,120,87,.045) 1px,transparent 1px),
-                linear-gradient(90deg,rgba(4,120,87,.045) 1px,transparent 1px);
-            background-size:42px 42px;
+                linear-gradient(rgba(15,118,110,.04) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(15,118,110,.04) 1px,transparent 1px);
+            background-size:38px 38px;
             mask-image:linear-gradient(180deg,transparent 0,#000 118px,#000 82%,transparent 100%);
         }
         body.yvm-page-wishlist .yvm-side-overlay{display:block!important}
         body.yvm-page-wishlist .yvm-side-panel{display:flex!important}
         a{text-decoration:none;color:inherit}
-        .wrap{width:min(1440px,calc(100% - 48px));margin:26px auto 56px}
+        .wrap{width:min(1440px,calc(100% - 48px));margin:22px auto 56px}
         .wishlist-shopbar{
             display:grid;
             grid-template-columns:minmax(260px,520px) repeat(3,auto);
             gap:18px;
             align-items:center;
-            margin:18px 0 22px;
-            padding:14px 18px;
-            border:1px solid rgba(16,185,129,.18);
-            border-radius:18px;
-            background:rgba(255,255,255,.82);
-            box-shadow:0 14px 36px rgba(15,23,42,.06);
-            backdrop-filter:blur(12px);
+            margin:14px 0 16px;
+            padding:12px 14px;
+            border:1px solid rgba(148,163,184,.30);
+            border-radius:14px;
+            background:rgba(255,255,255,.86);
+            box-shadow:var(--wish-soft-shadow);
+            backdrop-filter:blur(16px);
         }
         .wish-search{
             display:flex;
@@ -79,59 +81,101 @@
             gap:10px;
             min-height:48px;
             padding:0 14px;
-            border:1px solid #CBD5E1;
-            border-radius:12px;
+            border:1px solid rgba(148,163,184,.38);
+            border-radius:10px;
             background:rgba(255,255,255,.92);
             color:#334155;
         }
         .wish-search input{width:100%;border:0;outline:0;background:transparent;color:var(--wish-ink);font-size:14px}
-        .shopbar-link{display:inline-flex;align-items:center;gap:8px;min-height:42px;color:#0F766E;font-weight:950;font-size:13px;white-space:nowrap}
+        .shopbar-link{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 8px;color:#0F766E;font-weight:950;font-size:13px;white-space:nowrap;border-radius:9px;transition:.18s ease}
+        .shopbar-link:hover{background:#ECFEFF;color:#134E4A}
         .shopbar-link svg,.wish-icon{flex-shrink:0}
         .category-nav{
             display:flex;
             flex-wrap:wrap;
             gap:10px 22px;
             align-items:center;
-            margin:-6px 0 22px;
-            padding:13px 18px;
-            border-radius:14px;
+            margin:-2px 0 16px;
+            padding:10px 14px;
+            border-radius:12px;
             color:#fff;
-            background:linear-gradient(135deg,#065F46,#047857);
-            box-shadow:0 14px 30px rgba(4,120,87,.16);
+            background:linear-gradient(135deg,#122033,#0F766E 62%,#B7791F);
+            box-shadow:0 18px 38px rgba(15,118,110,.18);
         }
         .category-nav a{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:900}
-        .page-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:18px}
-        .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:14px;color:#64748B;font-size:13px;font-weight:850}
-        .breadcrumb a{color:#047857}
-        .title-row{display:flex;align-items:center;gap:13px}
-        .heart-mark{
-            width:42px;height:42px;border-radius:50%;
-            display:grid;place-items:center;
-            color:#047857;background:#ECFDF5;border:1px solid #A7F3D0;
-            box-shadow:0 10px 22px rgba(4,120,87,.10);
+        .page-top{
+            position:relative;
+            display:grid;
+            gap:14px;
+            margin-bottom:14px;
+            padding:16px;
+            overflow:hidden;
+            border:1px solid rgba(148,163,184,.30);
+            border-radius:12px;
+            background:
+                linear-gradient(135deg,rgba(255,255,255,.98),rgba(248,250,252,.93)),
+                radial-gradient(circle at 10% 0,rgba(183,121,31,.12),transparent 26%);
+            box-shadow:0 12px 34px rgba(15,23,42,.08);
+            backdrop-filter:blur(16px);
         }
-        h1{margin:0;font-size:32px;line-height:1.1;letter-spacing:0}
+        .page-mainline{
+            display:grid;
+            grid-template-columns:minmax(0,1fr) auto;
+            gap:18px;
+            align-items:start;
+        }
+        .page-top::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto;
+            height:4px;
+            background:linear-gradient(90deg,var(--wish-rose),var(--wish-primary),var(--wish-accent));
+        }
+        .breadcrumb{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:#64748B;font-size:12px;font-weight:850}
+        .breadcrumb a{color:var(--wish-primary)}
+        .title-row{display:flex;align-items:center;gap:11px}
+        .heart-mark{
+            width:34px;height:34px;border-radius:9px;
+            display:grid;place-items:center;
+            color:var(--wish-primary);background:#ECFEFF;border:1px solid rgba(8,145,178,.22);
+            box-shadow:0 8px 18px rgba(4,120,87,.08);
+        }
+        h1{margin:0;font-size:clamp(26px,2vw,32px);line-height:1.05;letter-spacing:0;color:#0F172A}
         .item-badge{
             display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:6px 11px;
-            border-radius:999px;color:#047857;background:#ECFDF5;border:1px solid #A7F3D0;
+            border-radius:999px;color:#0F766E;background:#ECFEFF;border:1px solid rgba(8,145,178,.22);
             font-size:12px;font-weight:950;white-space:nowrap;
         }
-        .page-copy{margin:8px 0 0;color:#475569;font-size:15px;font-weight:750}
-        .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+        .page-copy{max-width:650px;margin:8px 0 0;color:#475569;font-size:13px;font-weight:750;line-height:1.4}
+        .hero-stats{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            gap:10px;
+            margin:0;
+            padding:10px;
+            border:1px solid rgba(148,163,184,.22);
+            border-radius:10px;
+            background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(248,250,252,.72));
+        }
+        .hero-stat{display:grid;gap:2px;min-width:0;padding:8px 10px;border:1px solid rgba(148,163,184,.22);border-radius:8px;background:#fff}
+        .hero-stat b{display:block;font-size:15px;color:#122033}
+        .hero-stat span{display:block;margin-top:2px;color:#64748B;font-size:10px;font-weight:850}
+        .top-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:34px;justify-content:flex-end}
         .top-btn,.add-btn,.mini-add,.empty a{
             display:inline-flex;align-items:center;justify-content:center;gap:8px;
-            min-height:42px;padding:10px 14px;border-radius:10px;
-            border:1px solid #A7F3D0;background:#fff;color:#047857;
+            min-height:36px;padding:8px 12px;border-radius:8px;
+            border:1px solid rgba(15,118,110,.24);background:#fff;color:var(--wish-primary);
             font-size:13px;font-weight:950;cursor:pointer;transition:.18s ease;
         }
-        .top-btn.primary,.summary-cta,.add-btn{color:#fff;background:linear-gradient(135deg,#047857,#059669);border-color:transparent}
+        .top-btn.primary,.summary-cta,.add-btn{color:#fff;background:linear-gradient(135deg,#8A2459,#0F766E);border-color:transparent;box-shadow:0 14px 30px rgba(15,118,110,.20)}
         .top-btn:hover,.add-btn:hover,.mini-add:hover,.empty a:hover{transform:translateY(-1px);box-shadow:0 12px 24px rgba(15,23,42,.10)}
-        .layout{display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:32px;align-items:start}
+        .layout{display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:28px;align-items:start}
         .wishlist-panel,.side-card,.benefit-strip,.empty{
             border:1px solid var(--wish-border);
-            border-radius:16px;
-            background:rgba(255,255,255,.92);
+            border-radius:14px;
+            background:rgba(255,255,255,.94);
             box-shadow:var(--wish-shadow);
+            backdrop-filter:blur(14px);
         }
         .wishlist-panel{overflow:hidden}
         .wishlist-head,.wish-row{
@@ -141,43 +185,43 @@
             align-items:center;
         }
         .wishlist-head{
-            padding:16px 18px;
+            padding:16px 20px;
             border-bottom:1px solid var(--wish-border);
             color:#475569;
             font-size:12px;
             font-weight:950;
             text-transform:uppercase;
             letter-spacing:.02em;
-            background:#fff;
+            background:linear-gradient(180deg,#fff,#F8FBFD);
         }
         .wish-row{
             min-height:88px;
-            padding:15px 18px;
+            padding:16px 20px;
             border-bottom:1px solid var(--wish-border);
             transition:.18s ease;
         }
         .wish-row:last-child{border-bottom:0}
-        .wish-row:hover{background:linear-gradient(135deg,#fff,#F8FFFC)}
+        .wish-row:hover{background:linear-gradient(135deg,#fff,#F8FFFC);box-shadow:inset 4px 0 0 rgba(15,118,110,.38)}
         .product-cell{display:grid;grid-template-columns:66px minmax(0,1fr);gap:16px;align-items:center}
         .product-img,.recent-img{
-            display:grid;place-items:center;background:#fff;border:1px solid #CBD5E1;border-radius:10px;overflow:hidden;
+            display:grid;place-items:center;background:linear-gradient(180deg,#fff,#F8FAFC);border:1px solid rgba(148,163,184,.32);border-radius:10px;overflow:hidden;
             box-shadow:0 10px 22px rgba(15,23,42,.06);
         }
         .product-img{width:66px;height:66px}
         .product-img img,.recent-img img{width:100%;height:100%;object-fit:contain;padding:7px}
-        .product-copy h2{margin:0;font-size:16px;line-height:1.35}
+        .product-copy h2{margin:0;font-size:16px;line-height:1.35;color:#0F172A}
         .meta-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-        .meta-chip{padding:5px 8px;border-radius:999px;background:#F8FAFC;border:1px solid #E2E8F0;color:#334155;font-size:12px;font-weight:800}
+        .meta-chip{padding:5px 8px;border-radius:999px;background:#F8FAFC;border:1px solid rgba(148,163,184,.28);color:#334155;font-size:12px;font-weight:800}
         .price-main{font-size:18px;font-weight:950;color:var(--wish-ink)}
         .price-old{margin-top:4px;color:#94A3B8;font-size:12px;font-weight:850;text-decoration:line-through;text-decoration-thickness:2px}
-        .save-line{margin-top:4px;color:#047857;font-size:12px;font-weight:950}
+        .save-line{margin-top:4px;color:#0F766E;font-size:12px;font-weight:950}
         .status-pill{
             display:inline-flex;align-items:center;gap:7px;width:max-content;
             padding:7px 10px;border-radius:999px;font-size:12px;font-weight:950;
         }
         .status-pill::before{content:"";width:8px;height:8px;border-radius:50%}
-        .status-pill.in{color:#047857;background:#ECFDF5;border:1px solid #BBF7D0}
-        .status-pill.in::before{background:#047857}
+        .status-pill.in{color:#0F766E;background:#ECFEFF;border:1px solid #A5F3FC}
+        .status-pill.in::before{background:#0F766E}
         .status-pill.low{color:#B45309;background:#FFFBEB;border:1px solid #FDE68A}
         .status-pill.low::before{background:#F59E0B}
         .status-pill.out{color:#BE123C;background:#FFF1F2;border:1px solid #FECDD3}
@@ -195,38 +239,50 @@
         .icon-link.heart{color:#E11D48;background:#FFF1F2}
         .icon-link:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(15,23,42,.10)}
         .side-stack{display:grid;gap:16px;position:sticky;top:112px}
-        .side-card{padding:20px}
+        .side-card{position:relative;overflow:hidden;padding:20px}
+        .side-card::before,.benefit-strip::before,.empty::before{
+            content:"";
+            position:absolute;
+            inset:0 0 auto;
+            height:4px;
+            background:linear-gradient(90deg,var(--wish-rose),var(--wish-primary),var(--wish-accent));
+            pointer-events:none;
+        }
         .side-card h2,.side-card h3{margin:0 0 16px;font-size:18px}
         .summary-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
         .metric{display:grid;gap:5px;justify-items:start}
-        .metric-icon{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#ECFDF5;color:#047857}
+        .metric-icon{width:32px;height:32px;border-radius:11px;display:grid;place-items:center;background:#ECFEFF;color:#0F766E}
         .metric b{font-size:15px}
         .metric span{color:#475569;font-size:12px;font-weight:750}
         .summary-cta{width:100%;min-height:48px;border-radius:10px;border:0;font-size:15px;font-weight:950}
         .reason-list{display:grid;gap:16px}
         .reason{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start}
-        .reason-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:#ECFDF5;color:#047857}
+        .reason-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:#ECFEFF;color:#0F766E}
         .reason b{display:block;font-size:14px}
         .reason span{display:block;margin-top:4px;color:#475569;font-size:13px;font-weight:750;line-height:1.4}
         .recent-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
         .recent-head h3{margin:0}
-        .recent-head a{color:#047857;font-size:12px;font-weight:950}
+        .recent-head a{color:#0F766E;font-size:12px;font-weight:950}
         .recent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-        .recent-card{display:grid;justify-items:center;gap:7px;padding:10px;border:1px solid #E2E8F0;border-radius:10px;text-align:center}
+        .recent-card{display:grid;justify-items:center;gap:7px;padding:10px;border:1px solid rgba(148,163,184,.28);border-radius:10px;text-align:center;background:linear-gradient(180deg,#fff,#F8FBFD)}
         .recent-img{width:66px;height:58px}
         .recent-card b{font-size:11px;line-height:1.25}
         .recent-card span{font-size:12px;font-weight:950}
         .mini-add{min-height:30px;padding:6px 11px;font-size:12px}
         .benefit-strip{
             display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;
-            margin-top:22px;padding:20px 22px;background:linear-gradient(135deg,#F8FFFC,#FFFFFF);
+            position:relative;
+            overflow:hidden;
+            margin-top:22px;padding:22px;background:linear-gradient(135deg,#F8FFFC,#FFFFFF);
         }
         .benefit{display:grid;grid-template-columns:58px 1fr;gap:16px;align-items:center}
-        .benefit-icon{width:58px;height:58px;display:grid;place-items:center;color:#047857}
+        .benefit-icon{width:58px;height:58px;display:grid;place-items:center;color:#0F766E}
         .benefit b{display:block}
         .benefit span{display:block;margin-top:5px;color:#334155;font-size:13px;font-weight:750;line-height:1.45}
-        .empty{margin-top:0;padding:56px 20px;text-align:center}
-        .empty-mark{width:60px;height:60px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#ECFDF5;color:#047857;border:1px solid #A7F3D0}
+        .empty{position:relative;overflow:hidden;margin-top:0;padding:64px 20px;text-align:center}
+        .empty-mark{width:64px;height:64px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#ECFEFF;color:#0F766E;border:1px solid rgba(8,145,178,.22)}
+        .no-results{display:none;margin-top:0;padding:34px 20px;text-align:center;color:#64748B;font-weight:850}
+        .wishlist-panel.is-filter-empty .no-results{display:block}
         .empty h2{margin:0 0 8px}
         .empty p{max-width:500px;margin:0 auto 18px;color:#475569;font-weight:750;line-height:1.55}
         @media(max-width:1180px){
@@ -236,8 +292,11 @@
             .side-card:first-child{grid-column:1 / -1}
         }
         @media(max-width:900px){
-            .page-top{display:grid}
-            .top-actions{justify-content:flex-start}
+            .page-top{padding:18px}
+            .page-mainline{display:block}
+            .breadcrumb{margin-bottom:10px}
+            .hero-stats{grid-template-columns:1fr;margin-top:0}
+            .top-actions{justify-content:flex-start;margin-top:14px}
             .wishlist-head{display:none}
             .wish-row{grid-template-columns:1fr;align-items:start}
             .row-actions{justify-content:flex-start;flex-wrap:wrap}
@@ -250,6 +309,8 @@
             .wrap{width:min(100% - 24px,1440px);margin-top:18px}
             h1{font-size:28px}
             .title-row{align-items:flex-start}
+            .hero-stats{display:grid;grid-template-columns:1fr}
+            .hero-checks{grid-template-columns:1fr}
             .product-cell{grid-template-columns:58px minmax(0,1fr)}
             .product-img{width:58px;height:58px}
             .summary-metrics,.recent-grid{grid-template-columns:1fr}
@@ -265,7 +326,7 @@
     <section class="wishlist-shopbar" aria-label="Wishlist quick tools">
         <label class="wish-search">
             <svg class="wish-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 4 4"></path></svg>
-            <input type="search" placeholder="Search saved medicines, health products..." aria-label="Search saved medicines">
+            <input id="wishlistSearch" type="search" placeholder="Search saved medicines, health products..." aria-label="Search saved medicines">
         </label>
         <a class="shopbar-link" href="/upload_prescription">
             <svg class="wish-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"></path><path d="M5 12h14"></path><path d="M7 19h10a4 4 0 0 0 0-8h-1a6 6 0 0 0-11.6 1.5A3.5 3.5 0 0 0 7 19Z"></path></svg>
@@ -292,36 +353,6 @@
         <a href="/#departments">Health Essentials</a>
     </nav>
 
-    <section class="page-top">
-        <div>
-            <nav class="breadcrumb" aria-label="Breadcrumb">
-                <a href="/">Home</a>
-                <span>&gt;</span>
-                <span>Wishlist</span>
-            </nav>
-            <div class="title-row">
-                <span class="heart-mark" aria-hidden="true">
-                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"></path></svg>
-                </span>
-                <h1>My Wishlist</h1>
-                <span class="item-badge">{{ wishlist_items|length }} Item{% if wishlist_items|length != 1 %}s{% endif %}</span>
-            </div>
-            <p class="page-copy">Save items you love and add them to cart anytime.</p>
-        </div>
-        <div class="top-actions">
-            {% if wishlist_items %}
-                <a class="top-btn primary" href="{{ url_for('wishlist_move_all_to_cart') }}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"></circle><circle cx="17" cy="20" r="1"></circle><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 8H7"></path></svg>
-                    Move All to Cart
-                </a>
-                <button class="top-btn" type="button" id="shareWishlist">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 13.5 6.8 4"></path><path d="m15.4 6.5-6.8 4"></path></svg>
-                    Share Wishlist
-                </button>
-            {% endif %}
-        </div>
-    </section>
-
     {% set in_stock_count = namespace(value=0) %}
     {% set wishlist_total = namespace(value=0) %}
     {% for item in wishlist_items %}
@@ -331,6 +362,43 @@
         {% endif %}
     {% endfor %}
     {% set saved_estimate = wishlist_total.value * 12 / 100 %}
+
+    <section class="page-top">
+        <div class="page-mainline">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Home</a>
+                    <span>&gt;</span>
+                    <span>Wishlist</span>
+                </nav>
+                <div class="title-row">
+                    <span class="heart-mark" aria-hidden="true">
+                        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"></path></svg>
+                    </span>
+                    <h1>My Wishlist</h1>
+                    <span class="item-badge">{{ wishlist_items|length }} Item{% if wishlist_items|length != 1 %}s{% endif %}</span>
+                </div>
+                <p class="page-copy">Review saved medicines, stock status, estimated savings and quick cart actions in one place.</p>
+            </div>
+            <div class="top-actions">
+                {% if wishlist_items %}
+                    <a class="top-btn primary" href="{{ url_for('wishlist_move_all_to_cart') }}">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1"></circle><circle cx="17" cy="20" r="1"></circle><path d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 8H7"></path></svg>
+                        Move All to Cart
+                    </a>
+                    <button class="top-btn" type="button" id="shareWishlist">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.6 13.5 6.8 4"></path><path d="m15.4 6.5-6.8 4"></path></svg>
+                        Share Wishlist
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-stats" aria-label="Wishlist highlights">
+            <span class="hero-stat"><b>{{ in_stock_count.value }}</b><span>Ready to order</span></span>
+            <span class="hero-stat"><b>Rs. {{ "%.0f"|format(saved_estimate) }}</b><span>Estimated savings</span></span>
+            <span class="hero-stat"><b>1-2 days</b><span>Fast delivery</span></span>
+        </div>
+    </section>
 
     {% if wishlist_items %}
         <section class="layout">
@@ -345,7 +413,7 @@
                 {% for item in wishlist_items %}
                     {% set stock = item.stock|default(0)|int %}
                     {% set old_price = item.price * 112 / 100 %}
-                    <article class="wish-row">
+                    <article class="wish-row" data-wishlist-item data-search-text="{{ item.name|lower }} {{ 'prescription' if item.prescription_required else 'otc' }} {{ 'in stock' if stock > 10 else 'low stock' if stock > 0 else 'out of stock' }}">
                         <div class="product-cell">
                             <a class="product-img" href="{{ url_for('medicine_details', id=item.id) }}">
                                 <img
@@ -406,6 +474,7 @@
                         </div>
                     </article>
                 {% endfor %}
+                <div class="no-results" id="wishlistNoResults">No saved medicines match your search.</div>
             </div>
 
             <aside class="side-stack">
@@ -515,6 +584,25 @@
                 await navigator.clipboard.writeText(window.location.href);
                 shareButton.textContent = "Link Copied";
             }
+        });
+    }
+
+    const wishlistSearch = document.getElementById("wishlistSearch");
+    const wishlistPanel = document.querySelector(".wishlist-panel");
+    const wishlistRows = Array.from(document.querySelectorAll("[data-wishlist-item]"));
+
+    if (wishlistSearch && wishlistRows.length) {
+        wishlistSearch.addEventListener("input", () => {
+            const query = wishlistSearch.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            wishlistRows.forEach((row) => {
+                const isVisible = row.dataset.searchText.includes(query);
+                row.hidden = !isVisible;
+                if (isVisible) visibleCount += 1;
+            });
+
+            wishlistPanel.classList.toggle("is-filter-empty", visibleCount === 0);
         });
     }
 </script>
