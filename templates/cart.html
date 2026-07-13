@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart - Yuvraj Medical</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css', v='cart-menu-fix-20260708') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css', v='cart-menu-fix-20260708') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}"> 
     <style>
         *{box-sizing:border-box}
         :root{
@@ -44,8 +44,8 @@
         body.yvm-page-cart .cart-item,
         body.yvm-page-cart .product-card,
         body.yvm-page-cart .trust-card{background:#fff!important}
-        body.yvm-page-cart .yvm-side-overlay{display:block!important}
-        body.yvm-page-cart .yvm-side-panel{display:flex!important}
+        body.yvm-page-cart .yvm-side-overlay,
+        body.yvm-page-cart .yvm-side-panel{display:none!important}
         a{text-decoration:none;color:inherit}
         .wrap{
             width:min(1360px,calc(100% - 44px));
@@ -67,30 +67,18 @@
         .metric span{display:block;margin-top:3px;color:var(--cart-muted);font-size:12px;font-weight:800}
         .flash{margin:12px 0;padding:12px 14px;border-radius:16px;background:#ECFDF5;border:1px solid #BBF7D0;color:#14532D;font-weight:800}
         .visual-hero{
-            position:relative;display:flex;align-items:center;min-height:320px;margin:0 0 18px;padding:42px 46px;
-            border:1px solid rgba(209,250,229,.9);border-radius:24px;
-            background-image:url("{{ url_for('static', filename='images/cart-ai-hero-wide.png') }}");
-            background-size:cover;background-position:center right;
-            box-shadow:0 18px 44px rgba(15,23,42,.08);overflow:hidden
+            display:grid;grid-template-columns:minmax(0,1.1fr) 300px;gap:20px;align-items:center;
+            margin:0 0 18px;padding:22px 24px;border:1px solid var(--cart-border);border-radius:24px;
+            background:linear-gradient(135deg,#ffffff 0%,#f8fffc 45%,#f0fdf4 100%);
+            box-shadow:0 16px 38px rgba(15,23,42,.06)
         }
-        .visual-hero::before{
-            content:"";position:absolute;inset:0;
-            background:linear-gradient(90deg,rgba(255,255,255,.96) 0%,rgba(255,255,255,.88) 36%,rgba(255,255,255,.52) 58%,rgba(255,255,255,.08) 100%);
-        }
-        .visual-copy{position:relative;z-index:1;max-width:610px;padding-left:18px;border-left:5px solid #10B981}
-        .visual-copy::before{content:"";position:absolute;left:-5px;top:0;width:5px;height:52px;border-radius:999px;background:#F59E0B;box-shadow:0 12px 24px rgba(245,158,11,.22)}
-        .visual-copy h2{margin:12px 0 14px;font-size:40px;line-height:1.08;color:var(--cart-ink);text-wrap:balance}
-        .visual-copy h2 span{display:inline;color:#047857}
-        .visual-copy p{margin:0;max-width:520px;color:#334155;font-size:16px;line-height:1.65;font-weight:800}
-        .visual-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,251,235,.92);color:#92400E;font-size:12px;font-weight:950;border:1px solid #FDE68A;box-shadow:0 10px 24px rgba(146,64,14,.09)}
-        .visual-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#10B981;box-shadow:0 0 0 5px rgba(16,185,129,.14)}
-        .visual-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
-        .visual-pills span{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.84);border:1px solid #D1FAE5;color:#0F766E;font-size:12px;font-weight:850;box-shadow:0 8px 18px rgba(15,23,42,.05)}
-        .visual-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-        .hero-action{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 15px;border-radius:999px;font-size:13px;font-weight:950;border:1px solid transparent;box-shadow:0 14px 28px rgba(15,23,42,.10);transition:.18s ease}
-        .hero-action.primary{color:#fff;background:linear-gradient(135deg,#047857,#16A34A)}
-        .hero-action.secondary{color:#065F46;background:rgba(255,255,255,.88);border-color:#A7F3D0}
-        .hero-action:hover{transform:translateY(-2px);box-shadow:0 18px 34px rgba(15,23,42,.14)}
+        .visual-copy h2{margin:8px 0 10px;font-size:24px;line-height:1.25;color:var(--cart-ink)}
+        .visual-copy p{margin:0;color:var(--cart-muted);font-size:14px;line-height:1.55;font-weight:700}
+        .visual-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#ECFDF5;color:#047857;font-size:12px;font-weight:900;border:1px solid #BBF7D0}
+        .visual-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+        .visual-pills span{padding:7px 10px;border-radius:999px;background:#F8FAFC;border:1px solid var(--cart-border);color:#0F766E;font-size:12px;font-weight:850}
+        .visual-art{display:grid;place-items:center;min-height:210px;padding:10px;border:1px solid #D1FAE5;border-radius:24px;background:linear-gradient(135deg,rgba(236,253,245,.95),rgba(255,255,255,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+        .visual-art svg{width:100%;max-width:320px;height:auto}
         .cart-hero-shell{
             margin:0 0 24px;padding:18px 20px;border:1px solid var(--cart-border);border-radius:24px;background:rgba(255,255,255,.94);
             box-shadow:0 18px 45px rgba(15,23,42,.08);backdrop-filter:blur(12px)
@@ -279,10 +267,7 @@
         @media(max-width:760px){
             .wrap{width:min(100% - 22px,1220px);margin-top:18px}
             .page-title{font-size:30px}
-            .visual-hero{min-height:430px;padding:28px 22px;align-items:flex-start;background-position:64% center}
-            .visual-hero::before{background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.86) 48%,rgba(255,255,255,.22) 100%)}
-            .visual-copy h2{font-size:30px}
-            .visual-copy{padding-left:14px}
+            .visual-hero{grid-template-columns:1fr}
             .top-metrics{grid-template-columns:1fr}
             .cart-table-head{display:none}
             .cart-item{grid-template-columns:1fr;align-items:start}
@@ -318,24 +303,41 @@
         </div>
     </section>
 
-    <section class="visual-hero" aria-label="Cart checkout hero">
+    <section class="visual-hero" aria-label="Premium pharmacy illustration">
         <div class="visual-copy">
-            <span class="visual-eyebrow">Ready for checkout</span>
-            <h2>Trusted medicines, fast delivery, and <span>secure checkout</span>.</h2>
+            <span class="visual-eyebrow">Premium care experience</span>
+            <h2>Trusted medicines, fast delivery, and secure checkout in one place.</h2>
             <p>Every order is packed with genuine products, verified stock, and support designed for a smoother pharmacy experience.</p>
             <div class="visual-pills">
                 <span>Verified stock</span>
                 <span>Fast dispatch</span>
                 <span>Safe payments</span>
             </div>
-            <div class="visual-actions">
-                {% if items %}
-                    <a class="hero-action primary" href="/checkout">Checkout now</a>
-                {% else %}
-                    <a class="hero-action primary" href="/">Browse medicines</a>
-                {% endif %}
-                <a class="hero-action secondary" href="/upload_prescription">Upload prescription</a>
-            </div>
+        </div>
+        <div class="visual-art" aria-hidden="true">
+            <svg viewBox="0 0 420 260" role="img">
+                <defs>
+                    <linearGradient id="pharmaGlow" x1="0%" x2="100%" y1="0%" y2="100%">
+                        <stop offset="0%" stop-color="#0f766e" />
+                        <stop offset="100%" stop-color="#16a34a" />
+                    </linearGradient>
+                </defs>
+                <rect x="32" y="36" width="356" height="188" rx="30" fill="url(#pharmaGlow)" />
+                <circle cx="336" cy="72" r="54" fill="#d1fae5" fill-opacity="0.22" />
+                <rect x="92" y="104" width="106" height="90" rx="22" fill="#ffffff" fill-opacity="0.95" />
+                <rect x="116" y="84" width="56" height="34" rx="10" fill="#ecfdf5" />
+                <path d="M120 142h58" stroke="#0f766e" stroke-width="8" stroke-linecap="round" />
+                <path d="M148 114v58" stroke="#0f766e" stroke-width="8" stroke-linecap="round" />
+                <path d="M224 120c12-22 42-30 72-20 18 6 30 20 34 40" stroke="#ffffff" stroke-width="10" stroke-linecap="round" fill="none" />
+                <path d="M242 124h76" stroke="#ffffff" stroke-width="10" stroke-linecap="round" />
+                <path d="M280 82l26 24-26 24" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <rect x="250" y="146" width="86" height="56" rx="16" fill="#ffffff" fill-opacity="0.95" />
+                <path d="M294 156v36" stroke="#0f766e" stroke-width="8" stroke-linecap="round" />
+                <path d="M276 174h36" stroke="#0f766e" stroke-width="8" stroke-linecap="round" />
+                <circle cx="324" cy="184" r="18" fill="#ecfdf5" />
+                <path d="M324 174v20" stroke="#0f766e" stroke-width="6" stroke-linecap="round" />
+                <path d="M314 184h20" stroke="#0f766e" stroke-width="6" stroke-linecap="round" />
+            </svg>
         </div>
     </section>
 

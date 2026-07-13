@@ -6,3 +6,4 @@ venv/
 backup.sql
 __pycache__/
 *.pyc
+.env
