@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment History - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
     
 <style>
 :root{
@@ -32,6 +34,10 @@ body::before{
 }
 a{text-decoration:none;color:inherit}
 button,input,select{font:inherit}
+body.yvm-pro-page .header,
+body.yvm-pro-page .home-service-strip,
+body.yvm-pro-page .side-overlay,
+body.yvm-pro-page .side-panel{display:none!important}
 
 /* Header */
 .header{
@@ -279,7 +285,9 @@ tbody tr:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
 </style>
 
 </head>
-<body>
+<body class="yvm-pro-page yvm-page-payment-history">
+
+{% include "partials/site_header.html" %}
 
 <div class="header">
     <a class="brand" href="/" aria-label="Yuvraj Medical home">
@@ -588,5 +596,6 @@ tbody tr:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
         control.addEventListener("change", filterRows);
     });
 </script>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

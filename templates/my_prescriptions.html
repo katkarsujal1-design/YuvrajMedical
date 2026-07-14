@@ -560,6 +560,642 @@
                 min-height: 210px;
             }
         }
+
+        body.yvm-page-my-prescriptions {
+            --yvm-shell-top: 24px;
+            background:
+                radial-gradient(circle at 52% 10%, rgba(15, 118, 110, .08), transparent 26rem),
+                linear-gradient(180deg, #f8fbfd 0%, #ffffff 44%, #f6fafc 100%) !important;
+        }
+
+        body.yvm-page-my-prescriptions .yvm-marquee-wrap {
+            display: none;
+        }
+
+        .rx-history-cats {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            min-height: 52px;
+            margin-top: 82px;
+            padding: 0 clamp(24px, 4vw, 58px);
+            border-bottom: 1px solid rgba(15, 118, 110, .13);
+            background: rgba(255, 255, 255, .96);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, .05);
+            overflow-x: auto;
+        }
+
+        .rx-history-cats span {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            min-height: 52px;
+            padding: 0 20px;
+            color: #0f172a;
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .rx-history-cats i {
+            width: 18px;
+            height: 18px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 6px;
+            color: #059669;
+            background: #ecfdf5;
+            font-style: normal;
+            font-size: 11px;
+        }
+
+        body.yvm-page-my-prescriptions .page-shell {
+            width: min(1440px, calc(100% - 64px)) !important;
+            min-height: auto;
+            margin: 24px auto 58px !important;
+            padding: 0 !important;
+        }
+
+        .rx-history-hero {
+            position: relative;
+            min-height: 330px;
+            display: grid;
+            grid-template-columns: minmax(0, .9fr) minmax(360px, .78fr);
+            gap: 28px;
+            align-items: center;
+            margin-bottom: 22px;
+            padding: 36px 42px;
+            border: 1px solid rgba(15, 118, 110, .18);
+            border-radius: 16px;
+            background:
+                linear-gradient(90deg, rgba(240, 253, 250, .98) 0%, rgba(255, 255, 255, .86) 48%, rgba(236, 253, 245, .74) 100%),
+                radial-gradient(circle at 50% 20%, rgba(16, 185, 129, .16), transparent 90px);
+            box-shadow: 0 18px 48px rgba(15, 23, 42, .08);
+            overflow: hidden;
+        }
+
+        .rx-history-hero::after {
+            content: "";
+            min-height: 292px;
+            background:
+                radial-gradient(circle at 58% 38%, rgba(16, 185, 129, .18), transparent 74px),
+                url("/static/images/dashboard-prescription-ai.png") center / contain no-repeat;
+            opacity: .95;
+        }
+
+        .rx-history-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 54% 18%, rgba(16, 185, 129, .15), transparent 42px),
+                radial-gradient(circle at 88% 20%, rgba(16, 185, 129, .18), transparent 34px),
+                linear-gradient(120deg, rgba(255, 255, 255, .36), transparent 38%);
+        }
+
+        .rx-history-hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .rx-crumbs {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 16px;
+            color: #0f766e;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .rx-title-line {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .rx-title-line h1 {
+            margin: 0;
+            color: #102134;
+            font-size: clamp(42px, 4.8vw, 64px);
+            line-height: 1.02;
+            text-shadow: none;
+        }
+
+        .rx-title-line span {
+            width: 42px;
+            height: 42px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #047857;
+            background: #d1fae5;
+            font-weight: 1000;
+        }
+
+        .rx-history-hero p {
+            max-width: 720px;
+            margin: 14px 0 0;
+            color: #475569;
+            font-size: 16px;
+            line-height: 1.7;
+            text-shadow: none;
+        }
+
+        .rx-dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 390px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .rx-left {
+            min-width: 0;
+            display: grid;
+            gap: 22px;
+        }
+
+        .rx-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .rx-stat {
+            min-height: 118px;
+            display: grid;
+            grid-template-columns: 58px minmax(0, 1fr);
+            align-items: center;
+            gap: 18px;
+            padding: 20px;
+            border: 1px solid rgba(148, 163, 184, .24);
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 14px 38px rgba(15, 23, 42, .06);
+        }
+
+        .rx-stat.approved { background: linear-gradient(135deg, #fff, #f0fdf4); border-color: #bbf7d0; }
+        .rx-stat.pending { background: linear-gradient(135deg, #fff, #fff7ed); border-color: #fed7aa; }
+        .rx-stat.rejected { background: linear-gradient(135deg, #fff, #fff1f2); border-color: #fecdd3; }
+
+        .rx-stat-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #fff;
+            background: #2563eb;
+            box-shadow: inset 0 0 0 10px rgba(255, 255, 255, .35);
+            font-weight: 1000;
+            font-size: 22px;
+        }
+
+        .rx-stat.approved .rx-stat-icon { background: #059669; }
+        .rx-stat.pending .rx-stat-icon { background: #f59e0b; }
+        .rx-stat.rejected .rx-stat-icon { background: #ef4444; }
+
+        .rx-stat span {
+            display: block;
+            color: #334155;
+            font-size: 15px;
+            font-weight: 850;
+        }
+
+        .rx-stat strong {
+            display: block;
+            margin-top: 8px;
+            color: #102134;
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        .rx-stat small {
+            display: block;
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .rx-list-panel,
+        .rx-side-card {
+            border: 1px solid rgba(148, 163, 184, .25);
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 16px 44px rgba(15, 23, 42, .07);
+        }
+
+        .rx-filters {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) 150px 150px 150px auto;
+            gap: 16px;
+            align-items: center;
+            padding: 18px;
+            border-bottom: 1px solid #e5edf5;
+        }
+
+        .rx-filter-control {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+            border: 1px solid #dbe4f0;
+            border-radius: 8px;
+            color: #334155;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .rx-filter-control input,
+        .rx-filter-control select {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: #334155;
+            font: inherit;
+        }
+
+        .rx-sort {
+            justify-content: flex-end;
+            border: 0;
+            color: #475569;
+        }
+
+        .rx-request-list {
+            display: grid;
+        }
+
+        .rx-request {
+            position: relative;
+            display: grid;
+            grid-template-columns: 124px minmax(0, 1.35fr) minmax(150px, .55fr) 200px 24px;
+            gap: 22px;
+            align-items: center;
+            padding: 20px 20px 20px 24px;
+            border-bottom: 1px solid #e5edf5;
+        }
+
+        .rx-request:last-child {
+            border-bottom: 0;
+        }
+
+        .rx-request::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 18px;
+            bottom: 18px;
+            width: 7px;
+            border-radius: 999px;
+            background: #f59e0b;
+        }
+
+        .rx-request.status-approved::before { background: #10b981; }
+        .rx-request.status-rejected::before { background: #ef4444; }
+
+        .rx-thumb {
+            width: 104px;
+            height: 112px;
+            overflow: hidden;
+            border: 1px solid #dbe4f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .rx-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .rx-pdf {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: #b91c1c;
+            font-weight: 1000;
+            background: #fff1f2;
+        }
+
+        .rx-row-title {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .rx-row-title h3 {
+            margin: 0;
+            color: #102134;
+            font-size: 20px;
+        }
+
+        .rx-status {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 1000;
+        }
+
+        .rx-status.approved { color: #047857; background: #dff8ed; }
+        .rx-status.pending { color: #c2410c; background: #ffedd5; }
+        .rx-status.rejected { color: #dc2626; background: #fee2e2; }
+
+        .rx-meta-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            color: #334155;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .rx-chip-line {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .rx-chip-line span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background: #f3f7fb;
+        }
+
+        .rx-reviewer {
+            border-left: 1px solid #e5edf5;
+            padding-left: 18px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .rx-reviewer strong {
+            display: block;
+            color: #102134;
+            margin-top: 6px;
+        }
+
+        .rx-row-actions {
+            display: grid;
+            gap: 10px;
+        }
+
+        .rx-action {
+            min-height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 1000;
+        }
+
+        .rx-action.primary {
+            color: #fff;
+            border-color: transparent;
+            background: linear-gradient(180deg, #059669, #047857);
+            box-shadow: 0 10px 22px rgba(4, 120, 87, .18);
+        }
+
+        .rx-action.warn {
+            color: #f97316;
+            border-color: #fdba74;
+        }
+
+        .rx-action.danger {
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        .rx-more {
+            color: #0f2f5f;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .rx-sidebar {
+            display: grid;
+            gap: 18px;
+            position: sticky;
+            top: 116px;
+        }
+
+        .rx-side-card {
+            padding: 22px;
+        }
+
+        .rx-side-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .rx-side-head h2,
+        .rx-side-card h3 {
+            margin: 0;
+            color: #102134;
+            font-size: 18px;
+        }
+
+        .rx-side-head select {
+            min-height: 40px;
+            border: 1px solid #dbe4f0;
+            border-radius: 8px;
+            background: #fff;
+            padding: 0 10px;
+            font-weight: 850;
+        }
+
+        .rx-donut-wrap {
+            display: grid;
+            grid-template-columns: 150px minmax(0, 1fr);
+            gap: 18px;
+            align-items: center;
+        }
+
+        .rx-donut {
+            width: 142px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: conic-gradient(#10b981 0 var(--approved-deg), #f59e0b var(--approved-deg) var(--pending-deg), #ef4444 var(--pending-deg) 360deg);
+        }
+
+        .rx-donut span {
+            width: 86px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #102134;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .rx-donut b {
+            display: block;
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        .rx-legend {
+            display: grid;
+            gap: 14px;
+            color: #102134;
+            font-size: 14px;
+            font-weight: 850;
+        }
+
+        .rx-legend-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .rx-legend i {
+            width: 12px;
+            height: 12px;
+            display: inline-block;
+            margin-right: 8px;
+            border-radius: 999px;
+            background: #10b981;
+        }
+
+        .rx-legend .pending-dot { background: #f59e0b; }
+        .rx-legend .rejected-dot { background: #ef4444; }
+
+        .rx-ready {
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            color: #047857;
+            background: linear-gradient(135deg, #f0fdf4, #fff);
+        }
+
+        .rx-ready strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 28px;
+        }
+
+        .rx-side-links {
+            display: grid;
+            gap: 8px;
+        }
+
+        .rx-side-link {
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr) 18px;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            color: #102134;
+        }
+
+        .rx-side-link i {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            color: #047857;
+            background: #e7f8ef;
+            font-style: normal;
+            font-weight: 1000;
+        }
+
+        .rx-side-link strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .rx-side-link small {
+            display: block;
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .rx-empty {
+            padding: 50px 22px;
+            text-align: center;
+        }
+
+        @media (max-width: 1180px) {
+            .rx-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .rx-sidebar {
+                position: static;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            .rx-history-hero,
+            .rx-stats,
+            .rx-filters,
+            .rx-request,
+            .rx-donut-wrap,
+            .rx-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .rx-history-hero::after {
+                display: none;
+            }
+
+            .rx-request {
+                padding-left: 22px;
+            }
+
+            .rx-reviewer {
+                border-left: 0;
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .rx-history-cats {
+                margin-top: 154px;
+            }
+
+            body.yvm-page-my-prescriptions .page-shell {
+                width: min(100% - 24px, 1440px) !important;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
@@ -588,136 +1224,243 @@
 
 {% include "partials/site_header.html" %}
 
+<nav class="rx-history-cats" aria-label="Prescription history categories">
+    <span><i>Rx</i>Prescription Medicines</span>
+    <span><i>O</i>OTC Medicines</span>
+    <span><i>H</i>Health Care</span>
+    <span><i>P</i>Personal Care</span>
+    <span><i>B</i>Baby Care</span>
+    <span><i>A</i>Ayurveda</span>
+    <span><i>E</i>Health Essentials</span>
+    <span><i>D</i>Deliver to: Pune, Maharashtra</span>
+</nav>
+
 <main class="page-shell">
 
-    <section class="hero">
-        <div class="hero-content">
-            <span class="eyebrow">Prescription History</span>
-            <h1>
-                Prescription history.
-                <span class="hero-accent">Every request, clearly tracked.</span>
-            </h1>
-            <p>
-                Track every uploaded prescription, review staff decisions, download files,
-                and move approved medicines to checkout from one polished workspace.
-            </p>
-        </div>
-    </section>
+    {% set approved_pct = (ns.approved * 100 / ns.total) if ns.total else 0 %}
+    {% set pending_pct = (ns.pending * 100 / ns.total) if ns.total else 0 %}
+    {% set rejected_pct = (ns.rejected * 100 / ns.total) if ns.total else 0 %}
+    {% set approved_deg = (ns.approved * 360 / ns.total) if ns.total else 0 %}
+    {% set pending_deg = ((ns.approved + ns.pending) * 360 / ns.total) if ns.total else 0 %}
 
-    <section class="summary-grid" aria-label="Prescription summary">
-        <div class="metric">
-            <span>Total Requests</span>
-            <strong>{{ ns.total }}</strong>
-        </div>
-        <div class="metric">
-            <span>Under Review</span>
-            <strong>{{ ns.pending }}</strong>
-        </div>
-        <div class="metric">
-            <span>Approved</span>
-            <strong>{{ ns.approved }}</strong>
-        </div>
-        <div class="metric">
-            <span>Rejected</span>
-            <strong>{{ ns.rejected }}</strong>
-        </div>
-    </section>
-
-    {% if requests_data %}
-        <section class="section-head">
-            <div>
-                <h2>Recent Prescriptions</h2>
-                <p>Newest uploads appear first with status, OCR options, staff notes, and next actions.</p>
+    <section class="rx-history-hero" aria-labelledby="history-title">
+        <div>
+            <nav class="rx-crumbs" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span>&gt;</span>
+                <a href="{{ url_for('profile') }}">My Account</a>
+                <span>&gt;</span>
+                <span>Prescription History</span>
+            </nav>
+            <div class="rx-title-line">
+                <h1 id="history-title">Prescription History</h1>
+                <span aria-hidden="true">✓</span>
             </div>
-        </section>
+            <p>Track all your prescription uploads, review status, and manage your orders.</p>
+        </div>
+    </section>
 
-        <section class="history-list" aria-label="Prescription request list">
-            {% for req in requests_data %}
-            <article class="history-card">
-                <div class="preview">
-                    {% if req.prescription_image.lower().endswith('.pdf') %}
-                        <a class="pdf-preview" href="/download_prescription/{{ req.id }}">
-                            <span>PDF</span>
-                            View or download prescription
-                        </a>
-                    {% else %}
-                        <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}" alt="Uploaded prescription">
-                    {% endif %}
+    <section class="rx-dashboard-grid" aria-label="Prescription dashboard">
+        <div class="rx-left">
+            <section class="rx-stats" aria-label="Prescription summary">
+                <article class="rx-stat">
+                    <span class="rx-stat-icon">□</span>
+                    <div>
+                        <span>Total Requests</span>
+                        <strong>{{ ns.total }}</strong>
+                        <small>All Prescription Requests</small>
+                    </div>
+                </article>
+                <article class="rx-stat approved">
+                    <span class="rx-stat-icon">✓</span>
+                    <div>
+                        <span>Approved</span>
+                        <strong>{{ ns.approved }}</strong>
+                        <small>Ready for Checkout</small>
+                    </div>
+                </article>
+                <article class="rx-stat pending">
+                    <span class="rx-stat-icon">◷</span>
+                    <div>
+                        <span>Under Review</span>
+                        <strong>{{ ns.pending }}</strong>
+                        <small>Waiting for Approval</small>
+                    </div>
+                </article>
+                <article class="rx-stat rejected">
+                    <span class="rx-stat-icon">×</span>
+                    <div>
+                        <span>Rejected</span>
+                        <strong>{{ ns.rejected }}</strong>
+                        <small>Need Attention</small>
+                    </div>
+                </article>
+            </section>
+
+            <section class="rx-list-panel" aria-label="Prescription request list">
+                <div class="rx-filters" aria-label="Prescription filters">
+                    <label class="rx-filter-control">
+                        <span>⌕</span>
+                        <input type="search" placeholder="Search by medicine name, request ID..." aria-label="Search prescriptions">
+                    </label>
+                    <label class="rx-filter-control">
+                        <select aria-label="Status filter">
+                            <option>All Status</option>
+                            <option>Approved</option>
+                            <option>Under Review</option>
+                            <option>Rejected</option>
+                        </select>
+                    </label>
+                    <label class="rx-filter-control">
+                        <select aria-label="Time filter">
+                            <option>All Time</option>
+                            <option>This Month</option>
+                            <option>Last 3 Months</option>
+                        </select>
+                    </label>
+                    <button class="rx-filter-control" type="button">More Filters</button>
+                    <span class="rx-filter-control rx-sort">Sort by: Latest First</span>
                 </div>
 
-                <div class="card-main">
-                    <div class="card-top">
-                        <div>
-                            <h3 class="request-title">Prescription Request #{{ req.id }}</h3>
-                            <div class="request-meta">
-                                <span>Uploaded {{ req.created_at }}</span>
-                                <span>File: {{ req.prescription_image }}</span>
-                                <span>Profile: {{ req.family_member_label }}</span>
-                            </div>
-                        </div>
+                {% if requests_data %}
+                    <div class="rx-request-list">
+                        {% for req in requests_data %}
+                            {% set status_key = 'approved' if req.status == 'Approved' else 'rejected' if req.status == 'Rejected' else 'pending' %}
+                            <article class="rx-request status-{{ status_key }}">
+                                <a class="rx-thumb" href="/download_prescription/{{ req.id }}">
+                                    {% if req.prescription_image.lower().endswith('.pdf') %}
+                                        <span class="rx-pdf">PDF</span>
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}" alt="Uploaded prescription">
+                                    {% endif %}
+                                </a>
 
-                        <span class="status status-{{ req.status|lower|replace(' ', '-') }}">
-                            {{ req.status }}
-                        </span>
+                                <div class="rx-row-main">
+                                    <div class="rx-row-title">
+                                        <h3>Prescription Request #{{ req.id }}</h3>
+                                        <span class="rx-status {{ status_key }}">{{ req.status }}</span>
+                                    </div>
+                                    <div class="rx-meta-line">
+                                        <span>Uploaded on {{ req.created_at }}</span>
+                                        <span>•</span>
+                                        <span>{{ req.family_member_label }}</span>
+                                    </div>
+                                    <div class="rx-chip-line">
+                                        {% if req.approved_medicines %}
+                                            <span>{{ req.approved_medicines.split(",")|length }} Medicines</span>
+                                            <span>{{ req.approved_medicines.split(",")[:2]|join(", ") }}</span>
+                                        {% elif req.detected_medicines %}
+                                            <span>OCR: {{ req.detected_medicines.split(",")|length }} items detected</span>
+                                            <span>{{ req.detected_medicines.split(",")[:2]|join(", ") }}</span>
+                                        {% else %}
+                                            <span>Waiting for medicine detection</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="rx-reviewer">
+                                    <span>Reviewed by</span>
+                                    {% if req.staff_note or req.status in ["Approved", "Rejected"] %}
+                                        <strong>Yuvraj Medical Staff</strong>
+                                        <span>Licensed Pharmacist</span>
+                                    {% else %}
+                                        <strong>—</strong>
+                                        <span>Waiting for staff review</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="rx-row-actions">
+                                    <a class="rx-action {% if status_key == 'pending' %}warn{% elif status_key == 'rejected' %}danger{% endif %}" href="/download_prescription/{{ req.id }}">View Details</a>
+                                    {% if req.status == "Approved" %}
+                                        <a class="rx-action primary" href="/checkout_prescription/{{ req.id }}">Proceed to Checkout</a>
+                                    {% elif req.status == "Rejected" %}
+                                        <a class="rx-action danger" href="/upload_prescription">Upload Again</a>
+                                    {% endif %}
+                                    <a class="rx-action" href="/repeat_prescription_order/{{ req.id }}">Repeat Order</a>
+                                </div>
+
+                                <span class="rx-more">⋮</span>
+                            </article>
+                        {% endfor %}
                     </div>
-
-                    <div class="detail-grid">
-                        <div class="detail-box">
-                            <label>OCR Medicine Options</label>
-                            {% if req.detected_medicines %}
-                                <p>{{ req.detected_medicines.split(",")[:5]|join(", ") }}</p>
-                            {% else %}
-                                <p>No clear high-percent medicine detected.</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="detail-box">
-                            <label>Staff Approved Medicines</label>
-                            <pre>{{ req.approved_medicines if req.approved_medicines else "Waiting for staff approval." }}</pre>
-                        </div>
-
-                        <div class="detail-box full">
-                            <label>Staff Note</label>
-                            <pre>{{ req.staff_note if req.staff_note else "Waiting for staff review." }}</pre>
-                        </div>
+                {% else %}
+                    <div class="rx-empty">
+                        <h2>No prescription requests yet</h2>
+                        <p>Upload your first prescription and the Yuvraj Medical team will review it before confirming eligible medicines.</p>
+                        <a href="/upload_prescription" class="rx-action primary">Upload Prescription</a>
                     </div>
+                {% endif %}
+            </section>
+        </div>
 
-                    <div class="actions">
-                        {% if req.status == "Approved" %}
-                            <a href="/checkout_prescription/{{ req.id }}" class="btn btn-success">
-                                Proceed to Checkout
-                            </a>
-                        {% endif %}
-
-                        <a href="/download_prescription/{{ req.id }}" class="btn btn-light">
-                            Download Prescription
-                        </a>
-                        <a href="/repeat_prescription_order/{{ req.id }}" class="btn btn-success">
-                            Repeat Prescription Order
-                        </a>
-                        <a href="/reorder_subscription" class="btn btn-light">
-                            Subscription
-                        </a>
-
-                        <form method="POST" action="/delete_prescription/{{ req.id }}" onsubmit="return confirm('Delete this prescription request?');">
-                            <button class="delete-btn" type="submit">Delete Prescription</button>
-                        </form>
+        <aside class="rx-sidebar" aria-label="Prescription overview and actions">
+            <section class="rx-side-card">
+                <div class="rx-side-head">
+                    <h2>Overview</h2>
+                    <select aria-label="Overview period">
+                        <option>All Time</option>
+                    </select>
+                </div>
+                <div class="rx-donut-wrap">
+                    <div class="rx-donut" style="--approved-deg: {{ approved_deg }}deg; --pending-deg: {{ pending_deg }}deg;">
+                        <span><b>{{ ns.total }}</b>Total</span>
+                    </div>
+                    <div class="rx-legend">
+                        <div class="rx-legend-row"><span><i></i>Approved</span><b>{{ ns.approved }} ({{ "%.0f"|format(approved_pct) }}%)</b></div>
+                        <div class="rx-legend-row"><span><i class="pending-dot"></i>Under Review</span><b>{{ ns.pending }} ({{ "%.0f"|format(pending_pct) }}%)</b></div>
+                        <div class="rx-legend-row"><span><i class="rejected-dot"></i>Rejected</span><b>{{ ns.rejected }} ({{ "%.0f"|format(rejected_pct) }}%)</b></div>
                     </div>
                 </div>
-            </article>
-            {% endfor %}
-        </section>
-    {% else %}
-        <section class="empty-state">
-            <h2>No prescription requests yet</h2>
-            <p>
-                Upload your first prescription and the Yuvraj Medical team will review it
-                before confirming eligible medicines.
-            </p>
-            <a href="/upload_prescription" class="btn btn-primary">Upload Prescription</a>
-            <a href="/reorder_subscription" class="btn btn-light">Open Reorder & Subscription</a>
-        </section>
-    {% endif %}
+                <div class="rx-ready">
+                    <span>Medicines Ready to Order</span>
+                    <strong>{{ ns.approved }}</strong>
+                    <small>View and add to cart</small>
+                </div>
+            </section>
+
+            <section class="rx-side-card">
+                <h3>Quick Actions</h3>
+                <div class="rx-side-links">
+                    <a class="rx-side-link" href="/upload_prescription">
+                        <i>↑</i>
+                        <span><strong>Upload New Prescription</strong><small>Upload prescription image or PDF</small></span>
+                        <b>&gt;</b>
+                    </a>
+                    <a class="rx-side-link" href="/reorder_subscription">
+                        <i>↻</i>
+                        <span><strong>Repeat Prescription Order</strong><small>Order from your previous prescriptions</small></span>
+                        <b>&gt;</b>
+                    </a>
+                    <a class="rx-side-link" href="/reorder_subscription#active-plans">
+                        <i>□</i>
+                        <span><strong>Active Subscriptions</strong><small>Manage your medicine subscriptions</small></span>
+                        <b>&gt;</b>
+                    </a>
+                </div>
+            </section>
+
+            <section class="rx-side-card">
+                <h3>Need Help?</h3>
+                <div class="rx-side-links">
+                    <a class="rx-side-link" href="/ai_health_assistant">
+                        <i>?</i>
+                        <span><strong>How prescription verification works?</strong><small>Know our verification process</small></span>
+                        <b>&gt;</b>
+                    </a>
+                    <a class="rx-side-link" href="/upload_prescription">
+                        <i>ⓘ</i>
+                        <span><strong>Prescription upload guidelines</strong><small>View accepted formats and tips</small></span>
+                        <b>&gt;</b>
+                    </a>
+                    <a class="rx-side-link" href="{{ url_for('chatbot') }}">
+                        <i>☎</i>
+                        <span><strong>Contact Support</strong><small>Our team is here to help you</small></span>
+                        <b>&gt;</b>
+                    </a>
+                </div>
+            </section>
+        </aside>
+    </section>
 </main>
 {% include "partials/site_header_script.html" %}
 

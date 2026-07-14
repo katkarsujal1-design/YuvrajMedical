@@ -61,7 +61,7 @@
         body.yvm-page-wishlist .yvm-side-overlay{display:block!important}
         body.yvm-page-wishlist .yvm-side-panel{display:flex!important}
         a{text-decoration:none;color:inherit}
-        .wrap{width:min(1440px,calc(100% - 48px));margin:22px auto 56px}
+        .wrap{width:min(1440px,calc(100% - 48px));margin:58px auto 56px}
         .wishlist-shopbar{
             display:grid;
             grid-template-columns:minmax(260px,520px) repeat(3,auto);
@@ -102,20 +102,21 @@
             background:linear-gradient(135deg,#122033,#0F766E 62%,#B7791F);
             box-shadow:0 18px 38px rgba(15,118,110,.18);
         }
-        .category-nav a{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:900}
+        .category-nav span{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:900;cursor:default}
         .page-top{
             position:relative;
             display:grid;
             gap:14px;
-            margin-bottom:14px;
-            padding:16px;
+            min-height:320px;
+            margin-bottom:18px;
+            padding:34px 38px;
             overflow:hidden;
-            border:1px solid rgba(148,163,184,.30);
-            border-radius:12px;
+            border:0;
+            border-radius:0;
             background:
-                linear-gradient(135deg,rgba(255,255,255,.98),rgba(248,250,252,.93)),
-                radial-gradient(circle at 10% 0,rgba(183,121,31,.12),transparent 26%);
-            box-shadow:0 12px 34px rgba(15,23,42,.08);
+                linear-gradient(90deg,rgba(18,32,51,.94) 0%,rgba(15,118,110,.80) 48%,rgba(138,36,89,.24) 100%),
+                url("/static/images/offer-healthcare-ai.png") center right/cover no-repeat;
+            box-shadow:0 24px 70px rgba(15,23,42,.16);
             backdrop-filter:blur(16px);
         }
         .page-mainline{
@@ -123,43 +124,54 @@
             grid-template-columns:minmax(0,1fr) auto;
             gap:18px;
             align-items:start;
+            position:relative;
+            z-index:1;
         }
         .page-top::before{
             content:"";
             position:absolute;
-            inset:0 0 auto;
-            height:4px;
-            background:linear-gradient(90deg,var(--wish-rose),var(--wish-primary),var(--wish-accent));
+            inset:auto 30px 24px auto;
+            width:190px;
+            height:60px;
+            border-radius:999px;
+            background:rgba(255,255,255,.18);
+            filter:blur(26px);
+            pointer-events:none;
         }
-        .breadcrumb{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:#64748B;font-size:12px;font-weight:850}
-        .breadcrumb a{color:var(--wish-primary)}
+        .breadcrumb{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:rgba(240,253,250,.78);font-size:12px;font-weight:850}
+        .breadcrumb a{color:#A7F3D0}
         .title-row{display:flex;align-items:center;gap:11px}
         .heart-mark{
             width:34px;height:34px;border-radius:9px;
             display:grid;place-items:center;
-            color:var(--wish-primary);background:#ECFEFF;border:1px solid rgba(8,145,178,.22);
-            box-shadow:0 8px 18px rgba(4,120,87,.08);
+            color:#A7F3D0;background:rgba(236,253,245,.14);border:1px solid rgba(167,243,208,.35);
+            box-shadow:0 8px 18px rgba(2,6,23,.12);
+            backdrop-filter:blur(8px);
         }
-        h1{margin:0;font-size:clamp(26px,2vw,32px);line-height:1.05;letter-spacing:0;color:#0F172A}
+        h1{margin:0;font-size:clamp(32px,3.8vw,54px);line-height:1.02;letter-spacing:0;color:#fff}
         .item-badge{
             display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:6px 11px;
-            border-radius:999px;color:#0F766E;background:#ECFEFF;border:1px solid rgba(8,145,178,.22);
+            border-radius:999px;color:#FDE68A;background:rgba(255,255,255,.13);border:1px solid rgba(253,230,138,.28);
             font-size:12px;font-weight:950;white-space:nowrap;
+            backdrop-filter:blur(8px);
         }
-        .page-copy{max-width:650px;margin:8px 0 0;color:#475569;font-size:13px;font-weight:750;line-height:1.4}
+        .page-copy{max-width:650px;margin:10px 0 0;color:rgba(240,253,250,.9);font-size:15px;font-weight:750;line-height:1.6}
         .hero-stats{
             display:grid;
             grid-template-columns:repeat(3,minmax(0,1fr));
             gap:10px;
             margin:0;
             padding:10px;
-            border:1px solid rgba(148,163,184,.22);
+            position:relative;
+            z-index:1;
+            border:1px solid rgba(209,250,229,.24);
             border-radius:10px;
-            background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(248,250,252,.72));
+            background:rgba(255,255,255,.10);
+            backdrop-filter:blur(10px);
         }
-        .hero-stat{display:grid;gap:2px;min-width:0;padding:8px 10px;border:1px solid rgba(148,163,184,.22);border-radius:8px;background:#fff}
-        .hero-stat b{display:block;font-size:15px;color:#122033}
-        .hero-stat span{display:block;margin-top:2px;color:#64748B;font-size:10px;font-weight:850}
+        .hero-stat{display:grid;gap:2px;min-width:0;padding:8px 10px;border:1px solid rgba(209,250,229,.24);border-radius:8px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px)}
+        .hero-stat b{display:block;font-size:15px;color:#FDE68A}
+        .hero-stat span{display:block;margin-top:2px;color:rgba(240,253,250,.82);font-size:10px;font-weight:850}
         .top-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:34px;justify-content:flex-end}
         .top-btn,.add-btn,.mini-add,.empty a{
             display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -167,7 +179,9 @@
             border:1px solid rgba(15,118,110,.24);background:#fff;color:var(--wish-primary);
             font-size:13px;font-weight:950;cursor:pointer;transition:.18s ease;
         }
+        .page-top .top-btn{background:rgba(255,255,255,.13);color:#fff;border-color:rgba(209,250,229,.26);backdrop-filter:blur(8px)}
         .top-btn.primary,.summary-cta,.add-btn{color:#fff;background:linear-gradient(135deg,#8A2459,#0F766E);border-color:transparent;box-shadow:0 14px 30px rgba(15,118,110,.20)}
+        .page-top .top-btn.primary{background:#fff;color:#0F766E;box-shadow:0 14px 30px rgba(2,6,23,.16)}
         .top-btn:hover,.add-btn:hover,.mini-add:hover,.empty a:hover{transform:translateY(-1px);box-shadow:0 12px 24px rgba(15,23,42,.10)}
         .layout{display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:28px;align-items:start}
         .wishlist-panel,.side-card,.benefit-strip,.empty{
@@ -292,7 +306,7 @@
             .side-card:first-child{grid-column:1 / -1}
         }
         @media(max-width:900px){
-            .page-top{padding:18px}
+            .page-top{min-height:300px;padding:28px 22px;background-position:center}
             .page-mainline{display:block}
             .breadcrumb{margin-bottom:10px}
             .hero-stats{grid-template-columns:1fr;margin-top:0}
@@ -306,7 +320,7 @@
             .category-nav{gap:10px 14px}
         }
         @media(max-width:620px){
-            .wrap{width:min(100% - 24px,1440px);margin-top:18px}
+            .wrap{width:min(100% - 24px,1440px);margin-top:122px}
             h1{font-size:28px}
             .title-row{align-items:flex-start}
             .hero-stats{display:grid;grid-template-columns:1fr}
@@ -343,14 +357,14 @@
     </section>
 
     <nav class="category-nav" aria-label="Popular categories">
-        <a href="/#departments">Prescription Medicines</a>
-        <a href="/#departments">OTC Medicines</a>
-        <a href="/#departments">Health Care</a>
-        <a href="/#departments">Personal Care</a>
-        <a href="/#departments">Baby Care</a>
-        <a href="/#departments">Devices</a>
-        <a href="/#departments">Ayurveda</a>
-        <a href="/#departments">Health Essentials</a>
+        <span>Prescription Medicines</span>
+        <span>OTC Medicines</span>
+        <span>Health Care</span>
+        <span>Personal Care</span>
+        <span>Baby Care</span>
+        <span>Devices</span>
+        <span>Ayurveda</span>
+        <span>Health Essentials</span>
     </nav>
 
     {% set in_stock_count = namespace(value=0) %}

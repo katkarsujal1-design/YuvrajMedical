@@ -172,7 +172,9 @@ body{
 }
     </style>
 </head>
-<body class="yvm-pro-page">
+<body class="yvm-pro-page yvm-page-health-essentials">
+
+{% include "partials/site_header.html" %}
 
 <div class="header">
     <a class="brand" href="/">
@@ -476,5 +478,6 @@ document.querySelectorAll(".cart-action").forEach((link) => {
 });
 </script>
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>

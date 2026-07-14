@@ -435,6 +435,10 @@ body.yvm-pro-page {
     --yvm-teal: #0f766e;
     --yvm-gold: #f4b63f;
     --yvm-page-image: url("/static/images/hero-doctor-clean.png");
+    --yvm-shell-max: 1440px;
+    --yvm-shell-gutter: clamp(24px, 5vw, 72px);
+    --yvm-shell-top: 28px;
+    --yvm-shell-bottom: 56px;
     min-height: 100vh;
     color: var(--yvm-ink);
     background:
@@ -471,6 +475,12 @@ body.yvm-pro-page::after {
 }
 
 body.yvm-page-ai-health-assistant { --yvm-page-image: url("/static/images/ai-feature-hero-premium.png"); }
+body.yvm-page-home,
+body.yvm-page-health-essentials,
+body.yvm-page-department,
+body.yvm-page-medicine-details { --yvm-page-image: url("/static/images/hero-doctor-clean.png"); }
+body.yvm-page-category,
+body.yvm-page-brand { --yvm-page-image: url("/static/images/promo-health-essentials-products-premium.png"); }
 body.yvm-page-cart,
 body.yvm-page-checkout,
 body.yvm-page-checkout-prescription { --yvm-page-image: url("/static/images/order-card-visual-premium.png"); }
@@ -500,6 +510,140 @@ body.yvm-page-scan-barcode,
 body.yvm-page-auto-scan,
 body.yvm-page-barcode-result,
 body.yvm-page-add-scanned-medicine { --yvm-page-image: url("/static/images/dashboard-order-ai.png"); }
+
+body.yvm-pro-page:has(.yvm-site-header) {
+    --yvm-shell-top: 58px;
+}
+
+body.yvm-pro-page:has(.yvm-site-header) > .header,
+body.yvm-pro-page:has(.yvm-site-header) > .home-service-strip,
+body.yvm-pro-page:has(.yvm-site-header) > .side-overlay,
+body.yvm-pro-page:has(.yvm-site-header) > .side-panel {
+    display: none !important;
+}
+
+body.yvm-pro-page > main,
+body.yvm-pro-page main.wrap,
+body.yvm-pro-page main.page,
+body.yvm-pro-page main.page-shell,
+body.yvm-pro-page main.shell,
+body.yvm-pro-page main.home-shell,
+body.yvm-pro-page main.category-shell,
+body.yvm-pro-page main.brand-shell,
+body.yvm-pro-page main.health-shell,
+body.yvm-pro-page main.delivery-shell,
+body.yvm-pro-page main.profile-wrap,
+body.yvm-pro-page main.chatbot-page,
+body.yvm-pro-page main.enterprise-login,
+body.yvm-pro-page .register-wrapper {
+    width: min(var(--yvm-shell-max), calc(100% - var(--yvm-shell-gutter))) !important;
+    max-width: var(--yvm-shell-max) !important;
+    margin: var(--yvm-shell-top) auto var(--yvm-shell-bottom) !important;
+}
+
+body.yvm-pro-page main.card,
+body.yvm-pro-page main.invoice,
+body.yvm-pro-page main.scanner-card {
+    width: min(var(--yvm-shell-max), calc(100% - var(--yvm-shell-gutter))) !important;
+    max-width: var(--yvm-shell-max) !important;
+    margin: var(--yvm-shell-top) auto var(--yvm-shell-bottom) !important;
+}
+
+body.yvm-pro-page main > section.hero,
+body.yvm-pro-page main > .hero,
+body.yvm-pro-page main > section.home-hero,
+body.yvm-pro-page main > section.customer-hero,
+body.yvm-pro-page main > section.category-hero,
+body.yvm-pro-page main > section.brand-hero,
+body.yvm-pro-page main > section.essentials-hero,
+body.yvm-pro-page main > section.rx-hero,
+body.yvm-pro-page main > section.delivery-hero,
+body.yvm-pro-page main > section.payment-hero,
+body.yvm-pro-page main > section.rs-hero,
+body.yvm-pro-page main > section.page-top,
+body.yvm-pro-page main > section.visual-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background:
+        linear-gradient(90deg, rgba(16,32,51,.94) 0%, rgba(15,118,110,.80) 48%, rgba(138,36,89,.24) 100%),
+        var(--yvm-page-image) center right / cover no-repeat !important;
+    box-shadow: 0 24px 70px rgba(15,23,42,.16) !important;
+}
+
+body.yvm-pro-page main > section.hero::after,
+body.yvm-pro-page main > .hero::after,
+body.yvm-pro-page main > section.home-hero::after,
+body.yvm-pro-page main > section.customer-hero::after,
+body.yvm-pro-page main > section.category-hero::after,
+body.yvm-pro-page main > section.brand-hero::after,
+body.yvm-pro-page main > section.essentials-hero::after,
+body.yvm-pro-page main > section.rx-hero::after,
+body.yvm-pro-page main > section.delivery-hero::after,
+body.yvm-pro-page main > section.payment-hero::after,
+body.yvm-pro-page main > section.rs-hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 30px 24px auto;
+    width: 190px;
+    height: 60px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    filter: blur(26px);
+    pointer-events: none;
+}
+
+body.yvm-pro-page main > section.hero > *,
+body.yvm-pro-page main > .hero > *,
+body.yvm-pro-page main > section.home-hero > *,
+body.yvm-pro-page main > section.customer-hero > *,
+body.yvm-pro-page main > section.category-hero > *,
+body.yvm-pro-page main > section.brand-hero > *,
+body.yvm-pro-page main > section.essentials-hero > *,
+body.yvm-pro-page main > section.rx-hero > *,
+body.yvm-pro-page main > section.delivery-hero > *,
+body.yvm-pro-page main > section.payment-hero > *,
+body.yvm-pro-page main > section.rs-hero > *,
+body.yvm-pro-page main > section.page-top > *,
+body.yvm-pro-page main > section.visual-hero > * {
+    position: relative;
+    z-index: 1;
+}
+
+body.yvm-pro-page main > section.hero h1,
+body.yvm-pro-page main > .hero h1,
+body.yvm-pro-page main > section.home-hero h1,
+body.yvm-pro-page main > section.customer-hero h1,
+body.yvm-pro-page main > section.category-hero h1,
+body.yvm-pro-page main > section.brand-hero h1,
+body.yvm-pro-page main > section.essentials-hero h1,
+body.yvm-pro-page main > section.rx-hero h1,
+body.yvm-pro-page main > section.delivery-hero h1,
+body.yvm-pro-page main > section.payment-hero h1,
+body.yvm-pro-page main > section.rs-hero h1,
+body.yvm-pro-page main > section.page-top h1,
+body.yvm-pro-page main > section.visual-hero h1 {
+    color: #fff !important;
+    letter-spacing: 0;
+}
+
+body.yvm-pro-page main > section.hero p,
+body.yvm-pro-page main > .hero p,
+body.yvm-pro-page main > section.home-hero p,
+body.yvm-pro-page main > section.customer-hero p,
+body.yvm-pro-page main > section.category-hero p,
+body.yvm-pro-page main > section.brand-hero p,
+body.yvm-pro-page main > section.essentials-hero p,
+body.yvm-pro-page main > section.rx-hero p,
+body.yvm-pro-page main > section.delivery-hero p,
+body.yvm-pro-page main > section.payment-hero p,
+body.yvm-pro-page main > section.rs-hero p,
+body.yvm-pro-page main > section.page-top p,
+body.yvm-pro-page main > section.visual-hero p {
+    color: rgba(240,253,250,.90) !important;
+}
 
 body.yvm-pro-page .wrap,
 body.yvm-pro-page .page,
@@ -609,10 +753,35 @@ body.yvm-pro-page .mini-pill {
 }
 
 @media (max-width: 820px) {
+    body.yvm-pro-page {
+        --yvm-shell-gutter: 24px;
+    }
+
+    body.yvm-pro-page:has(.yvm-site-header) {
+        --yvm-shell-top: 122px;
+    }
+
     body.yvm-pro-page::before {
         background:
             linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.88)),
             var(--yvm-page-image) center top 90px / min(360px, 82vw) auto no-repeat;
         opacity: .72;
+    }
+
+    body.yvm-pro-page main > section.hero,
+    body.yvm-pro-page main > .hero,
+    body.yvm-pro-page main > section.home-hero,
+    body.yvm-pro-page main > section.customer-hero,
+    body.yvm-pro-page main > section.category-hero,
+    body.yvm-pro-page main > section.brand-hero,
+    body.yvm-pro-page main > section.essentials-hero,
+    body.yvm-pro-page main > section.rx-hero,
+    body.yvm-pro-page main > section.delivery-hero,
+    body.yvm-pro-page main > section.payment-hero,
+    body.yvm-pro-page main > section.rs-hero,
+    body.yvm-pro-page main > section.page-top,
+    body.yvm-pro-page main > section.visual-hero {
+        min-height: 300px;
+        background-position: center !important;
     }
 }

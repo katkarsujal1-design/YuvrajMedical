@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reorder &amp; Subscription - Yuvraj Medical</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         :root{--ink:#101b34;--muted:#53627d;--line:#dfe7f1;--green:#007a52;--green2:#008c64;--soft:#f8fbfd;--red:#ef4444;--orange:#f59e0b;--gold:#d9a637;--shadow:0 14px 34px rgba(16,27,52,.08);--shadow-lg:0 26px 70px rgba(16,27,52,.14)}
@@ -11,6 +13,9 @@
         body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#fbfcfd 0%,#f4f8fb 100%)}
         a{text-decoration:none;color:inherit}
         button,input,select{font:inherit}
+        body.yvm-pro-page .rs-header,
+        body.yvm-pro-page .side-overlay,
+        body.yvm-pro-page .side-panel{display:none!important}
         .rs-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 1px 0 rgba(16,27,52,.08)}
         .rs-header-top{min-height:92px;background:#fff;color:#101b34;border-bottom:1px solid #dfe7f1}
         .rs-header-inner{width:min(1750px,calc(100% - 72px));height:100%;min-height:92px;margin:0 auto;display:grid;grid-template-columns:280px minmax(360px,1fr) auto;gap:26px;align-items:center}
@@ -41,7 +46,9 @@
         @media(max-width:760px){.rs-header-inner,.wrap{width:min(100% - 22px,1660px)}.rs-header-inner{grid-template-columns:1fr;gap:12px}.brand img{width:58px;height:58px}.brand-word{font-size:30px}.header-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cart-pill,.menu-toggle{justify-content:center}.stat-strip,.subs-grid,.builder-benefits{grid-template-columns:1fr}.buy-item{grid-template-columns:58px minmax(0,1fr);gap:12px}.buy-item .price-wrap,.buy-item .stepper,.buy-item .add-btn,.buy-item .bookmark{grid-column:2}.builder-tools,.plan-row{grid-template-columns:1fr}.remove-x{justify-self:start}.cart-offer{grid-template-columns:1fr}.panel-head{display:grid}.carousel-arrow{display:none}}
     </style>
 </head>
-<body>
+<body class="yvm-pro-page yvm-page-reorder-subscription">
+{% include "partials/site_header.html" %}
+
 <header class="rs-header">
     <div class="rs-header-top">
         <div class="rs-header-inner">
@@ -371,5 +378,6 @@
     })();
 </script>
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+{% include "partials/site_header_script.html" %}
 </body>
 </html>
