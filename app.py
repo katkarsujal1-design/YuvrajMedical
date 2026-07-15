@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, session, g, jsonify
 import hashlib
 import re
 import secrets
+import base64
 import requests
 from dotenv import load_dotenv
 from google import genai
