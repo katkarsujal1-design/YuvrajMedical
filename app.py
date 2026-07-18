@@ -4581,6 +4581,49 @@ def get_customer_order(order_id, user_id):
     return order, items
 
 
+def get_owner_order(order_id):
+    """Return an order and its line items for an authenticated owner."""
+    ensure_payment_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT orders.*, users.name AS customer_name
+        FROM orders
+        JOIN users ON users.id = orders.user_id
+        WHERE orders.id=%s
+    """, (order_id,))
+    order = cursor.fetchone()
+    if not order:
+        cursor.close()
+        return None, []
+    cursor.execute("""
+        SELECT medicines.id AS medicine_id, medicines.name,
+               order_items.quantity, order_items.price
+        FROM order_items
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE order_items.order_id=%s
+        ORDER BY medicines.name
+    """, (order_id,))
+    items = cursor.fetchall()
+    cursor.close()
+    return order, items
+
+
+@app.route("/owner/orders/<int:order_id>/invoice")
+def owner_order_invoice(order_id):
+    if "user" not in flask.session or flask.session["user"]["role"] != "owner":
+        return flask.redirect("/login")
+    order, items = get_owner_order(order_id)
+    if not order:
+        abort(404)
+    invoice_image = static_image_data_uri("images/order-card-visual-premium.png")
+    html = flask.render_template("invoice.html", order=order, items=items, invoice_image=invoice_image)
+    response = flask.make_response(html)
+    response.headers["Content-Type"] = "text/html; charset=utf-8"
+    response.headers["Content-Disposition"] = f"attachment; filename=invoice-{order_id}.html"
+    return response
+
+
 @app.route("/payment_history")
 def payment_history():
     if "user" not in flask.session:
@@ -5501,7 +5544,8 @@ def update_order_status(order_id):
     status = flask.request.form.get("status")
     if status not in ORDER_STATUSES:
         flash("Invalid order status.")
-        return flask.redirect("/staff#orders")
+        destination = "/owner_dashboard#orders" if flask.session["user"]["role"] == "owner" else "/staff#orders"
+        return flask.redirect(destination)
 
     refund_status = "Not Applicable"
     return_status = "Not Requested"
@@ -5525,7 +5569,8 @@ def update_order_status(order_id):
     if status == "Delivered" and existing_order.get("delivery_otp") and submitted_delivery_otp != existing_order["delivery_otp"]:
         cursor.close()
         flash("Delivery OTP is required to mark this order as Delivered.")
-        return flask.redirect("/staff#orders")
+        destination = "/owner_dashboard#orders" if flask.session["user"]["role"] == "owner" else "/staff#orders"
+        return flask.redirect(destination)
 
     cursor.execute("""
         UPDATE orders
@@ -5557,7 +5602,198 @@ def update_order_status(order_id):
     db.commit()
     cursor.close()
     flash(f"Order #{order_id} updated to {status}.")
-    return flask.redirect("/staff#orders")
+    destination = "/owner_dashboard#orders" if flask.session["user"]["role"] == "owner" else "/staff#orders"
+    return flask.redirect(destination)
+# ================= REVENUE ANALYTICS =================
+
+def calculate_revenue_growth(current, previous):
+    """Return a JSON/template-safe comparison with zero-safe growth."""
+    current = float(current or 0)
+    previous = float(previous or 0)
+    difference = current - previous
+    if previous:
+        growth_percentage = (difference / previous) * 100
+    else:
+        growth_percentage = 0 if current == 0 else 100
+    trend = "increase" if difference > 0 else "decrease" if difference < 0 else "neutral"
+    return {
+        "current": round(current, 2),
+        "previous": round(previous, 2),
+        "difference": round(difference, 2),
+        "growth_percentage": round(growth_percentage, 2),
+        "trend": trend,
+    }
+
+
+def _revenue_total(db, start_date, end_date):
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COALESCE(SUM(total), 0)
+        FROM orders
+        WHERE DATE(`date`) BETWEEN %s AND %s
+          AND status != 'Cancelled'
+    """, (start_date.isoformat(), end_date.isoformat()))
+    total = cursor.fetchone()[0]
+    cursor.close()
+    return float(total or 0)
+
+
+def _month_shift(value, months):
+    """Shift the first day of a month without an external date dependency."""
+    month_index = value.year * 12 + value.month - 1 + months
+    return datetime(month_index // 12, month_index % 12 + 1, 1).date()
+
+
+def build_revenue_dashboard(db, anchor_date=None, chart_start=None, chart_end=None):
+    """Build all revenue cards, charts, and insights from completed order data."""
+    anchor = anchor_date or datetime.now().date()
+    week_start = anchor - timedelta(days=anchor.weekday())
+    last_week_start = week_start - timedelta(days=7)
+    month_start = anchor.replace(day=1)
+    next_month_start = _month_shift(month_start, 1)
+    last_month_start = _month_shift(month_start, -1)
+    year_start = anchor.replace(month=1, day=1)
+    next_year_start = anchor.replace(year=anchor.year + 1, month=1, day=1)
+    last_year_start = anchor.replace(year=anchor.year - 1, month=1, day=1)
+
+    cards = {
+        "today": calculate_revenue_growth(
+            _revenue_total(db, anchor, anchor),
+            _revenue_total(db, anchor - timedelta(days=1), anchor - timedelta(days=1)),
+        ),
+        "week": calculate_revenue_growth(
+            _revenue_total(db, week_start, anchor),
+            _revenue_total(db, last_week_start, last_week_start + (anchor - week_start)),
+        ),
+        "month": calculate_revenue_growth(
+            _revenue_total(db, month_start, anchor),
+            _revenue_total(db, last_month_start, min(month_start - timedelta(days=1), last_month_start + (anchor - month_start))),
+        ),
+        "year": calculate_revenue_growth(
+            _revenue_total(db, year_start, anchor),
+            _revenue_total(db, last_year_start, last_year_start + (anchor - year_start)),
+        ),
+    }
+
+    chart_start = chart_start or anchor
+    chart_end = chart_end or anchor
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT DATE(`date`) AS revenue_date, COALESCE(SUM(total), 0) AS revenue
+        FROM orders
+        WHERE DATE(`date`) BETWEEN %s AND %s
+          AND status != 'Cancelled'
+        GROUP BY DATE(`date`)
+        ORDER BY revenue_date
+    """, (chart_start.isoformat(), chart_end.isoformat()))
+    daily_rows = cursor.fetchall()
+    cursor.close()
+    daily_map = {str(row["revenue_date"]): float(row["revenue"] or 0) for row in daily_rows}
+    day_count = (chart_end - chart_start).days + 1
+    daily_labels = [(chart_start + timedelta(days=i)).strftime("%d %b") for i in range(day_count)]
+    daily_values = [daily_map.get((chart_start + timedelta(days=i)).isoformat(), 0) for i in range(day_count)]
+
+    # Match the selected range against the immediately preceding range.
+    previous_start = chart_start - timedelta(days=day_count)
+    previous_end = chart_start - timedelta(days=1)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT DATE(`date`) AS revenue_date, COALESCE(SUM(total), 0) AS revenue
+        FROM orders
+        WHERE DATE(`date`) BETWEEN %s AND %s
+          AND status != 'Cancelled'
+        GROUP BY DATE(`date`)
+        ORDER BY revenue_date
+    """, (previous_start.isoformat(), previous_end.isoformat()))
+    previous_rows = cursor.fetchall()
+    cursor.close()
+    previous_map = {str(row["revenue_date"]): float(row["revenue"] or 0) for row in previous_rows}
+    previous_values = [previous_map.get((previous_start + timedelta(days=i)).isoformat(), 0) for i in range(day_count)]
+
+    month_chart_start = anchor.replace(month=1, day=1)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT MONTH(`date`) AS month_number, COALESCE(SUM(total), 0) AS revenue
+        FROM orders
+        WHERE DATE(`date`) >= %s AND DATE(`date`) < %s
+          AND status != 'Cancelled'
+        GROUP BY MONTH(`date`)
+        ORDER BY month_number
+    """, (month_chart_start.isoformat(), next_year_start.isoformat()))
+    monthly_rows = cursor.fetchall()
+    cursor.close()
+    monthly_map = {int(row["month_number"]): float(row["revenue"] or 0) for row in monthly_rows}
+    monthly_labels = [datetime(2000, month, 1).strftime("%b") for month in range(1, 13)]
+    monthly_values = [monthly_map.get(month, 0) for month in range(1, 13)]
+
+    total_in_range = sum(daily_values)
+    non_empty_days = [(label, value) for label, value in zip(daily_labels, daily_values) if value > 0]
+    highest = max(non_empty_days, key=lambda item: item[1]) if non_empty_days else ("No sales", 0)
+    lowest = min(non_empty_days, key=lambda item: item[1]) if non_empty_days else ("No sales", 0)
+    best_month_index = max(range(12), key=lambda index: monthly_values[index]) if any(monthly_values) else None
+    primary = calculate_revenue_growth(
+        total_in_range,
+        sum(previous_values),
+    )
+
+    return {
+        "cards": cards,
+        "charts": {
+            "daily": {
+                "labels": daily_labels,
+                "values": daily_values,
+                "previous_values": previous_values,
+            },
+            "monthly": {"labels": monthly_labels, "values": monthly_values},
+        },
+        "selected_period": primary,
+        "insights": {
+            "highest_day": {"label": highest[0], "value": round(highest[1], 2)},
+            "lowest_day": {"label": lowest[0], "value": round(lowest[1], 2)},
+            "average_daily": round(total_in_range / day_count, 2) if day_count else 0,
+            "best_month": monthly_labels[best_month_index] if best_month_index is not None else "No sales yet",
+        },
+        "range": {"start": chart_start.isoformat(), "end": chart_end.isoformat()},
+    }
+
+
+def _parse_revenue_filter(filter_name, start_value=None, end_value=None):
+    today = datetime.now().date()
+    if filter_name == "yesterday":
+        start = end = today - timedelta(days=1)
+    elif filter_name == "last_7_days":
+        start, end = today - timedelta(days=6), today
+    elif filter_name == "last_30_days":
+        start, end = today - timedelta(days=29), today
+    elif filter_name == "this_month":
+        start, end = today.replace(day=1), today
+    elif filter_name == "this_year":
+        start, end = today.replace(month=1, day=1), today
+    elif filter_name == "custom":
+        start = datetime.strptime(start_value or "", "%Y-%m-%d").date()
+        end = datetime.strptime(end_value or "", "%Y-%m-%d").date()
+        if start > end or (end - start).days > 730:
+            raise ValueError("Choose a valid range of up to two years.")
+    else:
+        start = end = today
+    return start, end
+
+
+@app.route("/api/owner/revenue")
+def owner_revenue_api():
+    if "user" not in flask.session or flask.session["user"].get("role") != "owner":
+        return flask.jsonify({"error": "Owner authentication required."}), 401
+    try:
+        start, end = _parse_revenue_filter(
+            flask.request.args.get("filter", "today"),
+            flask.request.args.get("start"),
+            flask.request.args.get("end"),
+        )
+    except ValueError as error:
+        return flask.jsonify({"error": str(error)}), 400
+    return flask.jsonify(build_revenue_dashboard(get_db(), end, start, end))
+
+
 # ================= OWNER DASHBOARD =================
 @app.route("/owner_dashboard")
 def owner_dashboard():
@@ -5856,7 +6092,13 @@ def owner_dashboard():
     cursor.execute("""
 
         SELECT orders.*,
-               users.name AS customer_name
+               users.name AS customer_name,
+               COALESCE((
+                   SELECT GROUP_CONCAT(CONCAT(medicines.name, ' x', order_items.quantity) SEPARATOR ', ')
+                   FROM order_items
+                   JOIN medicines ON medicines.id = order_items.medicine_id
+                   WHERE order_items.order_id = orders.id
+               ), 'No items') AS item_summary
 
         FROM orders
 
@@ -5925,6 +6167,11 @@ def owner_dashboard():
     except Exception:
         recent_prescriptions = []
 
+    # ================= REVENUE COMPARISONS =================
+
+    revenue_dashboard = build_revenue_dashboard(db)
+    revenue_cards = revenue_dashboard["cards"]
+
     # ================= RENDER =================
 
     response = flask.make_response(flask.render_template(
@@ -5935,6 +6182,19 @@ def owner_dashboard():
         weekly_sales=weekly_sales,
         monthly_sales=monthly_sales,
         yearly_sales=yearly_sales,
+
+        today_revenue=revenue_cards["today"]["current"],
+        yesterday_revenue=revenue_cards["today"]["previous"],
+        weekly_revenue=revenue_cards["week"]["current"],
+        last_week_revenue=revenue_cards["week"]["previous"],
+        monthly_revenue=revenue_cards["month"]["current"],
+        last_month_revenue=revenue_cards["month"]["previous"],
+        yearly_revenue=revenue_cards["year"]["current"],
+        last_year_revenue=revenue_cards["year"]["previous"],
+        growth_percentage=revenue_cards["today"]["growth_percentage"],
+        difference=revenue_cards["today"]["difference"],
+        trend=revenue_cards["today"]["trend"],
+        revenue_dashboard=revenue_dashboard,
 
         pending_orders=pending_orders,
         success_orders=success_orders,
