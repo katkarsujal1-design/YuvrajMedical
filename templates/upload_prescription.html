@@ -519,6 +519,126 @@
             gap: 16px;
         }
 
+        .ai-rx-banner {
+            order: 3;
+            display: grid;
+            grid-template-columns: minmax(0, .92fr) minmax(260px, .48fr);
+            gap: 22px;
+            align-items: center;
+            min-height: 235px;
+            padding: 30px 34px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(8, 145, 178, .24);
+            border-radius: 14px;
+            background:
+                linear-gradient(90deg, rgba(5, 51, 68, .94) 0%, rgba(15, 118, 110, .90) 54%, rgba(255, 255, 255, .62) 100%),
+                url("/static/images/ai-feature-hero-premium.png") right center / contain no-repeat;
+            box-shadow: 0 18px 46px rgba(5, 51, 68, .16);
+            color: #ffffff;
+        }
+
+        .ai-rx-banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(120deg, rgba(255, 255, 255, .18), transparent 34%),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, .08) 0 1px, transparent 1px 22px);
+        }
+
+        .ai-rx-copy,
+        .ai-rx-panel {
+            position: relative;
+            z-index: 1;
+        }
+
+        .ai-rx-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 28px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            color: #ccfbf1;
+            background: rgba(255, 255, 255, .13);
+            border: 1px solid rgba(204, 251, 241, .32);
+            font-size: 11px;
+            font-weight: 1000;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        .ai-rx-badge strong {
+            display: inline-grid;
+            place-items: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            color: #064e3b;
+            background: #a7f3d0;
+            font-size: 10px;
+        }
+
+        .ai-rx-banner h2 {
+            max-width: 720px;
+            margin: 16px 0 10px;
+            color: #ffffff;
+            font-size: clamp(28px, 3vw, 42px);
+            line-height: 1.08;
+            letter-spacing: 0;
+        }
+
+        .ai-rx-banner p {
+            max-width: 680px;
+            margin: 0;
+            color: #dff8f4;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.65;
+        }
+
+        .ai-rx-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .ai-rx-panel {
+            justify-self: end;
+            width: min(320px, 100%);
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, .36);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .16);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 42px rgba(2, 6, 23, .18);
+        }
+
+        .ai-rx-panel span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 12px 0;
+            color: #ecfeff;
+            border-bottom: 1px solid rgba(255, 255, 255, .20);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .ai-rx-panel span:last-child {
+            border-bottom: 0;
+        }
+
+        .ai-rx-panel b {
+            color: #a7f3d0;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
         .trust-row {
             grid-template-columns: repeat(4, minmax(0, 1fr));
             order: 5;
@@ -1070,8 +1190,14 @@
 
         @media (max-width: 1060px) {
             .rx-hero,
+            .ai-rx-banner,
             .main-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .ai-rx-panel {
+                justify-self: stretch;
+                width: 100%;
             }
 
             .hero-visual {
@@ -1099,6 +1225,7 @@
             }
 
             .rx-hero,
+            .ai-rx-banner,
             .upload-card {
                 padding: 22px;
             }
@@ -1107,7 +1234,15 @@
                 min-height: auto;
             }
 
+            .ai-rx-banner {
+                background:
+                    linear-gradient(135deg, rgba(5, 51, 68, .96), rgba(15, 118, 110, .92)),
+                    url("/static/images/ai-feature-hero-premium.png") right bottom / 260px no-repeat;
+            }
+
             .hero-actions,
+            .ai-rx-actions,
+            .ai-rx-actions .btn,
             .hero-actions .btn {
                 width: 100%;
             }
@@ -1141,6 +1276,7 @@
             }
 
             .rx-hero,
+            .ai-rx-banner,
             .upload-card,
             .side-card {
                 padding: 18px;
@@ -1253,6 +1389,26 @@
                 <span class="stamp"></span>
                 <span class="qr"></span>
             </div>
+        </div>
+    </section>
+
+    <section class="ai-rx-banner" aria-labelledby="ai-prescription-title">
+        <div class="ai-rx-copy">
+            <span class="ai-rx-badge"><strong>AI</strong> Smart prescription support</span>
+            <h2 id="ai-prescription-title">Need help reading your prescription before upload?</h2>
+            <p>
+                Use the Yuvraj Medical AI assistant for simple medicine guidance, upload tips, and next-step support before our pharmacist verifies your prescription.
+            </p>
+            <div class="ai-rx-actions">
+                <a class="btn btn-primary" href="{{ url_for('chatbot') }}">Open AI Assistant</a>
+                <a class="btn btn-light" href="#upload-card">Upload Now</a>
+            </div>
+        </div>
+
+        <div class="ai-rx-panel" aria-label="AI prescription support highlights">
+            <span>Clear photo guidance <b>Instant tips</b></span>
+            <span>Medicine name help <b>AI support</b></span>
+            <span>Pharmacist verification <b>Required</b></span>
         </div>
     </section>
 
