@@ -2727,6 +2727,127 @@
             border-color:rgba(var(--section-rgb),.26);
         }
 
+        /* ================= REVENUE COMPARISON ================= */
+        #analytics{
+            border-color:rgba(148,163,184,.14);
+            background:
+                radial-gradient(circle at top left,rgba(59,130,246,.12),transparent 34%),
+                linear-gradient(145deg,#1e293b 0%,#1a202c 100%);
+            box-shadow:0 28px 76px rgba(2,6,23,.28);
+        }
+        #analytics::before{display:none;}
+        #analytics > .section-heading h2,
+        #analytics .revenue-chart-card .section-heading h2,
+        #analytics .revenue-insights .section-heading h2{color:#f8fafc;}
+        #analytics > .section-heading p,
+        #analytics .revenue-chart-card .section-heading p,
+        #analytics .revenue-insights .section-heading p{color:#94a3b8;}
+        #analytics .glass-card,
+        #analytics .revenue-comparison-card,
+        #analytics .revenue-insight-grid .list-item{
+            border-color:rgba(148,163,184,.15);
+            background:linear-gradient(145deg,rgba(51,65,85,.92) 0%,rgba(30,41,59,.88) 100%);
+            box-shadow:0 20px 48px rgba(2,6,23,.28);
+        }
+        #analytics .glass-card:hover,
+        #analytics .revenue-comparison-card:hover,
+        #analytics .revenue-insight-grid .list-item:hover{
+            border-color:rgba(203,213,225,.24);
+            box-shadow:0 28px 64px rgba(2,6,23,.36);
+        }
+        #analytics .sales-metric-label{color:#cbd5e1;}
+        #analytics .sales-metric-value{color:#f8fafc;}
+        #analytics .revenue-insight-grid .list-item strong{color:#f8fafc;}
+        #analytics .revenue-insight-grid .list-item span{color:#94a3b8;}
+        #analytics #revenueRangeLabel{
+            color:#dbeafe;
+            background:rgba(15,23,42,.34);
+            border:1px solid rgba(148,163,184,.18);
+        }
+        .revenue-filters{margin-bottom:18px;padding:14px 16px;}
+        .revenue-filter-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+        .revenue-filter-buttons .table-btn,
+        .custom-revenue-range .table-btn{color:#cbd5e1;background:rgba(15,23,42,.34);border-color:rgba(148,163,184,.18);}
+        .revenue-filter-buttons .table-btn.active{color:#fff;background:linear-gradient(135deg,var(--blue),var(--cyan));border-color:transparent;}
+        .custom-revenue-range{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(148,163,184,.18);}
+        .custom-revenue-range[hidden]{display:none;}
+        .custom-revenue-range label{display:grid;gap:5px;color:#94a3b8;font-size:12px;font-weight:800;}
+        .custom-revenue-range input{min-height:36px;padding:7px 10px;color:#e2e8f0;background:#0f172a;border:1px solid rgba(148,163,184,.25);border-radius:9px;}
+        .revenue-comparison-grid{margin-bottom:18px;}
+        .revenue-comparison-card{min-height:190px;}
+        .revenue-trend{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:900;}
+        .revenue-trend.increase{color:#047857;background:#dcfce7;}
+        .revenue-trend.decrease{color:#b91c1c;background:#fee2e2;}
+        .revenue-trend.neutral{color:#475569;background:#e2e8f0;}
+        .revenue-card-details{position:relative;z-index:1;display:grid;gap:8px;margin-top:20px;padding-top:14px;border-top:1px solid rgba(148,163,184,.18);}
+        .revenue-card-details span{display:flex;justify-content:space-between;gap:12px;color:#94a3b8;font-size:12px;font-weight:700;}
+        .revenue-card-details strong{color:#e2e8f0;}
+        .revenue-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:18px;}
+        .revenue-chart-card{min-width:0;}
+        .revenue-chart-growth{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap;}
+        .revenue-chart-growth.increase{color:#047857;background:#dcfce7;}
+        .revenue-chart-growth.decrease{color:#b91c1c;background:#fee2e2;}
+        .revenue-chart-growth.neutral{color:#475569;background:#e2e8f0;}
+        .revenue-canvas-wrap{position:relative;height:300px;}
+        .revenue-insight-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+        .revenue-insight-grid .list-item{align-items:flex-start;flex-direction:column;min-height:92px;}
+        .revenue-insight-grid .list-item strong{font-size:13px;line-height:1.45;}
+        .revenue-error{margin-top:12px;padding:10px 12px;color:#b91c1c;background:#fee2e2;border-radius:10px;font-size:13px;font-weight:800;}
+        .revenue-loading{position:absolute;inset:0;z-index:20;display:grid;grid-template-columns:repeat(2,1fr);gap:16px;padding:70px 22px 22px;background:rgba(15,23,42,.82);backdrop-filter:blur(4px);}
+        .revenue-loading[hidden]{display:none;}
+        .revenue-loading span{min-height:150px;border-radius:16px;background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%;animation:revenueSkeleton 1.2s infinite;}
+        @keyframes revenueSkeleton{to{background-position:-200% 0;}}
+        .dark-enterprise .custom-revenue-range input{color:#e2e8f0;background:#0f172a;border-color:rgba(148,163,184,.25);}
+        @media(max-width:1180px){.revenue-insight-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+        @media(max-width:760px){.revenue-chart-grid,.revenue-insight-grid{grid-template-columns:1fr;}.revenue-canvas-wrap{height:250px;}.revenue-filter-buttons{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}.revenue-filter-buttons .table-btn{flex:0 0 auto;}.revenue-loading{grid-template-columns:1fr;}}
+
+        /* ================= RECENT ORDERS CONTROLS ================= */
+        #orders{
+            border-color:rgba(148,163,184,.14);
+            background:
+                radial-gradient(circle at top left,rgba(59,130,246,.12),transparent 34%),
+                linear-gradient(145deg,#1e293b 0%,#1a202c 100%);
+            box-shadow:0 28px 76px rgba(2,6,23,.28);
+        }
+        #orders::before{display:none;}
+        #orders .glass-card{
+            border-color:rgba(148,163,184,.15);
+            background:linear-gradient(145deg,rgba(51,65,85,.92) 0%,rgba(30,41,59,.88) 100%);
+            box-shadow:0 20px 48px rgba(2,6,23,.28);
+        }
+        #orders .glass-card:hover{border-color:rgba(203,213,225,.24);box-shadow:0 28px 64px rgba(2,6,23,.36);}
+        #orders .table-header h2{color:#f8fafc;}
+        #orders .table-header p{color:#94a3b8;}
+        #orders .enterprise-table th{color:#cbd5e1;background:rgba(15,23,42,.72);}
+        #orders .enterprise-table td{color:#e2e8f0;background:rgba(30,41,59,.78);border-color:rgba(148,163,184,.14);}
+        #orders .enterprise-table tr:hover td,
+        #orders .enterprise-table tr.selected-row td{color:#f8fafc;background:#334155;border-color:rgba(96,165,250,.34);box-shadow:0 10px 24px rgba(2,6,23,.22);}
+        #orders .enterprise-table tr.selected-row td:first-child{box-shadow:inset 5px 0 0 #3b82f6,0 12px 30px rgba(2,6,23,.28);}
+        .orders-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+        .orders-search,.orders-filter{min-height:38px;padding:8px 11px;color:#e2e8f0;background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.22);border-radius:10px;font:inherit;font-size:13px;}
+        .orders-search::placeholder{color:#94a3b8;}
+        .orders-filter option{color:#e2e8f0;background:#1e293b;}
+        #orders .table-btn{color:#cbd5e1;background:rgba(15,23,42,.34);border-color:rgba(148,163,184,.18);}
+        #orders .table-btn:hover{color:#fff;background:rgba(37,99,235,.34);border-color:rgba(96,165,250,.4);}
+        #orders .table-btn[disabled]{color:#64748b;background:rgba(15,23,42,.22);opacity:.65;cursor:not-allowed;}
+        .orders-search{width:min(260px,100%);}
+        .order-actions{display:flex;gap:6px;justify-content:center;white-space:nowrap;}
+        .order-actions .table-btn{padding:7px 9px;}
+        .orders-empty-filter{padding:22px;color:#94a3b8;text-align:center;font-weight:800;}
+        .order-drawer-items{display:grid;gap:8px;margin-top:8px;}
+        .order-drawer-items span{display:block;padding:10px 12px;color:#334155;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;}
+        .order-update-dialog{width:min(460px,calc(100% - 28px));padding:0;border:0;border-radius:18px;background:#fff;box-shadow:0 30px 90px rgba(2,6,23,.35);}
+        .order-update-dialog::backdrop{background:rgba(15,23,42,.58);backdrop-filter:blur(4px);}
+        .order-update-form{display:grid;gap:15px;padding:24px;}
+        .order-update-form h3{margin:0;color:#0f172a;font-size:21px;}
+        .order-update-form p{margin:0;color:#64748b;font-size:13px;}
+        .order-update-form label{display:grid;gap:6px;color:#475569;font-size:12px;font-weight:850;}
+        .order-update-form select,.order-update-form input{min-height:42px;padding:9px 11px;color:#0f172a;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;font:inherit;}
+        .order-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;}
+        .orders-flash{margin-bottom:14px;padding:11px 14px;color:#166534;background:#dcfce7;border:1px solid #bbf7d0;border-radius:11px;font-size:13px;font-weight:800;}
+        .dark-enterprise .orders-search,.dark-enterprise .orders-filter{color:#e2e8f0;background:#0f172a;border-color:rgba(148,163,184,.25);}
+        @media(max-width:760px){.orders-toolbar{align-items:stretch}.orders-search{width:100%}.orders-filter{flex:1}.order-actions{justify-content:flex-start}.enterprise-table td:last-child{min-width:220px;}}
+
         @keyframes rise{
             from{opacity:0; transform:translateY(12px);}
             to{opacity:1; transform:translateY(0);}
@@ -2963,87 +3084,136 @@
             <section class="dashboard-section" id="analytics">
                 <div class="section-heading">
                     <div>
-                        <h2>Sales Analytics</h2>
-                        <p>High-velocity revenue snapshots across the business.</p>
+                        <h2>Revenue Comparison</h2>
+                        <p>Live revenue performance, period comparisons, and business insights.</p>
                     </div>
-                    <span class="pill status-info">Enterprise view</span>
+                    <span class="pill status-info" id="revenueRangeLabel">Today</span>
                 </div>
 
-                <div class="sales-metrics-grid">
-                    <article class="sales-metric-card">
-                        <div class="sales-metric-top"><span class="sales-metric-label">Today</span><span class="sales-metric-chip">+8.2%</span></div>
-                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ today_sales }}</span></div>
-                        <p class="sales-metric-meta">Daily sales velocity</p>
-                        <div class="sales-mini-chart today" aria-hidden="true">
-                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eTodayLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6ee7b7" /><stop offset="100%" stop-color="#14b8a6" /></linearGradient><linearGradient id="eTodayArea" x1="0" y1="10" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#14b8a6" stop-opacity="0.34" /><stop offset="100%" stop-color="#14b8a6" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eTodayArea)" d="M0 36 C16 31, 24 28, 34 30 S56 38, 66 28 S98 18, 120 10 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eTodayLine)" d="M0 36 C16 31, 24 28, 34 30 S56 38, 66 28 S98 18, 120 10" /></svg>
+                <!-- Revenue filters -->
+                <div class="revenue-filters glass-card" aria-label="Revenue period filters">
+                    <div class="revenue-filter-buttons" id="revenueFilterButtons">
+                        <button class="table-btn active" type="button" data-revenue-filter="today">Today</button>
+                        <button class="table-btn" type="button" data-revenue-filter="yesterday">Yesterday</button>
+                        <button class="table-btn" type="button" data-revenue-filter="last_7_days">Last 7 Days</button>
+                        <button class="table-btn" type="button" data-revenue-filter="last_30_days">Last 30 Days</button>
+                        <button class="table-btn" type="button" data-revenue-filter="this_month">This Month</button>
+                        <button class="table-btn" type="button" data-revenue-filter="this_year">This Year</button>
+                        <button class="table-btn" type="button" data-revenue-filter="custom">Custom Date Range</button>
+                    </div>
+                    <form class="custom-revenue-range" id="customRevenueRange" hidden>
+                        <label>From <input type="date" id="revenueStartDate" required></label>
+                        <label>To <input type="date" id="revenueEndDate" required></label>
+                        <button class="table-btn" type="submit">Apply</button>
+                    </form>
+                </div>
+
+                <!-- Revenue comparison cards -->
+                <div class="sales-metrics-grid revenue-comparison-grid" id="revenueComparisonGrid">
+                    {% for key, title, previous_label in [('today','Today vs Yesterday','Yesterday'),('week','This Week vs Last Week','Last week'),('month','This Month vs Last Month','Last month'),('year','This Year vs Last Year','Last year')] %}
+                    {% set comparison = revenue_dashboard.cards[key] %}
+                    <article class="sales-metric-card revenue-comparison-card" data-card="{{ key }}">
+                        <div class="sales-metric-top">
+                            <span class="sales-metric-label">{{ title }}</span>
+                            <span class="revenue-trend {{ comparison.trend }}" data-field="trend">{% if comparison.trend == 'increase' %}▲{% elif comparison.trend == 'decrease' %}▼{% else %}—{% endif %} {{ comparison.growth_percentage|abs }}%</span>
+                        </div>
+                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount" data-field="current" data-count-value="{{ comparison.current }}">{{ comparison.current }}</span></div>
+                        <div class="revenue-card-details">
+                            <span>{{ previous_label }} <strong data-field="previous">&#8377;{{ comparison.previous }}</strong></span>
+                            <span>Difference <strong data-field="difference">{{ '+' if comparison.difference > 0 else '' }}&#8377;{{ comparison.difference }}</strong></span>
                         </div>
                     </article>
-                    <article class="sales-metric-card">
-                        <div class="sales-metric-top"><span class="sales-metric-label">Weekly</span><span class="sales-metric-chip">+6.4%</span></div>
-                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ weekly_sales }}</span></div>
-                        <p class="sales-metric-meta">Current week momentum</p>
-                        <div class="sales-mini-chart weekly" aria-hidden="true">
-                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eWeeklyLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6366f1" /><stop offset="100%" stop-color="#2563eb" /></linearGradient><linearGradient id="eWeeklyArea" x1="0" y1="12" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.34" /><stop offset="100%" stop-color="#3b82f6" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eWeeklyArea)" d="M0 30 C18 26, 28 24, 42 26 S68 34, 82 24 S104 14, 120 12 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eWeeklyLine)" d="M0 30 C18 26, 28 24, 42 26 S68 34, 82 24 S104 14, 120 12" /></svg>
+                    {% endfor %}
+                </div>
+
+                <!-- Revenue charts -->
+                <div class="revenue-chart-grid">
+                    <article class="glass-card revenue-chart-card">
+                        <div class="section-heading">
+                            <div><h2>Revenue Chart</h2><p>Monthly revenue movement</p></div>
+                            <span class="revenue-chart-growth neutral" id="revenueChartGrowth">— 0%</span>
                         </div>
+                        <div class="revenue-canvas-wrap"><canvas id="revenueGrowthChart"></canvas></div>
                     </article>
-                    <article class="sales-metric-card">
-                        <div class="sales-metric-top"><span class="sales-metric-label">Monthly</span><span class="sales-metric-chip">+12.1%</span></div>
-                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ monthly_sales }}</span></div>
-                        <p class="sales-metric-meta">Month-to-date revenue</p>
-                        <div class="sales-mini-chart monthly" aria-hidden="true">
-                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eMonthlyLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#9333ea" /><stop offset="100%" stop-color="#e879f9" /></linearGradient><linearGradient id="eMonthlyArea" x1="0" y1="10" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#d946ef" stop-opacity="0.32" /><stop offset="100%" stop-color="#d946ef" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eMonthlyArea)" d="M0 28 C16 24, 28 20, 42 22 S66 32, 82 24 S104 12, 120 10 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eMonthlyLine)" d="M0 28 C16 24, 28 20, 42 22 S66 32, 82 24 S104 12, 120 10" /></svg>
-                        </div>
-                    </article>
-                    <article class="sales-metric-card">
-                        <div class="sales-metric-top"><span class="sales-metric-label">Yearly</span><span class="sales-metric-chip">+4.9%</span></div>
-                        <div class="sales-metric-value"><span class="currency">&#8377;</span><span class="amount">{{ yearly_sales }}</span></div>
-                        <p class="sales-metric-meta">Annual run-rate</p>
-                        <div class="sales-mini-chart yearly" aria-hidden="true">
-                            <svg viewBox="0 0 120 48" preserveAspectRatio="none"><defs><linearGradient id="eYearlyLine" x1="0" y1="0" x2="120" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#b45309" /><stop offset="100%" stop-color="#fde68a" /></linearGradient><linearGradient id="eYearlyArea" x1="0" y1="8" x2="0" y2="48" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#fbbf24" stop-opacity="0.3" /><stop offset="100%" stop-color="#fbbf24" stop-opacity="0" /></linearGradient></defs><path class="spark-area" fill="url(#eYearlyArea)" d="M0 34 C18 28, 30 26, 44 28 S68 36, 82 24 S104 16, 120 8 L120 48 L0 48 Z" /><path class="spark-line" stroke="url(#eYearlyLine)" d="M0 34 C18 28, 30 26, 44 28 S68 36, 82 24 S104 16, 120 8" /></svg>
-                        </div>
+                    <article class="glass-card revenue-chart-card">
+                        <div class="section-heading"><div><h2>Monthly Revenue</h2><p>Month-by-month performance</p></div></div>
+                        <div class="revenue-canvas-wrap"><canvas id="monthlyRevenueChart"></canvas></div>
                     </article>
                 </div>
 
-                <div class="content-grid" style="margin-top:18px">
-                    <div class="glass-card">
-                        <div class="section-heading"><div><h2>Revenue Chart</h2><p>Monthly revenue movement</p></div></div>
-                        <div class="chart-bars" aria-hidden="true"><span style="height:42%"></span><span style="height:56%"></span><span style="height:48%"></span><span style="height:74%"></span><span style="height:62%"></span><span style="height:88%"></span><span style="height:70%"></span><span style="height:96%"></span></div>
+                <!-- Smart insights -->
+                <article class="glass-card revenue-insights" id="revenueInsights">
+                    <div class="section-heading"><div><h2>Smart Insights</h2><p>Automatic highlights from the selected period</p></div></div>
+                    <div class="revenue-insight-grid">
+                        <div class="list-item"><strong data-insight="growth">Revenue is unchanged compared to the previous period.</strong><span>Period growth</span></div>
+                        <div class="list-item"><strong data-insight="highest">—</strong><span>Highest sales day</span></div>
+                        <div class="list-item"><strong data-insight="lowest">—</strong><span>Lowest sales day</span></div>
+                        <div class="list-item"><strong data-insight="average">—</strong><span>Average daily revenue</span></div>
+                        <div class="list-item"><strong data-insight="best-month">—</strong><span>Best performing month</span></div>
                     </div>
-                    <div class="panel-grid">
-                        <div class="glass-card"><h3>Monthly Orders Chart</h3><div class="chart-bars" style="height:120px"><span style="height:50%"></span><span style="height:70%"></span><span style="height:44%"></span><span style="height:82%"></span></div></div>
-                        <div class="glass-card"><h3>Medicine Category Pie Chart</h3><div class="donut"></div></div>
-                        <div class="glass-card"><h3>Top Selling Brands</h3><div class="list-stack">{% for m in medicines[:4] %}<div class="list-item"><strong>{{ m["name"] }}</strong><span>{{ m["category"] }}</span></div>{% endfor %}</div></div>
-                    </div>
-                </div>
+                </article>
+                <p class="revenue-error" id="revenueError" role="alert" hidden></p>
+                <div class="revenue-loading" id="revenueLoading" hidden aria-label="Loading revenue data"><span></span><span></span><span></span><span></span></div>
             </section>
 
             <section class="dashboard-section" id="orders">
                 <div class="glass-card table-card">
                     <div class="table-header">
-                        <div><h2>Recent Orders</h2><p>Premium operational table</p></div>
-                        <div class="table-toolbar"><button class="table-btn" type="button">Search</button><button class="table-btn" type="button">Filter</button><button class="table-btn" type="button" onclick="window.print()">Export</button></div>
+                        <div><h2>Recent Orders</h2><p>Search, review, invoice, and update the latest orders.</p></div>
+                        <div class="orders-toolbar">
+                            <input class="orders-search" id="orderSearch" type="search" placeholder="Search ID, customer, medicine…" aria-label="Search recent orders">
+                            <select class="orders-filter" id="orderStatusFilter" aria-label="Filter orders by status">
+                                <option value="">All statuses</option>
+                                {% for status in order_statuses %}<option value="{{ status|e }}">{{ status }}</option>{% endfor %}
+                            </select>
+                            <button class="table-btn" id="exportOrders" type="button">Export CSV</button>
+                        </div>
                     </div>
+                    {% with messages = get_flashed_messages() %}{% if messages %}<div class="orders-flash" role="status">{{ messages[-1] }}</div>{% endif %}{% endwith %}
                     <div class="table-scroll">
-                        <table class="enterprise-table">
+                        <table class="enterprise-table" id="recentOrdersTable">
                             <tr><th>Order ID</th><th>Customer</th><th>Medicines</th><th>Amount</th><th>Payment</th><th>Status</th><th>Delivery</th><th>Action</th></tr>
                             {% for o in recent_orders %}
-                            <tr class="selectable-row" data-title="Order #{{ o['id']|e }}" data-subtitle="{{ o['customer_name']|e }}" data-id="{{ o['id']|e }}" data-status="{{ o['status']|e }}">
+                            <tr class="selectable-row order-row" data-id="{{ o['id']|e }}" data-customer="{{ o['customer_name']|e }}" data-items="{{ o['item_summary']|e }}" data-total="{{ o['total']|e }}" data-payment="{{ (o['payment_status'] or o['payment_method'] or 'Recorded')|e }}" data-status="{{ o['status']|e }}" data-delivery="{{ (o['delivery_status'] or o['status'])|e }}" data-address="{{ (o['delivery_address'] or 'Not provided')|e }}" data-date="{{ o['date']|e }}">
                                 <td>#{{ o["id"] }}</td>
                                 <td>{{ o["customer_name"] }}</td>
-                                <td>{{ "Prescription order" if o["prescription"] else "Order items" }}</td>
+                                <td>{{ o["item_summary"] }}</td>
                                 <td>&#8377;{{ o["total"] }}</td>
-                                <td><span class="pill status-info">Recorded</span></td>
+                                <td><span class="pill status-info">{{ o["payment_status"] or o["payment_method"] or "Recorded" }}</span></td>
                                 <td><span class="pill {% if o['status'] == 'Delivered' %}status-ok{% elif o['status'] == 'Cancelled' %}status-danger{% else %}status-warn{% endif %}">{{ o["status"] }}</span></td>
-                                <td>{{ "Completed" if o["status"] == "Delivered" else "In progress" }}</td>
-                                <td><button class="table-btn" type="button">View</button> <button class="table-btn" type="button">Invoice</button> <button class="table-btn" type="button">Update</button></td>
+                                <td>{{ o["delivery_status"] or ("Completed" if o["status"] == "Delivered" else "In progress") }}</td>
+                                <td><div class="order-actions"><button class="table-btn order-view" type="button">View</button><a class="table-btn" href="/owner/orders/{{ o['id'] }}/invoice">Invoice</a><button class="table-btn order-update" type="button" {% if o['status'] in ['Cancelled','Refunded'] %}disabled title="Closed orders cannot be updated"{% endif %}>Update</button></div></td>
                             </tr>
                             {% else %}
                             <tr><td colspan="8">No recent orders found.</td></tr>
                             {% endfor %}
+                            <tr id="ordersNoMatch" hidden><td class="orders-empty-filter" colspan="8">No orders match this search or filter.</td></tr>
                         </table>
                     </div>
                 </div>
             </section>
+
+            <div class="drawer-backdrop" id="orderDrawerBackdrop"></div>
+            <aside class="details-drawer" id="orderDrawer" aria-hidden="true" aria-labelledby="orderDrawerTitle">
+                <div class="drawer-top"><div><div class="drawer-kicker">Order details</div><h3 id="orderDrawerTitle">Order</h3></div><button class="drawer-close" id="orderDrawerClose" type="button" aria-label="Close order details">×</button></div>
+                <div class="drawer-fields">
+                    <div class="drawer-field"><span class="drawer-icon">CU</span><div><span>Customer</span><strong id="drawerCustomer">—</strong></div></div>
+                    <div class="drawer-field"><span class="drawer-icon">DT</span><div><span>Order date</span><strong id="drawerDate">—</strong></div></div>
+                    <div class="drawer-field"><span class="drawer-icon">₹</span><div><span>Amount and payment</span><strong id="drawerPayment">—</strong></div></div>
+                    <div class="drawer-field"><span class="drawer-icon">ST</span><div><span>Status and delivery</span><strong id="drawerStatus">—</strong></div></div>
+                    <div class="drawer-field"><span class="drawer-icon">AD</span><div><span>Delivery address</span><strong id="drawerAddress">—</strong></div></div>
+                    <div class="drawer-field"><span class="drawer-icon">RX</span><div><span>Medicines</span><strong id="drawerItems">—</strong></div></div>
+                </div>
+            </aside>
+
+            <dialog class="order-update-dialog" id="orderUpdateDialog">
+                <form class="order-update-form" id="orderUpdateForm" method="POST">
+                    <div><h3 id="orderUpdateTitle">Update order</h3><p>Choose the next operational status. Closed orders remain locked.</p></div>
+                    <label>Status<select id="orderUpdateStatus" name="status" required>{% for status in order_statuses %}<option value="{{ status|e }}">{{ status }}</option>{% endfor %}</select></label>
+                    <label id="deliveryOtpField" hidden>Delivery OTP<input id="orderDeliveryOtp" name="delivery_otp" inputmode="numeric" autocomplete="one-time-code" placeholder="Required when marking delivered"></label>
+                    <div class="order-dialog-actions"><button class="table-btn" id="cancelOrderUpdate" type="button">Cancel</button><button class="primary-btn" type="submit">Save status</button></div>
+                </form>
+            </dialog>
 
             <section class="dashboard-section" id="inventory">
                 <div class="section-heading"><div><h2>Medicine Inventory</h2><p>Stock, expiry, category, pricing, and availability.</p></div><a class="primary-btn" href="/staff">Manage Inventory</a></div>
@@ -3269,6 +3439,244 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+    /* ================= REVENUE COMPARISON DASHBOARD ================= */
+    (() => {
+        const root = document.getElementById("analytics");
+        if(!root || typeof Chart === "undefined") return;
+
+        const initialData = {{ revenue_dashboard|tojson }};
+        const loading = document.getElementById("revenueLoading");
+        const errorTarget = document.getElementById("revenueError");
+        const rangeLabel = document.getElementById("revenueRangeLabel");
+        const customForm = document.getElementById("customRevenueRange");
+        const startInput = document.getElementById("revenueStartDate");
+        const endInput = document.getElementById("revenueEndDate");
+        let activeRequest = null;
+
+        const money = value => new Intl.NumberFormat("en-IN", {
+            minimumFractionDigits:0,
+            maximumFractionDigits:2
+        }).format(Number(value || 0));
+        const currency = value => `₹${money(value)}`;
+
+        function animateValue(element, target){
+            const end = Number(target || 0);
+            const startTime = performance.now();
+            const duration = 650;
+            const tick = now => {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                element.textContent = money(end * eased);
+                if(progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        }
+
+        const commonOptions = {
+            responsive:true,
+            maintainAspectRatio:false,
+            interaction:{intersect:false,mode:"index"},
+            plugins:{
+                legend:{display:false},
+                tooltip:{callbacks:{label:context => ` ${context.dataset.label}: ${currency(context.parsed.y)}`}}
+            },
+            scales:{
+                x:{grid:{display:false},ticks:{color:"#94a3b8",maxRotation:0,autoSkip:true,maxTicksLimit:10}},
+                y:{beginAtZero:true,grid:{color:"rgba(148,163,184,.14)"},ticks:{color:"#94a3b8",callback:value => `₹${money(value)}`}}
+            }
+        };
+
+        const growthChart = new Chart(document.getElementById("revenueGrowthChart"), {
+            type:"line",
+            data:{labels:[],datasets:[
+                {label:"Current period",data:[],borderColor:"#2563eb",backgroundColor:"rgba(37,99,235,.12)",fill:true,tension:.36,pointRadius:2,pointHoverRadius:5,borderWidth:3},
+                {label:"Previous period",data:[],borderColor:"#94a3b8",backgroundColor:"transparent",fill:false,tension:.36,pointRadius:0,pointHoverRadius:4,borderWidth:2,borderDash:[6,5]}
+            ]},
+            options:{...commonOptions,plugins:{...commonOptions.plugins,legend:{display:true,position:"bottom",align:"start",labels:{usePointStyle:true,boxWidth:7,color:"#94a3b8",font:{weight:"700"}}}}}
+        });
+        const monthlyChart = new Chart(document.getElementById("monthlyRevenueChart"), {
+            type:"bar",
+            data:{labels:[],datasets:[{data:[],backgroundColor:"rgba(6,182,212,.78)",hoverBackgroundColor:"#2563eb",borderRadius:7,maxBarThickness:34}]},
+            options:commonOptions
+        });
+
+        function updateCard(key, comparison){
+            const card = root.querySelector(`[data-card="${key}"]`);
+            if(!card) return;
+            animateValue(card.querySelector('[data-field="current"]'), comparison.current);
+            card.querySelector('[data-field="previous"]').textContent = currency(comparison.previous);
+            card.querySelector('[data-field="difference"]').textContent = `${comparison.difference > 0 ? "+" : ""}${currency(comparison.difference)}`;
+            const trend = card.querySelector('[data-field="trend"]');
+            const indicator = comparison.trend === "increase" ? "▲" : comparison.trend === "decrease" ? "▼" : "—";
+            trend.className = `revenue-trend ${comparison.trend}`;
+            trend.textContent = `${indicator} ${Math.abs(comparison.growth_percentage).toFixed(2)}%`;
+        }
+
+        function renderInsights(data){
+            const comparison = data.selected_period;
+            const direction = comparison.trend === "increase" ? "increased" : comparison.trend === "decrease" ? "decreased" : "is unchanged";
+            const growthText = comparison.trend === "neutral"
+                ? "Revenue is unchanged compared to the previous period."
+                : `Revenue ${direction} by ${Math.abs(comparison.growth_percentage).toFixed(2)}% compared to the previous period.`;
+            root.querySelector('[data-insight="growth"]').textContent = growthText;
+            root.querySelector('[data-insight="highest"]').textContent = `${data.insights.highest_day.label} · ${currency(data.insights.highest_day.value)}`;
+            root.querySelector('[data-insight="lowest"]').textContent = `${data.insights.lowest_day.label} · ${currency(data.insights.lowest_day.value)}`;
+            root.querySelector('[data-insight="average"]').textContent = currency(data.insights.average_daily);
+            root.querySelector('[data-insight="best-month"]').textContent = data.insights.best_month;
+        }
+
+        function renderRevenue(data){
+            Object.entries(data.cards).forEach(([key, comparison]) => updateCard(key, comparison));
+            growthChart.data.labels = data.charts.daily.labels;
+            growthChart.data.datasets[0].data = data.charts.daily.values;
+            growthChart.data.datasets[1].data = data.charts.daily.previous_values;
+            growthChart.update();
+            const chartGrowth = document.getElementById("revenueChartGrowth");
+            const comparison = data.selected_period;
+            const indicator = comparison.trend === "increase" ? "▲" : comparison.trend === "decrease" ? "▼" : "—";
+            chartGrowth.className = `revenue-chart-growth ${comparison.trend}`;
+            chartGrowth.textContent = `${indicator} ${Math.abs(comparison.growth_percentage).toFixed(2)}%`;
+            monthlyChart.data.labels = data.charts.monthly.labels;
+            monthlyChart.data.datasets[0].data = data.charts.monthly.values;
+            monthlyChart.update();
+            renderInsights(data);
+        }
+
+        async function loadRevenue(filter, start, end){
+            activeRequest?.abort();
+            const controller = new AbortController();
+            activeRequest = controller;
+            const params = new URLSearchParams({filter});
+            if(start && end){ params.set("start", start); params.set("end", end); }
+            loading.hidden = false;
+            errorTarget.hidden = true;
+            try{
+                const response = await fetch(`/api/owner/revenue?${params}`, {signal:controller.signal,headers:{Accept:"application/json"}});
+                const data = await response.json();
+                if(!response.ok) throw new Error(data.error || "Revenue data could not be loaded.");
+                renderRevenue(data);
+                rangeLabel.textContent = filter === "custom" ? `${data.range.start} – ${data.range.end}` : document.querySelector(`[data-revenue-filter="${filter}"]`).textContent;
+            }catch(error){
+                if(error.name !== "AbortError"){
+                    errorTarget.textContent = error.message;
+                    errorTarget.hidden = false;
+                }
+            }finally{
+                if(activeRequest === controller) loading.hidden = true;
+            }
+        }
+
+        document.getElementById("revenueFilterButtons").addEventListener("click", event => {
+            const button = event.target.closest("[data-revenue-filter]");
+            if(!button) return;
+            root.querySelectorAll("[data-revenue-filter]").forEach(item => item.classList.toggle("active", item === button));
+            const filter = button.dataset.revenueFilter;
+            customForm.hidden = filter !== "custom";
+            if(filter !== "custom") loadRevenue(filter);
+        });
+        customForm.addEventListener("submit", event => {
+            event.preventDefault();
+            loadRevenue("custom", startInput.value, endInput.value);
+        });
+
+        endInput.max = new Date().toISOString().slice(0, 10);
+        startInput.max = endInput.max;
+        startInput.value = initialData.range.start;
+        endInput.value = initialData.range.end;
+        renderRevenue(initialData);
+    })();
+</script>
+<script>
+    /* ================= RECENT ORDERS ================= */
+    (() => {
+        const table = document.getElementById("recentOrdersTable");
+        if(!table) return;
+        const rows = [...table.querySelectorAll(".order-row")];
+        const search = document.getElementById("orderSearch");
+        const statusFilter = document.getElementById("orderStatusFilter");
+        const noMatch = document.getElementById("ordersNoMatch");
+        const drawer = document.getElementById("orderDrawer");
+        const backdrop = document.getElementById("orderDrawerBackdrop");
+        const dialog = document.getElementById("orderUpdateDialog");
+        const updateForm = document.getElementById("orderUpdateForm");
+        const updateStatus = document.getElementById("orderUpdateStatus");
+        const otpField = document.getElementById("deliveryOtpField");
+        const otpInput = document.getElementById("orderDeliveryOtp");
+
+        const visibleRows = () => rows.filter(row => !row.hidden);
+        const filterRows = () => {
+            const query = search.value.trim().toLowerCase();
+            const status = statusFilter.value;
+            rows.forEach(row => {
+                const searchable = `${row.dataset.id} ${row.dataset.customer} ${row.dataset.items} ${row.dataset.payment}`.toLowerCase();
+                row.hidden = Boolean((query && !searchable.includes(query)) || (status && row.dataset.status !== status));
+            });
+            noMatch.hidden = visibleRows().length !== 0 || rows.length === 0;
+        };
+        search.addEventListener("input", filterRows);
+        statusFilter.addEventListener("change", filterRows);
+
+        const closeDrawer = () => {
+            document.body.classList.remove("drawer-open");
+            drawer.setAttribute("aria-hidden", "true");
+        };
+        const openDrawer = row => {
+            document.getElementById("orderDrawerTitle").textContent = `Order #${row.dataset.id}`;
+            document.getElementById("drawerCustomer").textContent = row.dataset.customer;
+            document.getElementById("drawerDate").textContent = row.dataset.date || "Not recorded";
+            document.getElementById("drawerPayment").textContent = `₹${row.dataset.total} · ${row.dataset.payment}`;
+            document.getElementById("drawerStatus").textContent = `${row.dataset.status} · ${row.dataset.delivery}`;
+            document.getElementById("drawerAddress").textContent = row.dataset.address;
+            document.getElementById("drawerItems").textContent = row.dataset.items;
+            document.body.classList.add("drawer-open");
+            drawer.setAttribute("aria-hidden", "false");
+            document.getElementById("orderDrawerClose").focus();
+        };
+        document.getElementById("orderDrawerClose").addEventListener("click", closeDrawer);
+        backdrop.addEventListener("click", closeDrawer);
+
+        const syncOtp = () => {
+            const delivered = updateStatus.value === "Delivered";
+            otpField.hidden = !delivered;
+            otpInput.required = delivered;
+            if(!delivered) otpInput.value = "";
+        };
+        updateStatus.addEventListener("change", syncOtp);
+        document.getElementById("cancelOrderUpdate").addEventListener("click", () => dialog.close());
+        updateForm.addEventListener("submit", event => {
+            if(["Cancelled", "Refunded"].includes(updateStatus.value) && !window.confirm(`Mark this order as ${updateStatus.value}? This closes the order workflow.`)) event.preventDefault();
+        });
+
+        rows.forEach(row => {
+            row.querySelector(".order-view").addEventListener("click", event => { event.stopPropagation(); openDrawer(row); });
+            row.addEventListener("click", event => { if(!event.target.closest("a,button,input,select")) openDrawer(row); });
+            row.querySelector(".order-update")?.addEventListener("click", event => {
+                event.stopPropagation();
+                updateForm.action = `/update_order_status/${row.dataset.id}`;
+                document.getElementById("orderUpdateTitle").textContent = `Update order #${row.dataset.id}`;
+                updateStatus.value = row.dataset.status;
+                syncOtp();
+                dialog.showModal();
+            });
+        });
+
+        document.getElementById("exportOrders").addEventListener("click", () => {
+            const escapeCsv = value => `"${String(value ?? "").replaceAll('"', '""')}"`;
+            const records = [["Order ID","Customer","Medicines","Amount","Payment","Status","Delivery","Date"]];
+            visibleRows().forEach(row => records.push([row.dataset.id,row.dataset.customer,row.dataset.items,row.dataset.total,row.dataset.payment,row.dataset.status,row.dataset.delivery,row.dataset.date]));
+            const csv = records.map(record => record.map(escapeCsv).join(",")).join("\r\n");
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+            link.download = `recent-orders-${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        });
+
+        document.addEventListener("keydown", event => { if(event.key === "Escape") closeDrawer(); });
+    })();
+</script>
 <script>
     (() => {
         const dashboard = document.getElementById("enterpriseDashboard");
