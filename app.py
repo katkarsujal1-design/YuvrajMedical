@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, request, redirect, session, g, jsonify, make_response
+from flask import Flask, render_template, request, redirect, session, g, jsonify, make_response, abort, send_from_directory
 #import pymysql
 import hashlib
 import re
@@ -3927,6 +3927,20 @@ def wishlist_to_cart(id):
     db = get_db()
     user_id = flask.session["user"]["id"]
     cursor = db.cursor()
+    cursor.execute(
+        "SELECT id FROM medicines WHERE id=%s AND stock > 0",
+        (id,)
+    )
+    if not cursor.fetchone():
+        cursor.execute(
+            "DELETE FROM wishlist WHERE user_id=%s AND medicine_id=%s",
+            (user_id, id)
+        )
+        db.commit()
+        cursor.close()
+        flask.flash("This medicine is no longer available.", "warning")
+        return flask.redirect("/wishlist")
+
     cursor.execute("""
         INSERT INTO cart (user_id, medicine_id, quantity)
         VALUES (%s, %s, 1)
