@@ -3,122 +3,877 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rewards & Loyalty - Yuvraj Medical</title>
+    <title>Rewards & Loyalty | Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
-    <style>
-        :root{--ink:#122033;--muted:#66758a;--line:#d8e2ee;--wine:#812052;--teal:#0f766e;--blue:#075985;--green:#047857;--amber:#a16207;--soft:#f8fafc;--gold:#c88719}
-        *{box-sizing:border-box}
-        body{
-            margin:0;
-            font-family:Inter,"Segoe UI",Arial,sans-serif;
-            color:var(--ink);
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.86),rgba(241,248,246,.9)),
-                url("{{ url_for('static', filename='images/profile-page-bg-ai.png') }}") center/cover fixed no-repeat;
-        }
-        body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(110deg,rgba(15,23,42,.08),rgba(255,255,255,.12) 38%,rgba(15,118,110,.08))}
-        a{text-decoration:none;color:inherit}
-        button,input{font:inherit}
-        .wrap{width:min(1200px,calc(100% - 28px));margin:28px auto 52px}
-        .hero{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:18px;align-items:stretch;margin-bottom:18px}
-        .hero-main,.visual,.panel,.reward-card,.coupon-card,.history-card{border:1px solid rgba(216,226,238,.95);border-radius:8px;background:rgba(255,255,255,.95);box-shadow:0 22px 58px rgba(15,23,42,.10)}
-        .hero-main{
-            position:relative;
-            overflow:hidden;
-            min-height:340px;
-            padding:32px;
-            color:white;
-            background:
-                linear-gradient(90deg,rgba(18,32,51,.95) 0%,rgba(18,32,51,.78) 52%,rgba(15,118,110,.18) 100%),
-                url("{{ url_for('static', filename='images/offer-healthcare-ai.png') }}") center/cover no-repeat;
-        }
-        .hero-main::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,135,25,.20),transparent 40%,rgba(15,118,110,.22));pointer-events:none}
-        .eyebrow{position:relative;display:inline-flex;padding:8px 11px;border-radius:999px;color:#fff7ed;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);font-size:12px;font-weight:1000;letter-spacing:.06em;text-transform:uppercase}
-        h1{position:relative;margin:14px 0 0;max-width:740px;font-size:50px;line-height:1.02;font-family:Georgia,serif;color:white;text-shadow:0 18px 36px rgba(2,6,23,.28)}
-        .hero-main p{position:relative;margin:14px 0 0;max-width:690px;color:#e2e8f0;font-weight:780;line-height:1.68}
-        .hero-proof{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:690px;margin-top:22px}
-        .hero-proof div{padding:12px;border-radius:8px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.20);backdrop-filter:blur(12px)}
-        .hero-proof span{display:block;color:#bfdbfe;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-        .hero-proof strong{display:block;margin-top:5px;color:#ffffff;font-size:18px}
-        .hero-actions{position:relative;display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-        .btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 15px;border-radius:8px;border:1px solid transparent;font-weight:950;cursor:pointer;transition:.18s ease}
-        .btn:hover{transform:translateY(-1px);box-shadow:0 14px 26px rgba(15,23,42,.12)}
-        .btn.primary{color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 14px 26px rgba(15,118,110,.18)}
-        .btn.secondary{color:var(--teal);background:#ecfeff;border-color:#bae6fd}
-        .hero-main .btn.secondary{color:white;background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.24)}
-        .visual{display:grid;align-content:space-between;gap:14px;padding:16px;overflow:hidden;background:linear-gradient(180deg,#fff,#f8fafc)}
-        .visual img{width:100%;aspect-ratio:1.25;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
-        .credit-pass{position:relative;overflow:hidden;padding:16px;border-radius:8px;color:white;background:linear-gradient(135deg,#812052,#122033 48%,#0f766e);box-shadow:0 16px 34px rgba(15,23,42,.16)}
-        .credit-pass::after{content:"YMR";position:absolute;right:12px;bottom:-8px;color:rgba(255,255,255,.11);font-size:54px;font-weight:1000;letter-spacing:.04em}
-        .credit-pass span{display:block;color:#fde68a;font-size:11px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase}
-        .credit-pass strong{display:block;margin-top:8px;font-size:24px}
-        .credit-pass small{display:block;margin-top:8px;color:#ccfbf1;font-weight:850}
-        .tier{padding:16px;border-radius:8px;background:linear-gradient(135deg,#122033,#0f766e);color:white}
-        .tier span{display:block;color:#bfdbfe;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-        .tier strong{display:block;margin-top:7px;font-size:24px}
-        .tier small{display:block;margin-top:5px;color:#ccfbf1;font-weight:800}
-        .meter{height:10px;margin-top:12px;border-radius:999px;background:rgba(255,255,255,.16);overflow:hidden}
-        .meter i{display:block;height:100%;width:var(--progress);border-radius:inherit;background:linear-gradient(90deg,#fbbf24,#2dd4bf,#ffffff)}
-        .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
-        .reward-card{padding:18px;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,250,252,.95))}
-        .reward-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--gold),var(--teal))}
-        .reward-card::after{content:attr(data-code);position:absolute;right:12px;top:8px;color:rgba(15,118,110,.08);font-size:50px;font-weight:1000}
-        .reward-card span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-        .reward-card strong{display:block;margin-top:8px;font-size:29px}
-        .reward-card small{display:block;margin-top:6px;color:var(--teal);font-weight:850}
-        .benefit-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:-4px 0 18px}
-        .benefit{display:grid;grid-template-columns:44px minmax(0,1fr);gap:11px;align-items:center;padding:13px;border:1px solid rgba(216,226,238,.95);border-radius:8px;background:rgba(255,255,255,.92);box-shadow:0 16px 36px rgba(15,23,42,.07)}
-        .benefit-icon{width:44px;height:44px;border-radius:8px;display:grid;place-items:center;color:white;font-weight:1000;background:linear-gradient(135deg,var(--wine),var(--teal))}
-        .benefit strong{display:block;font-size:14px}
-        .benefit span{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:800}
-        .layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(330px,.9fr);gap:18px;align-items:start}
-        .panel{padding:20px;background:rgba(255,255,255,.96)}
-        .panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
-        .panel-head h2{margin:0;font-size:22px}
-        .panel-head p{margin:5px 0 0;color:var(--muted);font-weight:750;line-height:1.5}
-        .badge{display:inline-flex;white-space:nowrap;padding:7px 10px;border-radius:999px;background:#fff7ed;color:var(--amber);border:1px solid #fed7aa;font-size:12px;font-weight:1000}
-        .coupon-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-        .coupon-card{display:grid;gap:12px;padding:16px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff);transition:.18s ease}
-        .coupon-card:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(15,23,42,.10)}
-        .coupon-code{display:flex;align-items:center;justify-content:space-between;gap:10px}
-        .coupon-code strong{font-size:20px;color:var(--wine)}
-        .coupon-code span{padding:6px 8px;border-radius:999px;background:#f1f5f9;color:var(--muted);font-size:11px;font-weight:950;border:1px solid #e2e8f0}
-        .coupon-card p{margin:0;color:var(--muted);line-height:1.5;font-weight:750}
-        .coupon-card form{margin:0}
-        .coupon-card .btn{width:100%;min-height:38px}
-        .coupon-card.locked{opacity:.62}
-        .referral{position:relative;display:grid;gap:13px;padding:19px;border-radius:8px;background:linear-gradient(135deg,#122033 0%,#7f1d4e 52%,#0f766e 100%);color:white;overflow:hidden;box-shadow:0 22px 58px rgba(15,23,42,.16)}
-        .referral::after{content:"Rs. 100";position:absolute;right:14px;top:10px;color:rgba(255,255,255,.10);font-size:46px;font-weight:1000}
-        .referral h2{margin:0;font-size:22px}
-        .referral p{margin:0;color:#dbeafe;font-weight:750;line-height:1.55}
-        .referral-cap{position:relative;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px;border-radius:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.20)}
-        .referral-cap span{display:block;color:#bfdbfe;font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
-        .referral-cap strong{font-size:30px}
-        .codebox{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px;border-radius:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
-        .codebox b{font-size:22px;letter-spacing:.06em}
-        .codebox span{color:#ccfbf1;font-size:12px;font-weight:850;word-break:break-all}
-        .referral-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-        .referral-stats div{padding:11px;border-radius:8px;background:rgba(255,255,255,.11)}
-        .referral-stats span{display:block;color:#bfdbfe;font-size:11px;font-weight:950;text-transform:uppercase}
-        .referral-stats strong{display:block;margin-top:5px;font-size:20px}
-        .referral-list{position:relative;display:grid;gap:8px}
-        .referral-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 11px;border-radius:8px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
-        .referral-row strong{display:block;font-size:13px}
-        .referral-row span{display:block;margin-top:3px;color:#bfdbfe;font-size:11px;font-weight:800}
-        .referral-row b{color:#fde68a;white-space:nowrap}
-        .referral-empty{padding:11px;border-radius:8px;background:rgba(255,255,255,.10);color:#dbeafe;font-size:12px;font-weight:800}
-        .history-list{display:grid;gap:10px}
-        .history-card{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;box-shadow:none;background:linear-gradient(180deg,#fff,#fbfdff)}
-        .history-icon{width:42px;height:42px;border-radius:8px;display:grid;place-items:center;color:#fff;font-weight:1000;background:linear-gradient(135deg,var(--wine),var(--teal))}
-        .history-card h3{margin:0;font-size:15px}
-        .history-card p{margin:4px 0 0;color:var(--muted);font-size:12px;font-weight:800}
-        .history-card strong{color:var(--green);white-space:nowrap}
-        .empty{padding:22px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);background:#fff;font-weight:800;text-align:center}
-        @media(max-width:980px){.hero,.layout{grid-template-columns:1fr}.visual{grid-template-columns:240px 1fr;align-items:center}.stats,.benefit-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.coupon-grid{grid-template-columns:1fr 1fr}}
-        @media(max-width:620px){.wrap{width:min(100% - 22px,1200px);margin-top:18px}.hero-main{min-height:430px;padding:22px}h1{font-size:34px}.visual{grid-template-columns:1fr}.stats,.coupon-grid,.referral-stats,.benefit-strip,.hero-proof{grid-template-columns:1fr}.panel-head,.codebox,.history-card,.referral-cap{grid-template-columns:1fr}.panel-head{display:grid}.badge{justify-self:start}}
-    </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+    <style>
+        :root {
+            --ink: #061b39;
+            --muted: #62708d;
+            --line: #dfe8f1;
+            --soft: #f7fbff;
+            --green: #009f66;
+            --green-dark: #006b52;
+            --mint: #31c985;
+            --blue: #3b82f6;
+            --orange: #f59e0b;
+            --purple: #8b5cf6;
+            --gold: #f3c84b;
+            --shadow: 0 18px 44px rgba(6, 27, 57, .08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 18% 8%, rgba(0, 159, 102, .08), transparent 28%),
+                radial-gradient(circle at 85% 12%, rgba(59, 130, 246, .06), transparent 26%),
+                linear-gradient(180deg, #ffffff 0%, #fbfdff 45%, #f5fbf8 100%) !important;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, select { font: inherit; }
+
+        .rewards-shell {
+            width: min(1440px, calc(100% - 64px));
+            margin: 24px auto 48px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            color: var(--green-dark);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0 22px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: clamp(32px, 4vw, 48px);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-weight: 750;
+        }
+
+        .verified-badge,
+        .round-icon {
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+        }
+
+        .verified-badge {
+            width: 34px;
+            height: 34px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--green-dark), var(--mint));
+            box-shadow: 0 12px 24px rgba(0, 159, 102, .18);
+        }
+
+        .ai-icon {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+        }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.45fr) minmax(360px, .95fr);
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .points-hero,
+        .tier-card,
+        .panel,
+        .trust-strip {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .96);
+            box-shadow: var(--shadow);
+        }
+
+        .points-hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 268px;
+            display: grid;
+            grid-template-columns: minmax(250px, .78fr) minmax(220px, .62fr) minmax(260px, .68fr);
+            gap: 22px;
+            padding: 28px;
+            color: #fff;
+            background:
+                radial-gradient(circle at 49% 42%, rgba(49, 201, 133, .30), transparent 24%),
+                linear-gradient(135deg, #006248 0%, #007e65 48%, #006b52 100%);
+        }
+
+        .points-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,.08), transparent 36%, rgba(255,255,255,.06));
+            pointer-events: none;
+        }
+
+        .points-main,
+        .tier-emblem,
+        .hero-benefits,
+        .hero-metrics {
+            position: relative;
+            z-index: 1;
+        }
+
+        .points-main h2,
+        .hero-benefits h2 {
+            margin: 0 0 14px;
+            font-size: 15px;
+            letter-spacing: 0;
+        }
+
+        .points-number {
+            display: block;
+            margin-top: 6px;
+            color: #ffe57f;
+            font-size: clamp(46px, 6vw, 64px);
+            line-height: .95;
+            font-weight: 1000;
+        }
+
+        .points-main strong {
+            display: block;
+            margin-top: 12px;
+            font-size: 17px;
+        }
+
+        .hero-progress {
+            height: 11px;
+            margin: 24px 0 13px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(255,255,255,.20);
+        }
+
+        .hero-progress span {
+            display: block;
+            width: var(--progress);
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #6ee7a6, #34d399);
+        }
+
+        .points-main small,
+        .hero-benefits li {
+            color: #eefdf7;
+            font-weight: 850;
+        }
+
+        .tier-emblem {
+            display: grid;
+            align-content: center;
+            justify-items: center;
+            text-align: center;
+        }
+
+        .emblem-ring {
+            width: min(190px, 100%);
+            aspect-ratio: 1;
+            position: relative;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle, rgba(255,255,255,.18) 0 46%, transparent 47%),
+                conic-gradient(from 20deg, rgba(255,255,255,.12), rgba(49,201,133,.58), rgba(255,255,255,.12));
+            box-shadow: inset 0 0 0 8px rgba(255,255,255,.08);
+        }
+
+        .shield {
+            width: 92px;
+            height: 104px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            filter: drop-shadow(0 18px 18px rgba(0,0,0,.18));
+        }
+
+        .tier-emblem h3 {
+            margin: 14px 0 5px;
+            font-size: 18px;
+        }
+
+        .current-tier {
+            display: inline-flex;
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: rgba(52, 211, 153, .95);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 1000;
+        }
+
+        .hero-benefits ul {
+            display: grid;
+            gap: 14px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .hero-benefits li {
+            display: grid;
+            grid-template-columns: 22px minmax(0, 1fr);
+            gap: 11px;
+            align-items: center;
+        }
+
+        .check {
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: rgba(52, 211, 153, .26);
+            color: #a7f3d0;
+            font-weight: 1000;
+        }
+
+        .hero-metrics {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1px;
+            margin: 4px -18px -18px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255,255,255,.12);
+        }
+
+        .hero-metric {
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            padding: 16px 18px;
+            background: rgba(0, 72, 56, .36);
+        }
+
+        .metric-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: var(--gold);
+            background: rgba(255,255,255,.18);
+            overflow: hidden;
+        }
+
+        .hero-metric span {
+            display: block;
+            color: rgba(255,255,255,.76);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .hero-metric strong {
+            display: block;
+            margin-top: 4px;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .tier-card {
+            padding: 24px;
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .panel-heading h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0;
+        }
+
+        .panel-heading a,
+        .panel-heading button {
+            border: 0;
+            background: transparent;
+            color: var(--green-dark);
+            font-size: 13px;
+            font-weight: 1000;
+            cursor: pointer;
+        }
+
+        .tier-summary {
+            display: grid;
+            grid-template-columns: 78px minmax(0, 1fr);
+            gap: 18px;
+            align-items: center;
+        }
+
+        .tier-badge {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            filter: drop-shadow(0 16px 16px rgba(0, 127, 95, .16));
+        }
+
+        .tier-summary h3 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .tier-summary p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 780;
+        }
+
+        .pill {
+            display: inline-flex;
+            margin-left: 8px;
+            padding: 5px 9px;
+            border-radius: 999px;
+            color: var(--green-dark);
+            background: #e6fff3;
+            font-size: 11px;
+            font-weight: 1000;
+            vertical-align: middle;
+        }
+
+        .tier-meter {
+            height: 11px;
+            margin-top: 20px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #e8edf4;
+        }
+
+        .tier-meter span {
+            display: block;
+            width: var(--progress);
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #20c77a, #33d08d);
+        }
+
+        .tier-points {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            color: #48607f;
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .tier-track {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 26px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfdff;
+        }
+
+        .tier-step {
+            display: grid;
+            gap: 8px;
+            justify-items: center;
+            text-align: center;
+        }
+
+        .tier-step .round-icon {
+            width: 52px;
+            height: 52px;
+            color: #fff;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .tier-step.is-active .round-icon,
+        .tier-step.is-gold .round-icon { background: #fff; }
+
+        .tier-step strong {
+            font-size: 13px;
+        }
+
+        .tier-step span {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+            gap: 22px;
+            margin-top: 22px;
+        }
+
+        .panel {
+            padding: 22px;
+        }
+
+        .earn-grid,
+        .redeem-grid,
+        .saving-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .earn-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .earn-card,
+        .redeem-card,
+        .activity-row,
+        .saving-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .earn-card {
+            display: grid;
+            gap: 11px;
+            justify-items: center;
+            min-height: 138px;
+            padding: 0 12px 18px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .card-banner {
+            width: calc(100% + 24px);
+            height: 96px;
+            display: grid;
+            place-items: center;
+            margin: 0 -12px 4px;
+            padding: 0;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(255,255,255,.95), transparent 26%),
+                linear-gradient(135deg, #eefbf6, #ffffff);
+        }
+
+        .card-banner.green { background: linear-gradient(135deg, #e7f8f0, #f8fffc); }
+        .card-banner.orange { background: linear-gradient(135deg, #fff2df, #fffdf8); }
+        .card-banner.blue { background: linear-gradient(135deg, #eaf4ff, #fbfdff); }
+        .card-banner.purple { background: linear-gradient(135deg, #f3edff, #fffaff); }
+
+        .card-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reward-icon {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .reward-icon.green,
+        .reward-icon.orange,
+        .reward-icon.blue,
+        .reward-icon.purple { background: #fff; }
+
+        .earn-card h3,
+        .redeem-card h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .earn-card p,
+        .redeem-card p,
+        .saving-card span,
+        .activity-row p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 760;
+            line-height: 1.45;
+        }
+
+        .earn-grid .extra-earn,
+        .activity-list .extra-activity {
+            display: none;
+        }
+
+        .earn-grid.show-all .extra-earn,
+        .activity-list.show-all .extra-activity {
+            display: grid;
+        }
+
+        .earn-card strong {
+            color: var(--green-dark);
+            font-size: 15px;
+        }
+
+        .redeem-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .redeem-card {
+            overflow: hidden;
+        }
+
+        .redeem-card .card-banner {
+            width: 100%;
+            height: 92px;
+            margin: 0;
+        }
+
+        .coupon-art {
+            min-height: 74px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 54px;
+            gap: 10px;
+            align-items: center;
+            padding: 14px 16px;
+        }
+
+        .coupon-art.green { background: linear-gradient(135deg, #e7f8f0, #f7fffb); color: var(--green-dark); }
+        .coupon-art.orange { background: linear-gradient(135deg, #fff1dc, #fffaf2); color: #b45309; }
+        .coupon-art.purple { background: linear-gradient(135deg, #f2eafe, #fcfaff); color: #6d28d9; }
+
+        .coupon-art strong {
+            display: block;
+            font-size: 25px;
+            line-height: 1;
+        }
+
+        .coupon-art span {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            font-weight: 1000;
+            text-transform: uppercase;
+        }
+
+        .coupon-gift {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: rgba(255,255,255,.58);
+            text-align: center;
+        }
+
+        .coupon-gift {
+            overflow: hidden;
+        }
+
+        .coupon-gift .ai-icon { transform: scale(1.5); }
+
+        .redeem-body {
+            display: grid;
+            gap: 10px;
+            padding: 14px 16px 16px;
+            text-align: center;
+        }
+
+        .redeem-body form {
+            margin: 0;
+        }
+
+        .redeem-btn {
+            width: 100%;
+            min-height: 36px;
+            border: 1px solid #cfd9e6;
+            border-radius: 7px;
+            color: var(--green-dark);
+            background: #fff;
+            font-weight: 1000;
+            cursor: pointer;
+        }
+
+        .redeem-btn.primary {
+            border-color: #b7ecd3;
+            background: #f5fffa;
+        }
+
+        .redeem-btn:disabled,
+        .redeem-card.locked {
+            opacity: .62;
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .activity-row {
+            display: grid;
+            grid-template-columns: 86px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 13px 16px;
+        }
+
+        .activity-banner {
+            width: 76px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f4fffa, #fff);
+        }
+
+        .activity-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .activity-points {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            font-weight: 1000;
+        }
+
+        .activity-points.plus {
+            color: var(--green-dark);
+            background: #dff8ec;
+        }
+
+        .activity-points.cash {
+            color: #b45309;
+            background: #fff0dc;
+        }
+
+        .activity-row h3 {
+            margin: 0 0 4px;
+            font-size: 14px;
+        }
+
+        .activity-row time,
+        .activity-row strong {
+            color: var(--green-dark);
+            font-size: 13px;
+            font-weight: 1000;
+            white-space: nowrap;
+        }
+
+        .saving-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .saving-card {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            min-height: 96px;
+            padding: 12px 16px 12px 12px;
+            overflow: hidden;
+        }
+
+        .saving-banner {
+            width: 82px;
+            height: 70px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f3fffa, #fff);
+        }
+
+        .saving-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .saving-card .round-icon {
+            width: 46px;
+            height: 46px;
+            color: #fff;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .saving-card .round-icon.orange,
+        .saving-card .round-icon.blue,
+        .saving-card .round-icon.purple { background: #fff; }
+
+        .saving-card b {
+            display: block;
+            margin-top: 4px;
+            font-size: 20px;
+        }
+
+        .saving-card small {
+            display: block;
+            margin-top: 6px;
+            color: var(--green-dark);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .trust-strip {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1px;
+            margin-top: 22px;
+            overflow: hidden;
+            background: #d3eee3;
+        }
+
+        .trust-item {
+            display: grid;
+            grid-template-columns: 50px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #f3fffa, #f9fffd);
+        }
+
+        .trust-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #a7e8cc;
+            border-radius: 999px;
+            color: var(--green-dark);
+            background: #ecfff6;
+            overflow: hidden;
+        }
+
+        .trust-item strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .trust-item span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 780;
+        }
+
+        .empty {
+            padding: 24px;
+            border: 1px dashed var(--line);
+            border-radius: 8px;
+            color: var(--muted);
+            background: #fbfdff;
+            font-weight: 850;
+            text-align: center;
+        }
+
+        @media (max-width: 1180px) {
+            .top-grid,
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .points-hero {
+                grid-template-columns: minmax(0, 1fr) minmax(260px, .72fr);
+            }
+
+            .hero-benefits { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 860px) {
+            .rewards-shell {
+                width: min(100% - 28px, 1440px);
+            }
+
+            .points-hero,
+            .hero-metrics,
+            .earn-grid,
+            .redeem-grid,
+            .saving-grid,
+            .trust-strip {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .tier-track {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .page-title {
+                align-items: flex-start;
+            }
+
+            .points-hero,
+            .hero-metrics,
+            .earn-grid,
+            .redeem-grid,
+            .saving-grid,
+            .trust-strip,
+            .tier-summary,
+            .tier-track,
+            .activity-row {
+                grid-template-columns: 1fr;
+            }
+
+            .points-hero,
+            .tier-card,
+            .panel {
+                padding: 18px;
+            }
+
+            .hero-metrics {
+                margin: 8px 0 0;
+            }
+
+            .activity-row time,
+            .activity-row strong {
+                white-space: normal;
+            }
+        }
+    </style>
 </head>
 <body class="yvm-pro-page yvm-page-rewards">
 
@@ -132,171 +887,355 @@
 </div>
 
 {% include "partials/site_header.html" %}
-<main class="wrap">
-    <section class="hero">
-        <div class="hero-main">
-            <span class="eyebrow">Rewards & Loyalty</span>
-            <h1>Earn care points every time you shop.</h1>
-            <p>Track loyalty points, cashback, referral rewards, redeemable coupons, and health savings from one bright rewards dashboard built for repeat medicine care.</p>
-            <div class="hero-proof" aria-label="Reward highlights">
-                <div><span>Care Tier</span><strong>{{ tier.name }}</strong></div>
-                <div><span>Cashback</span><strong>2% Verified</strong></div>
-                <div><span>Referral</span><strong>Rs. {{ referral.max_bonus }}</strong></div>
-            </div>
-            <div class="hero-actions">
-                <a class="btn primary" href="#redeem">Redeem Rewards</a>
-                <a class="btn secondary" href="/cart">Use In Cart</a>
-            </div>
+
+<main class="rewards-shell">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span>&gt;</span>
+        <a href="/profile">My Account</a>
+        <span>&gt;</span>
+        <span>Rewards & Loyalty</span>
+    </nav>
+
+    <header class="page-title">
+        <div>
+            <h1>Rewards & Loyalty</h1>
+            <p>Earn points, unlock rewards, and save more on your healthcare.</p>
         </div>
-        <aside class="visual">
-            <img src="{{ url_for('static', filename='images/offer-discount-ai.png') }}" alt="Reward savings visual">
-            <div class="credit-pass">
-                <span>Yuvraj Care Pass</span>
-                <strong>{{ referral.code }}</strong>
-                <small>Use this pass to invite family and unlock referral savings.</small>
+        <span class="verified-badge" aria-hidden="true">
+            <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt="">
+        </span>
+    </header>
+
+    <section class="top-grid" aria-label="Rewards overview">
+        <article class="points-hero">
+            <div class="points-main">
+                <h2>My Care Points</h2>
+                <span class="points-number">{{ summary.points }}</span>
+                <strong>Available Points</strong>
+                <div class="hero-progress" style="--progress: {{ tier_progress }}%;"><span></span></div>
+                <small>{% if next_tier_gap is not none %}{{ next_tier_gap }} points to reach next tier{% else %}Highest tier unlocked{% endif %}</small>
             </div>
-            <div class="tier">
-                <span>{{ tier.name }}</span>
-                <strong>{{ summary.points }} points</strong>
-                <small>{{ tier.accent }}</small>
-                <div class="meter" style="--progress: {{ tier_progress }}%;"><i></i></div>
-                <small>{% if next_tier_gap is not none %}{{ next_tier_gap }} points to next tier{% else %}Highest tier unlocked{% endif %}</small>
+
+            <div class="tier-emblem" aria-label="Current tier">
+                <div class="emblem-ring">
+                    <div class="shield">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/care-shield.png') }}" alt="">
+                    </div>
+                </div>
+                <h3>{{ tier.name }}</h3>
+                <span class="current-tier">Current Tier</span>
+            </div>
+
+            <div class="hero-benefits">
+                <h2>Benefits You Enjoy</h2>
+                <ul>
+                    <li><span class="check">✓</span><span>1% verified cashback</span></li>
+                    <li><span class="check">✓</span><span>Priority customer support</span></li>
+                    <li><span class="check">✓</span><span>Exclusive member offers</span></li>
+                    <li><span class="check">✓</span><span>Early access to savings</span></li>
+                </ul>
+            </div>
+
+            <div class="hero-metrics" aria-label="Rewards totals">
+                <div class="hero-metric">
+                    <span class="metric-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/shop-bag.png') }}" alt=""></span>
+                    <div><span>Total Earned</span><strong>{{ summary.points + summary.pending_points }} pts</strong></div>
+                </div>
+                <div class="hero-metric">
+                    <span class="metric-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt=""></span>
+                    <div><span>Total Redeemed</span><strong>{{ summary.pending_points }} pts</strong></div>
+                </div>
+                <div class="hero-metric">
+                    <span class="metric-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt=""></span>
+                    <div><span>Cashback Earned</span><strong>Rs. {{ summary.cashback_available }}</strong></div>
+                </div>
+                <div class="hero-metric">
+                    <span class="metric-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt=""></span>
+                    <div><span>Coupons Ready</span><strong>{{ available_coupon_count }}</strong></div>
+                </div>
+            </div>
+        </article>
+
+        <aside class="tier-card">
+            <div class="panel-heading">
+                <h2>Tier Progress</h2>
+                <button type="button" data-scroll-target="#tier-map">View All Tiers</button>
+            </div>
+            <div class="tier-summary">
+                <div class="tier-badge">
+                    <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/care-shield.png') }}" alt="">
+                </div>
+                <div>
+                    <h3>{{ tier.name }} <span class="pill">Current Tier</span></h3>
+                    <p>{% if next_tier_gap is not none %}{{ next_tier_gap }} more points to reach the next tier{% else %}You have unlocked the top loyalty tier{% endif %}</p>
+                </div>
+            </div>
+            <div class="tier-meter" style="--progress: {{ tier_progress }}%;"><span></span></div>
+            <div class="tier-points">
+                <span>{{ summary.points }} pts</span>
+                <span>{% if next_tier_points %}{{ next_tier_points }} pts{% else %}Top tier{% endif %}</span>
+            </div>
+            <div class="tier-track" id="tier-map">
+                <div class="tier-step {% if summary.points >= 0 %}is-active{% endif %}">
+                    <span class="round-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/shop-bag.png') }}" alt=""></span>
+                    <strong>Wellness Starter</strong>
+                    <span>0 - 749 pts</span>
+                </div>
+                <div class="tier-step {% if summary.points >= 750 %}is-active{% endif %}">
+                    <span class="round-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/care-shield.png') }}" alt=""></span>
+                    <strong>Care Plus</strong>
+                    <span>750 - 1799 pts</span>
+                </div>
+                <div class="tier-step {% if summary.points >= 1800 %}is-active{% endif %}">
+                    <span class="round-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt=""></span>
+                    <strong>Gold Health</strong>
+                    <span>1800 - 3599 pts</span>
+                </div>
+                <div class="tier-step is-gold {% if summary.points >= 3600 %}is-active{% endif %}">
+                    <span class="round-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt=""></span>
+                    <strong>Platinum Care</strong>
+                    <span>3600+ pts</span>
+                </div>
             </div>
         </aside>
     </section>
 
-    <section class="stats" aria-label="Rewards summary">
-        <div class="reward-card" data-code="LP"><span>Loyalty Points</span><strong>{{ summary.points }}</strong><small>{{ summary.pending_points }} pending from active orders</small></div>
-        <div class="reward-card" data-code="CB"><span>Cashback</span><strong>Rs. {{ summary.cashback_available }}</strong><small>Rs. {{ summary.cashback_pending }} waiting for verification</small></div>
-        <div class="reward-card" data-code="RR"><span>Referral Rewards</span><strong>Rs. {{ referral.expected_reward }}</strong><small>{{ referral.pending }} expected reward{% if referral.pending != 1 %}s{% endif %} from invites</small></div>
-        <div class="reward-card" data-code="RD"><span>Reward Redemption</span><strong>{{ available_coupon_count }}</strong><small>Coupons ready to activate</small></div>
-    </section>
-
-    <section class="benefit-strip" aria-label="Reward benefits">
-        <div class="benefit"><div class="benefit-icon">LP</div><div><strong>Earn On Every Order</strong><span>Points build from medicine purchases.</span></div></div>
-        <div class="benefit"><div class="benefit-icon">CB</div><div><strong>Verified Cashback</strong><span>Cashback appears after payment review.</span></div></div>
-        <div class="benefit"><div class="benefit-icon">RF</div><div><strong>Refer & Save</strong><span>Invite with your personal code.</span></div></div>
-        <div class="benefit"><div class="benefit-icon">CP</div><div><strong>Cart Coupons</strong><span>Activate rewards directly in checkout.</span></div></div>
-    </section>
-
-    <section class="layout">
-        <div class="panel" id="redeem">
-            <div class="panel-head">
-                <div>
-                    <h2>Coupons</h2>
-                    <p>Redeem points for cart-ready coupons. Available coupons are added directly to checkout.</p>
-                </div>
-                <span class="badge">Reward Redemption</span>
+    <section class="dashboard-grid">
+        <article class="panel">
+            <div class="panel-heading">
+                <h2>Ways to Earn Points</h2>
+                <button type="button" data-toggle-target="#earn-methods" data-open-label="View All" data-close-label="Show Less">View All</button>
             </div>
-            <div class="coupon-grid">
-                {% for coupon in coupons %}
-                <article class="coupon-card{% if not coupon.available %} locked{% endif %}">
-                    <div class="coupon-code">
-                        <strong>{{ coupon.code }}</strong>
-                        <span>{{ coupon.point_cost }} pts</span>
+            <div class="earn-grid" id="earn-methods">
+                <div class="earn-card">
+                    <div class="card-banner green">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/shop-earn-banner.png') }}" alt="">
                     </div>
-                    <p>{{ coupon.label }}. Minimum cart value Rs. {{ coupon.min_subtotal }}.</p>
-                    <form method="POST" action="/rewards/redeem">
-                        <input type="hidden" name="coupon_code" value="{{ coupon.code }}">
-                        {% if coupon.available %}
-                            <button class="btn primary" type="submit">Activate Coupon</button>
+                    <span class="reward-icon green"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/shop-bag.png') }}" alt=""></span>
+                    <h3>Shop & Earn</h3>
+                    <p>Earn points on every order</p>
+                    <strong>Rs. 20 = 1 Point</strong>
+                </div>
+                <div class="earn-card">
+                    <div class="card-banner orange">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/prescription-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon orange"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/prescription-bottle.png') }}" alt=""></span>
+                    <h3>Upload Prescription</h3>
+                    <p>Earn points on prescription review</p>
+                    <strong>10 Points</strong>
+                </div>
+                <div class="earn-card">
+                    <div class="card-banner blue">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/daily-login-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon blue"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/daily-login.png') }}" alt=""></span>
+                    <h3>Daily Login</h3>
+                    <p>Login daily and keep tracking care</p>
+                    <strong>1 Point</strong>
+                </div>
+                <div class="earn-card">
+                    <div class="card-banner purple">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/referral-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon purple"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/referral-network.png') }}" alt=""></span>
+                    <h3>Refer & Earn</h3>
+                    <p>Refer friends and family</p>
+                    <strong>Rs. {{ referral.max_bonus }}</strong>
+                </div>
+                <div class="earn-card extra-earn">
+                    <div class="card-banner green">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/cashback-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon green"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt=""></span>
+                    <h3>Verified Payment</h3>
+                    <p>Get cashback after payment verification</p>
+                    <strong>1% Cashback</strong>
+                </div>
+                <div class="earn-card extra-earn">
+                    <div class="card-banner blue">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/delivery-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon blue"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/delivery-truck.png') }}" alt=""></span>
+                    <h3>Delivered Orders</h3>
+                    <p>Bonus points after order delivery</p>
+                    <strong>10 Points</strong>
+                </div>
+                <div class="earn-card extra-earn">
+                    <div class="card-banner purple">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/coupon-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon purple"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt=""></span>
+                    <h3>Redeem Coupons</h3>
+                    <p>Turn points into cart savings</p>
+                    <strong>{{ available_coupon_count }} Ready</strong>
+                </div>
+                <div class="earn-card extra-earn">
+                    <div class="card-banner orange">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/tier-banner.png') }}" alt="">
+                    </div>
+                    <span class="reward-icon orange"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/care-shield.png') }}" alt=""></span>
+                    <h3>Reach New Tiers</h3>
+                    <p>Unlock better benefits as points grow</p>
+                    <strong>{{ tier.name }}</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="panel" id="redeem">
+            <div class="panel-heading">
+                <h2>Redeem Your Points</h2>
+                <a href="/cart">View Cart</a>
+            </div>
+            <div class="redeem-grid">
+                {% for coupon in coupons %}
+                <article class="redeem-card {% if not coupon.available %}locked{% endif %}">
+                    <div class="card-banner {% if loop.index == 1 %}green{% elif loop.index == 2 %}green{% elif loop.index == 3 %}orange{% else %}purple{% endif %}">
+                        {% if coupon.code == "FREESHIP" %}
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/delivery-banner.png') }}" alt="">
                         {% else %}
-                            <button class="btn secondary" type="submit">Earn More Points</button>
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/coupon-banner.png') }}" alt="">
                         {% endif %}
-                    </form>
+                    </div>
+                    <div class="coupon-art {% if loop.index == 1 %}green{% elif loop.index == 2 %}green{% elif loop.index == 3 %}orange{% else %}purple{% endif %}">
+                        <div>
+                            <strong>{{ coupon.display_value }}</strong>
+                            <span>{{ coupon.label }}</span>
+                        </div>
+                        <div class="coupon-gift" aria-hidden="true">
+                            {% if coupon.code == "FREESHIP" %}
+                            <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/delivery-truck.png') }}" alt="">
+                            {% else %}
+                            <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt="">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="redeem-body">
+                        <h3>{{ coupon.point_cost }} Points</h3>
+                        <p>Min. Rs. {{ coupon.min_subtotal }}</p>
+                        <form method="POST" action="/rewards/redeem">
+                            <input type="hidden" name="coupon_code" value="{{ coupon.code }}">
+                            <button class="redeem-btn {% if coupon.available %}primary{% endif %}" type="submit">{{ "Redeem" if coupon.available else "Earn More" }}</button>
+                        </form>
+                    </div>
                 </article>
                 {% endfor %}
             </div>
-        </div>
-
-        <aside class="referral">
-            <h2>Referral Rewards</h2>
-            <p>Share your code with family and friends. Successful referral milestones unlock bonus reward value for future medicine orders.</p>
-            <div class="referral-cap">
-                <div>
-                    <span>Referral Value</span>
-                    <strong>Up to Rs. {{ referral.max_bonus }}</strong>
-                </div>
-                <span>Rs. {{ referral.max_bonus }} per signup</span>
-            </div>
-            <div class="codebox">
-                <div>
-                    <b>{{ referral.code }}</b>
-                    <span>{{ referral.link }}</span>
-                </div>
-                <a class="btn secondary" href="{{ referral.whatsapp_url }}" target="_blank" rel="noopener">Invite</a>
-            </div>
-            <div class="referral-stats">
-                <div><span>Completed</span><strong>{{ referral.completed }}</strong></div>
-                <div><span>Expected</span><strong>{{ referral.pending }}</strong></div>
-                <div><span>Reward</span><strong>Rs. {{ referral.expected_reward }}</strong></div>
-            </div>
-            <div class="referral-list">
-                {% for item in referral.preview %}
-                <div class="referral-row">
-                    <div>
-                        <strong>{{ item.invitee_name or "Invited user" }}</strong>
-                        <span>{{ item.status }} · {{ item.created_at }}</span>
-                    </div>
-                    <b>Rs. {{ item.reward_amount }}</b>
-                </div>
-                {% else %}
-                <div class="referral-empty">No referral signups yet. Share your invite on WhatsApp to start earning expected rewards.</div>
-                {% endfor %}
-            </div>
-        </aside>
+        </article>
     </section>
 
-    <section class="layout" style="margin-top:18px">
-        <div class="panel">
-            <div class="panel-head">
-                <div>
-                    <h2>Loyalty Points</h2>
-                    <p>Recent point activity from your medicine orders.</p>
-                </div>
-                <span class="badge">{{ summary.orders }} orders</span>
+    <section class="dashboard-grid">
+        <article class="panel">
+            <div class="panel-heading">
+                <h2>Recent Activity</h2>
+                <button type="button" data-toggle-target="#activity" data-open-label="View All Activity" data-close-label="Show Less">View All Activity</button>
             </div>
-            <div class="history-list">
+            <div class="activity-list" id="activity">
                 {% for item in point_history %}
-                <article class="history-card">
-                    <div class="history-icon">LP</div>
+                <article class="activity-row {% if loop.index > 2 %}extra-activity{% endif %}">
+                    <span class="activity-banner">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/shop-earn-banner.png') }}" alt="">
+                    </span>
                     <div>
                         <h3>Order #{{ item.order_id }}</h3>
-                        <p>{{ item.status }} · {{ item.date }}</p>
+                        <p>{{ item.status }} order reward credited after completion</p>
+                        <p>You earned {{ item.points }} loyalty point{{ "" if item.points == 1 else "s" }}: {{ item.base_points }} from order value + {{ item.bonus_points }} completion bonus.</p>
+                        <time>{{ item.date }}</time>
                     </div>
                     <strong>+{{ item.points }} pts</strong>
                 </article>
-                {% else %}
-                <div class="empty">Place your first order to start earning loyalty points.</div>
                 {% endfor %}
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-head">
-                <div>
-                    <h2>Cashback History</h2>
-                    <p>Cashback is credited after payment verification.</p>
-                </div>
-                <span class="badge">2% reward</span>
-            </div>
-            <div class="history-list">
                 {% for item in cashback_history %}
-                <article class="history-card">
-                    <div class="history-icon">CB</div>
+                <article class="activity-row {% if point_history|length + loop.index > 3 %}extra-activity{% endif %}">
+                    <span class="activity-banner">
+                        <img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/cashback-banner.png') }}" alt="">
+                    </span>
                     <div>
-                        <h3>Order #{{ item.order_id }} · {{ item.method }}</h3>
-                        <p>Rs. {{ item.amount }} · {{ item.status }} · {{ item.created_at }}</p>
+                        <h3>Cashback for Order #{{ item.order_id }}</h3>
+                        <p>{{ item.status }} · {{ item.method }}</p>
+                        <p>You earned Rs. {{ item.cashback }} cashback from this activity.</p>
+                        {% if item.created_at %}<time>{{ item.created_at }}</time>{% endif %}
                     </div>
                     <strong>Rs. {{ item.cashback }}</strong>
                 </article>
-                {% else %}
-                <div class="empty">Verified payment cashback will appear here.</div>
                 {% endfor %}
+                {% if not point_history and not cashback_history %}
+                <div class="empty">Place an order to start earning points, cashback, and coupon rewards.</div>
+                {% endif %}
             </div>
+        </article>
+
+        <article class="panel">
+            <div class="panel-heading">
+                <h2>Your Rewards & Savings</h2>
+                <select aria-label="Savings period">
+                    <option>This Year</option>
+                    <option>This Month</option>
+                    <option>All Time</option>
+                </select>
+            </div>
+            <div class="saving-grid">
+                <div class="saving-card">
+                    <span class="saving-banner"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/shop-earn-banner.png') }}" alt=""></span>
+                    <div><span>Points Earned</span><b>{{ summary.points }}</b><small>▲ Active rewards</small></div>
+                </div>
+                <div class="saving-card">
+                    <span class="saving-banner"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/coupon-banner.png') }}" alt=""></span>
+                    <div><span>Pending Points</span><b>{{ summary.pending_points }}</b><small>▲ From active orders</small></div>
+                </div>
+                <div class="saving-card">
+                    <span class="saving-banner"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/cashback-banner.png') }}" alt=""></span>
+                    <div><span>Total Savings</span><b>Rs. {{ summary.cashback_available }}</b><small>▲ Verified cashback</small></div>
+                </div>
+                <div class="saving-card">
+                    <span class="saving-banner"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/banners/delivery-banner.png') }}" alt=""></span>
+                    <div><span>Coupons Ready</span><b>{{ available_coupon_count }}</b><small>▲ Redeem in cart</small></div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="trust-strip" aria-label="Reward promises">
+        <div class="trust-item">
+            <span class="trust-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt=""></span>
+            <div><strong>100% Secure</strong><span>Your rewards and data are safe</span></div>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/care-shield.png') }}" alt=""></span>
+            <div><strong>No Expiry</strong><span>Your points never expire</span></div>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/daily-login.png') }}" alt=""></span>
+            <div><strong>Easy Redemption</strong><span>Redeem in just one click</span></div>
+        </div>
+        <div class="trust-item">
+            <span class="trust-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt=""></span>
+            <div><strong>Best Value</strong><span>More points, more savings</span></div>
         </div>
     </section>
 </main>
+
+<script>
+document.querySelectorAll("[data-scroll-target]").forEach((button) => {
+    button.addEventListener("click", () => {
+        document.querySelector(button.dataset.scrollTarget)?.scrollIntoView({behavior: "smooth", block: "start"});
+    });
+});
+
+document.querySelectorAll("[data-toggle-target]").forEach((button) => {
+    button.addEventListener("click", () => {
+        const target = document.querySelector(button.dataset.toggleTarget);
+        if (!target) return;
+        const open = !target.classList.contains("show-all");
+        target.classList.toggle("show-all", open);
+        button.textContent = open ? button.dataset.closeLabel : button.dataset.openLabel;
+        if (open) {
+            target.scrollIntoView({behavior: "smooth", block: "nearest"});
+        }
+    });
+});
+</script>
 {% include "partials/site_header_script.html" %}
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>

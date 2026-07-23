@@ -1,0 +1,491 @@
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    html,
+    body.yvm-page-home {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body.yvm-page-home img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    body.yvm-page-home .home-shell,
+    body.yvm-page-home .news-offers-section {
+        width: min(100% - 32px, 1160px);
+    }
+
+    body.yvm-page-home .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    body.yvm-page-home .health-grid,
+    body.yvm-page-home .health-concern-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    body.yvm-page-home .home-product-card,
+    body.yvm-page-home .medicine-card,
+    body.yvm-page-home .product-card {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --mobile-page-pad: 12px;
+        --mobile-nav-height: 78px;
+    }
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body.yvm-page-home {
+        padding-bottom: calc(var(--mobile-nav-height) + 22px + env(safe-area-inset-bottom));
+    }
+
+    body.yvm-page-home .bg-particles,
+    body.yvm-page-home .side-overlay,
+    body.yvm-page-home .side-panel {
+        display: none !important;
+    }
+
+    body.yvm-page-home .header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px 12px;
+        align-items: center;
+        width: 100%;
+        padding: 10px var(--mobile-page-pad) 12px;
+        border-radius: 0;
+        background: linear-gradient(135deg, #00684e 0%, #08a567 100%);
+        box-shadow: 0 14px 34px rgba(0, 73, 56, 0.22);
+    }
+
+    body.yvm-page-home .brand {
+        min-width: 0;
+        gap: 8px;
+    }
+
+    body.yvm-page-home .brand-icon {
+        width: 44px !important;
+        height: 44px !important;
+        flex: 0 0 44px;
+    }
+
+    body.yvm-page-home .brand-name .brand-yuvraj {
+        font-size: 22px !important;
+        line-height: 1;
+    }
+
+    body.yvm-page-home .brand-name .brand-medical {
+        font-size: 8px !important;
+        letter-spacing: 3px !important;
+        line-height: 1.1;
+    }
+
+    body.yvm-page-home .brand-name .brand-tagline {
+        font-size: 9px !important;
+        line-height: 1.2;
+    }
+
+    body.yvm-page-home .home-header-search {
+        grid-column: 1 / -1;
+        order: 3;
+        width: 100%;
+        max-width: none;
+        flex-basis: auto;
+    }
+
+    body.yvm-page-home .home-header-search form {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 14px;
+    }
+
+    body.yvm-page-home .home-header-search input {
+        min-height: 46px;
+        font-size: 14px;
+    }
+
+    body.yvm-page-home .home-header-search button {
+        min-width: 46px;
+        min-height: 46px;
+    }
+
+    body.yvm-page-home .header-actions {
+        justify-self: end;
+        display: flex;
+        width: auto;
+        gap: 8px;
+    }
+
+    body.yvm-page-home .header-actions a:not(.cart-btn),
+    body.yvm-page-home .menu-toggle {
+        display: none !important;
+    }
+
+    body.yvm-page-home .cart-btn {
+        min-height: 44px;
+        padding: 0 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    body.yvm-page-home .home-service-strip {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        grid-template-columns: none;
+        gap: 10px;
+        width: 100%;
+        padding: 10px var(--mobile-page-pad);
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+    }
+
+    body.yvm-page-home .home-service-strip::-webkit-scrollbar,
+    body.yvm-page-home .health-grid::-webkit-scrollbar,
+    body.yvm-page-home .health-concern-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    body.yvm-page-home .home-service-strip span {
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid rgba(0, 122, 82, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        white-space: nowrap;
+        scroll-snap-align: start;
+    }
+
+    body.yvm-page-home .home-shell {
+        width: 100%;
+        margin: 0;
+        padding: 14px var(--mobile-page-pad) 0;
+    }
+
+    body.yvm-page-home .home-hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        gap: 16px;
+        padding: 18px 0 10px;
+    }
+
+    body.yvm-page-home .hero-copy {
+        padding-left: 0;
+    }
+
+    body.yvm-page-home .hero-copy h1 {
+        font-size: clamp(28px, 8vw, 36px);
+        line-height: 1.1;
+    }
+
+    body.yvm-page-home .hero-copy p {
+        max-width: 100%;
+        font-size: 14px;
+        line-height: 1.55;
+    }
+
+    body.yvm-page-home .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    body.yvm-page-home .hero-actions a,
+    body.yvm-page-home .home-section-head a,
+    body.yvm-page-home .home-add-btn,
+    body.yvm-page-home .add-btn,
+    body.yvm-page-home .detail-btn,
+    body.yvm-page-home .btn,
+    body.yvm-page-home button,
+    body.yvm-page-home input,
+    body.yvm-page-home select,
+    body.yvm-page-home textarea {
+        min-height: 44px;
+    }
+
+    body.yvm-page-home .home-hero-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    body.yvm-page-home .hero-visual {
+        min-height: 250px;
+    }
+
+    body.yvm-page-home .home-section,
+    body.yvm-page-home .health-concern-section,
+    body.yvm-page-home .news-offers-section {
+        width: 100%;
+        margin: 14px 0;
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    body.yvm-page-home .home-section-head,
+    body.yvm-page-home .health-concern-head,
+    body.yvm-page-home .news-offers-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    body.yvm-page-home .home-section-head h2,
+    body.yvm-page-home .health-concern-head h2,
+    body.yvm-page-home .news-offers-head h2 {
+        font-size: 21px;
+        line-height: 1.2;
+    }
+
+    body.yvm-page-home .health-grid {
+        display: flex;
+        grid-template-columns: none;
+        gap: 10px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        padding-bottom: 6px;
+        scroll-snap-type: x proximity;
+    }
+
+    body.yvm-page-home .health-grid .health-card {
+        flex: 0 0 128px;
+        min-height: 116px;
+        scroll-snap-align: start;
+    }
+
+    body.yvm-page-home .health-concern-grid {
+        display: flex;
+        grid-template-columns: none;
+        gap: 12px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        padding-bottom: 6px;
+        scroll-snap-type: x proximity;
+    }
+
+    body.yvm-page-home .health-concern-card {
+        flex: 0 0 180px;
+        min-height: 140px;
+        scroll-snap-align: start;
+    }
+
+    body.yvm-page-home .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    body.yvm-page-home .home-product-card,
+    body.yvm-page-home .product-card,
+    body.yvm-page-home .medicine-card {
+        min-width: 0;
+        min-height: auto;
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    body.yvm-page-home .home-product-image {
+        height: 90px;
+        min-height: 90px;
+    }
+
+    body.yvm-page-home .home-product-image img {
+        max-height: 84px;
+        object-fit: contain;
+    }
+
+    body.yvm-page-home .home-product-card h3 {
+        min-height: 34px;
+        font-size: 13px;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    body.yvm-page-home .home-price {
+        font-size: 16px;
+    }
+
+    body.yvm-page-home .home-stock,
+    body.yvm-page-home .home-product-card small {
+        font-size: 11px;
+    }
+
+    body.yvm-page-home .promo-grid,
+    body.yvm-page-home .review-grid,
+    body.yvm-page-home .article-grid,
+    body.yvm-page-home .home-trust-strip {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    body.yvm-page-home .promo-card {
+        grid-template-columns: 1fr;
+        min-height: 190px;
+        padding: 16px;
+    }
+
+    body.yvm-page-home .promo-card img,
+    body.yvm-page-home .promo-card-visual {
+        display: block;
+    }
+
+    body.yvm-page-home .promo-card > div:first-child {
+        max-width: 78%;
+    }
+
+    body.yvm-page-home .news-banner,
+    body.yvm-page-home .news-banner-visual {
+        min-height: 190px;
+        border-radius: 14px;
+    }
+
+    body.yvm-page-home .news-banner-visual img {
+        height: 190px;
+    }
+
+    body.yvm-page-home .news-carousel-controls {
+        align-self: flex-end;
+    }
+
+    body.yvm-page-home form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    body.yvm-page-home table,
+    body.yvm-page-home thead,
+    body.yvm-page-home tbody,
+    body.yvm-page-home tr,
+    body.yvm-page-home td,
+    body.yvm-page-home th {
+        display: block;
+        width: 100%;
+    }
+
+    body.yvm-page-home table {
+        border: 0;
+    }
+
+    body.yvm-page-home thead {
+        display: none;
+    }
+
+    body.yvm-page-home tr {
+        margin-bottom: 12px;
+        border: 1px solid rgba(0, 122, 82, 0.14);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 10px 24px rgba(11, 31, 58, 0.08);
+    }
+
+    body.yvm-page-home td {
+        border: 0 !important;
+        padding: 10px 12px !important;
+    }
+
+    body.yvm-page-home .footer {
+        padding-bottom: calc(var(--mobile-nav-height) + 30px);
+    }
+
+    body.yvm-page-home .footer-container {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 16px;
+        padding: 0 var(--mobile-page-pad) 24px;
+    }
+
+    .mobile-bottom-nav {
+        position: fixed;
+        right: 10px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        left: 10px;
+        z-index: 1200;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        min-height: 64px;
+        padding: 8px;
+        border: 1px solid rgba(0, 122, 82, 0.16);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 18px 44px rgba(4, 61, 50, 0.22);
+        backdrop-filter: blur(16px);
+    }
+
+    .mobile-bottom-nav a {
+        display: grid;
+        place-items: center;
+        min-width: 0;
+        min-height: 48px;
+        gap: 3px;
+        border-radius: 12px;
+        color: #405371;
+        font-size: 11px;
+        font-weight: 900;
+        text-decoration: none;
+    }
+
+    .mobile-bottom-nav a[aria-current="page"] {
+        color: #007a52;
+        background: #eafaf3;
+    }
+
+    .mobile-bottom-nav span {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    .mobile-bottom-nav b {
+        max-width: 100%;
+        overflow: hidden;
+        line-height: 1.1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 380px) {
+    body.yvm-page-home .product-grid,
+    body.yvm-page-home .home-hero-stats {
+        grid-template-columns: 1fr;
+    }
+
+    body.yvm-page-home .health-grid .health-card {
+        flex-basis: 118px;
+    }
+
+    body.yvm-page-home .brand-name .brand-yuvraj {
+        font-size: 20px !important;
+    }
+
+    body.yvm-page-home .cart-btn {
+        padding: 0 9px;
+        font-size: 12px;
+    }
+
+    .mobile-bottom-nav {
+        right: 6px;
+        left: 6px;
+        padding: 7px 6px;
+    }
+
+    .mobile-bottom-nav b {
+        font-size: 10px;
+    }
+}

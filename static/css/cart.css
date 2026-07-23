@@ -118,7 +118,7 @@ body.yvm-page-cart .trust-card{
     border:0;
     border-radius:0;
     background:
-        linear-gradient(90deg,rgba(4,47,46,.94) 0%,rgba(6,78,59,.82) 46%,rgba(6,78,59,.28) 100%),
+        linear-gradient(90deg,rgba(3,30,31,.98) 0%,rgba(4,72,58,.90) 50%,rgba(3,30,31,.54) 100%),
         url("/static/images/cart-ai-hero-wide.png") center right/cover no-repeat;
     box-shadow:0 24px 70px rgba(15,23,42,.16);
     overflow:hidden;
@@ -151,13 +151,15 @@ body.yvm-page-cart .trust-card{
     line-height:1.08;
     letter-spacing:-.03em;
     color:#fff;
+    text-shadow:0 3px 18px rgba(0,0,0,.46);
 }
 
 .visual-copy p{
     margin:0;
     max-width:650px;
-    color:rgba(240,253,250,.9);
+    color:#f8fffd;
     font-size:15px;
+    text-shadow:0 2px 14px rgba(0,0,0,.42);
     line-height:1.65;
     font-weight:750;
 }

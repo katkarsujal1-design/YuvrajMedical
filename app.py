@@ -338,6 +338,7 @@ def ensure_notification_schema():
             target_url VARCHAR(255),
             dedupe_key VARCHAR(190) NOT NULL,
             is_read TINYINT(1) NOT NULL DEFAULT 0,
+            is_deleted TINYINT(1) NOT NULL DEFAULT 0,
             created_at DATETIME,
             UNIQUE KEY unique_notification_dedupe (dedupe_key),
             INDEX(user_id),
@@ -345,9 +346,44 @@ def ensure_notification_schema():
             INDEX(is_read)
         )
     """)
+    try:
+        cursor.execute("ALTER TABLE notifications ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0")
+    except mysql.connector.Error:
+        pass
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS notification_preferences (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            notification_type VARCHAR(80) NOT NULL,
+            is_enabled TINYINT(1) NOT NULL DEFAULT 1,
+            updated_at DATETIME,
+            UNIQUE KEY unique_user_notification_preference (user_id, notification_type),
+            INDEX(user_id)
+        )
+    """)
     db.commit()
     cursor.close()
     app.config["NOTIFICATION_SCHEMA_READY"] = True
+
+
+def get_notification_preferences(user_id):
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT notification_type, is_enabled
+        FROM notification_preferences
+        WHERE user_id=%s
+    """, (user_id,))
+    saved_preferences = {
+        row["notification_type"]: bool(row["is_enabled"])
+        for row in cursor.fetchall()
+    }
+    cursor.close()
+    return {
+        notification_type: saved_preferences.get(notification_type, True)
+        for notification_type in NOTIFICATION_TYPES
+    }
 
 
 def ensure_reviews_feedback_schema():
@@ -524,7 +560,7 @@ def sync_user_notifications(user_id):
         "Health Tips Notifications",
         "Daily medicine safety tip",
         "Take medicines only as prescribed and confirm dose changes with a pharmacist or doctor.",
-        "/ai_health_assistant",
+        "/chatbot",
         f"health-tip:{user_id}:{today_key}"
     )
     cursor.close()
@@ -541,7 +577,7 @@ def get_user_notifications(user_id, limit=None):
     cursor.execute(f"""
         SELECT *
         FROM notifications
-        WHERE user_id=%s
+        WHERE user_id=%s AND COALESCE(is_deleted, 0)=0
         ORDER BY is_read ASC, created_at DESC, id DESC
         {limit_sql}
     """, tuple(params))
@@ -549,7 +585,7 @@ def get_user_notifications(user_id, limit=None):
     cursor.execute("""
         SELECT COUNT(*) AS unread
         FROM notifications
-        WHERE user_id=%s AND is_read=0
+        WHERE user_id=%s AND is_read=0 AND COALESCE(is_deleted, 0)=0
     """, (user_id,))
     unread_count = (cursor.fetchone() or {}).get("unread", 0)
     cursor.close()
@@ -1961,14 +1997,14 @@ def search_medicine():
 AI_FEATURE_CONFIG = {
     "medicine_search": {"title": "AI Medicine Search"},
     "symptom_checker": {"title": "AI Symptom Checker"},
-    "health_assistant": {"title": "AI Health Assistant"},
+    "health_assistant": {"title": "AI Chatbot"},
     "disease_info": {"title": "AI Disease Information"},
     "medicine_suggestions": {"title": "AI Medicine Suggestions"},
     "reminder_suggestions": {"title": "AI Medicine Reminder Suggestions"},
     "health_question": {
-        "title": "AI Health Assistant",
+        "title": "AI Chatbot",
     },
-    "general": {"title": "AI Health Assistant"},
+    "general": {"title": "AI Chatbot"},
 }
 
 
@@ -2271,7 +2307,7 @@ def manual_ai_answer(feature, user_text):
         return nutrition_answer(text)
 
     if symptom_key:
-        return symptom_answer(text, heading="AI Health Assistant")
+        return symptom_answer(text, heading="AI Chatbot")
 
     if any(disease in lower_text for disease in DISEASE_GUIDANCE):
         disease_name, description = disease_profile(text)
@@ -2301,57 +2337,6 @@ def fetch_ai_medicine_context(query):
     if not rows:
         return "No matching local store medicines were found for this query."
     return format_medicine_matches(rows)
-
-
-def call_ai_health_assistant(feature, user_text, medicine_context=None):
-    return manual_ai_answer(feature, user_text)
-
-
-@app.route("/ai_health_assistant")
-def ai_health_assistant():
-    if "user" not in flask.session:
-        return flask.redirect("/login")
-
-    db = get_db()
-    user_id = flask.session["user"]["id"]
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT medicine_id, quantity
-        FROM cart
-        WHERE user_id=%s
-    """, (user_id,))
-    cart_rows = cursor.fetchall()
-    cursor.close()
-
-    cart_count = sum(row["quantity"] for row in cart_rows)
-    return flask.render_template("ai_health_assistant.html", cart_count=cart_count)
-
-
-@app.route("/ai_health_assistant/ask", methods=["POST"])
-def ai_health_assistant_ask():
-    if "user" not in flask.session:
-        return flask.jsonify({"error": "Please login to use AI Health Assistant."}), 401
-
-    data = flask.request.get_json(silent=True) or {}
-    feature = (data.get("feature") or "general").strip()
-    user_text = (data.get("message") or "").strip()
-
-    if feature not in AI_FEATURE_CONFIG:
-        return flask.jsonify({"error": "Invalid AI feature selected."}), 400
-
-    if len(user_text) < 2:
-        return flask.jsonify({"error": "Please enter your question."}), 400
-
-    if len(user_text) > 1200:
-        return flask.jsonify({"error": "Please keep your question under 1200 characters."}), 400
-
-    answer = call_ai_health_assistant(feature, user_text)
-    return flask.jsonify({
-        "answer": answer,
-        "feature": AI_FEATURE_CONFIG[feature]["title"],
-        "safety_note": "Manual guidance only. Please confirm treatment, dose, and prescription needs with a qualified doctor or pharmacist.",
-    })
 
 
 @app.route("/chatbot")
@@ -3032,12 +3017,14 @@ def profile():
     if "user" not in flask.session:
         return flask.redirect("/login")
 
-    user, addresses, family_members = get_profile_context(flask.session["user"]["id"])
+    user_id = flask.session["user"]["id"]
+    user, addresses, family_members = get_profile_context(user_id)
     return flask.render_template(
         "profile.html",
         user=user,
         addresses=addresses,
-        family_members=family_members
+        family_members=family_members,
+        rewards=build_rewards_context(user_id)
     )
 
 
@@ -3500,32 +3487,64 @@ def ensure_cart_feature_schema():
 
 
 CART_COUPONS = {
-    "SAVE10": {
-        "type": "percent",
-        "value": 10,
-        "min_subtotal": 100,
-        "label": "10% off on cart value above Rs. 100"
-    },
-    "HEALTH50": {
+    "HEALTH25": {
         "type": "flat",
-        "value": 50,
-        "min_subtotal": 500,
-        "label": "Rs. 50 off on cart value above Rs. 500"
+        "value": 25,
+        "min_subtotal": 299,
+        "label": "Rs. 25 off on cart value above Rs. 299"
     },
     "FREESHIP": {
         "type": "free_delivery",
         "value": 0,
-        "min_subtotal": 200,
-        "label": "Free delivery above Rs. 200"
+        "min_subtotal": 399,
+        "label": "Free delivery above Rs. 399"
+    },
+    "SAVE5": {
+        "type": "percent",
+        "value": 5,
+        "min_subtotal": 499,
+        "label": "5% off on cart value above Rs. 499"
+    },
+    "HEALTH50": {
+        "type": "flat",
+        "value": 50,
+        "min_subtotal": 699,
+        "label": "Rs. 50 off on cart value above Rs. 699"
+    },
+    "SAVE10": {
+        "type": "percent",
+        "value": 10,
+        "min_subtotal": 999,
+        "label": "10% off on cart value above Rs. 999"
+    },
+    "HEALTH100": {
+        "type": "flat",
+        "value": 100,
+        "min_subtotal": 1499,
+        "label": "Rs. 100 off on cart value above Rs. 1499"
+    },
+    "HEALTH200": {
+        "type": "flat",
+        "value": 200,
+        "min_subtotal": 2499,
+        "label": "Rs. 200 off on cart value above Rs. 2499"
     }
 }
 
 
 REWARD_COUPON_COSTS = {
-    "FREESHIP": 120,
-    "SAVE10": 250,
-    "HEALTH50": 500,
+    "HEALTH25": 300,
+    "FREESHIP": 450,
+    "SAVE5": 650,
+    "HEALTH50": 900,
+    "SAVE10": 1400,
+    "HEALTH100": 2200,
+    "HEALTH200": 3800,
 }
+
+LOYALTY_RUPEES_PER_POINT = 20
+DELIVERED_ORDER_POINT_BONUS = 10
+REWARD_CASHBACK_RATE = 0.01
 
 
 def calculate_cart_totals(subtotal):
@@ -3666,12 +3685,13 @@ def build_rewards_context(user_id):
 
     completed_orders = [order for order in orders if order.get("status") == "Delivered"]
     active_orders = [order for order in orders if order.get("status") in ["Pending", "Approved", "Packed", "Out For Delivery"]]
-    total_spent = sum(rupees_value(order.get("total")) for order in orders if order.get("status") != "Cancelled")
     delivered_spent = sum(rupees_value(order.get("total")) for order in completed_orders)
-    points = int(total_spent // 10) + len(completed_orders) * 50
-    pending_points = int(sum(rupees_value(order.get("total")) for order in active_orders) // 10)
-    cashback_available = round(sum(rupees_value(payment.get("amount")) * 0.02 for payment in payments if payment.get("status") == "Verified"), 2)
-    cashback_pending = round(sum(rupees_value(payment.get("amount")) * 0.02 for payment in payments if payment.get("status") in ["Pending Verification", "Pending COD"]), 2)
+    active_spent = sum(rupees_value(order.get("total")) for order in active_orders)
+    points = int(delivered_spent // LOYALTY_RUPEES_PER_POINT) + len(completed_orders) * DELIVERED_ORDER_POINT_BONUS
+    pending_points = int(active_spent // LOYALTY_RUPEES_PER_POINT)
+    rewardable_payments = [payment for payment in payments if payment.get("order_status") != "Cancelled"]
+    cashback_available = round(sum(rupees_value(payment.get("amount")) * REWARD_CASHBACK_RATE for payment in rewardable_payments if payment.get("status") == "Verified"), 2)
+    cashback_pending = round(sum(rupees_value(payment.get("amount")) * REWARD_CASHBACK_RATE for payment in rewardable_payments if payment.get("status") in ["Pending Verification", "Pending COD"]), 2)
     tier, tier_progress, next_tier_points = reward_tier_for_points(points)
 
     referral_code = referral_code_for_user(user)
@@ -3695,28 +3715,35 @@ def build_rewards_context(user_id):
             "min_subtotal": coupon["min_subtotal"],
             "point_cost": point_cost,
             "available": points >= point_cost,
+            "display_value": (
+                "FREE" if coupon["type"] == "free_delivery"
+                else f"{coupon['value']}%"
+                if coupon["type"] == "percent"
+                else f"Rs. {coupon['value']}"
+            ),
         })
 
     cashback_history = []
-    for payment in payments:
+    for payment in rewardable_payments:
         amount = rupees_value(payment.get("amount"))
         cashback_history.append({
             "order_id": payment.get("order_id"),
             "method": payment.get("method"),
             "amount": amount,
-            "cashback": round(amount * 0.02, 2),
+            "cashback": round(amount * REWARD_CASHBACK_RATE, 2),
             "status": "Credited" if payment.get("status") == "Verified" else "Pending",
             "created_at": payment.get("created_at"),
         })
 
     point_history = []
-    for order in orders[:8]:
-        base_points = int(rupees_value(order.get("total")) // 10)
-        bonus = 50 if order.get("status") == "Delivered" else 0
+    for order in completed_orders[:8]:
+        base_points = int(rupees_value(order.get("total")) // LOYALTY_RUPEES_PER_POINT)
         point_history.append({
             "order_id": order.get("id"),
             "status": order.get("status"),
-            "points": base_points + bonus,
+            "points": base_points + DELIVERED_ORDER_POINT_BONUS,
+            "base_points": base_points,
+            "bonus_points": DELIVERED_ORDER_POINT_BONUS,
             "date": order.get("date"),
         })
 
@@ -3729,7 +3756,7 @@ def build_rewards_context(user_id):
             "cashback_pending": cashback_pending,
             "orders": len(orders),
             "delivered_orders": len(completed_orders),
-            "total_spent": total_spent,
+            "total_spent": delivered_spent + active_spent,
             "delivered_spent": delivered_spent,
         },
         "tier": tier,
@@ -3775,6 +3802,7 @@ def redeem_reward():
     }
     if code in available_codes:
         flask.session["cart_coupon"] = code
+        flask.session["reward_coupon_unlocked"] = code
         flash(f"Reward coupon {code} is ready in your cart.")
         return flask.redirect("/cart")
 
@@ -4083,9 +4111,12 @@ def apply_coupon():
         return flask.redirect("/login")
 
     code = flask.request.form.get("coupon_code", "").strip().upper()
-    if code in CART_COUPONS:
+    if code in CART_COUPONS and flask.session.get("reward_coupon_unlocked") == code:
         flask.session["cart_coupon"] = code
         flash(f"Coupon {code} applied.")
+    elif code in CART_COUPONS:
+        flask.session.pop("cart_coupon", None)
+        flash("Redeem this coupon with loyalty points from the Rewards page first.")
     else:
         flask.session.pop("cart_coupon", None)
         flash("Invalid coupon code.")
@@ -4095,6 +4126,7 @@ def apply_coupon():
 @app.route("/cart/remove_coupon")
 def remove_coupon():
     flask.session.pop("cart_coupon", None)
+    flask.session.pop("reward_coupon_unlocked", None)
     return flask.redirect("/cart")
 
 
@@ -4457,6 +4489,7 @@ def place_order():
             WHERE user_id=%s
         """, (user_id,))
         flask.session.pop("cart_coupon", None)
+        flask.session.pop("reward_coupon_unlocked", None)
 
         # ================= COMMIT =================
         db.commit()
@@ -4704,13 +4737,20 @@ def notifications_page():
     if "user" not in flask.session:
         return flask.redirect("/login")
 
-    notifications, unread_count = get_user_notifications(flask.session["user"]["id"])
+    user_id = flask.session["user"]["id"]
+    notifications, unread_count = get_user_notifications(user_id)
     summary = {
         "total": len(notifications),
         "unread": unread_count,
         "types": NOTIFICATION_TYPES,
     }
-    return flask.render_template("notifications.html", notifications=notifications, summary=summary)
+    preferences = get_notification_preferences(user_id)
+    return flask.render_template(
+        "notifications.html",
+        notifications=notifications,
+        summary=summary,
+        preferences=preferences
+    )
 
 
 @app.route("/notifications/mark_read/<int:notification_id>", methods=["POST"])
@@ -4747,6 +4787,78 @@ def mark_all_notifications_read():
     db.commit()
     cursor.close()
     return flask.redirect("/notifications")
+
+
+@app.route("/notifications/delete/<int:notification_id>", methods=["POST"])
+def delete_notification(notification_id):
+    if "user" not in flask.session:
+        return flask.redirect("/login")
+
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE notifications
+        SET is_deleted=1
+        WHERE id=%s AND user_id=%s
+    """, (notification_id, flask.session["user"]["id"]))
+    db.commit()
+    cursor.close()
+    return flask.redirect("/notifications")
+
+
+@app.route("/notifications/delete_all", methods=["POST"])
+def delete_all_notifications():
+    if "user" not in flask.session:
+        return flask.redirect("/login")
+
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE notifications
+        SET is_deleted=1
+        WHERE user_id=%s
+    """, (flask.session["user"]["id"],))
+    db.commit()
+    cursor.close()
+    return flask.redirect("/notifications")
+
+
+@app.route("/notifications/preferences", methods=["POST"])
+def update_notification_preferences():
+    if "user" not in flask.session:
+        return flask.jsonify({"ok": False, "message": "Please login first."}), 401
+
+    payload = flask.request.get_json(silent=True) or flask.request.form
+    notification_type = payload.get("type")
+    is_enabled = str(payload.get("enabled", "1")).lower() in {"1", "true", "yes", "on"}
+    if notification_type not in NOTIFICATION_TYPES:
+        return flask.jsonify({"ok": False, "message": "Invalid notification type."}), 400
+
+    ensure_notification_schema()
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO notification_preferences (
+            user_id,
+            notification_type,
+            is_enabled,
+            updated_at
+        )
+        VALUES (%s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            is_enabled=VALUES(is_enabled),
+            updated_at=VALUES(updated_at)
+    """, (
+        flask.session["user"]["id"],
+        notification_type,
+        1 if is_enabled else 0,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ))
+    db.commit()
+    cursor.close()
+    return flask.jsonify({"ok": True, "type": notification_type, "enabled": is_enabled})
 
 
 @app.route("/reviews_feedback", methods=["GET", "POST"])

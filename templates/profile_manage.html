@@ -51,10 +51,10 @@
         }
         .panel-head{
             padding:26px;
-            color:white;
+            color:#ffffff !important;
             background:
                 linear-gradient(135deg,rgba(8,47,73,.98),rgba(15,118,110,.92)),
-                radial-gradient(circle at 90% 12%,rgba(253,230,138,.18),transparent 32%);
+                radial-gradient(circle at 90% 12%,rgba(253,230,138,.18),transparent 32%) !important;
         }
         .panel-head span{
             display:inline-flex;
@@ -68,8 +68,8 @@
             text-transform:uppercase;
             letter-spacing:.08em;
         }
-        .panel-head h2{margin:0;font-size:30px}
-        .panel-head p{max-width:680px;margin:8px 0 0;color:#ccfbf1;font-weight:750;line-height:1.55}
+        .panel-head h2{margin:0;font-size:30px;color:#ffffff !important;text-shadow:0 3px 16px rgba(0,0,0,.34)}
+        .panel-head p{max-width:680px;margin:8px 0 0;color:#f8fffd !important;font-weight:850;line-height:1.55;text-shadow:0 2px 12px rgba(0,0,0,.32)}
         .panel-body{padding:26px}
         .message,.error{
             margin-bottom:18px;
@@ -175,6 +175,24 @@
         }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+    <style>
+        body.yvm-pro-page.yvm-page-profile-manage .panel-head {
+            color: #ffffff !important;
+            background:
+                linear-gradient(100deg, rgba(3, 30, 31, .98) 0%, rgba(5, 86, 70, .92) 54%, rgba(3, 30, 31, .58) 100%),
+                radial-gradient(circle at 90% 12%, rgba(253, 230, 138, .22), transparent 32%) !important;
+        }
+
+        body.yvm-pro-page.yvm-page-profile-manage .panel-head h2 {
+            color: #ffffff !important;
+            text-shadow: 0 3px 16px rgba(0, 0, 0, .44);
+        }
+
+        body.yvm-pro-page.yvm-page-profile-manage .panel-head p {
+            color: #f8fffd !important;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, .42);
+        }
+    </style>
 </head>
 <body class="yvm-pro-page yvm-page-profile-manage">
 

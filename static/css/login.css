@@ -39,6 +39,21 @@ input{
         linear-gradient(135deg,var(--navy),var(--navy));
 }
 
+.ambient-glow{
+    position:absolute;
+    left:50%;
+    top:46%;
+    z-index:1;
+    width:min(560px,70vw);
+    aspect-ratio:1;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(6,182,212,.26),rgba(37,99,235,.12) 42%,transparent 70%);
+    filter:blur(18px);
+    opacity:0;
+    transform:translate3d(-50%,-50%,0) scale(.65);
+    animation:centerGlow 6s ease-in-out forwards, slowBreath 12s ease-in-out 6s infinite;
+}
+
 .public-chatbot-link{
     position:fixed;
     top:18px;
@@ -57,21 +72,6 @@ input{
     font-weight:900;
     text-decoration:none;
     box-shadow:0 14px 32px rgba(15,23,42,.22);
-}
-
-.ambient-glow{
-    position:absolute;
-    left:50%;
-    top:46%;
-    z-index:1;
-    width:min(560px,70vw);
-    aspect-ratio:1;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(6,182,212,.26),rgba(37,99,235,.12) 42%,transparent 70%);
-    filter:blur(18px);
-    opacity:0;
-    transform:translate3d(-50%,-50%,0) scale(.65);
-    animation:centerGlow 6s ease-in-out forwards, slowBreath 12s ease-in-out 6s infinite;
 }
 
 .particle-field{
@@ -817,6 +817,315 @@ body.intro-complete{
 @keyframes ringRotateReverse{
     to{
         transform:rotate(-360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        overflow-y: auto;
+        background:
+            radial-gradient(circle at 50% 0%, rgba(6,182,212,.20), transparent 34%),
+            linear-gradient(180deg, #07111f 0%, #061322 54%, #07111f 100%);
+    }
+
+    .enterprise-login {
+        min-height: 100svh;
+        padding: 18px 14px 28px;
+        overflow: visible;
+        display: grid;
+        align-items: center;
+        background:
+            radial-gradient(circle at 50% 8%, rgba(6,182,212,.24), transparent 34%),
+            linear-gradient(180deg, #07111f 0%, #061322 58%, #07111f 100%);
+    }
+
+    .ambient-ecg,
+    .hero-ecg,
+    .medical-icons,
+    .light-ray {
+        display: none !important;
+    }
+
+    .intro-stage {
+        position: fixed;
+        inset: 0;
+        z-index: 25;
+        display: grid !important;
+        place-items: center;
+        min-height: 100svh;
+        background:
+            radial-gradient(circle at 50% 40%, rgba(6,182,212,.22), transparent 34%),
+            linear-gradient(180deg, #07111f 0%, #061322 100%);
+        animation: mobileIntroExit .42s ease 2s forwards !important;
+    }
+
+    .ambient-glow {
+        display: block !important;
+        top: 42%;
+        width: min(360px, 82vw);
+        opacity: 1;
+        animation: slowBreath 1.8s ease-in-out infinite alternate !important;
+    }
+
+    .particle-field {
+        display: block !important;
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+    }
+
+    .particle {
+        width: 3px;
+        height: 3px;
+        opacity: .28;
+    }
+
+    .logo-formation {
+        position: static;
+        display: grid !important;
+        gap: 7px;
+        opacity: 0;
+        transform: scale(.82);
+        animation:
+            mobileLogoPop .55s ease .12s forwards,
+            mobileLogoExit .42s ease 1.72s forwards !important;
+    }
+
+    .logo-formation img {
+        width: 112px;
+        height: 112px;
+        filter: drop-shadow(0 0 28px rgba(6,182,212,.82));
+    }
+
+    .logo-formation h1 {
+        font-size: 28px;
+        letter-spacing: .04em;
+    }
+
+    .logo-formation p {
+        font-size: 11px;
+        letter-spacing: .22em;
+    }
+
+    .orbit-ring,
+    .logo-light {
+        display: none;
+    }
+
+    .public-chatbot-link {
+        position: static;
+        width: fit-content;
+        min-height: 40px;
+        margin: 0 0 14px auto;
+        padding: 9px 13px;
+        border-radius: 999px;
+        font-size: 12px;
+        background: rgba(255,255,255,.12);
+    }
+
+    .auth-shell {
+        width: 100%;
+        max-width: 430px;
+        min-height: auto;
+        margin: 0 auto;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        align-content: start;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: mobileAuthIn .45s ease 2.08s forwards !important;
+    }
+
+    .brand-lockup {
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 4px 2px;
+        text-align: left;
+    }
+
+    .brand-lockup img {
+        width: 58px;
+        height: 58px;
+        padding: 7px;
+        border-radius: 16px;
+    }
+
+    .brand-lockup h1 {
+        font-size: 24px;
+        line-height: 1.05;
+    }
+
+    .brand-lockup p {
+        margin-top: 5px;
+        font-size: 12px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 22px;
+        border-radius: 18px;
+        background: rgba(7, 32, 45, .92);
+        box-shadow: 0 18px 44px rgba(0,0,0,.34);
+        backdrop-filter: blur(16px);
+    }
+
+    .auth-card h2 {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        margin: 8px 0 18px;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .auth-form {
+        gap: 10px;
+    }
+
+    .auth-form label,
+    .remember-option,
+    .links,
+    .security-title,
+    .data-row {
+        font-size: 12px;
+    }
+
+    .auth-form input[type="email"],
+    .auth-form input[type="password"],
+    .auth-form input[inputmode="numeric"],
+    .login-btn,
+    .mini-btn,
+    .device-action {
+        min-height: 44px;
+        border-radius: 12px;
+    }
+
+    .auth-form input[type="email"],
+    .auth-form input[type="password"],
+    .auth-form input[inputmode="numeric"] {
+        padding: 10px 12px;
+        font-size: 16px;
+    }
+
+    .form-options {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        align-items: start;
+        margin: 2px 0 6px;
+    }
+
+    .remember-option {
+        min-width: 0;
+    }
+
+    .muted-link {
+        justify-self: start;
+    }
+
+    .links {
+        margin-top: 13px;
+    }
+
+    .security-panel {
+        margin-top: 18px;
+        padding-top: 14px;
+        overflow: hidden;
+    }
+
+    .security-grid,
+    .inline-actions {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .security-link,
+    .mini-btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        padding: 10px 12px;
+        justify-content: flex-start;
+    }
+
+    .data-panel {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .auth-card h2,
+    .subtitle,
+    .auth-form label,
+    .auth-form input,
+    .form-options,
+    .login-btn,
+    .links,
+    .security-panel {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
+@keyframes mobileLogoPop {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes mobileLogoExit {
+    to {
+        opacity: 0;
+        transform: translateY(-18px) scale(.9);
+    }
+}
+
+@keyframes mobileIntroExit {
+    to {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+@keyframes mobileAuthIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 380px) {
+    .enterprise-login {
+        padding: 14px 10px 24px;
+    }
+
+    .auth-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .brand-lockup h1 {
+        font-size: 21px;
+    }
+
+    .brand-lockup img {
+        width: 52px;
+        height: 52px;
     }
 }
 

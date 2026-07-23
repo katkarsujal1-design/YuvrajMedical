@@ -6,17 +6,871 @@
     <title>Notifications | Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
-    <style>
-        :root{--ink:#102033;--muted:#64748b;--line:#dbe4f0;--wine:#7f1d4e;--teal:#0f766e;--soft:#f8fafc;--amber:#a16207;--green:#047857;--red:#b91c1c;--shadow:0 24px 70px rgba(15,23,42,.11)}
-        *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#f8fafc 0%,#eef7f5 52%,#fdf2f8 100%)}body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(115deg,rgba(127,29,78,.055),transparent 30%,rgba(15,118,110,.06) 72%,transparent)}a{text-decoration:none;color:inherit}
-        .wrap{width:min(1220px,calc(100% - 32px));margin:28px auto 56px}.hero{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;margin-bottom:18px}.hero-main,.hero-side,.stat,.type-card,.toolbar,.notice-card,.empty{border:1px solid rgba(219,228,240,.92);border-radius:8px;background:rgba(255,255,255,.96);box-shadow:var(--shadow)}.hero-main{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,.9fr) minmax(300px,.75fr);gap:24px;align-items:center;padding:34px;background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(236,254,255,.74))}.hero-main::after{content:"";position:absolute;inset:auto 0 0 auto;width:52%;height:7px;background:linear-gradient(90deg,var(--wine),var(--teal),#facc15)}.hero-copy{position:relative;z-index:2}.hero-visual{position:relative;z-index:2;overflow:hidden;border-radius:8px;border:1px solid rgba(15,118,110,.18);background:#fff;box-shadow:0 18px 42px rgba(15,23,42,.13)}.hero-visual::after{content:"Live alert intelligence";position:absolute;left:14px;bottom:14px;padding:8px 11px;border-radius:999px;color:#fff;background:rgba(16,32,51,.74);backdrop-filter:blur(12px);font-size:12px;font-weight:1000}.hero-visual img{display:block;width:100%;height:330px;object-fit:cover}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;color:var(--teal);background:#ecfeff;border:1px solid rgba(15,118,110,.14);font-size:12px;font-weight:1000;letter-spacing:.09em;text-transform:uppercase}.hero h1{max-width:760px;margin:14px 0 0;font-size:clamp(38px,4.8vw,64px);line-height:.98;letter-spacing:0}.hero h1 .title-gradient{display:inline;background:linear-gradient(92deg,var(--wine),#334155 38%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.hero p{max-width:700px;margin:16px 0 0;color:#475569;font-size:16px;font-weight:800;line-height:1.75}.hero-text-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.hero-text-chips span{padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#334155;font-size:12px;font-weight:1000}.hero-side{padding:18px;display:grid;align-content:space-between;gap:14px;background:linear-gradient(135deg,rgba(127,29,78,.06),rgba(15,118,110,.08)),#fff}.status-ring{aspect-ratio:1;border-radius:999px;display:grid;place-items:center;text-align:center;background:conic-gradient(var(--teal) 0 72%,#e2e8f0 72% 100%);padding:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}.ring-inner{width:100%;height:100%;border-radius:999px;background:#fff;display:grid;place-items:center}.ring-inner strong{display:block;font-size:44px;line-height:1;color:var(--wine)}.ring-inner span{display:block;margin-top:6px;color:var(--muted);font-size:12px;font-weight:1000;text-transform:uppercase;letter-spacing:.08em}.hero-actions{display:grid;gap:10px}.hero-actions button,.hero-actions a{border:0;border-radius:8px;padding:12px 14px;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));font-weight:1000;cursor:pointer;text-align:center}.hero-actions a{background:#fff;color:var(--ink);border:1px solid var(--line)}
-        .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.stat{position:relative;overflow:hidden;padding:17px}.stat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--wine),var(--teal));opacity:.82}.stat span{display:block;color:var(--muted);font-size:11px;font-weight:1000;letter-spacing:.07em;text-transform:uppercase}.stat strong{display:block;margin-top:8px;font-size:30px;line-height:1;color:#0f172a}.stat small{display:block;margin-top:6px;color:var(--muted);font-weight:800}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;margin-bottom:18px;background:linear-gradient(135deg,#fff,rgba(236,254,255,.72))}.toolbar h2{margin:0;font-size:21px}.toolbar h2 span{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:800}.filters{display:flex;flex-wrap:wrap;gap:8px}.filter-btn{border:1px solid var(--line);border-radius:999px;padding:9px 12px;background:#fff;color:var(--muted);font-weight:1000;cursor:pointer;box-shadow:0 8px 18px rgba(15,23,42,.04)}.filter-btn.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--wine),var(--teal))}
-        .types{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:18px}.type-card{position:relative;overflow:hidden;padding:16px 15px 15px}.type-card::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--wine),var(--teal))}.type-card strong{display:block;font-size:16px;letter-spacing:0}.type-card span{display:block;margin-top:8px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.5}
-        .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px}.list{display:grid;gap:12px}.notice-card{position:relative;display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:16px;align-items:start;padding:18px;transition:transform .18s ease,box-shadow .18s ease}.notice-card:hover{transform:translateY(-2px);box-shadow:0 26px 68px rgba(15,23,42,.14)}.notice-card.unread{border-color:rgba(15,118,110,.38);background:linear-gradient(135deg,rgba(15,118,110,.07),rgba(127,29,78,.05)),#fff}.notice-card.unread::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:4px;border-radius:0 999px 999px 0;background:linear-gradient(180deg,var(--wine),var(--teal))}.icon{width:62px;height:62px;border-radius:8px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));font-weight:1000;font-size:15px;box-shadow:0 12px 26px rgba(15,118,110,.2)}.notice-card h3{margin:0;font-size:21px;line-height:1.2;letter-spacing:0}.notice-card p{margin:9px 0 0;color:#526174;font-weight:800;line-height:1.62}.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pill{padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:12px;font-weight:1000}.pill.unread{background:#ecfdf5;color:var(--green);border-color:#bbf7d0}.pill.read{background:#f8fafc;color:#64748b}.notice-actions{display:grid;gap:8px;min-width:132px}.notice-actions a,.notice-actions button{border:1px solid var(--line);border-radius:8px;padding:10px 11px;background:#fff;color:var(--ink);font-weight:1000;cursor:pointer;text-align:center}.notice-actions .primary{border:0;color:#fff;background:linear-gradient(135deg,var(--wine),var(--teal));box-shadow:0 12px 24px rgba(15,118,110,.18)}
-        .side-panel{display:grid;gap:12px;align-content:start}.insight{padding:17px;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 16px 38px rgba(15,23,42,.07)}.insight h3{margin:0;font-size:18px}.insight p{margin:9px 0 0;color:var(--muted);font-weight:800;line-height:1.58}.quick-links{display:grid;gap:8px;margin-top:12px}.quick-links a{padding:11px;border-radius:8px;background:#f8fafc;border:1px solid var(--line);font-weight:1000}.empty{padding:38px;text-align:center;color:var(--muted);font-weight:800}.empty strong{display:block;margin-bottom:6px;color:var(--ink);font-size:21px}.is-hidden{display:none!important}
-        @media(max-width:980px){.hero,.layout,.hero-main{grid-template-columns:1fr}.hero-side{grid-template-columns:180px minmax(0,1fr);align-items:center}.hero-visual img{height:260px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){.wrap{width:min(100% - 22px,1220px);margin-top:18px}.hero-side,.notice-card{grid-template-columns:1fr}.hero-visual img{height:210px}.toolbar{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:1fr}.notice-actions{grid-template-columns:1fr 1fr}.icon{width:48px;height:48px}.status-ring{max-width:190px}}
-    </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+    <style>
+        :root {
+            --ink: #071b3a;
+            --muted: #607094;
+            --line: #dfe8f3;
+            --soft: #f7fbff;
+            --green: #00a86b;
+            --green-dark: #007a52;
+            --blue: #3478f6;
+            --purple: #9b5cf6;
+            --orange: #ff9f1c;
+            --pink: #ff4f73;
+            --panel: #ffffff;
+            --shadow: 0 18px 46px rgba(7, 27, 58, .08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 16% 8%, rgba(0, 168, 107, .10), transparent 24%),
+                radial-gradient(circle at 86% 10%, rgba(52, 120, 246, .08), transparent 22%),
+                linear-gradient(180deg, #fbfdff 0%, #ffffff 46%, #f7fbf9 100%) !important;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, input, select { font: inherit; }
+
+        .notifications-shell {
+            width: min(1440px, calc(100% - 64px));
+            margin: 26px auto 56px;
+        }
+
+        .page-hero {
+            min-height: 244px;
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, .78fr) minmax(360px, .62fr);
+            align-items: center;
+            gap: 28px;
+            margin-bottom: 26px;
+            padding: 30px 34px;
+            overflow: hidden;
+            border: 1px solid rgba(190, 223, 211, .9);
+            border-radius: 8px;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,.98) 0%, rgba(245,255,250,.94) 42%, rgba(255,255,255,.52) 66%, rgba(255,255,255,.08) 100%),
+                url("{{ url_for('static', filename='images/notification-center-premium.png') }}") center right/cover no-repeat;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            color: var(--green-dark);
+            background: rgba(232, 255, 245, .92);
+            border: 1px solid #c9efdf;
+            box-shadow: 0 14px 28px rgba(0, 168, 107, .12);
+        }
+
+        .hero-icon svg,
+        .icon-box svg,
+        .action-icon svg,
+        .button-icon svg { width: 24px; height: 24px; }
+
+        .hero-copy h1 {
+            margin: 0;
+            font-size: clamp(34px, 4vw, 56px);
+            line-height: 1.08;
+            letter-spacing: 0;
+        }
+
+        .hero-copy p {
+            margin: 10px 0 0;
+            max-width: 620px;
+            color: var(--muted);
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.65;
+        }
+
+        .hero-copy {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-copy .hero-icon {
+            margin-bottom: 16px;
+        }
+
+        .hero-kpis {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+            max-width: 560px;
+        }
+
+        .hero-kpi {
+            min-height: 76px;
+            display: grid;
+            gap: 4px;
+            padding: 14px 16px;
+            border: 1px solid rgba(201, 239, 223, .9);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .78);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 24px rgba(7, 27, 58, .06);
+        }
+
+        .hero-kpi strong {
+            color: var(--green-dark);
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .hero-kpi span {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .hero-art {
+            min-height: 184px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.40)),
+                url("{{ url_for('static', filename='images/notification-center-premium.png') }}") center/cover no-repeat;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.66), 0 16px 36px rgba(7, 27, 58, .10);
+        }
+
+        .hero-art::after {
+            content: "{{ summary.unread }}";
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #fff;
+            background: var(--green);
+            border: 3px solid #dff8ed;
+            font-weight: 1000;
+            box-shadow: 0 10px 22px rgba(0, 168, 107, .22);
+        }
+
+        .notifications-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 390px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .feed-panel,
+        .summary-card,
+        .quick-card,
+        .preferences-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255,255,255,.96);
+            box-shadow: var(--shadow);
+        }
+
+        .feed-panel { overflow: hidden; }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 14px 18px 10px;
+            border-bottom: 1px solid #edf2f8;
+        }
+
+        .tab-btn {
+            flex: 0 0 auto;
+            min-height: 42px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: var(--ink);
+            background: transparent;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            color: var(--green-dark);
+            background: #eafaf3;
+            border-color: #c9efdf;
+            box-shadow: inset 0 -3px 0 var(--green);
+        }
+
+        .count-pill {
+            min-width: 28px;
+            min-height: 24px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 999px;
+            padding: 2px 8px;
+            color: var(--green-dark);
+            background: #dff7ec;
+            font-size: 12px;
+            font-weight: 1000;
+        }
+
+        .tab-btn.active .count-pill {
+            color: #ffffff;
+            background: var(--green);
+        }
+
+        .feed-tools {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) 170px auto auto;
+            gap: 14px;
+            align-items: center;
+            padding: 16px 18px;
+            border-bottom: 1px solid #edf2f8;
+        }
+
+        .search-box,
+        .time-select,
+        .ghost-button {
+            min-height: 48px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+            box-shadow: 0 9px 20px rgba(7, 27, 58, .04);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+        }
+
+        .search-box svg {
+            width: 18px;
+            height: 18px;
+            color: #536686;
+            flex: 0 0 auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            color: var(--ink);
+            background: transparent;
+            font-weight: 700;
+        }
+
+        .search-box input::placeholder { color: #7b8aaa; }
+
+        .time-select {
+            appearance: none;
+            padding: 0 38px 0 16px;
+            font-weight: 800;
+            background:
+                linear-gradient(45deg, transparent 50%, #66799a 50%) right 18px center / 7px 7px no-repeat,
+                linear-gradient(135deg, #fff, #fbfdff);
+        }
+
+        .ghost-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 0 16px;
+            color: var(--ink);
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .ghost-button.success { color: var(--green-dark); }
+
+        .settings-menu {
+            position: relative;
+        }
+
+        .settings-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            z-index: 30;
+            display: none;
+            min-width: 250px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 8px;
+            background: #fff;
+            box-shadow: 0 18px 44px rgba(7, 27, 58, .16);
+        }
+
+        .settings-menu.open .settings-dropdown {
+            display: grid;
+            gap: 6px;
+        }
+
+        .settings-dropdown button {
+            width: 100%;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 0;
+            border-radius: 8px;
+            padding: 9px 11px;
+            color: var(--ink);
+            background: transparent;
+            font-size: 13px;
+            font-weight: 900;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .settings-dropdown button:hover {
+            background: #f4fbf8;
+            color: var(--green-dark);
+        }
+
+        .settings-dropdown .danger-action {
+            color: #b91c1c;
+        }
+
+        .settings-dropdown .danger-action:hover {
+            color: #991b1b;
+            background: #fff1f2;
+        }
+
+        .notification-list {
+            display: grid;
+            gap: 14px;
+            padding: 16px 18px 20px;
+        }
+
+        .notice-card {
+            --accent: var(--green);
+            display: grid;
+            grid-template-columns: 78px minmax(0, 1fr) auto 32px;
+            gap: 16px;
+            align-items: center;
+            min-height: 106px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 16px 14px;
+            background: #fff;
+            box-shadow: 0 12px 28px rgba(7, 27, 58, .055);
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+
+        .notice-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px rgba(7, 27, 58, .10);
+            border-color: rgba(0, 168, 107, .22);
+        }
+
+        .notice-card[data-type*="Prescription"] { --accent: var(--purple); }
+        .notice-card[data-type*="Refill"],
+        .notice-card[data-type*="Expiry"] { --accent: var(--orange); }
+        .notice-card[data-type*="Offer"] { --accent: var(--pink); }
+        .notice-card[data-type*="Delivery"] { --accent: var(--blue); }
+        .notice-card[data-type*="Health"] { --accent: #5d7f8c; }
+
+        .icon-box {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: var(--accent);
+            background: color-mix(in srgb, var(--accent) 14%, white);
+        }
+
+        .notice-copy h2 {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.25;
+            letter-spacing: 0;
+        }
+
+        .notice-copy p {
+            margin: 8px 0 0;
+            color: #536686;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.55;
+        }
+
+        .notice-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            color: #607094;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .notice-meta span + span::before {
+            content: "";
+            width: 4px;
+            height: 4px;
+            display: inline-block;
+            margin: 0 10px 2px 0;
+            border-radius: 999px;
+            background: #bcc8da;
+        }
+
+        .status-pill {
+            justify-self: end;
+            min-width: 64px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            padding: 7px 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 1000;
+        }
+
+        .status-pill.new {
+            color: var(--green-dark);
+            background: #ddf8ec;
+            border-color: #c5efdd;
+        }
+
+        .status-pill.unread {
+            color: #e68100;
+            background: #fff7e5;
+            border-color: #ffe1ad;
+        }
+
+        .status-pill.read {
+            color: var(--blue);
+            background: #edf5ff;
+            border-color: #cfe2ff;
+        }
+
+        .kebab {
+            width: 28px;
+            height: 38px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #071b3a;
+            cursor: pointer;
+        }
+
+        .kebab::before {
+            content: "...";
+            display: block;
+            transform: rotate(90deg);
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 1000;
+            letter-spacing: 1px;
+        }
+
+        .quick-action-row {
+            display: none;
+            grid-column: 2 / -1;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(96px, max-content));
+        }
+
+        .notice-card.action-open .quick-action-row { display: grid; }
+
+        .mini-action {
+            min-height: 38px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 8px 12px;
+            background: #fff;
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .mini-action.primary {
+            border-color: var(--green);
+            color: #fff;
+            background: linear-gradient(135deg, var(--green-dark), var(--green));
+        }
+
+        .side-stack {
+            display: grid;
+            gap: 16px;
+        }
+
+        .summary-card,
+        .quick-card,
+        .preferences-card {
+            padding: 22px;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .panel-heading h2 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0;
+        }
+
+        .panel-heading a,
+        .panel-heading button {
+            border: 0;
+            background: transparent;
+            color: var(--green-dark);
+            font-size: 13px;
+            font-weight: 1000;
+            cursor: pointer;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 172px 1fr;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .donut {
+            --unread-sweep: 79%;
+            width: 152px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: conic-gradient(
+                var(--green) 0 var(--unread-sweep),
+                var(--blue) var(--unread-sweep) 87%,
+                var(--purple) 87% 92%,
+                var(--orange) 92% 97%,
+                var(--pink) 97% 100%
+            );
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+        }
+
+        .donut-inner {
+            width: 86px;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: #fff;
+            box-shadow: 0 10px 24px rgba(7, 27, 58, .08);
+            text-align: center;
+        }
+
+        .donut-inner strong {
+            display: block;
+            font-size: 30px;
+            line-height: 1;
+        }
+
+        .donut-inner span {
+            display: block;
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .legend {
+            display: grid;
+            gap: 11px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .legend li {
+            display: grid;
+            grid-template-columns: 12px minmax(0, 1fr) auto;
+            gap: 10px;
+            align-items: center;
+            color: var(--ink);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--green);
+        }
+
+        .dot.blue { background: var(--blue); }
+        .dot.purple { background: var(--purple); }
+        .dot.orange { background: var(--orange); }
+        .dot.pink { background: var(--pink); }
+
+        .enable-box {
+            display: grid;
+            grid-template-columns: 38px 1fr;
+            gap: 14px;
+            margin-top: 20px;
+            padding: 16px;
+            border: 1px solid #a8e5cd;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #effbf6, #f8fffc);
+        }
+
+        .enable-box h3 {
+            margin: 0;
+            color: var(--green-dark);
+            font-size: 15px;
+        }
+
+        .enable-box p {
+            margin: 8px 0 12px;
+            color: #536686;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.55;
+        }
+
+        .enable-box button {
+            min-height: 36px;
+            border: 1px solid #77d8b4;
+            border-radius: 8px;
+            padding: 7px 12px;
+            color: var(--green-dark);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 1000;
+            cursor: pointer;
+        }
+
+        .action-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .action-link {
+            display: grid;
+            grid-template-columns: 38px minmax(0, 1fr) 18px;
+            gap: 12px;
+            align-items: center;
+            border-radius: 8px;
+            padding: 6px 4px;
+        }
+
+        .action-link:hover {
+            background: #f7fbff;
+        }
+
+        .action-icon {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: var(--green-dark);
+            background: #ddf8ec;
+        }
+
+        .action-link strong {
+            display: block;
+            font-size: 14px;
+            line-height: 1.2;
+        }
+
+        .action-link span {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .chevron { color: #496181; font-weight: 1000; }
+
+        .preference-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #edf2f8;
+        }
+
+        .preferences-card.is-highlighted {
+            border-color: #82dfbc;
+            box-shadow: 0 18px 46px rgba(0, 168, 107, .16);
+        }
+
+        .preference-row strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .preference-row span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .toggle {
+            width: 44px;
+            height: 24px;
+            position: relative;
+            flex: 0 0 auto;
+            border: 0;
+            border-radius: 999px;
+            background: #caeadc;
+            cursor: pointer;
+        }
+
+        .toggle::after {
+            content: "";
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 999px;
+            background: var(--green);
+            box-shadow: 0 4px 8px rgba(0, 168, 107, .26);
+        }
+
+        .toggle[aria-pressed="false"] {
+            background: #d9e2ef;
+        }
+
+        .toggle[aria-pressed="false"]::after {
+            right: auto;
+            left: 4px;
+            background: #7b8aaa;
+            box-shadow: 0 4px 8px rgba(83, 102, 134, .20);
+        }
+
+        .notice-toast {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            z-index: 140;
+            min-width: min(360px, calc(100vw - 32px));
+            transform: translate(-50%, 16px);
+            border: 1px solid #bfead8;
+            border-radius: 8px;
+            padding: 13px 16px;
+            color: var(--green-dark);
+            background: #f4fff9;
+            box-shadow: 0 18px 44px rgba(7, 27, 58, .14);
+            font-size: 14px;
+            font-weight: 900;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .notice-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        .empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-weight: 800;
+        }
+
+        .empty strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--ink);
+            font-size: 20px;
+        }
+
+        .is-hidden { display: none !important; }
+
+        @media (max-width: 1120px) {
+            .notifications-layout,
+            .page-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .page-hero {
+                background-position: center right;
+            }
+
+            .hero-art {
+                min-height: 160px;
+            }
+
+            .summary-grid { grid-template-columns: 172px minmax(0, 1fr); }
+        }
+
+        @media (max-width: 820px) {
+            .notifications-shell {
+                width: min(100% - 28px, 1440px);
+            }
+
+            .feed-tools {
+                grid-template-columns: 1fr;
+            }
+
+            .notice-card {
+                grid-template-columns: 58px minmax(0, 1fr) auto;
+            }
+
+            .kebab { grid-column: 3; grid-row: 1; }
+            .quick-action-row { grid-column: 1 / -1; }
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 560px) {
+            .page-hero {
+                gap: 14px;
+                padding: 20px;
+                margin-bottom: 18px;
+            }
+
+            .hero-copy h1 { font-size: 28px; }
+            .hero-kpis { grid-template-columns: 1fr; }
+            .hero-art { min-height: 128px; }
+            .tabs { padding-inline: 12px; }
+            .feed-tools,
+            .notification-list { padding-inline: 12px; }
+
+            .notice-card {
+                grid-template-columns: 1fr auto;
+                gap: 12px;
+            }
+
+            .icon-box { display: none; }
+            .notice-copy { grid-column: 1 / -1; }
+            .status-pill { justify-self: start; }
+            .kebab { grid-column: 2; grid-row: 2; }
+        }
+    </style>
 </head>
 <body class="yvm-pro-page yvm-page-notifications">
 
@@ -30,127 +884,359 @@
 </div>
 
 {% include "partials/site_header.html" %}
-<main class="wrap">
-    <section class="hero">
-        <div class="hero-main">
-            <div class="hero-copy">
-                <span class="eyebrow">Notification Center</span>
-                <h1><span class="title-gradient">Every healthcare update</span>, sorted and ready to act on.</h1>
-                <p>Review order updates, prescription decisions, delivery movement, offers, refill reminders, expiry alerts, and health tips from one professional workspace.</p>
-                <div class="hero-text-chips" aria-label="Notification capabilities">
-                    <span>Order intelligence</span>
-                    <span>Delivery signals</span>
-                    <span>Health reminders</span>
-                </div>
+
+<main class="notifications-shell">
+    <section class="page-hero" aria-label="Notification center overview">
+        <div class="hero-copy">
+            <div class="hero-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 21a2 2 0 0 0 3.4 0"/><path d="M4 17h16"/><path d="M6 17v-6a6 6 0 1 1 12 0v6"/></svg>
             </div>
-            <div class="hero-visual">
-                <img src="{{ url_for('static', filename='images/notification-center-premium.png') }}" alt="Healthcare notification dashboard visual">
+            <h1>Notification Center</h1>
+            <p>Stay updated with your orders, prescriptions, reminders, offers, and important alerts.</p>
+            <div class="hero-kpis" aria-label="Notification summary">
+                <div class="hero-kpi"><strong>{{ summary.total }}</strong><span>Total alerts</span></div>
+                <div class="hero-kpi"><strong>{{ summary.unread }}</strong><span>Unread now</span></div>
+                <div class="hero-kpi"><strong>{{ summary.total - summary.unread }}</strong><span>Already read</span></div>
             </div>
         </div>
-        <aside class="hero-side" aria-label="Unread notification summary">
-            <div class="status-ring">
-                <div class="ring-inner">
-                    <div><strong>{{ summary.unread }}</strong><span>Unread</span></div>
-                </div>
+        <div class="hero-art" aria-hidden="true"></div>
+    </section>
+
+    <div class="notifications-layout">
+        <section class="feed-panel" aria-label="Notification feed">
+            <div class="tabs" aria-label="Notification filters">
+                <button class="tab-btn active" type="button" data-filter="all">All Notifications <span class="count-pill" data-count-for="all">{{ summary.total }}</span></button>
+                <button class="tab-btn" type="button" data-filter="unread">Unread <span class="count-pill" data-count-for="unread">{{ summary.unread }}</span></button>
+                <button class="tab-btn" type="button" data-filter="Order Updates">Orders <span class="count-pill" data-count-for="Order Updates">0</span></button>
+                <button class="tab-btn" type="button" data-filter="Prescription Updates">Prescriptions <span class="count-pill" data-count-for="Prescription Updates">0</span></button>
+                <button class="tab-btn" type="button" data-filter="Refill Reminders">Reminders <span class="count-pill" data-count-for="Refill Reminders">0</span></button>
+                <button class="tab-btn" type="button" data-filter="Offer Notifications">Offers <span class="count-pill" data-count-for="Offer Notifications">0</span></button>
             </div>
-            <div class="hero-actions">
-                <form method="POST" action="/notifications/mark_all_read"><button type="submit">Mark All Read</button></form>
-                <a href="/my_orders">Open Orders</a>
-            </div>
-        </aside>
-    </section>
 
-    <section class="stats" aria-label="Notification summary">
-        <div class="stat"><span>Total Alerts</span><strong>{{ summary.total }}</strong><small>All saved notifications</small></div>
-        <div class="stat"><span>Unread</span><strong>{{ summary.unread }}</strong><small>Needs attention</small></div>
-        <div class="stat"><span>Categories</span><strong>{{ summary.types|length }}</strong><small>Active alert groups</small></div>
-        <div class="stat"><span>Status</span><strong>{{ "Clear" if summary.unread == 0 else "Action" }}</strong><small>{{ "Everything is read" if summary.unread == 0 else "Review unread items" }}</small></div>
-    </section>
-
-    <section class="toolbar" aria-label="Notification filters">
-        <h2>Notification Feed <span>Filter by priority, category, or unread alerts.</span></h2>
-        <div class="filters">
-            <button class="filter-btn active" type="button" data-filter="all">All</button>
-            <button class="filter-btn" type="button" data-filter="unread">Unread</button>
-            {% for type in summary.types.keys() %}
-            <button class="filter-btn" type="button" data-filter="{{ type }}">{{ type }}</button>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section class="types" aria-label="Notification categories">
-        {% for type, description in summary.types.items() %}
-        <article class="type-card">
-            <strong>{{ type }}</strong>
-            <span>{{ description }}</span>
-        </article>
-        {% endfor %}
-    </section>
-
-    <div class="layout">
-        <section class="list" aria-label="Notification list" id="notification-list">
-            {% for notification in notifications %}
-            <article class="notice-card {% if not notification.is_read %}unread{% endif %}" data-type="{{ notification.type }}" data-read="{{ 1 if notification.is_read else 0 }}">
-                <div class="icon">{{ notification.type[:2]|upper }}</div>
-                <div>
-                    <h3>{{ notification.title }}</h3>
-                    <p>{{ notification.message }}</p>
-                    <div class="meta">
-                        <span class="pill">{{ notification.type }}</span>
-                        <span class="pill">{{ notification.created_at }}</span>
-                        <span class="pill {{ 'read' if notification.is_read else 'unread' }}">{{ "Read" if notification.is_read else "Unread" }}</span>
+            <div class="feed-tools">
+                <label class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+                    <input id="notification-search" type="search" placeholder="Search notifications...">
+                </label>
+                <select class="time-select" id="time-filter" aria-label="Time filter">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+                <form method="POST" action="/notifications/mark_all_read">
+                    <button class="ghost-button success" type="submit">
+                        <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
+                        Mark all as read
+                    </button>
+                </form>
+                <div class="settings-menu" id="settings-menu">
+                    <button class="ghost-button" type="button" id="settings-button" aria-expanded="false" aria-haspopup="true">
+                        <span class="button-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V22a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1A2 2 0 1 1 4.2 18l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.3 8A2 2 0 1 1 7.1 5.2l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.6V4a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.6h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1A2 2 0 1 1 20.1 8l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.6 1h.1a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1Z"/></svg></span>
+                        Settings
+                    </button>
+                    <div class="settings-dropdown" role="menu" aria-label="Notification settings">
+                        <button type="button" id="settings-preferences-button" role="menuitem">Notification preferences <span>&gt;</span></button>
+                        <form method="POST" action="/notifications/delete_all" id="delete-all-notifications-form">
+                            <button class="danger-action" type="submit" role="menuitem">Delete all notifications <span>&gt;</span></button>
+                        </form>
                     </div>
                 </div>
-                <div class="notice-actions">
-                    {% if notification.target_url %}<a class="primary" href="{{ notification.target_url }}">Open</a>{% endif %}
-                    {% if not notification.is_read %}
-                    <form method="POST" action="/notifications/mark_read/{{ notification.id }}"><button type="submit">Mark Read</button></form>
-                    {% endif %}
-                </div>
-            </article>
-            {% else %}
-            <div class="empty"><strong>No notifications yet.</strong>Order, prescription, delivery, offer, refill, expiry, and health tip updates will appear here.</div>
-            {% endfor %}
-            <div class="empty is-hidden" id="filtered-empty"><strong>No matching notifications.</strong>Try a different category or view all notifications.</div>
+            </div>
+
+            <div class="notification-list" id="notification-list">
+                {% for notification in notifications %}
+                {% set status_class = "read" if notification.is_read else ("new" if loop.index <= 2 else "unread") %}
+                {% set status_label = "Read" if notification.is_read else ("New" if loop.index <= 2 else "Unread") %}
+                <article class="notice-card {% if not notification.is_read %}unread{% endif %}" data-type="{{ notification.type }}" data-read="{{ 1 if notification.is_read else 0 }}" data-title="{{ notification.title|lower }}" data-message="{{ notification.message|lower }}" data-created="{{ notification.created_at }}">
+                    <div class="icon-box" aria-hidden="true">
+                        {% if "Prescription" in notification.type %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2h8l2 3v17H6V5l2-3Z"/><path d="M9 9h6"/><path d="M12 6v6"/></svg>
+                        {% elif "Refill" in notification.type or "Expiry" in notification.type %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2h4"/><path d="M9 5h6"/><path d="M8 8h8v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V8Z"/><path d="M10 13h4"/></svg>
+                        {% elif "Offer" in notification.type %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7Z"/></svg>
+                        {% elif "Delivery" in notification.type %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 18V6H3v12h11Z"/><path d="M14 10h4l3 4v4h-7v-8Z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+                        {% else %}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h12l-1 14H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/><path d="M12 11v4"/><path d="M10 13h4"/></svg>
+                        {% endif %}
+                    </div>
+                    <div class="notice-copy">
+                        <h2>{{ notification.title }}</h2>
+                        <p>{{ notification.message }}</p>
+                        <div class="notice-meta">
+                            <span>{{ notification.created_at }}</span>
+                            <span>{{ notification.type }}</span>
+                        </div>
+                    </div>
+                    <span class="status-pill {{ status_class }}">{{ status_label }}</span>
+                    <button class="kebab" type="button" aria-label="Notification actions"></button>
+                    <div class="quick-action-row">
+                        {% if notification.target_url %}<a class="mini-action primary" href="{{ notification.target_url }}">Open</a>{% endif %}
+                        {% if not notification.is_read %}
+                        <form method="POST" action="/notifications/mark_read/{{ notification.id }}"><button class="mini-action" type="submit">Mark Read</button></form>
+                        {% endif %}
+                        <form method="POST" action="/notifications/delete/{{ notification.id }}"><button class="mini-action" type="submit">Delete</button></form>
+                    </div>
+                </article>
+                {% else %}
+                <div class="empty"><strong>No notifications yet.</strong>Order, prescription, delivery, offer, refill, expiry, and health tip updates will appear here.</div>
+                {% endfor %}
+                <div class="empty is-hidden" id="filtered-empty"><strong>No matching notifications.</strong>Try a different category or view all notifications.</div>
+            </div>
         </section>
 
-        <aside class="side-panel" aria-label="Notification actions and guidance">
-            <section class="insight">
-                <h3>Priority Guide</h3>
-                <p>Unread delivery, expiry, and prescription alerts usually need the fastest attention. Offer and health-tip alerts can be reviewed anytime.</p>
+        <aside class="side-stack" aria-label="Notification summary and actions">
+            <section class="summary-card">
+                <div class="panel-heading">
+                    <h2>Notification Summary</h2>
+                    <button type="button" data-filter-shortcut="all">View all</button>
+                </div>
+                <div class="summary-grid">
+                    <div class="donut" id="summary-donut">
+                        <div class="donut-inner">
+                            <div><strong>{{ summary.total }}</strong><span>Total</span></div>
+                        </div>
+                    </div>
+                    <ul class="legend">
+                        <li><span class="dot"></span><span>Unread</span><strong data-summary="unread">{{ summary.unread }}</strong></li>
+                        <li><span class="dot blue"></span><span>Orders</span><strong data-summary="Order Updates">0</strong></li>
+                        <li><span class="dot purple"></span><span>Prescriptions</span><strong data-summary="Prescription Updates">0</strong></li>
+                        <li><span class="dot orange"></span><span>Reminders</span><strong data-summary="Refill Reminders">0</strong></li>
+                        <li><span class="dot pink"></span><span>Offers</span><strong data-summary="Offer Notifications">0</strong></li>
+                    </ul>
+                </div>
+                <div class="enable-box">
+                    <div class="hero-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 21a2 2 0 0 0 3.4 0"/><path d="M4 17h16"/><path d="M6 17v-6a6 6 0 1 1 12 0v6"/></svg>
+                    </div>
+                    <div>
+                        <h3>Stay updated!</h3>
+                        <p>Enable push notifications to never miss an important update.</p>
+                        <button type="button" id="enable-notifications-button">Enable Notifications</button>
+                    </div>
+                </div>
             </section>
-            <section class="insight">
-                <h3>Quick Links</h3>
-                <div class="quick-links">
-                    <a href="/my_orders">My Orders</a>
-                    <a href="/my_prescriptions">My Prescriptions</a>
-                    <a href="/payment_history">Payment History</a>
-                    <a href="/ai_health_assistant">AI Health Assistant</a>
+
+            <section class="quick-card">
+                <div class="panel-heading"><h2>Quick Actions</h2></div>
+                <div class="action-list">
+                    <a class="action-link" href="/my_orders"><span class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h12l-1 14H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span><span><strong>View All Orders</strong><span>Track and manage your orders</span></span><span class="chevron">&gt;</span></a>
+                    <a class="action-link" href="/my_prescriptions"><span class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2h8l2 3v17H6V5l2-3Z"/><path d="M9 10h6"/><path d="M9 14h6"/></svg></span><span><strong>My Prescriptions</strong><span>View prescription history</span></span><span class="chevron">&gt;</span></a>
+                    <a class="action-link" href="/reorder_subscription"><span class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2v6h-6"/><path d="M7 22v-6h6"/><path d="M20 11a8 8 0 0 0-13.5-5.8L4 8"/><path d="M4 13a8 8 0 0 0 13.5 5.8L20 16"/></svg></span><span><strong>Refill Reminders</strong><span>Manage your medicine reminders</span></span><span class="chevron">&gt;</span></a>
+                    <a class="action-link" href="/#offers"><span class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/></svg></span><span><strong>Offers & Discounts</strong><span>View latest offers and promotions</span></span><span class="chevron">&gt;</span></a>
+                    <a class="action-link" href="/chatbot"><span class="action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.2-3 4"/><path d="M12 17h.01"/></svg></span><span><strong>Help & Support</strong><span>Get help with your queries</span></span><span class="chevron">&gt;</span></a>
+                </div>
+            </section>
+
+            <section class="preferences-card" id="notification-preferences">
+                <div class="panel-heading"><h2>Notification Preferences</h2></div>
+                <div class="preference-row">
+                    <span><strong>Order updates</strong><span>Delivery and fulfillment alerts</span></span>
+                    <button class="toggle" type="button" aria-label="Toggle order updates" aria-pressed="{{ 'true' if preferences.get('Order Updates', True) else 'false' }}" data-preference-type="Order Updates"></button>
+                </div>
+                <div class="preference-row">
+                    <span><strong>Prescription updates</strong><span>Review status and approvals</span></span>
+                    <button class="toggle" type="button" aria-label="Toggle prescription updates" aria-pressed="{{ 'true' if preferences.get('Prescription Updates', True) else 'false' }}" data-preference-type="Prescription Updates"></button>
+                </div>
+                <div class="preference-row">
+                    <span><strong>Offer notifications</strong><span>Discounts and monthly saver alerts</span></span>
+                    <button class="toggle" type="button" aria-label="Toggle offer notifications" aria-pressed="{{ 'true' if preferences.get('Offer Notifications', True) else 'false' }}" data-preference-type="Offer Notifications"></button>
+                </div>
+                <div class="preference-row">
+                    <span><strong>Refill reminders</strong><span>Repeat medicine reorder prompts</span></span>
+                    <button class="toggle" type="button" aria-label="Toggle refill reminders" aria-pressed="{{ 'true' if preferences.get('Refill Reminders', True) else 'false' }}" data-preference-type="Refill Reminders"></button>
                 </div>
             </section>
         </aside>
     </div>
 </main>
+<div class="notice-toast" id="notice-toast" role="status" aria-live="polite"></div>
 
 <script>
-const filterButtons = document.querySelectorAll(".filter-btn");
-const cards = document.querySelectorAll(".notice-card");
+const tabs = document.querySelectorAll(".tab-btn");
+const cards = Array.from(document.querySelectorAll(".notice-card"));
+const searchInput = document.getElementById("notification-search");
+const timeFilter = document.getElementById("time-filter");
 const filteredEmpty = document.getElementById("filtered-empty");
+const donut = document.getElementById("summary-donut");
+const settingsMenu = document.getElementById("settings-menu");
+const settingsButton = document.getElementById("settings-button");
+const settingsPreferencesButton = document.getElementById("settings-preferences-button");
+const deleteAllNotificationsForm = document.getElementById("delete-all-notifications-form");
+const preferencesCard = document.getElementById("notification-preferences");
+const enableNotificationsButton = document.getElementById("enable-notifications-button");
+const toast = document.getElementById("notice-toast");
+let currentFilter = "all";
 
-filterButtons.forEach((button) => {
+function showToast(message) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("show");
+    window.clearTimeout(showToast.timer);
+    showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 2600);
+}
+
+function countBy(filter) {
+    if (filter === "all") return cards.length;
+    if (filter === "unread") return cards.filter((card) => card.dataset.read === "0").length;
+    return cards.filter((card) => card.dataset.type === filter).length;
+}
+
+function percent(count) {
+    return cards.length ? `${Math.round((count / cards.length) * 100)}%` : "0%";
+}
+
+["Order Updates", "Prescription Updates", "Refill Reminders", "Offer Notifications"].forEach((type) => {
+    const count = countBy(type);
+    document.querySelectorAll(`[data-count-for="${type}"]`).forEach((node) => node.textContent = count);
+    document.querySelectorAll(`[data-summary="${type}"]`).forEach((node) => node.textContent = `${count} (${percent(count)})`);
+});
+
+document.querySelectorAll('[data-summary="unread"]').forEach((node) => {
+    const count = countBy("unread");
+    node.textContent = `${count} (${percent(count)})`;
+});
+
+if (donut) {
+    donut.style.setProperty("--unread-sweep", percent(countBy("unread")));
+}
+
+function startOfDay(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function matchesTimeFilter(card) {
+    const filter = timeFilter?.value || "all";
+    if (filter === "all") return true;
+
+    const createdAt = new Date((card.dataset.created || "").replace(" ", "T"));
+    if (Number.isNaN(createdAt.getTime())) return true;
+
+    const now = new Date();
+    const createdDay = startOfDay(createdAt);
+    const today = startOfDay(now);
+    if (filter === "today") return createdDay.getTime() === today.getTime();
+
+    const daysSince = Math.floor((today - createdDay) / 86400000);
+    if (filter === "week") return daysSince >= 0 && daysSince < 7;
+    if (filter === "month") return createdAt.getFullYear() === now.getFullYear() && createdAt.getMonth() === now.getMonth();
+    return true;
+}
+
+function applyFilters() {
+    const query = (searchInput?.value || "").trim().toLowerCase();
+    let visible = 0;
+
+    cards.forEach((card) => {
+        const matchesTab = currentFilter === "all" || (currentFilter === "unread" && card.dataset.read === "0") || card.dataset.type === currentFilter;
+        const text = `${card.dataset.title || ""} ${card.dataset.message || ""} ${card.dataset.type || ""}`;
+        const matchesSearch = !query || text.includes(query);
+        const show = matchesTab && matchesSearch && matchesTimeFilter(card);
+        card.classList.toggle("is-hidden", !show);
+        if (show) visible += 1;
+    });
+
+    if (filteredEmpty) filteredEmpty.classList.toggle("is-hidden", visible !== 0);
+}
+
+tabs.forEach((button) => {
     button.addEventListener("click", () => {
-        filterButtons.forEach((item) => item.classList.remove("active"));
+        tabs.forEach((item) => item.classList.remove("active"));
         button.classList.add("active");
-        const filter = button.dataset.filter;
-        let visible = 0;
+        currentFilter = button.dataset.filter;
+        applyFilters();
+    });
+});
 
-        cards.forEach((card) => {
-            const match = filter === "all" || (filter === "unread" && card.dataset.read === "0") || card.dataset.type === filter;
-            card.classList.toggle("is-hidden", !match);
-            if (match) visible += 1;
+document.querySelectorAll("[data-filter-shortcut]").forEach((button) => {
+    button.addEventListener("click", () => {
+        const target = button.dataset.filterShortcut;
+        document.querySelector(`.tab-btn[data-filter="${target}"]`)?.click();
+    });
+});
+
+cards.forEach((card) => {
+    card.querySelector(".kebab")?.addEventListener("click", () => {
+        cards.forEach((item) => {
+            if (item !== card) item.classList.remove("action-open");
         });
+        card.classList.toggle("action-open");
+    });
+});
 
-        if (filteredEmpty) filteredEmpty.classList.toggle("is-hidden", visible !== 0);
+searchInput?.addEventListener("input", applyFilters);
+timeFilter?.addEventListener("change", applyFilters);
+
+function setSettingsMenu(open) {
+    settingsMenu?.classList.toggle("open", open);
+    settingsButton?.setAttribute("aria-expanded", String(open));
+}
+
+function openPreferences() {
+    setSettingsMenu(false);
+    preferencesCard?.scrollIntoView({behavior: "smooth", block: "center"});
+    preferencesCard?.classList.add("is-highlighted");
+    window.setTimeout(() => preferencesCard?.classList.remove("is-highlighted"), 1800);
+}
+
+settingsButton?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setSettingsMenu(!settingsMenu?.classList.contains("open"));
+});
+
+settingsPreferencesButton?.addEventListener("click", openPreferences);
+
+deleteAllNotificationsForm?.addEventListener("submit", (event) => {
+    if (!window.confirm("Delete all notifications?")) {
+        event.preventDefault();
+    }
+});
+
+document.addEventListener("click", (event) => {
+    if (!settingsMenu?.contains(event.target)) {
+        setSettingsMenu(false);
+    }
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+        setSettingsMenu(false);
+    }
+});
+
+enableNotificationsButton?.addEventListener("click", async () => {
+    if (!("Notification" in window)) {
+        showToast("Browser notifications are not supported here.");
+        return;
+    }
+
+    const permission = Notification.permission === "default"
+        ? await Notification.requestPermission()
+        : Notification.permission;
+    showToast(permission === "granted" ? "Browser notifications are enabled." : "Notification permission was not enabled.");
+});
+
+document.querySelectorAll("[data-preference-type]").forEach((toggle) => {
+    toggle.addEventListener("click", async () => {
+        const enabled = toggle.getAttribute("aria-pressed") !== "true";
+        const previous = !enabled;
+        toggle.setAttribute("aria-pressed", String(enabled));
+
+        try {
+            const response = await fetch("/notifications/preferences", {
+                method: "POST",
+                headers: {"Content-Type": "application/json", "Accept": "application/json"},
+                body: JSON.stringify({type: toggle.dataset.preferenceType, enabled})
+            });
+            const data = await response.json();
+            if (!response.ok || !data.ok) throw new Error(data.message || "Preference could not be saved.");
+            showToast(`${toggle.dataset.preferenceType} ${enabled ? "enabled" : "disabled"}.`);
+        } catch (error) {
+            toggle.setAttribute("aria-pressed", String(previous));
+            showToast(error.message || "Preference could not be saved.");
+        }
     });
 });
 </script>

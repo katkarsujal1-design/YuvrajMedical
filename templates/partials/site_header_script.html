@@ -43,4 +43,37 @@
         if (event.key === "Escape") setOpen(false);
     });
 })();
+
+(() => {
+    const cardSelector = [
+        ".home-product-card",
+        ".medicine-card",
+        ".product-card",
+        "body.yvm-page-home .popular-section .card",
+        "body.yvm-page-department .card"
+    ].join(",");
+    const interactiveSelector = "a, button, input, select, textarea, label, form";
+
+    document.querySelectorAll(cardSelector).forEach((card) => {
+        const detailsLink = card.querySelector('a[href*="/medicine/"]');
+        if (!detailsLink) return;
+        card.classList.add("is-clickable-card");
+        card.setAttribute("role", "link");
+        card.setAttribute("tabindex", "0");
+        card.dataset.cardHref = detailsLink.href;
+
+        card.addEventListener("click", (event) => {
+            if (event.target.closest(interactiveSelector)) return;
+            window.location.href = card.dataset.cardHref;
+        });
+
+        card.addEventListener("keydown", (event) => {
+            if (event.target.closest(interactiveSelector)) return;
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                window.location.href = card.dataset.cardHref;
+            }
+        });
+    });
+})();
 </script>

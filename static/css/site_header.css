@@ -568,7 +568,7 @@ body.yvm-pro-page main > section.visual-hero {
     border: 0 !important;
     border-radius: 0 !important;
     background:
-        linear-gradient(90deg, rgba(16,32,51,.94) 0%, rgba(15,118,110,.80) 48%, rgba(138,36,89,.24) 100%),
+        linear-gradient(90deg, rgba(5,18,34,.98) 0%, rgba(7,74,64,.90) 50%, rgba(5,18,34,.54) 100%),
         var(--yvm-page-image) center right / cover no-repeat !important;
     box-shadow: 0 24px 70px rgba(15,23,42,.16) !important;
 }
@@ -627,6 +627,7 @@ body.yvm-pro-page main > section.page-top h1,
 body.yvm-pro-page main > section.visual-hero h1 {
     color: #fff !important;
     letter-spacing: 0;
+    text-shadow: 0 3px 18px rgba(0,0,0,.46);
 }
 
 body.yvm-pro-page main > section.hero p,
@@ -642,7 +643,8 @@ body.yvm-pro-page main > section.payment-hero p,
 body.yvm-pro-page main > section.rs-hero p,
 body.yvm-pro-page main > section.page-top p,
 body.yvm-pro-page main > section.visual-hero p {
-    color: rgba(240,253,250,.90) !important;
+    color: #f8fffd !important;
+    text-shadow: 0 2px 14px rgba(0,0,0,.42);
 }
 
 body.yvm-pro-page .wrap,
@@ -720,6 +722,183 @@ body.yvm-pro-page h1,
 body.yvm-pro-page h2,
 body.yvm-pro-page h3 {
     letter-spacing: 0;
+}
+
+/* Unified medicine card system: matches the home page product-card design. */
+body.yvm-pro-page .home-product-card,
+body.yvm-pro-page .medicine-card,
+body.yvm-pro-page .product-card {
+    position: relative !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 260px !important;
+    padding: 14px !important;
+    border: 1px solid #dcebf2 !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 12px 28px rgba(8, 35, 55, .06) !important;
+    transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease !important;
+    overflow: hidden;
+}
+
+body.yvm-pro-page .home-product-card:hover,
+body.yvm-pro-page .medicine-card:hover,
+body.yvm-pro-page .product-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(4, 121, 109, .24) !important;
+    box-shadow: 0 20px 42px rgba(8, 35, 55, .13) !important;
+}
+
+body.yvm-pro-page .home-product-card::before,
+body.yvm-pro-page .medicine-card::before,
+body.yvm-pro-page .product-card::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 0 auto !important;
+    height: 3px !important;
+    background: linear-gradient(90deg, #0bbf72, #04796d, #fde68a) !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+}
+
+body.yvm-pro-page .home-product-image,
+body.yvm-pro-page .image-box,
+body.yvm-pro-page .rec-img {
+    width: 100% !important;
+    height: 104px !important;
+    min-height: 104px !important;
+    display: grid !important;
+    place-items: center !important;
+    margin: 0 0 10px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(180deg, #ffffff, #f5fbff) !important;
+    border: 1px solid #edf4f8 !important;
+    overflow: hidden !important;
+}
+
+body.yvm-pro-page .home-product-image img,
+body.yvm-pro-page .image-box img,
+body.yvm-pro-page .rec-img img {
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 100px !important;
+    object-fit: contain !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+body.yvm-pro-page .home-product-card h3,
+body.yvm-pro-page .medicine-card h3,
+body.yvm-pro-page .product-card h3,
+body.yvm-pro-page .product-card strong {
+    margin: 0 !important;
+    color: #08243d !important;
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+    font-weight: 900 !important;
+}
+
+body.yvm-pro-page .home-price,
+body.yvm-pro-page .price,
+body.yvm-pro-page .rec-price {
+    color: #047857 !important;
+    font-size: 18px !important;
+    font-weight: 1000 !important;
+}
+
+body.yvm-pro-page .home-stock,
+body.yvm-pro-page .stock,
+body.yvm-pro-page .stock-mini {
+    color: #0e9f6e !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+}
+
+body.yvm-pro-page .stock.out,
+body.yvm-pro-page .stock-out {
+    color: #dc2626 !important;
+}
+
+body.yvm-pro-page .qty-box {
+    display: grid !important;
+    grid-template-columns: 34px minmax(0, 1fr) 34px !important;
+    gap: 7px !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 10px 0 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+}
+
+body.yvm-pro-page .qty-box a,
+body.yvm-pro-page .qty-box span,
+body.yvm-pro-page .cart-count {
+    min-height: 32px !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: 9px !important;
+    text-decoration: none !important;
+    font-weight: 950 !important;
+}
+
+body.yvm-pro-page .qty-box a {
+    color: #04796d !important;
+    background: #e8f8f5 !important;
+}
+
+body.yvm-pro-page .qty-box span,
+body.yvm-pro-page .cart-count {
+    color: #08243d !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+body.yvm-pro-page .home-add-btn,
+body.yvm-pro-page .add-btn,
+body.yvm-pro-page .detail-btn,
+body.yvm-pro-page .out-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 34px !important;
+    padding: 8px 12px !important;
+    border-radius: 999px !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    font-weight: 950 !important;
+    box-shadow: none !important;
+}
+
+body.yvm-pro-page .home-add-btn,
+body.yvm-pro-page .add-btn {
+    color: #ffffff !important;
+    background: #14a76c !important;
+}
+
+body.yvm-pro-page .detail-btn {
+    color: #04796d !important;
+    background: #e8f8f5 !important;
+    border: 1px solid #cdeee5 !important;
+}
+
+body.yvm-pro-page .out-btn {
+    color: #ffffff !important;
+    background: #64748b !important;
+    border: 0 !important;
+}
+
+body.yvm-pro-page .is-clickable-card {
+    cursor: pointer;
+}
+
+body.yvm-pro-page .is-clickable-card:focus-visible {
+    outline: 3px solid rgba(20, 167, 108, .34);
+    outline-offset: 3px;
 }
 
 body.yvm-pro-page .btn,

@@ -115,7 +115,7 @@ body.yvm-pro-page .side-panel{display:none!important}
   position:relative;overflow:hidden;min-height:310px;margin-bottom:22px;border-radius:28px;
   border:1px solid rgba(15,118,110,.16);
   background:
-    linear-gradient(100deg,rgba(4,47,46,.96) 0%,rgba(15,118,110,.88) 42%,rgba(15,118,110,.18) 76%),
+    linear-gradient(100deg,rgba(3,30,31,.98) 0%,rgba(5,86,70,.92) 48%,rgba(3,30,31,.54) 100%),
     url("/static/images/payment_history_ai/payment-history-hero-banner.png") center right/cover no-repeat;
   box-shadow:0 26px 70px rgba(15,23,42,.16);
 }
@@ -129,8 +129,8 @@ body.yvm-pro-page .side-panel{display:none!important}
   border-radius:999px;background:rgba(255,255,255,.12);font-size:12px;font-weight:950;
   text-transform:uppercase;letter-spacing:.08em;backdrop-filter:blur(8px);
 }
-.payment-hero h1{margin:16px 0 0;max-width:660px;font-size:48px;line-height:1.04;letter-spacing:-.045em}
-.payment-hero p{max-width:600px;margin:14px 0 0;color:rgba(255,255,255,.86);font-size:17px;font-weight:650;line-height:1.65}
+.payment-hero h1{margin:16px 0 0;max-width:660px;font-size:48px;line-height:1.04;letter-spacing:-.045em;text-shadow:0 3px 18px rgba(0,0,0,.46)}
+.payment-hero p{max-width:600px;margin:14px 0 0;color:#f8fffd;font-size:17px;font-weight:650;line-height:1.65;text-shadow:0 2px 14px rgba(0,0,0,.42)}
 
 .shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,360px);gap:22px;align-items:start}
 .main-stack,.side-stack{display:grid;gap:20px;min-width:0}
@@ -360,8 +360,7 @@ tbody tr:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
             <a href="/rewards"><span>Rewards &amp; Loyalty</span><span>›</span></a>
             <a href="/notifications"><span>Notifications</span><span>›</span></a>
             <a href="/reviews_feedback"><span>Reviews &amp; Feedback</span><span>›</span></a>
-            <a href="{{ url_for('chatbot') }}"><span>Gemini AI Chatbot</span><span>›</span></a>
-            <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>›</span></a>
+            <a href="{{ url_for('chatbot') }}"><span>AI Chatbot</span><span>›</span></a>
         </section>
 
         <section class="side-section">

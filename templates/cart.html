@@ -535,6 +535,7 @@
                     <input name="coupon_code" placeholder="Enter coupon code" value="{{ totals.coupon_code or '' }}">
                     <button type="submit">Apply</button>
                 </form>
+                <small>Reward coupons must be unlocked from the Rewards & Loyalty page before applying.</small>
                 {% if totals.coupon_code %}
                     <small>Applied: {{ totals.coupon_code }} - <a href="/cart/remove_coupon">Remove coupon</a></small>
                 {% endif %}

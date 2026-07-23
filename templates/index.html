@@ -103,16 +103,16 @@ img{
     top:0;
     z-index:1000;
     background:
-        radial-gradient(circle at 12% 0%,rgba(251,191,36,.15),transparent 28%),
-        linear-gradient(135deg,rgba(76,29,61,.96) 0%,rgba(127,29,78,.96) 52%,rgba(159,58,74,.96) 100%);
+        radial-gradient(circle at 12% 0%, rgba(16,185,129,.16), transparent 28%),
+        linear-gradient(135deg, rgba(4,120,87,.98) 0%, rgba(5,150,105,.96) 52%, rgba(22,163,74,.96) 100%);
     backdrop-filter:blur(18px);
-    border-bottom:1px solid rgba(253,230,138,.42);
+    border-bottom:1px solid rgba(209,250,229,.32);
     color:#ffffff;
     padding:10px 24px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 12px 34px rgba(76,29,61,.30);
+    box-shadow:0 12px 34px rgba(4,120,87,.24);
 }
 
 .header h2{
@@ -132,20 +132,20 @@ img{
 .side-panel a{
     text-decoration:none;
     color:#fff7ed;
-    padding:9px 13px;
-    border-radius:999px;
+    padding:9px 14px;
+    border-radius:8px;
     background:rgba(255,255,255,.14);
-    border:1px solid rgba(253,230,138,.20);
-    font-weight:700;
-    transition:.3s;
+    border:1px solid rgba(220,252,231,.22);
+    font-weight:900;
+    transition:transform .18s ease, background .18s ease, color .18s ease;
 }
 
 .header-actions a:hover,
 .menu-toggle:hover,
 .side-panel a:hover{
     background:#fff7ed;
-    color:#6f1d49;
-    transform:translateY(-2px);
+    color:#065f46;
+    transform:translateY(-1px);
 }
 
 .menu-toggle{
@@ -166,10 +166,10 @@ img{
     display:inline-grid;
     place-items:center;
     background:#facc15;
-    color:#4c1d3d;
+    color:#065f46;
     font-size:12px;
-    font-weight:950;
-    box-shadow:0 8px 16px rgba(0,0,0,.20);
+    font-weight:1000;
+    box-shadow:none;
 }
 
 .welcome-marquee-wrap{
@@ -1305,19 +1305,86 @@ body{
 .side-panel a{
     color:#ecfeff;
     background:rgba(255,255,255,.12);
-    border:1px solid rgba(103,232,249,.22);
+    border:1px solid rgba(220,252,231,.22);
 }
 
 .header-actions a:hover,
 .menu-toggle:hover{
     background:#ffffff;
-    color:#075985;
+    color:#065f46;
 }
 
 .cart-btn{
     background:linear-gradient(135deg,#0d9488,#22c55e)!important;
     color:#ffffff!important;
     border-color:transparent!important;
+}
+
+body.yvm-page-home .menu-toggle{
+    min-height:40px;
+    padding:9px 14px;
+    border-radius:8px;
+    gap:8px;
+    color:#fff7ed;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(253,230,138,.52);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 22px rgba(4,120,87,.16);
+    font-size:13px;
+    font-weight:900;
+    transition:transform .18s ease,background .18s ease,color .18s ease,border-color .18s ease;
+}
+
+body.yvm-page-home .menu-toggle:hover,
+body.yvm-page-home.menu-open .menu-toggle{
+    transform:translateY(-1px);
+    color:#065f46;
+    background:#fff7ed;
+    border-color:#fde68a;
+}
+
+body.yvm-page-home .menu-notification-badge{
+    min-width:22px;
+    height:22px;
+    padding:0 7px;
+    border-radius:999px;
+    background:#facc15;
+    color:#065f46;
+    font-size:12px;
+    font-weight:1000;
+    box-shadow:none;
+}
+
+body.yvm-page-home .side-overlay{
+    background:rgba(6,95,70,.54);
+}
+
+body.yvm-page-home .side-panel{
+    display:flex;
+    flex-direction:column;
+    background:
+        radial-gradient(circle at 85% 0%,rgba(167,243,208,.16),transparent 30%),
+        linear-gradient(160deg,#065f46,#0f766e 58%,#16a34a);
+    border-left:1px solid rgba(220,252,231,.24);
+    box-shadow:-24px 0 60px rgba(4,120,87,.24);
+}
+
+body.yvm-page-home .side-panel-head h3,
+body.yvm-page-home .side-section-title,
+body.yvm-page-home .side-notifications h4{
+    color:#fde68a;
+}
+
+body.yvm-page-home .side-close,
+body.yvm-page-home .side-panel a{
+    color:#fff7ed;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(220,252,231,.18);
+}
+
+body.yvm-page-home .side-close:hover,
+body.yvm-page-home .side-panel a:hover{
+    color:#065f46;
+    background:#fff7ed;
 }
 
 .customer-hero{
@@ -3591,10 +3658,12 @@ body.yvm-page-home{
 }
 
 .promo-card{
+    position:relative;
+    isolation:isolate;
     min-height:170px;
     display:grid;
-    grid-template-columns:minmax(0,1fr) 140px;
-    gap:12px;
+    grid-template-columns:minmax(0,1fr);
+    gap:10px;
     align-items:center;
     padding:22px;
     border-radius:16px;
@@ -3605,8 +3674,17 @@ body.yvm-page-home{
     box-shadow:0 16px 36px rgba(4,121,109,.18);
 }
 
+.promo-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:1;
+    background:
+        linear-gradient(90deg,rgba(0,62,52,.88) 0%,rgba(0,89,75,.68) 44%,rgba(0,89,75,.18) 100%),
+        linear-gradient(180deg,rgba(0,0,0,.14),rgba(0,0,0,.20));
+}
+
 .promo-card.enhanced{
-    position:relative;
     animation:promoFadeIn .55s ease both;
     transition:transform .28s ease, box-shadow .28s ease;
 }
@@ -3642,15 +3720,25 @@ body.yvm-page-home{
 }
 
 .promo-card h3{
+    position:relative;
+    z-index:3;
     margin:0;
     font-size:24px;
     line-height:1.25;
 }
 
 .promo-card p{
+    position:relative;
+    z-index:3;
     margin:10px 0 16px;
     color:rgba(255,255,255,.92);
     font-weight:800;
+}
+
+.promo-card > div:first-child{
+    position:relative;
+    z-index:3;
+    max-width:245px;
 }
 
 .promo-card > div:first-child > span{
@@ -3674,6 +3762,8 @@ body.yvm-page-home{
 }
 
 .promo-card small{
+    position:relative;
+    z-index:3;
     display:block;
     margin:0 0 10px;
     color:rgba(255,255,255,.78);
@@ -3683,24 +3773,34 @@ body.yvm-page-home{
 }
 
 .promo-card img{
-    width:140px;
-    height:118px;
+    position:absolute;
+    inset:0;
+    z-index:0;
+    width:100%;
+    height:100%;
     object-fit:cover;
-    border-radius:14px;
+    border-radius:inherit;
+    transition:transform .4s ease;
 }
 
 .promo-card-visual{
-    position:relative;
-    width:140px;
-    height:118px;
-    border-radius:14px;
+    position:absolute;
+    inset:0;
+    z-index:0;
+    width:100%;
+    height:100%;
+    border-radius:inherit;
     overflow:hidden;
 }
 
 .promo-card-visual img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
     transition:transform .35s ease;
 }
 
+.promo-card:hover > img,
 .promo-card.enhanced:hover .promo-card-visual img{
     transform:scale(1.05);
 }
@@ -4115,6 +4215,80 @@ body.yvm-page-home{
     font-weight:950;
 }
 
+body.yvm-page-home .popular-section .card {
+    position: relative;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    border: 1px solid #dcebf2;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(8,35,55,.06);
+    text-align: left;
+    overflow: hidden;
+}
+
+body.yvm-page-home .popular-section .card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg,#0bbf72,#04796d,#fde68a);
+}
+
+body.yvm-page-home .popular-section .card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(4,121,109,.24);
+    box-shadow: 0 20px 42px rgba(8,35,55,.13);
+}
+
+body.yvm-page-home .popular-section .img-box {
+    width: 100%;
+    height: 104px;
+    display: grid;
+    place-items: center;
+    margin: 0 0 10px;
+    border: 1px solid #edf4f8;
+    border-radius: 12px;
+    background: linear-gradient(180deg,#ffffff,#f5fbff);
+}
+
+body.yvm-page-home .popular-section .img-box img {
+    max-width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+}
+
+body.yvm-page-home .popular-section .card h3 {
+    min-height: 0;
+    margin: 0;
+    color: #08243d;
+    font-size: 15px;
+    line-height: 1.25;
+}
+
+body.yvm-page-home .popular-section .card p {
+    margin: 4px 0;
+    color: #526d7f;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+body.yvm-page-home .popular-section .card strong {
+    color: #047857;
+    font-size: 18px;
+}
+
+body.yvm-page-home .popular-section .detail-btn,
+body.yvm-page-home .popular-section .add-btn,
+body.yvm-page-home .popular-section .out-btn {
+    min-height: 34px;
+    margin-top: 8px;
+    border-radius: 999px;
+    font-size: 13px;
+}
+
 .home-trust-strip{
     display:grid;
     grid-template-columns:repeat(5,minmax(0,1fr));
@@ -4303,9 +4477,77 @@ body.yvm-page-home{
     .hero-floating{position:static;margin:8px auto 0;transform:none}
     .hero-visual-card{min-height:auto}
 }
+
+body.yvm-page-home .header{
+    background:
+        radial-gradient(circle at 12% 0%,rgba(16,185,129,.16),transparent 28%),
+        linear-gradient(135deg,rgba(4,120,87,.98) 0%,rgba(5,150,105,.96) 52%,rgba(22,163,74,.96) 100%) !important;
+    border-bottom:1px solid rgba(209,250,229,.32) !important;
+    box-shadow:0 12px 34px rgba(4,120,87,.24) !important;
+}
+
+body.yvm-page-home .header-actions a,
+body.yvm-page-home .menu-toggle{
+    border-radius:8px !important;
+    color:#fff7ed !important;
+    background:rgba(255,255,255,.14) !important;
+    border:1px solid rgba(220,252,231,.22) !important;
+    font-weight:900 !important;
+}
+
+body.yvm-page-home .header-actions a:hover,
+body.yvm-page-home .menu-toggle:hover,
+body.yvm-page-home.menu-open .menu-toggle{
+    color:#065f46 !important;
+    background:#fff7ed !important;
+    border-color:#fde68a !important;
+}
+
+body.yvm-page-home .cart-btn{
+    background:#16a34a !important;
+    border-color:rgba(255,255,255,.22) !important;
+    color:#ffffff !important;
+}
+
+body.yvm-page-home .menu-toggle{
+    gap:8px !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 22px rgba(4,120,87,.16) !important;
+}
+
+body.yvm-page-home .menu-notification-badge{
+    background:#facc15 !important;
+    color:#065f46 !important;
+    box-shadow:none !important;
+}
+
+body.yvm-page-home .side-overlay{
+    background:rgba(6,95,70,.54) !important;
+}
+
+body.yvm-page-home .side-panel{
+    background:
+        radial-gradient(circle at 85% 0%,rgba(167,243,208,.16),transparent 30%),
+        linear-gradient(160deg,#065f46,#0f766e 58%,#16a34a) !important;
+    border-left:1px solid rgba(220,252,231,.24) !important;
+    box-shadow:-24px 0 60px rgba(4,120,87,.24) !important;
+}
+
+body.yvm-page-home .side-panel a,
+body.yvm-page-home .side-close{
+    color:#fff7ed !important;
+    background:rgba(255,255,255,.12) !important;
+    border-color:rgba(220,252,231,.18) !important;
+}
+
+body.yvm-page-home .side-panel a:hover,
+body.yvm-page-home .side-close:hover{
+    color:#065f46 !important;
+    background:#fff7ed !important;
+}
 </style>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer-mobile.css') }}">
 </head>
 
 <body class="yvm-pro-page yvm-page-home">
@@ -4356,7 +4598,7 @@ body.yvm-page-home{
                 type="button"
                 aria-controls="account-panel"
                 aria-expanded="false">
-            <span>☰ Menu</span>
+            <span>Menu</span>
             <span class="menu-notification-badge">{{ notifications|length }}</span>
         </button>
     </div>
@@ -4405,8 +4647,7 @@ body.yvm-page-home{
             <a href="/rewards"><span>Rewards & Loyalty</span><span>›</span></a>
             <a href="/notifications"><span>Notifications</span><span>›</span></a>
             <a href="/reviews_feedback"><span>Reviews & Feedback</span><span>›</span></a>
-            <a href="{{ url_for('chatbot') }}"><span>Gemini AI Chatbot</span><span>›</span></a>
-            <a href="/ai_health_assistant"><span>AI Health Assistant</span><span>›</span></a>
+            <a href="{{ url_for('chatbot') }}"><span>AI Chatbot</span><span>›</span></a>
         </section>
 
         <section class="side-section">
@@ -4655,6 +4896,29 @@ body.yvm-page-home{
         </div>
     </section>
 </main>
+
+<nav class="mobile-bottom-nav" aria-label="Mobile quick navigation">
+    <a href="/" aria-current="page">
+        <span aria-hidden="true">⌂</span>
+        <b>Home</b>
+    </a>
+    <a href="#health-category">
+        <span aria-hidden="true">▦</span>
+        <b>Categories</b>
+    </a>
+    <a href="{{ url_for('cart') }}">
+        <span aria-hidden="true">🛒</span>
+        <b>Cart</b>
+    </a>
+    <a href="{{ url_for('my_orders') }}">
+        <span aria-hidden="true">▤</span>
+        <b>Orders</b>
+    </a>
+    <a href="{{ url_for('profile') }}">
+        <span aria-hidden="true">◎</span>
+        <b>Profile</b>
+    </a>
+</nav>
 
 <section class="customer-hero">
     <div class="hero-glow"></div>
@@ -5050,7 +5314,7 @@ body.yvm-page-home{
 <div class="floating-contact" aria-label="Quick contact">
     <a class="ai-assistant-float"
        href="{{ url_for('chatbot') }}"
-       aria-label="Open Gemini AI Chatbot">🤖</a>
+       aria-label="Open AI Chatbot">🤖</a>
     <a class="whatsapp-float"
        href="https://wa.me/919999999999"
        aria-label="Chat on WhatsApp">☎</a>
@@ -5359,6 +5623,7 @@ if (newsCarousel) {
     </div>
 
 </footer>
+{% include "partials/site_header_script.html" %}
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

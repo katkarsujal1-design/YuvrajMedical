@@ -3,1037 +3,810 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Management</title>
+    <title>My Profile | Yuvraj Medical</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
     <style>
-        *{box-sizing:border-box}
-        body{
-            margin:0;
-            font-family:"Segoe UI",Arial,sans-serif;
-            color:#102033;
+        :root {
+            --ink: #071b3a;
+            --muted: #607094;
+            --line: #dfe8f1;
+            --panel: #ffffff;
+            --soft: #f7fbff;
+            --green: #00a86b;
+            --green-dark: #007a52;
+            --mint: #31c985;
+            --blue: #3478f6;
+            --orange: #f59e0b;
+            --pink: #f43f5e;
+            --shadow: 0 18px 46px rgba(7, 27, 58, .08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
             background:
-                linear-gradient(135deg,rgba(2,6,23,.50),rgba(8,47,73,.34)),
-                url("{{ url_for('static', filename='images/profile-page-bg-ai.png') }}") center/cover fixed no-repeat;
+                radial-gradient(circle at 16% 8%, rgba(0,168,107,.09), transparent 25%),
+                radial-gradient(circle at 88% 10%, rgba(52,120,246,.07), transparent 24%),
+                linear-gradient(180deg, #fbfdff 0%, #ffffff 48%, #f6fbf8 100%) !important;
         }
-        body::before{
-            content:"";
-            position:fixed;
-            inset:0;
-            z-index:-1;
+
+        a { color: inherit; text-decoration: none; }
+        button, input { font: inherit; }
+
+        .profile-shell {
+            width: min(1500px, calc(100% - 64px));
+            margin: 26px auto 50px;
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .profile-sidebar,
+        .overview-card,
+        .info-card,
+        .secure-strip {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255,255,255,.96);
+            box-shadow: var(--shadow);
+        }
+
+        .profile-sidebar {
+            position: sticky;
+            top: 96px;
+            overflow: hidden;
+        }
+
+        .side-head {
+            display: grid;
+            justify-items: center;
+            gap: 10px;
+            padding: 24px 18px 18px;
+            text-align: center;
+            border-bottom: 1px solid #edf2f8;
+        }
+
+        .avatar {
+            position: relative;
+            width: 92px;
+            height: 92px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #fff;
             background:
-                linear-gradient(90deg,rgba(255,255,255,.18),rgba(255,255,255,.04) 38%,rgba(255,255,255,.16)),
-                radial-gradient(circle at 12% 8%,rgba(103,232,249,.16),transparent 30%),
-                radial-gradient(circle at 88% 12%,rgba(253,230,138,.10),transparent 26%);
+                radial-gradient(circle at 30% 20%, rgba(255,255,255,.28), transparent 30%),
+                linear-gradient(135deg, var(--mint), #006b52);
+            border: 6px solid #e9fff5;
+            box-shadow: 0 16px 30px rgba(0,168,107,.18);
+            overflow: hidden;
+            font-size: 34px;
+            font-weight: 1000;
         }
-        a{text-decoration:none}
-        .shell{min-height:100vh}
-        .topbar{
-            position:sticky;
-            top:0;
-            z-index:5;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:18px;
-            padding:16px 5vw;
-            background:linear-gradient(135deg,rgba(8,47,73,.96),rgba(15,118,110,.90));
-            color:white;
-            box-shadow:0 18px 42px rgba(8,47,73,.20);
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-        .brand{
-            display:flex;
-            align-items:center;
-            gap:12px;
+
+        .camera-dot {
+            position: absolute;
+            right: 4px;
+            bottom: 4px;
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: #fff;
+            background: #263a59;
+            border: 3px solid #fff;
         }
-        .brand-badge{
-            display:grid;
-            place-items:center;
-            width:48px;
-            height:48px;
-            border-radius:16px;
-            background:#ffffff;
-            padding:4px;
-            box-shadow:0 12px 26px rgba(2,6,23,.20);
-            overflow:hidden;
+
+        .camera-dot svg,
+        .nav-icon svg,
+        .card-icon svg,
+        .tiny-icon svg,
+        .edit-link svg {
+            width: 18px;
+            height: 18px;
         }
-        .brand-badge img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-            border-radius:13px;
+
+        .side-head h1 {
+            margin: 4px 0 0;
+            font-size: 17px;
+            line-height: 1.2;
         }
-        .brand h1{
-            margin:0;
-            font-size:22px;
-            line-height:1.05;
+
+        .side-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
         }
-        .brand span{
-            display:block;
-            margin-top:4px;
-            color:#ccfbf1;
-            font-size:12px;
-            font-weight:800;
+
+        .member-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            color: #9a5b07;
+            background: #fff3d8;
+            font-size: 12px;
+            font-weight: 1000;
         }
-        .nav{
-            display:flex;
-            gap:10px;
-            flex-wrap:wrap;
-            justify-content:flex-end;
+
+        .change-photo-btn {
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 13px;
+            border: 1px solid #bdebd6;
+            border-radius: 8px;
+            color: var(--green-dark);
+            background: #f5fffa;
+            font-size: 13px;
+            font-weight: 1000;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,168,107,.08);
         }
-        .nav a{
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            min-height:38px;
-            padding:9px 13px;
-            border-radius:999px;
-            color:white;
-            background:rgba(255,255,255,.13);
-            border:1px solid rgba(255,255,255,.18);
-            font-size:13px;
-            font-weight:850;
+
+        .side-nav {
+            display: grid;
+            gap: 4px;
+            padding: 12px;
         }
-        .nav a:hover{background:white;color:#075985}
-        .profile-wrap{
-            width:min(1240px,calc(100% - 32px));
-            margin:26px auto 46px;
+
+        .side-nav a {
+            min-height: 44px;
+            display: grid;
+            grid-template-columns: 28px minmax(0, 1fr);
+            gap: 10px;
+            align-items: center;
+            padding: 9px 10px;
+            border-radius: 8px;
+            color: #405371;
+            font-size: 14px;
+            font-weight: 850;
         }
-        .hero{
-            display:grid;
-            grid-template-columns:380px minmax(0,1fr);
-            gap:24px;
-            align-items:start;
+
+        .side-nav a:hover,
+        .side-nav a.active {
+            color: var(--green-dark);
+            background: #eafaf3;
         }
-        .identity-card,
-        .panel{
-            border-radius:26px;
-            background:rgba(255,255,255,.92);
-            border:1px solid rgba(255,255,255,.56);
-            box-shadow:0 28px 70px rgba(2,6,23,.24);
-            backdrop-filter:blur(16px);
+
+        .side-nav a.logout {
+            margin-top: 8px;
+            color: var(--pink);
+            border-top: 1px solid #edf2f8;
+            border-radius: 0;
+            padding-top: 16px;
         }
-        .identity-card{
-            overflow:hidden;
+
+        .main-stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .overview-card {
+            padding: 22px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0;
+        }
+
+        .section-head p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-weight: 750;
+        }
+
+        .edit-link,
+        .outline-action {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid #c9efdf;
+            border-radius: 8px;
+            padding: 9px 14px;
+            color: var(--green-dark);
+            background: #fff;
+            font-size: 13px;
+            font-weight: 1000;
+            cursor: pointer;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: minmax(420px, 1fr) minmax(320px, 390px);
+            gap: 18px;
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .identity-line {
+            display: grid;
+            grid-template-columns: 140px 1px minmax(0, 1fr) 1px minmax(220px, .72fr);
+            gap: 18px;
+            align-items: center;
+        }
+
+        .divider {
+            width: 1px;
+            min-height: 166px;
+            background: var(--line);
+        }
+
+        .verified-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 12px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            color: var(--green-dark);
+            background: #e7fff3;
+            font-size: 12px;
+            font-weight: 1000;
+        }
+
+        .profile-photo-form {
+            margin: 0;
+        }
+
+        .photo-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .field-list,
+        .security-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .field-list span,
+        .mini-label {
+            display: block;
+            color: #657696;
+            font-size: 11px;
+            font-weight: 1000;
+            text-transform: uppercase;
+        }
+
+        .field-list b {
+            display: block;
+            margin-top: 6px;
+            font-size: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .status-line {
+            display: grid;
+            grid-template-columns: 42px minmax(0, 1fr);
+            gap: 12px;
+            align-items: center;
+        }
+
+        .tiny-icon,
+        .card-icon {
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: var(--green-dark);
+            background: #eafaf3;
+        }
+
+        .tiny-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .tiny-icon.orange { color: #a85f00; background: #fff2dc; }
+
+        .loyalty-card {
+            padding: 20px;
+            border: 1px solid #cfeee0;
+            border-radius: 8px;
             background:
-                linear-gradient(180deg,rgba(255,255,255,.98),rgba(240,253,250,.92));
-            backdrop-filter:blur(16px);
-            border-color:rgba(255,255,255,.72);
+                linear-gradient(135deg, rgba(242,255,249,.95), rgba(255,255,255,.94)),
+                url("{{ url_for('static', filename='images/rewards_ai/banners/tier-banner.png') }}") center/cover no-repeat;
+            overflow: hidden;
         }
-        .profile-cover{
-            position:relative;
-            height:96px;
+
+        .loyalty-card h3 {
+            margin: 0 0 18px;
+            font-size: 16px;
+        }
+
+        .loyalty-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1px;
+            margin-bottom: 18px;
+            background: #d8e9e2;
+        }
+
+        .loyalty-grid div {
+            display: grid;
+            justify-items: center;
+            gap: 5px;
+            padding: 10px;
+            background: rgba(255,255,255,.74);
+            text-align: center;
+        }
+
+        .loyalty-grid b {
+            font-size: 20px;
+        }
+
+        .loyalty-grid span {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 850;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.1fr 1fr;
+            gap: 18px;
+        }
+
+        .info-card {
+            padding: 20px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .title-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border: 1px solid #c9efdf;
+        }
+
+        .card-title h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .table-list {
+            display: grid;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: minmax(120px, .72fr) minmax(0, 1fr);
+            gap: 14px;
+            padding: 12px;
+            border-bottom: 1px solid #edf2f8;
+            font-size: 13px;
+        }
+
+        .table-row:last-child { border-bottom: 0; }
+        .table-row span { color: var(--muted); font-weight: 850; }
+        .table-row b { text-align: right; overflow-wrap: anywhere; }
+
+        .address-area {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 152px;
+            gap: 12px;
+        }
+
+        .address-card,
+        .add-address {
+            min-height: 216px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .address-card {
+            padding: 18px;
+        }
+
+        .default-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            color: var(--green-dark);
+            background: #e7fff3;
+            font-size: 11px;
+            font-weight: 1000;
+        }
+
+        .address-card h3 {
+            margin: 18px 0 8px;
+            font-size: 16px;
+        }
+
+        .address-card p {
+            margin: 0;
+            color: #405371;
+            line-height: 1.55;
+            font-weight: 750;
+        }
+
+        .address-phone {
+            display: inline-flex;
+            margin-top: 18px;
+            color: #405371;
+            font-size: 13px;
+            font-weight: 850;
+        }
+
+        .add-address {
+            display: grid;
+            place-items: center;
+            gap: 10px;
+            padding: 18px;
+            border-style: dashed;
+            color: var(--green-dark);
+            font-weight: 1000;
+            text-align: center;
+        }
+
+        .plus-circle {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #9fdec1;
+            border-radius: 999px;
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .security-list {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            gap: 0;
+        }
+
+        .security-row {
+            min-height: 42px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 11px 12px;
+            border-bottom: 1px solid #edf2f8;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 850;
+        }
+
+        .security-row:last-child { border-bottom: 0; }
+        .security-row b,
+        .security-row a {
+            color: var(--green-dark);
+            font-weight: 1000;
+        }
+
+        .secure-strip {
+            display: grid;
+            grid-template-columns: 94px minmax(0, .9fr) minmax(440px, 1.2fr);
+            gap: 18px;
+            align-items: center;
+            padding: 18px 24px;
             background:
-                linear-gradient(135deg,rgba(8,47,73,.96),rgba(15,118,110,.84)),
-                radial-gradient(circle at 82% 20%,rgba(253,230,138,.28),transparent 32%);
-        }
-        .profile-cover::after{
-            content:"";
-            position:absolute;
-            inset:18px;
-            border-radius:22px;
-            border:1px solid rgba(255,255,255,.12);
-        }
-        .identity-body{
-            padding:0 24px 24px;
-        }
-        .avatar-row{
-            display:flex;
-            align-items:flex-end;
-            justify-content:space-between;
-            gap:14px;
-        }
-        .avatar{
-            display:grid;
-            place-items:center;
-            width:104px;
-            height:104px;
-            margin-top:-52px;
-            border-radius:32px;
-            background:linear-gradient(135deg,#0ea5e9,#0f766e);
-            color:white;
-            border:6px solid rgba(255,255,255,.94);
-            font-size:42px;
-            font-weight:950;
-            box-shadow:
-                0 18px 36px rgba(8,47,73,.24),
-                0 0 0 1px rgba(14,165,233,.16);
-            overflow:hidden;
-        }
-        .avatar img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-        }
-        .avatar-initial{
-            display:grid;
-            place-items:center;
-            width:100%;
-            height:100%;
-            color:#ffffff;
-            background:
-                radial-gradient(circle at 30% 18%,rgba(253,230,138,.35),transparent 32%),
-                linear-gradient(135deg,#075985,#0f766e);
-            font-size:42px;
-            font-weight:950;
-        }
-        .trust-score{
-            display:grid;
-            gap:4px;
-            min-width:118px;
-            margin-bottom:8px;
-            padding:11px 12px;
-            border-radius:18px;
-            background:linear-gradient(180deg,#ffffff,#ecfeff);
-            border:1px solid rgba(14,165,233,.16);
-            box-shadow:0 12px 26px rgba(14,116,144,.10);
-        }
-        .trust-score span{
-            color:#64748b;
-            font-size:10px;
-            font-weight:950;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-        }
-        .trust-score b{
-            color:#075985;
-            font-size:22px;
-            line-height:1;
-        }
-        .photo-panel{
-            margin-top:18px;
-            padding:14px;
-            border-radius:20px;
-            background:linear-gradient(180deg,#ffffff,#ecfeff);
-            border:1px solid rgba(14,165,233,.16);
-            backdrop-filter:none;
-        }
-        .photo-panel h3{
-            margin:0 0 4px;
-            color:#0f172a;
-            font-size:15px;
-        }
-        .photo-panel p{
-            margin:0 0 12px;
-            color:#64748b;
-            font-size:12px;
-            line-height:1.45;
-            font-weight:750;
-        }
-        .photo-actions{
-            display:grid;
-            grid-template-columns:1fr;
-            gap:9px;
-        }
-        .photo-action{
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            min-height:40px;
-            padding:10px 12px;
-            border-radius:999px;
-            color:white;
-            background:linear-gradient(135deg,#0284c7,#0f766e);
-            font-size:13px;
-            font-weight:950;
-            cursor:pointer;
-            box-shadow:0 12px 22px rgba(14,116,144,.16);
-        }
-        .photo-action.camera-option{
-            display:none;
-            background:linear-gradient(135deg,#7f1d4e,#0f766e);
-        }
-        .photo-input{
-            position:absolute;
-            width:1px;
-            height:1px;
-            opacity:0;
-            pointer-events:none;
-        }
-        .photo-note{
-            display:block;
-            margin-top:10px;
-            color:#0f766e;
-            font-size:11px;
-            font-weight:850;
-        }
-        .identity-body h2{
-            margin:14px 0 4px;
-            font-size:28px;
-            line-height:1.1;
-        }
-        .identity-body p{
-            margin:0;
-            color:#64748b;
-            font-weight:750;
-            overflow-wrap:anywhere;
-        }
-        .role-pill{
-            display:inline-flex;
-            margin-top:14px;
-            padding:8px 12px;
-            border-radius:999px;
-            background:#fef3c7;
-            color:#7f1d4e;
-            font-size:12px;
-            font-weight:950;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-        }
-        .status-list{
-            display:grid;
-            gap:10px;
-            margin-top:20px;
-        }
-        .status{
-            display:flex;
-            justify-content:space-between;
-            gap:12px;
-            padding:12px;
-            border-radius:16px;
-            background:#f8fafc;
-            color:#475569;
-            font-size:13px;
-            font-weight:800;
-        }
-        .status b{color:#0f172a}
-        .verified{color:#047857!important}
-        .pending{color:#b45309!important}
-        .summary{
-            position:relative;
-            overflow:hidden;
-            padding:28px;
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.96),rgba(236,254,255,.90)),
-                radial-gradient(circle at 94% 12%,rgba(14,165,233,.12),transparent 34%);
-            backdrop-filter:blur(16px);
-            min-height:0;
-        }
-        .summary::before{
-            content:"";
-            position:absolute;
-            right:-80px;
-            top:-86px;
-            width:230px;
-            height:230px;
-            border-radius:50%;
-            background:radial-gradient(circle,rgba(14,165,233,.16),transparent 68%);
-        }
-        .summary-kicker{
-            display:inline-flex;
-            margin-bottom:12px;
-            padding:8px 11px;
-            border-radius:999px;
-            color:#4c1d3d;
-            background:#fde68a;
-            font-size:11px;
-            font-weight:950;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-            box-shadow:0 12px 24px rgba(245,158,11,.12);
-        }
-        .summary h2{
-            position:relative;
-            margin:0;
-            font-size:32px;
-            color:#0f172a;
-        }
-        .summary p{
-            position:relative;
-            max-width:720px;
-            margin:8px 0 0;
-            color:#475569;
-            line-height:1.65;
-            font-weight:700;
-        }
-        .stats{
-            position:relative;
-            display:grid;
-            grid-template-columns:repeat(3,minmax(0,1fr));
-            gap:14px;
-            margin-top:26px;
-        }
-        .stat{
-            min-height:116px;
-            padding:18px;
-            border-radius:20px;
-            background:#ffffff;
-            border:1px solid rgba(13,148,136,.13);
-            box-shadow:0 14px 30px rgba(15,118,110,.08);
-            backdrop-filter:none;
-        }
-        .stat span{
-            color:#64748b;
-            font-size:12px;
-            font-weight:900;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-        }
-        .stat strong{
-            display:block;
-            margin-top:12px;
-            color:#075985;
-            font-size:30px;
-            line-height:1;
-        }
-        .details-grid{
-            position:relative;
-            display:grid;
-            grid-template-columns:repeat(4,minmax(0,1fr));
-            gap:14px;
-            margin-top:22px;
-        }
-        .detail{
-            padding:16px;
-            border-radius:18px;
-            background:#ffffff;
-            border:1px solid rgba(14,165,233,.13);
-            box-shadow:0 12px 28px rgba(15,23,42,.06);
-            backdrop-filter:none;
-        }
-        .detail span{
-            display:block;
-            color:#64748b;
-            font-size:12px;
-            font-weight:900;
-            text-transform:uppercase;
-            letter-spacing:.07em;
-        }
-        .detail b{
-            display:block;
-            margin-top:7px;
-            color:#0f172a;
-            overflow-wrap:anywhere;
-        }
-        .section-title{
-            display:flex;
-            align-items:flex-end;
-            justify-content:space-between;
-            gap:16px;
-            margin:34px 0 0;
-            padding:24px 26px 18px;
-            border-radius:30px 30px 0 0;
-            color:#102033;
-            background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(236,254,255,.92));
-            border:1px solid rgba(255,255,255,.70);
-            border-bottom:none;
-            box-shadow:0 18px 42px rgba(15,23,42,.08);
-        }
-        .section-title h2{
-            margin:0;
-            font-size:28px;
-            color:#0f172a;
-        }
-        .section-title p{
-            margin:5px 0 0;
-            color:#64748b;
-            font-weight:700;
-        }
-        .section-badge{
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            padding:9px 12px;
-            border-radius:999px;
-            color:#4c1d3d;
-            background:#fde68a;
-            font-size:12px;
-            font-weight:950;
-            box-shadow:0 12px 24px rgba(0,0,0,.14);
-        }
-        .management-grid{
-            position:relative;
-            display:grid;
-            grid-template-columns:repeat(5,minmax(0,1fr));
-            gap:16px;
-            padding:22px;
-            border-radius:0 0 30px 30px;
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.97),rgba(236,254,255,.92)),
-                radial-gradient(circle at 96% 10%,rgba(253,230,138,.22),transparent 26%),
-                radial-gradient(circle at 0% 100%,rgba(14,165,233,.16),transparent 30%);
-            border:1px solid rgba(255,255,255,.70);
-            border-top:none;
-            box-shadow:0 26px 64px rgba(15,23,42,.08);
-            overflow:hidden;
-        }
-        .management-grid::before{
-            content:"";
-            position:absolute;
-            inset:18px;
-            border-radius:24px;
-            border:1px solid rgba(14,165,233,.08);
-            pointer-events:none;
-        }
-        .action-card{
-            position:relative;
-            z-index:1;
-            min-height:218px;
-            display:flex;
-            flex-direction:column;
-            padding:20px;
-            border-radius:24px;
-            overflow:hidden;
-            background:#ffffff;
-            color:#102033;
-            border:1px solid rgba(14,165,233,.13);
-            box-shadow:0 14px 30px rgba(15,118,110,.08);
-            transition:transform .25s ease,box-shadow .25s ease,background .25s ease,border-color .25s ease;
-        }
-        .action-card::before{
-            content:attr(data-code);
-            position:absolute;
-            right:15px;
-            top:12px;
-            color:rgba(14,116,144,.10);
-            font-family:"Segoe UI",Arial,sans-serif;
-            font-size:42px;
-            font-weight:950;
-            line-height:1;
-        }
-        .action-card::after{
-            content:"";
-            position:absolute;
-            right:-42px;
-            bottom:-50px;
-            width:132px;
-            height:132px;
-            border-radius:50%;
-            background:radial-gradient(circle,rgba(14,165,233,.10),transparent 68%);
-            transition:.25s ease;
-        }
-        .action-card.featured{
-            grid-column:span 2;
-            background:#ffffff;
-            border-color:rgba(14,165,233,.13);
-        }
-        .action-card:hover{
-            transform:translateY(-8px);
-            background:#ffffff;
-            border-color:rgba(14,165,233,.26);
-            box-shadow:0 24px 46px rgba(15,118,110,.13);
-        }
-        .action-card:hover::after{
-            transform:scale(1.16);
-            opacity:.92;
-        }
-        .action-top{
-            display:flex;
-            align-items:flex-start;
-            justify-content:space-between;
-            gap:12px;
-        }
-        .action-icon{
-            display:grid;
-            place-items:center;
-            width:54px;
-            height:54px;
-            border-radius:18px;
-            background:#ffffff;
-            padding:5px;
-            box-shadow:0 14px 28px rgba(2,6,23,.20);
-            overflow:hidden;
-        }
-        .action-icon img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-            border-radius:14px;
-        }
-        .tool-chip{
-            position:relative;
-            z-index:1;
-            display:inline-flex;
-            padding:7px 9px;
-            border-radius:999px;
-            color:#075985;
-            background:#ecfeff;
-            border:1px solid rgba(14,165,233,.14);
-            font-size:10px;
-            font-weight:950;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-        }
-        .action-card h3{
-            position:relative;
-            z-index:1;
-            max-width:190px;
-            margin:20px 0 8px;
-            color:#0f172a;
-            font-size:19px;
-            line-height:1.18;
-        }
-        .action-card p{
-            position:relative;
-            z-index:1;
-            margin:0;
-            color:#64748b;
-            font-size:13px;
-            line-height:1.5;
-            font-weight:750;
-        }
-        .action-arrow{
-            position:relative;
-            z-index:1;
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            width:max-content;
-            margin-top:auto;
-            padding:9px 12px;
-            border-radius:999px;
-            color:#4c1d3d;
-            background:#fde68a;
-            font-weight:950;
-            box-shadow:0 12px 24px rgba(0,0,0,.14);
-        }
-        /* Compact premium layout pass */
-        .profile-wrap{width:min(1180px,calc(100% - 32px));margin:24px auto 42px}
-        .hero{grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}
-        .profile-cover{height:78px}
-        .profile-cover::after{inset:14px;border-radius:18px}
-        .identity-body{padding:0 18px 18px}
-        .avatar{width:96px;height:96px;margin-top:-42px;border-radius:26px}
-        .trust-score{min-width:104px;margin-bottom:6px;padding:9px 10px;border-radius:16px}
-        .trust-score b{font-size:19px}
-        .identity-body h2{margin:12px 0 4px;font-size:24px}
-        .role-pill{margin-top:12px;padding:7px 10px}
-        .photo-panel{margin-top:14px;padding:12px;border-radius:18px}
-        .photo-action{min-height:36px;padding:9px 11px}
-        .photo-note{margin-top:8px}
-        .status-list{margin-top:16px}
-        .status{padding:10px 11px}
-        .summary{padding:24px}
-        .summary h2{font-size:29px}
-        .summary p{line-height:1.55}
-        .stats{gap:12px;margin-top:22px}
-        .stat{min-height:94px;padding:15px;border-radius:18px}
-        .stat strong{margin-top:10px}
-        .details-grid{gap:12px;margin-top:18px}
-        .detail{padding:13px;border-radius:16px}
-        .section-title{margin:28px 0 0;padding:20px 22px 16px}
-        .management-grid{gap:12px;padding:18px}
-        .management-grid::before{inset:14px;border-radius:22px}
-        .action-card{min-height:166px;padding:16px;border-radius:20px}
-        .action-card::before{right:13px;top:11px;font-size:32px}
-        .action-card::after{right:-52px;bottom:-58px;width:120px;height:120px}
-        .action-icon{width:46px;height:46px;border-radius:15px;padding:4px}
-        .action-icon img{border-radius:12px}
-        .tool-chip{padding:6px 8px;font-size:9px}
-        .action-card h3{max-width:180px;margin:14px 0 7px;font-size:16px}
-        .action-card p{font-size:12px;line-height:1.38}
-        .action-arrow{padding:8px 11px}
-        /* Final alignment fix: no cover overlap, balanced premium tool mosaic */
-        .profile-cover{display:none}
-        .identity-body{padding:20px 18px 18px}
-        .avatar-row{align-items:center}
-        .avatar{margin-top:0;width:94px;height:94px;border-radius:26px}
-        .trust-score{margin-bottom:0}
-        .summary{max-width:100%;padding:22px}
-        .stats{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:18px}
-        .details-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:16px}
-        .management-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-        .action-card.featured{grid-column:span 2;min-height:176px}
-        .action-card{min-height:154px}
-        .action-card:nth-child(n+3){background:#ffffff}
-        .action-card h3{font-size:15px}
-        .action-card p{font-size:11.5px}
-        .quick-panel{
-            padding:22px;
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.96),rgba(236,254,255,.88));
-        }
-        .quick-panel h2{
-            margin:0;
-            color:#0f172a;
-            font-size:28px;
-        }
-        .quick-panel p{
-            margin:8px 0 0;
-            color:#475569;
-            font-weight:750;
-        }
-        .quick-grid{
-            display:grid;
-            grid-template-columns:repeat(2,minmax(0,1fr));
-            gap:12px;
-            margin-top:20px;
-        }
-        .quick-grid div{
-            min-height:92px;
-            padding:15px;
-            border-radius:18px;
-            background:#ffffff;
-            border:1px solid rgba(14,165,233,.14);
-            box-shadow:0 14px 30px rgba(15,118,110,.08);
-        }
-        .quick-grid span{
-            display:block;
-            color:#64748b;
-            font-size:11px;
-            font-weight:950;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-        }
-        .quick-grid b{
-            display:block;
-            margin-top:10px;
-            color:#075985;
-            font-size:24px;
-        }
-        .premium-center{
-            margin-top:22px;
-            padding:28px;
-            background:
-                linear-gradient(135deg,rgba(255,255,255,.97),rgba(236,254,255,.92)),
-                radial-gradient(circle at 96% 10%,rgba(253,230,138,.22),transparent 26%),
-                radial-gradient(circle at 0% 100%,rgba(14,165,233,.16),transparent 30%);
-            border:1px solid rgba(255,255,255,.70);
-        }
-        .premium-center .stats{
-            grid-template-columns:repeat(3,minmax(0,1fr));
-        }
-        .premium-center .details-grid{
-            grid-template-columns:repeat(4,minmax(0,1fr));
-        }
-        @media(max-width:1100px){
-            .hero{grid-template-columns:1fr}
-            .management-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-            .action-card.featured{grid-column:span 1}
-            .details-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-        }
-        @media(max-width:720px){
-            .topbar{align-items:flex-start;flex-direction:column}
-            .nav{justify-content:flex-start}
-            .summary h2{font-size:26px}
-            .stats,.details-grid,.management-grid{grid-template-columns:1fr}
-            .section-title{align-items:flex-start;flex-direction:column}
-            .profile-wrap{width:min(100% - 24px,1240px)}
-            .photo-actions{grid-template-columns:1fr 1fr}
-            .photo-action.camera-option{display:flex}
+                linear-gradient(135deg, rgba(232,255,245,.96), rgba(255,255,255,.96)),
+                url("{{ url_for('static', filename='images/rewards_ai/banners/cashback-banner.png') }}") center right/cover no-repeat;
+        }
+
+        .secure-badge {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #c9efdf;
+            overflow: hidden;
+            box-shadow: 0 14px 28px rgba(0,168,107,.13);
+        }
+
+        .secure-strip h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .secure-strip p {
+            margin: 8px 0 0;
+            color: #405371;
+            font-weight: 750;
+            line-height: 1.55;
+        }
+
+        .secure-features {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255,255,255,.74);
+        }
+
+        .secure-feature {
+            display: grid;
+            grid-template-columns: 36px minmax(0, 1fr);
+            gap: 10px;
+            align-items: center;
+            padding: 14px;
+            border-right: 1px solid #dcebe4;
+        }
+
+        .secure-feature:last-child { border-right: 0; }
+        .secure-feature b { display: block; font-size: 13px; }
+        .secure-feature span { color: var(--muted); font-size: 11px; font-weight: 800; }
+
+        .ai-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        @media (max-width: 1220px) {
+            .profile-shell,
+            .overview-grid,
+            .content-grid,
+            .secure-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: static;
+            }
+
+            .side-nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .profile-shell {
+                width: min(100% - 28px, 1500px);
+            }
+
+            .identity-line,
+            .address-area,
+            .secure-features,
+            .side-nav,
+            .loyalty-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .divider { display: none; }
+            .section-head,
+            .card-title {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .table-row b { text-align: left; }
         }
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-profile">
 
 <div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span><span></span><span></span><span></span>
 </div>
-    
+
 {% include "partials/site_header.html" %}
-<div class="shell">
-    <main class="profile-wrap">
-        <section class="hero">
-            <aside class="identity-card">
-                <div class="profile-cover"></div>
-                <div class="identity-body">
-                    <div class="avatar-row">
+
+{% set default_address = (addresses|selectattr("is_default")|list|first) or (addresses|first) %}
+{% set points = rewards.summary.points if rewards else 0 %}
+{% set cashback = rewards.summary.cashback_available if rewards else 0 %}
+{% set coupons = rewards.available_coupon_count if rewards else 0 %}
+{% set verified = user.get("email_verified") and user.get("mobile_verified") %}
+
+<main class="profile-shell">
+    <aside class="profile-sidebar" aria-label="Profile navigation">
+        <div class="side-head">
+            <form class="profile-photo-form" method="POST" action="/profile/photo" enctype="multipart/form-data">
+                <label class="avatar" for="profile-photo">
+                    {% if user.get("profile_image") %}
+                    <img src="{{ url_for('static', filename=user['profile_image']) }}" alt="{{ user['name'] }} profile photo">
+                    {% else %}
+                    {{ user["name"][:1]|upper }}
+                    {% endif %}
+                    <span class="camera-dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></span>
+                </label>
+                <input class="photo-input" id="profile-photo" type="file" name="profile_photo" accept="image/png,image/jpeg,image/webp" onchange="this.form.submit()">
+            </form>
+            <div>
+                <h1>{{ user["name"] }}</h1>
+                <p>{{ user["email"] }}</p>
+            </div>
+            <label class="change-photo-btn" for="profile-photo">Change Profile Image</label>
+            <span class="member-pill">Premium Member</span>
+        </div>
+
+        <nav class="side-nav">
+            <a href="/"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>My Dashboard</a>
+            <a class="active" href="/profile"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>My Profile</a>
+            <a href="/profile/manage/addresses"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>Address Book</a>
+            <a href="/profile/manage/family"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-8 0v2"/><circle cx="12" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Family Profiles</a>
+            <a href="/profile/manage/change_password"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8Z"/></svg></span>Security & Privacy</a>
+            <a href="/notifications"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 21a2 2 0 0 0 3.4 0"/><path d="M4 17h16"/><path d="M6 17v-6a6 6 0 1 1 12 0v6"/></svg></span>Notification Preferences</a>
+            <a href="/payment_history"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg></span>Payment Methods</a>
+            <a href="/my_orders"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12l2 4v16H4V6l2-4Z"/><path d="M8 6h8"/></svg></span>My Orders</a>
+            <a href="/my_prescriptions"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9 15h6"/><path d="M12 12v6"/></svg></span>Prescription History</a>
+            <a href="/rewards"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg></span>Rewards & Loyalty</a>
+            <a href="/reviews_feedback"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 1 1 5.8 1c-.7 1.2-2.1 1.5-2.6 2.7"/><path d="M12 17h.01"/></svg></span>Support Tickets</a>
+            <a class="logout" href="/logout"><span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span>Logout</a>
+        </nav>
+    </aside>
+
+    <section class="main-stack">
+        <article class="overview-card">
+            <div class="section-head">
+                <div>
+                    <h2>Profile Overview</h2>
+                    <p>Manage your personal information and account details.</p>
+                </div>
+                <a class="edit-link" href="/edit_profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>Edit Profile</a>
+            </div>
+
+            <div class="overview-grid">
+                <div class="identity-line">
+                    <div>
                         <div class="avatar">
                             {% if user.get("profile_image") %}
-                                <img src="{{ url_for('static', filename=user['profile_image']) }}" alt="{{ user['name'] }} profile photo">
+                            <img src="{{ url_for('static', filename=user['profile_image']) }}" alt="{{ user['name'] }} profile photo">
                             {% else %}
-                                <span class="avatar-initial">{{ user["name"][:1]|upper }}</span>
+                            {{ user["name"][:1]|upper }}
                             {% endif %}
                         </div>
-                        <div class="trust-score">
-                            <span>Account</span>
-                            <b>{{ "Ready" if user.get("email_verified") and user.get("mobile_verified") else "Review" }}</b>
-                        </div>
+                        <span class="verified-chip">{{ "Verified" if verified else "Review Needed" }}</span>
+                        <label class="change-photo-btn" for="profile-photo" style="margin-top:10px;">Change Image</label>
                     </div>
-                    <h2>{{ user["name"] }}</h2>
-                    <p>{{ user["email"] }}</p>
-                    <span class="role-pill">{{ user["role"] }}</span>
-
-                    <div class="photo-panel">
-                        <h3>Profile Photo</h3>
-                        <p>Add a clear profile picture for a more personal and trusted account.</p>
-                        <div class="photo-actions">
-                            <form method="POST" action="/profile/photo" enctype="multipart/form-data">
-                                <label class="photo-action" for="profile-photo-browse">Browse Document</label>
-                                <input class="photo-input"
-                                       id="profile-photo-browse"
-                                       type="file"
-                                       name="profile_photo"
-                                       accept="image/png,image/jpeg,image/webp"
-                                       onchange="this.form.submit()">
-                            </form>
-                            <form method="POST" action="/profile/photo" enctype="multipart/form-data">
-                                <label class="photo-action camera-option" for="profile-photo-camera">Take Photo</label>
-                                <input class="photo-input"
-                                       id="profile-photo-camera"
-                                       type="file"
-                                       name="profile_photo"
-                                       accept="image/*"
-                                       capture="user"
-                                       onchange="this.form.submit()">
-                            </form>
-                        </div>
-                        <span class="photo-note">Camera option appears on mobile screens.</span>
+                    <span class="divider"></span>
+                    <div class="field-list">
+                        <div><span>Full Name</span><b>{{ user["name"] }}</b></div>
+                        <div><span>Email Address</span><b>{{ user["email"] }}</b></div>
+                        <div><span>Mobile Number</span><b>{{ user.get("phone") or "Not added" }}</b></div>
                     </div>
-
-                    <div class="status-list">
-                        <div class="status">
-                            <span>Email</span>
-                            <b class="{{ 'verified' if user.get('email_verified') else 'pending' }}">
-                                {{ "Verified" if user.get("email_verified") else "Pending" }}
-                            </b>
-                        </div>
-                        <div class="status">
-                            <span>Mobile</span>
-                            <b class="{{ 'verified' if user.get('mobile_verified') else 'pending' }}">
-                                {{ "Verified" if user.get("mobile_verified") else "Pending" }}
-                            </b>
-                        </div>
-                        <div class="status">
-                            <span>Emergency</span>
-                            <b class="{{ 'verified' if user.get('emergency_contact_phone') else 'pending' }}">
-                                {{ "Added" if user.get("emergency_contact_phone") else "Missing" }}
-                            </b>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
-            <section class="panel quick-panel">
-                <span class="summary-kicker">Quick Status</span>
-                <h2>Account snapshot</h2>
-                <p>Your important account signals at a glance.</p>
-
-                <div class="quick-grid">
-                    <div><span>Email</span><b>{{ "Verified" if user.get("email_verified") else "Pending" }}</b></div>
-                    <div><span>Mobile</span><b>{{ "Verified" if user.get("mobile_verified") else "Pending" }}</b></div>
-                    <div><span>Addresses</span><b>{{ addresses|length }}</b></div>
-                    <div><span>Family</span><b>{{ family_members|length }}</b></div>
-                </div>
-            </section>
-        </section>
-
-        <section class="panel summary premium-center">
-                <span class="summary-kicker">Premium Account Center</span>
-                <h2>Manage every detail of your healthcare account.</h2>
-                <p>Keep personal information, mobile verification, delivery addresses, family profiles, and emergency contacts ready for faster ordering and safer pharmacy support.</p>
-
-                <div class="stats">
-                    <div class="stat">
-                        <span>Delivery Addresses</span>
-                        <strong>{{ addresses|length }}</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Family Profiles</span>
-                        <strong>{{ family_members|length }}</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Security Status</span>
-                        <strong>{{ "Ready" if user.get("email_verified") and user.get("mobile_verified") else "Review" }}</strong>
+                    <span class="divider"></span>
+                    <div class="field-list">
+                        <div class="status-line"><span class="tiny-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span><div><span>Member Since</span><b>{{ user.get("created_at") or "Active member" }}</b></div></div>
+                        <div class="status-line"><span class="tiny-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><span>Account Status</span><b>{{ "Active" if verified else "Needs verification" }}</b></div></div>
+                        <div class="status-line"><span class="tiny-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8 4 10h10l4-10-5 3-4-7-4 7-5-3Z"/><path d="M7 21h10"/></svg></span><div><span>Care Tier</span><b>{{ rewards.tier.name if rewards else "Care Plus" }}</b></div></div>
                     </div>
                 </div>
 
-                <div class="details-grid">
-                    <div class="detail"><span>User ID</span><b>{{ user["id"] }}</b></div>
-                    <div class="detail"><span>Phone</span><b>{{ user["phone"] }}</b></div>
-                    <div class="detail"><span>Primary Address</span><b>{{ user["address"] }}</b></div>
-                    <div class="detail"><span>Emergency Contact</span><b>{{ user.get("emergency_contact_phone") or "Not added" }}</b></div>
-                </div>
-        </section>
-
-        <section class="section-title">
-            <div>
-                <h2>Profile Tools</h2>
-                <p>All requested profile management features in one place.</p>
+                <aside class="loyalty-card">
+                    <h3>Your Loyalty Summary</h3>
+                    <div class="loyalty-grid">
+                        <div><span class="tiny-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/shop-bag.png') }}" alt=""></span><b>{{ points }}</b><span>Points</span></div>
+                        <div><span class="tiny-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt=""></span><b>Rs. {{ cashback }}</b><span>Cashback</span></div>
+                        <div><span class="tiny-icon"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/gift-coupon.png') }}" alt=""></span><b>{{ coupons }}</b><span>Coupons</span></div>
+                    </div>
+                    <a class="outline-action" href="/rewards">View Rewards & Loyalty &gt;</a>
+                </aside>
             </div>
-            <span class="section-badge">20 account controls</span>
+        </article>
+
+        <section class="content-grid">
+            <article class="info-card">
+                <div class="card-title">
+                    <div class="title-left"><span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><h2>Personal Information</h2></div>
+                </div>
+                <div class="table-list">
+                    <div class="table-row"><span>Full Name</span><b>{{ user["name"] }}</b></div>
+                    <div class="table-row"><span>Email Address</span><b>{{ user["email"] }}</b></div>
+                    <div class="table-row"><span>Mobile Number</span><b>{{ user.get("phone") or "Not added" }}</b></div>
+                    <div class="table-row"><span>Role</span><b>{{ user.get("role")|title }}</b></div>
+                    <div class="table-row"><span>Primary Address</span><b>{{ user.get("address") or "Not added" }}</b></div>
+                </div>
+                <a class="outline-action" href="/edit_profile" style="width:100%; margin-top:16px;">Edit Personal Info</a>
+            </article>
+
+            <article class="info-card">
+                <div class="card-title">
+                    <div class="title-left"><span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><h2>Addresses</h2></div>
+                    <a class="outline-action" href="/profile/manage/addresses">Manage</a>
+                </div>
+                <div class="address-area">
+                    <div class="address-card">
+                        {% if default_address %}
+                        <span class="default-chip">Default Address</span>
+                        <h3>{{ default_address.get("label") or "Home" }}</h3>
+                        <p>{{ default_address.get("address") }}</p>
+                        <span class="address-phone">{{ default_address.get("phone") or user.get("phone") or "" }}</span>
+                        {% else %}
+                        <span class="default-chip">No address</span>
+                        <h3>Add Delivery Address</h3>
+                        <p>Save home, office, and family delivery locations for faster checkout.</p>
+                        {% endif %}
+                    </div>
+                    <a class="add-address" href="/profile/manage/addresses"><span class="plus-circle">+</span>Add New Address</a>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <div class="card-title">
+                    <div class="title-left"><span class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8Z"/></svg></span><h2>Account Security</h2></div>
+                </div>
+                <div class="security-list">
+                    <div class="security-row"><span>Password</span><a href="/profile/manage/change_password">Change</a></div>
+                    <div class="security-row"><span>Mobile Verification</span><b>{{ "Verified" if user.get("mobile_verified") else "Pending" }}</b></div>
+                    <div class="security-row"><span>Email Verification</span><b>{{ "Verified" if user.get("email_verified") else "Pending" }}</b></div>
+                    <div class="security-row"><span>Emergency Contact</span><b>{{ "Added" if user.get("emergency_contact_phone") else "Missing" }}</b></div>
+                    <div class="security-row"><span>Family Profiles</span><a href="/profile/manage/family">{{ family_members|length }} saved</a></div>
+                </div>
+                <a class="outline-action" href="/profile/manage/change_password" style="width:100%; margin-top:16px;">Manage Security</a>
+            </article>
         </section>
 
-        <section class="management-grid">
-            <a class="action-card featured" href="/profile" data-code="01">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Identity</span>
-                </div>
-                <h3>View Profile</h3>
-                <p>Review your account identity, status, and saved details.</p>
-                <span class="action-arrow">Open →</span>
-            </a>
-            <a class="action-card featured" href="/edit_profile" data-code="02">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Details</span>
-                </div>
-                <h3>Edit Profile</h3>
-                <p>Update your name, primary mobile number, and address.</p>
-                <span class="action-arrow">Edit →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/change_password" data-code="03">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Security</span>
-                </div>
-                <h3>Change Password</h3>
-                <p>Refresh your login password for better account security.</p>
-                <span class="action-arrow">Secure →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/change_mobile" data-code="04">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Mobile</span>
-                </div>
-                <h3>Change Mobile Number</h3>
-                <p>Update the phone number used for order communication.</p>
-                <span class="action-arrow">Update →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/verify_mobile" data-code="05">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">OTP</span>
-                </div>
-                <h3>Verify Mobile Number</h3>
-                <p>Confirm your mobile number with OTP verification.</p>
-                <span class="action-arrow">Verify →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/verify_email" data-code="06">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Email</span>
-                </div>
-                <h3>Verify Email</h3>
-                <p>Confirm your email address for account recovery support.</p>
-                <span class="action-arrow">Verify →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/addresses" data-code="07">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Delivery</span>
-                </div>
-                <h3>Manage Addresses</h3>
-                <p>Add and organize delivery locations for faster checkout.</p>
-                <span class="action-arrow">Manage →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/addresses" data-code="08">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Multiple</span>
-                </div>
-                <h3>Multiple Delivery Addresses</h3>
-                <p>Save home, work, and family addresses for repeat orders.</p>
-                <span class="action-arrow">Add →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/family" data-code="09">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Family</span>
-                </div>
-                <h3>Family Member Profiles</h3>
-                <p>Keep family health profiles ready for routine medicines.</p>
-                <span class="action-arrow">Create →</span>
-            </a>
-            <a class="action-card" href="/profile/manage/emergency" data-code="10">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Urgent</span>
-                </div>
-                <h3>Emergency Contact</h3>
-                <p>Add a trusted contact for urgent medicine coordination.</p>
-                <span class="action-arrow">Set →</span>
-            </a>
-            <a class="action-card featured" href="/rewards" data-code="11">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Points</span>
-                </div>
-                <h3>Loyalty Points</h3>
-                <p>Watch medicine purchases turn into care points and tier progress.</p>
-                <span class="action-arrow">Earn →</span>
-            </a>
-            <a class="action-card featured" href="/rewards#redeem" data-code="12">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Cashback</span>
-                </div>
-                <h3>Cashback History</h3>
-                <p>Review credited and pending cashback from verified payments.</p>
-                <span class="action-arrow">Track →</span>
-            </a>
-            <a class="action-card" href="/rewards" data-code="13">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Refer</span>
-                </div>
-                <h3>Referral Rewards</h3>
-                <p>Share your personal referral code and unlock bonus savings.</p>
-                <span class="action-arrow">Share →</span>
-            </a>
-            <a class="action-card" href="/rewards#redeem" data-code="14">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Coupons</span>
-                </div>
-                <h3>Coupons</h3>
-                <p>Browse reward coupons for discounts and free delivery.</p>
-                <span class="action-arrow">Browse →</span>
-            </a>
-            <a class="action-card" href="/rewards#redeem" data-code="15">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Redeem</span>
-                </div>
-                <h3>Reward Redemption</h3>
-                <p>Activate eligible rewards directly into your shopping cart.</p>
-                <span class="action-arrow">Redeem →</span>
-            </a>
-            <a class="action-card featured" href="/reorder_subscription#buy-again" data-code="16">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Repeat</span>
-                </div>
-                <h3>Buy Again</h3>
-                <p>Quickly reorder medicines from your previous purchases.</p>
-                <span class="action-arrow">Buy →</span>
-            </a>
-            <a class="action-card featured" href="/reorder_subscription#subscription-form" data-code="17">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Monthly</span>
-                </div>
-                <h3>Monthly Medicine Subscription</h3>
-                <p>Set monthly refill plans for routine medicines.</p>
-                <span class="action-arrow">Plan →</span>
-            </a>
-            <a class="action-card" href="/reorder_subscription#subscription-form" data-code="18">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Auto</span>
-                </div>
-                <h3>Auto Reorder</h3>
-                <p>Turn on automatic reorder preference for active subscriptions.</p>
-                <span class="action-arrow">Enable →</span>
-            </a>
-            <a class="action-card" href="/reorder_subscription" data-code="19">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Refill</span>
-                </div>
-                <h3>Refill Reminder</h3>
-                <p>Track upcoming refill dates before medicine runs out.</p>
-                <span class="action-arrow">Track →</span>
-            </a>
-            <a class="action-card" href="/reorder_subscription" data-code="20">
-                <div class="action-top">
-                    <div class="action-icon"><img src="{{ url_for('static', filename='images/profile-tool-icon-ai.png') }}" alt=""></div>
-                    <span class="tool-chip">Rx</span>
-                </div>
-                <h3>Repeat Prescription Orders</h3>
-                <p>Repeat approved prescription medicine orders from one dashboard.</p>
-                <span class="action-arrow">Repeat →</span>
-            </a>
+        <section class="secure-strip">
+            <span class="secure-badge"><img class="ai-icon" src="{{ url_for('static', filename='images/rewards_ai/secure-badge.png') }}" alt=""></span>
+            <div>
+                <h2>Your Account is Secure & Verified</h2>
+                <p>We use pharmacy-grade security signals to protect personal information and keep repeat ordering smooth.</p>
+            </div>
+            <div class="secure-features">
+                <div class="secure-feature"><span class="tiny-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><div><b>256-bit Encryption</b><span>Secure data protection</span></div></div>
+                <div class="secure-feature"><span class="tiny-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="m17 8-5-5-5 5"/><path d="m7 16 5 5 5-5"/></svg></span><div><b>Regular Monitoring</b><span>24/7 account monitoring</span></div></div>
+                <div class="secure-feature"><span class="tiny-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><b>Privacy Protected</b><span>Your privacy is our priority</span></div></div>
+            </div>
         </section>
-    </main>
-</div>
+    </section>
+</main>
+
 {% include "partials/site_header_script.html" %}
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
