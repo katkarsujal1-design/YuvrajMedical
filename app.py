@@ -246,6 +246,23 @@ def ensure_delivery_feature_schema():
     app.config["DELIVERY_FEATURE_SCHEMA_READY"] = True
 
 
+def recommended_purchase_price(selling_price, category=""):
+    try:
+        price = max(0, float(selling_price or 0))
+    except (TypeError, ValueError):
+        return 0
+    category_key = (category or "").strip().lower()
+    if any(term in category_key for term in ("supplement", "vitamin", "hair", "personal", "cosmetic")):
+        cost_ratio = 1.12
+    elif any(term in category_key for term in ("device", "equipment", "thermometer", "first aid")):
+        cost_ratio = 1.10
+    elif any(term in category_key for term in ("injection", "iv fluid", "anti-tb", "antiviral")):
+        cost_ratio = 1.08
+    else:
+        cost_ratio = 1.10
+    return round(price * cost_ratio, 2)
+
+
 def ensure_inventory_management_schema():
     if app.config.get("INVENTORY_MANAGEMENT_SCHEMA_READY"):
         return
@@ -275,6 +292,19 @@ def ensure_inventory_management_schema():
             INDEX idx_stock_medicine (medicine_id),
             INDEX idx_stock_created (created_at)
         )
+    """)
+    cursor.execute("""
+        UPDATE medicines
+        SET purchase_price = ROUND(
+            price * CASE
+                WHEN LOWER(COALESCE(category, '')) REGEXP 'supplement|vitamin|hair|personal|cosmetic' THEN 1.12
+                WHEN LOWER(COALESCE(category, '')) REGEXP 'device|equipment|thermometer|first aid' THEN 1.10
+                WHEN LOWER(COALESCE(category, '')) REGEXP 'injection|iv fluid|anti-tb|antiviral' THEN 1.08
+                ELSE 1.10
+            END,
+            2
+        )
+        WHERE purchase_price IS NULL OR purchase_price <= price
     """)
     db.commit()
     cursor.close()
@@ -1395,14 +1425,56 @@ def brand_slug_for(value):
     return re.sub(r"[^a-z0-9]+", "-", (value or "").lower()).strip("-")
 
 
+_MEDICINE_IMAGE_INDEX = None
+
+
+def _medicine_image_index():
+    global _MEDICINE_IMAGE_INDEX
+    if _MEDICINE_IMAGE_INDEX is None:
+        image_root = os.path.join(app.static_folder, "images")
+        index = {}
+        for filename in os.listdir(image_root):
+            file_path = os.path.join(image_root, filename)
+            if not os.path.isfile(file_path):
+                continue
+            stem, extension = os.path.splitext(filename)
+            if extension.lower() not in {".jpg", ".jpeg", ".png", ".webp"}:
+                continue
+            normalized = re.sub(r"[^a-z0-9]+", "", stem.lower())
+            if normalized:
+                index.setdefault(normalized, filename)
+        _MEDICINE_IMAGE_INDEX = index
+    return _MEDICINE_IMAGE_INDEX
+
+
 def medicine_image_url(medicine):
-    image = (medicine or {}).get("image") or ""
-    if image.startswith("/static/"):
-        return image
-    if image and image != "default.jpg":
-        return flask.url_for("static", filename=f"images/{image}")
-    name = ((medicine or {}).get("name") or "").replace("/", "-").replace("%", "").replace(".", "")
-    return flask.url_for("static", filename=f"images/{name}.jpeg")
+    image = ((medicine or {}).get("image") or "").strip()
+    fallback = flask.url_for("static", filename="images/medicine-product-fallback-premium.png")
+
+    if image and image.lower() != "default.jpg":
+        static_name = image.removeprefix("/static/").replace("\\", "/")
+        if not static_name.startswith("images/"):
+            static_name = f"images/{static_name}"
+        local_path = os.path.join(app.static_folder, *static_name.split("/"))
+        if os.path.isfile(local_path):
+            return flask.url_for("static", filename=static_name)
+
+    name = ((medicine or {}).get("name") or "").strip()
+    normalized_name = re.sub(r"[^a-z0-9]+", "", name.lower())
+    if not normalized_name or normalized_name.startswith("unknownmedicine"):
+        return fallback
+
+    image_index = _medicine_image_index()
+    filename = image_index.get(normalized_name)
+    if not filename:
+        closest = max(
+            image_index,
+            key=lambda candidate: fuzz.ratio(normalized_name, candidate),
+            default="",
+        )
+        if closest and fuzz.ratio(normalized_name, closest) >= 88:
+            filename = image_index[closest]
+    return flask.url_for("static", filename=f"images/{filename}") if filename else fallback
 
 
 def disease_category_image_url(disease):
@@ -6179,6 +6251,8 @@ def owner_dashboard():
     """)
     medicines = cursor.fetchall()
     cursor.close()
+    for medicine in medicines:
+        medicine["image_url"] = medicine_image_url(medicine)
 
 
     cursor =db.cursor(dictionary=True)
@@ -6418,6 +6492,8 @@ def owner_inventory_update(medicine_id):
     except (TypeError, ValueError):
         flash("Price, stock, and alert threshold must be valid numbers.")
         return flask.redirect("/owner_dashboard#inventory")
+    if purchase_price <= price:
+        purchase_price = recommended_purchase_price(price, data.get("category"))
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -6604,6 +6680,7 @@ def add_medicine():
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    ensure_inventory_management_schema()
     db = get_db()
 
     try:
@@ -6612,6 +6689,7 @@ def add_medicine():
         department, prescription_required = classify_medicine(name)
         category = normalize_category(flask.request.form.get("category"))
         price = flask.request.form.get("price")
+        purchase_price = recommended_purchase_price(price, category)
         stock = flask.request.form.get("stock")
         expiry = flask.request.form.get("expiry")
         barcode_number = flask.request.form.get("barcode")
@@ -6645,6 +6723,7 @@ def add_medicine():
                 category,
                 department,
                 price,
+                purchase_price,
                 prescription_required,
                 stock,
                 expiry_date,
@@ -6652,7 +6731,7 @@ def add_medicine():
                 barcode
             )
 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 
         """, (
 
@@ -6660,6 +6739,7 @@ def add_medicine():
             category,
             department,
             price,
+            purchase_price,
             prescription_required,
             stock,
             expiry,
@@ -6684,12 +6764,13 @@ def add_medicine():
 #------------bulk upload medicine-----------
 @app.route("/bulk_upload", methods=["POST"])
 def bulk_upload():
-    db = get_db()
     if "user" not in flask.session:
         return flask.redirect("/login")
 
     if flask.session["user"]["role"] not in ["owner","staff"]:
        return flask.redirect("/")
+    ensure_inventory_management_schema()
+    db = get_db()
     try:
         file = flask.request.files.get("file")
 
@@ -6720,6 +6801,7 @@ def bulk_upload():
                 stock = 0
 
             category = normalize_category(row.get("category", ""))
+            purchase_price = recommended_purchase_price(price, category)
             expiry = str(row.get("expiry", "")).strip()
             department, prescription_required = classify_medicine(name)
 
@@ -6740,9 +6822,9 @@ def bulk_upload():
             # ---------------- INSERT ----------------
             cursor = db.cursor(dictionary=True)
             cursor.execute("""
-                INSERT INTO medicines (name, price, stock, category, department, prescription_required, expiry_date)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (name, price, stock, category, department, prescription_required, expiry))
+                INSERT INTO medicines (name, price, purchase_price, stock, category, department, prescription_required, expiry_date)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (name, price, purchase_price, stock, category, department, prescription_required, expiry))
 
             inserted += 1
 
@@ -6765,16 +6847,19 @@ def edit_medicine(id):
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    category = normalize_category(data.get("category"))
+    purchase_price = recommended_purchase_price(data.get("price"), category)
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         UPDATE medicines
-        SET name=%s, price=%s, stock=%s, category=%s, expiry_date=%s
+        SET name=%s, price=%s, purchase_price=%s, stock=%s, category=%s, expiry_date=%s
         WHERE id=%s
     """, (
         data["name"],
         data["price"],
+        purchase_price,
         data["stock"],
-        normalize_category(data.get("category")),
+        category,
         data["expiry"],
         id
     ))

@@ -2861,8 +2861,40 @@
         @media(max-width:760px){.orders-toolbar{align-items:stretch}.orders-search{width:100%}.orders-filter{flex:1}.order-actions{justify-content:flex-start}.enterprise-table td:last-child{min-width:220px;}}
 
         /* ================= INVENTORY MANAGEMENT ================= */
+        #inventory{
+            border-color:rgba(148,163,184,.14);
+            background:
+                radial-gradient(circle at top left,rgba(59,130,246,.12),transparent 34%),
+                linear-gradient(145deg,#1e293b 0%,#1a202c 100%);
+            box-shadow:0 28px 76px rgba(2,6,23,.28);
+        }
+        #inventory::before{display:none;}
+        #inventory .section-heading h2{color:#f8fafc;}
+        #inventory .section-heading p{color:#94a3b8;}
+        #inventory .glass-card,
+        #inventory .metric-card{
+            border-color:rgba(148,163,184,.15);
+            background:linear-gradient(145deg,rgba(51,65,85,.92) 0%,rgba(30,41,59,.88) 100%);
+            box-shadow:0 20px 48px rgba(2,6,23,.28);
+        }
+        #inventory .glass-card:hover,
+        #inventory .metric-card:hover{border-color:rgba(203,213,225,.24);box-shadow:0 28px 64px rgba(2,6,23,.36);}
+        #inventory .metric-card h3,
+        #inventory .table-header h2{color:#f8fafc;}
+        #inventory .metric-value{color:#fff;}
+        #inventory .metric-note,
+        #inventory .table-header p{color:#94a3b8;}
+        #inventory .enterprise-table th{color:#cbd5e1;background:rgba(15,23,42,.72);}
+        #inventory .enterprise-table td{color:#e2e8f0;background:rgba(30,41,59,.78);border-color:rgba(148,163,184,.14);}
+        #inventory .enterprise-table tr:hover td{color:#f8fafc;background:#334155;border-color:rgba(96,165,250,.34);box-shadow:0 10px 24px rgba(2,6,23,.22);}
+        #inventory .table-header{border-color:rgba(148,163,184,.15);}
+        #inventory .table-btn{color:#cbd5e1;background:rgba(15,23,42,.34);border-color:rgba(148,163,184,.18);}
+        #inventory .table-btn:hover{color:#fff;background:rgba(37,99,235,.34);border-color:rgba(96,165,250,.4);}
+        #inventory .table-btn[disabled]{color:#64748b;background:rgba(15,23,42,.22);opacity:.65;cursor:not-allowed;}
         .inventory-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-        .inventory-toolbar input,.inventory-toolbar select{min-height:38px;padding:8px 11px;color:#334155;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-size:13px;}
+        .inventory-toolbar input,.inventory-toolbar select{min-height:38px;padding:8px 11px;color:#e2e8f0;background:rgba(15,23,42,.6);border:1px solid rgba(148,163,184,.22);border-radius:10px;font:inherit;font-size:13px;}
+        .inventory-toolbar input::placeholder{color:#94a3b8;}
+        .inventory-toolbar option{color:#e2e8f0;background:#1e293b;}
         .inventory-search{width:min(270px,100%);}
         .inventory-actions{display:flex;gap:6px;flex-wrap:wrap;white-space:nowrap;}
         .inventory-actions .table-btn{padding:7px 9px;}
@@ -2876,6 +2908,21 @@
         .inventory-form label{display:grid;gap:6px;color:#475569;font-size:12px;font-weight:850;}
         .inventory-form input,.inventory-form select{min-height:42px;padding:9px 11px;color:#0f172a;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;font:inherit;}
         .inventory-history-note{padding:10px 12px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:12px;font-weight:700;}
+        .inventory-product{display:flex;align-items:center;gap:10px;min-width:190px;cursor:pointer;}
+        .inventory-product img{width:42px;height:42px;object-fit:contain;padding:4px;background:#fff;border:1px solid #e2e8f0;border-radius:11px;box-shadow:0 4px 12px rgba(15,23,42,.08);}
+        .inventory-product strong{display:block;color:#f8fafc}.inventory-product small{display:block;margin-top:2px;color:#94a3b8;}
+        .inventory-attention{color:#b45309!important;background:#fffbeb!important;border-color:#fcd34d!important;}
+        .inventory-attention.active{color:#fff!important;background:#d97706!important;border-color:#d97706!important;}
+        .inventory-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 4px 0;color:#94a3b8;font-size:13px;font-weight:750;}
+        .inventory-pagination{display:flex;align-items:center;gap:6px}.inventory-pagination button{min-width:36px}.inventory-pagination button[disabled]{opacity:.45;cursor:not-allowed;}
+        .inventory-page-number{padding:0 7px;color:#cbd5e1;font-weight:900;}
+        .inventory-drawer-backdrop{position:fixed;inset:0;z-index:1190;background:rgba(15,23,42,.45);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.22s;}
+        .inventory-detail-drawer{position:fixed;z-index:1200;top:0;right:0;width:min(430px,100%);height:100%;padding:26px;overflow:auto;background:linear-gradient(180deg,#fff,#f8fafc);box-shadow:-24px 0 70px rgba(15,23,42,.2);transform:translateX(105%);transition:transform .25s ease;}
+        .inventory-detail-open .inventory-drawer-backdrop{opacity:1;visibility:visible}.inventory-detail-open .inventory-detail-drawer{transform:translateX(0);}
+        .inventory-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}.inventory-detail-hero{display:flex;align-items:center;gap:14px;margin:22px 0;padding:18px;background:#fff;border:1px solid #e2e8f0;border-radius:18px;}
+        .inventory-detail-hero img{width:74px;height:74px;object-fit:contain}.inventory-detail-hero h3{margin:0 0 5px;color:#0f172a}.inventory-detail-hero p{margin:0;color:#64748b;}
+        .inventory-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.inventory-detail-card{padding:14px;background:#fff;border:1px solid #e2e8f0;border-radius:13px}.inventory-detail-card span{display:block;color:#94a3b8;font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.inventory-detail-card strong{display:block;margin-top:5px;color:#0f172a;font-size:15px;}
+        .inventory-detail-actions{display:flex;gap:8px;margin-top:18px}.inventory-detail-actions button{flex:1;}
         @media(max-width:680px){.inventory-form-grid{grid-template-columns:1fr}.inventory-toolbar{align-items:stretch}.inventory-search{width:100%}}
 
         @keyframes rise{
@@ -3263,13 +3310,13 @@
                 </div>
 
                 <div class="glass-card table-card" style="margin-top:18px">
-                    <div class="table-header"><div><h2>Inventory Table</h2><p>Direct catalog and stock management</p></div><div class="inventory-toolbar"><input class="inventory-search" id="inventorySearch" type="search" placeholder="Search medicine, barcode, supplier…"><select id="inventoryCategory"><option value="">All categories</option>{% for category in medicines|map(attribute='category')|unique|sort %}<option value="{{ category|e }}">{{ category }}</option>{% endfor %}</select><select id="inventoryStatus"><option value="">All stock states</option><option value="available">Available</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="expiring">Near expiry</option><option value="expired">Expired</option></select><button class="table-btn" id="exportInventory" type="button">Export CSV</button></div></div>
+                    <div class="table-header"><div><h2>Inventory Table</h2><p>Fast stock control with clear alerts and product details.</p></div><div class="inventory-toolbar"><input class="inventory-search" id="inventorySearch" type="search" placeholder="Search medicine, barcode, supplier…"><select id="inventoryCategory" aria-label="Filter by medicine category"><option value="">All categories</option></select><select id="inventoryStatus"><option value="">All stock states</option><option value="available">Available</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="expiring">Near expiry</option><option value="expired">Expired</option></select><select id="inventorySort" aria-label="Sort inventory"><option value="recent">Newest first</option><option value="name">Name A–Z</option><option value="stock-asc">Lowest stock</option><option value="expiry">Earliest expiry</option><option value="price-desc">Highest price</option></select><button class="table-btn inventory-attention" id="inventoryAttention" type="button">Needs attention</button><button class="table-btn" id="exportInventory" type="button">Export CSV</button></div></div>
                     <div class="table-scroll">
                         <table class="enterprise-table" id="inventoryTable">
                             <tr><th>Medicine</th><th>Supplier</th><th>Category</th><th>Batch / Barcode</th><th>Expiry</th><th>Quantity</th><th>Cost</th><th>Selling Price</th><th>Status</th><th>Actions</th></tr>
                             {% for m in medicines %}
-                            <tr class="inventory-row" data-id="{{ m['id'] }}" data-name="{{ m['name']|e }}" data-supplier="{{ (m.get('supplier') or '')|e }}" data-category="{{ (m['category'] or '')|e }}" data-batch="{{ (m.get('batch_number') or '')|e }}" data-barcode="{{ (m.get('barcode') or '')|e }}" data-expiry="{{ m['expiry_date'] or '' }}" data-stock="{{ m['stock'] }}" data-threshold="{{ m.get('low_stock_threshold') or 10 }}" data-price="{{ m['price'] }}" data-purchase="{{ m.get('purchase_price') or 0 }}">
-                                <td>{{ m["name"] }}</td>
+                            <tr class="inventory-row" data-id="{{ m['id'] }}" data-name="{{ m['name']|e }}" data-image="{{ m.get('image_url') or '' }}" data-supplier="{{ (m.get('supplier') or '')|e }}" data-category="{{ (m['category'] or '')|e }}" data-batch="{{ (m.get('batch_number') or '')|e }}" data-barcode="{{ (m.get('barcode') or '')|e }}" data-expiry="{{ m['expiry_date'] or '' }}" data-stock="{{ m['stock'] }}" data-threshold="{{ m.get('low_stock_threshold') or 10 }}" data-price="{{ m['price'] }}" data-purchase="{{ m.get('purchase_price') or 0 }}">
+                                <td><div class="inventory-product inventory-view" role="button" tabindex="0"><img src="{{ m.get('image_url') or url_for('static', filename='images/medicine-product-fallback-premium.png') }}" alt="{{ m['name'] }}" onerror="this.onerror=null;this.src='/static/images/medicine-product-fallback-premium.png';"><div><strong>{{ m["name"] }}</strong><small>View details</small></div></div></td>
                                 <td>{{ m.get("supplier") or "Not set" }}</td>
                                 <td>{{ m["category"] }}</td>
                                 <td>{{ m.get("batch_number") or "No batch" }}<br><small>{{ m.get("barcode") or "No barcode" }}</small></td>
@@ -3278,12 +3325,13 @@
                                 <td>&#8377;{{ m.get("purchase_price") or "—" }}</td>
                                 <td>&#8377;{{ m["price"] }}</td>
                                 <td><span class="pill inventory-stock-pill {% if m['stock'] == 0 %}status-danger{% elif m['stock'] <= (m.get('low_stock_threshold') or 10) %}status-warn{% else %}status-ok{% endif %}">{% if m["stock"] == 0 %}Out{% elif m['stock'] <= (m.get('low_stock_threshold') or 10) %}Low{% else %}Available{% endif %}</span></td>
-                                <td><div class="inventory-actions"><button class="table-btn inventory-edit" type="button">Edit</button><button class="table-btn inventory-adjust" type="button">Restock</button><form method="POST" action="/owner/inventory/{{ m['id'] }}/delete" onsubmit="return confirm('Delete {{ m['name']|e }}? This cannot be undone.');"><button class="table-btn" type="submit">Delete</button></form></div></td>
+                                <td><div class="inventory-actions"><button class="table-btn inventory-view" type="button">View</button><button class="table-btn inventory-edit" type="button">Edit</button><button class="table-btn inventory-adjust" type="button">Restock</button><form method="POST" action="/owner/inventory/{{ m['id'] }}/delete" onsubmit="return confirm('Delete {{ m['name']|e }}? This cannot be undone.');"><button class="table-btn" type="submit">Delete</button></form></div></td>
                             </tr>
                             {% endfor %}
                             <tr id="inventoryNoMatch" hidden><td colspan="10">No medicines match the selected filters.</td></tr>
                         </table>
                     </div>
+                    <div class="inventory-footer"><span id="inventoryCount">Showing medicines</span><div class="inventory-pagination"><button class="table-btn" id="inventoryPrev" type="button">Previous</button><span class="inventory-page-number" id="inventoryPage">1 / 1</span><button class="table-btn" id="inventoryNext" type="button">Next</button></div></div>
                 </div>
                 <div class="glass-card table-card" style="margin-top:18px">
                     <div class="table-header"><div><h2>Stock Movement History</h2><p>Latest restocks, reductions, and manual corrections</p></div></div>
@@ -3293,6 +3341,22 @@
 
             <dialog class="inventory-dialog" id="inventoryEditDialog"><form class="inventory-form" id="inventoryEditForm" method="POST"><div><h3 id="inventoryEditTitle">Edit medicine</h3><p>Update catalog, supplier, pricing, expiry, barcode, and alert settings.</p></div><div class="inventory-form-grid"><label>Medicine name<input id="invName" name="name" required></label><label>Category<input id="invCategory" name="category" required></label><label>Supplier<input id="invSupplier" name="supplier"></label><label>Batch number<input id="invBatch" name="batch_number"></label><label>Barcode<input id="invBarcode" name="barcode"></label><label>Expiry date<input id="invExpiry" name="expiry" type="date"></label><label>Current stock<input id="invStock" name="stock" type="number" min="0" required></label><label>Low-stock alert at<input id="invThreshold" name="low_stock_threshold" type="number" min="0" required></label><label>Purchase price<input id="invPurchase" name="purchase_price" type="number" min="0" step="0.01"></label><label>Selling price<input id="invPrice" name="price" type="number" min="0" step="0.01" required></label></div><div class="order-dialog-actions"><button class="table-btn inventory-cancel" type="button">Cancel</button><button class="primary-btn" type="submit">Save medicine</button></div></form></dialog>
             <dialog class="inventory-dialog" id="inventoryAdjustDialog"><form class="inventory-form" id="inventoryAdjustForm" method="POST"><div><h3 id="inventoryAdjustTitle">Adjust stock</h3><p>Use a positive quantity to restock or a negative quantity to record damage, expiry, or correction.</p></div><label>Quantity change<input id="invAdjustment" name="quantity" type="number" required placeholder="Example: 25 or -3"></label><label>Reason<input name="reason" required placeholder="Supplier delivery, expired stock, correction…"></label><div class="inventory-history-note">Every adjustment is saved in the stock movement history.</div><div class="order-dialog-actions"><button class="table-btn inventory-cancel" type="button">Cancel</button><button class="primary-btn" type="submit">Save adjustment</button></div></form></dialog>
+            <div class="inventory-drawer-backdrop" id="inventoryDrawerBackdrop"></div>
+            <aside class="inventory-detail-drawer" id="inventoryDrawer" aria-hidden="true" aria-labelledby="inventoryDrawerName">
+                <div class="inventory-detail-head"><div><div class="drawer-kicker">Medicine inventory</div><h2>Product details</h2></div><button class="drawer-close" id="inventoryDrawerClose" type="button" aria-label="Close medicine details">×</button></div>
+                <div class="inventory-detail-hero"><img id="inventoryDrawerImage" alt=""><div><h3 id="inventoryDrawerName">Medicine</h3><p id="inventoryDrawerCategory">Category</p></div></div>
+                <div class="inventory-detail-grid">
+                    <div class="inventory-detail-card"><span>Stock status</span><strong id="inventoryDrawerStatus">—</strong></div>
+                    <div class="inventory-detail-card"><span>Quantity</span><strong id="inventoryDrawerStock">—</strong></div>
+                    <div class="inventory-detail-card"><span>Selling price</span><strong id="inventoryDrawerPrice">—</strong></div>
+                    <div class="inventory-detail-card"><span>Margin / unit</span><strong id="inventoryDrawerProfit">—</strong></div>
+                    <div class="inventory-detail-card"><span>Expiry</span><strong id="inventoryDrawerExpiry">—</strong></div>
+                    <div class="inventory-detail-card"><span>Supplier</span><strong id="inventoryDrawerSupplier">—</strong></div>
+                    <div class="inventory-detail-card"><span>Batch</span><strong id="inventoryDrawerBatch">—</strong></div>
+                    <div class="inventory-detail-card"><span>Barcode</span><strong id="inventoryDrawerBarcode">—</strong></div>
+                </div>
+                <div class="inventory-detail-actions"><button class="table-btn" id="inventoryDrawerEdit" type="button">Edit medicine</button><button class="primary-btn" id="inventoryDrawerRestock" type="button">Restock</button></div>
+            </aside>
 
             <section class="dashboard-section" id="prescriptions">
                 <div class="section-heading"><div><h2>Prescription Verification</h2><p>Review queue for prescription based orders.</p></div><a class="primary-btn" href="/staff_prescriptions">Open Queue</a></div>
@@ -3756,11 +3820,42 @@
         const search = document.getElementById("inventorySearch");
         const category = document.getElementById("inventoryCategory");
         const status = document.getElementById("inventoryStatus");
+        const sort = document.getElementById("inventorySort");
+        const attention = document.getElementById("inventoryAttention");
+        const count = document.getElementById("inventoryCount");
+        const pageLabel = document.getElementById("inventoryPage");
+        const previousButton = document.getElementById("inventoryPrev");
+        const nextButton = document.getElementById("inventoryNext");
         const noMatch = document.getElementById("inventoryNoMatch");
         const editDialog = document.getElementById("inventoryEditDialog");
         const adjustDialog = document.getElementById("inventoryAdjustDialog");
         const editForm = document.getElementById("inventoryEditForm");
         const adjustForm = document.getElementById("inventoryAdjustForm");
+        const drawer = document.getElementById("inventoryDrawer");
+        const drawerBackdrop = document.getElementById("inventoryDrawerBackdrop");
+        const pageSize = 5;
+        let currentPage = 1;
+        let attentionOnly = false;
+        let activeRow = null;
+        const categoryKey = value => String(value || "").trim().replace(/\s+/g, " ").toLocaleLowerCase();
+
+        const categoryGroups = new Map();
+        rows.forEach(row => {
+            const label = String(row.dataset.category || "General").trim() || "General";
+            const key = categoryKey(label);
+            const group = categoryGroups.get(key) || {label, count: 0};
+            group.count += 1;
+            categoryGroups.set(key, group);
+            row.dataset.categoryKey = key;
+        });
+        [...categoryGroups.entries()]
+            .sort(([, left], [, right]) => left.label.localeCompare(right.label))
+            .forEach(([key, group]) => {
+                const option = document.createElement("option");
+                option.value = key;
+                option.textContent = `${group.label} (${group.count})`;
+                category.appendChild(option);
+            });
 
         const stateFor = row => {
             const stock = Number(row.dataset.stock || 0);
@@ -3777,22 +3872,102 @@
         rows.forEach(row => {
             row.dataset.state = stateFor(row);
             const expiryCell = row.querySelector(".inventory-expiry");
+            const stockPill = row.querySelector(".inventory-stock-pill");
             if(row.dataset.state === "expired") expiryCell.classList.add("inventory-expired");
             if(row.dataset.state === "expiring") expiryCell.classList.add("inventory-expiring");
+            const stateLabels = {available:"Available", low:"Low stock", out:"Out of stock", expiring:"Near expiry", expired:"Expired"};
+            stockPill.textContent = stateLabels[row.dataset.state];
+            stockPill.classList.remove("status-ok", "status-warn", "status-danger");
+            stockPill.classList.add(row.dataset.state === "available" ? "status-ok" : (row.dataset.state === "low" || row.dataset.state === "expiring" ? "status-warn" : "status-danger"));
+        });
+        const expiryValue = row => row.dataset.expiry ? new Date(`${row.dataset.expiry}T00:00:00`).getTime() : Number.MAX_SAFE_INTEGER;
+        const sortedRows = matches => [...matches].sort((a, b) => {
+            if(sort.value === "name") return a.dataset.name.localeCompare(b.dataset.name);
+            if(sort.value === "stock-asc") return Number(a.dataset.stock) - Number(b.dataset.stock);
+            if(sort.value === "expiry") return expiryValue(a) - expiryValue(b);
+            if(sort.value === "price-desc") return Number(b.dataset.price) - Number(a.dataset.price);
+            return Number(b.dataset.id) - Number(a.dataset.id);
         });
         const filterRows = () => {
             const query = search.value.trim().toLowerCase();
-            rows.forEach(row => {
+            const matches = sortedRows(rows.filter(row => {
                 const haystack = `${row.dataset.name} ${row.dataset.supplier} ${row.dataset.category} ${row.dataset.batch} ${row.dataset.barcode}`.toLowerCase();
-                row.hidden = Boolean((query && !haystack.includes(query)) || (category.value && row.dataset.category !== category.value) || (status.value && row.dataset.state !== status.value));
-            });
-            noMatch.hidden = rows.some(row => !row.hidden);
+                const needsAttention = ["low", "out", "expiring", "expired"].includes(row.dataset.state);
+                const match = !((query && !haystack.includes(query)) || (category.value && row.dataset.categoryKey !== category.value) || (status.value && row.dataset.state !== status.value) || (attentionOnly && !needsAttention));
+                row.dataset.matchesFilter = match ? "true" : "false";
+                return match;
+            }));
+            const pageTotal = Math.max(1, Math.ceil(matches.length / pageSize));
+            currentPage = Math.min(currentPage, pageTotal);
+            const start = (currentPage - 1) * pageSize;
+            const visible = matches.slice(start, start + pageSize);
+            matches.forEach(row => row.parentElement.insertBefore(row, noMatch));
+            rows.forEach(row => row.hidden = !visible.includes(row));
+            noMatch.hidden = matches.length > 0;
+            count.textContent = matches.length
+                ? `Showing ${start + 1}–${Math.min(start + pageSize, matches.length)} of ${matches.length} medicines`
+                : "No medicines found";
+            pageLabel.textContent = `${currentPage} / ${pageTotal}`;
+            previousButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === pageTotal;
         };
-        search.addEventListener("input", filterRows);
-        category.addEventListener("change", filterRows);
-        status.addEventListener("change", filterRows);
+        const resetAndFilter = () => { currentPage = 1; filterRows(); };
+        search.addEventListener("input", resetAndFilter);
+        category.addEventListener("change", () => {
+            search.value = "";
+            status.value = "";
+            attentionOnly = false;
+            attention.classList.remove("active");
+            attention.setAttribute("aria-pressed", "false");
+            resetAndFilter();
+        });
+        status.addEventListener("change", resetAndFilter);
+        sort.addEventListener("change", resetAndFilter);
+        attention.addEventListener("click", () => {
+            attentionOnly = !attentionOnly;
+            attention.classList.toggle("active", attentionOnly);
+            attention.setAttribute("aria-pressed", String(attentionOnly));
+            resetAndFilter();
+        });
+        previousButton.addEventListener("click", () => { if(currentPage > 1){ currentPage--; filterRows(); } });
+        nextButton.addEventListener("click", () => { currentPage++; filterRows(); });
+        filterRows();
+
+        const closeInventoryDrawer = () => {
+            document.body.classList.remove("inventory-detail-open");
+            drawer.setAttribute("aria-hidden", "true");
+        };
+        const openInventoryDrawer = row => {
+            activeRow = row;
+            const purchase = Number(row.dataset.purchase || 0);
+            const price = Number(row.dataset.price || 0);
+            document.getElementById("inventoryDrawerImage").src = row.dataset.image || "/static/images/medicine-product-fallback-premium.png";
+            document.getElementById("inventoryDrawerName").textContent = row.dataset.name;
+            document.getElementById("inventoryDrawerCategory").textContent = row.dataset.category || "General";
+            document.getElementById("inventoryDrawerStatus").textContent = row.dataset.state.replace("-", " ").replace(/\b\w/g, letter => letter.toUpperCase());
+            document.getElementById("inventoryDrawerStock").textContent = `${row.dataset.stock} packs · alert at ${row.dataset.threshold}`;
+            document.getElementById("inventoryDrawerPrice").textContent = `₹${price.toFixed(2)}`;
+            const margin = price - purchase;
+            document.getElementById("inventoryDrawerProfit").textContent = purchase ? `${margin < 0 ? "−" : ""}₹${Math.abs(margin).toFixed(2)}` : "Cost not set";
+            document.getElementById("inventoryDrawerExpiry").textContent = row.dataset.expiry || "Not set";
+            document.getElementById("inventoryDrawerSupplier").textContent = row.dataset.supplier || "Not set";
+            document.getElementById("inventoryDrawerBatch").textContent = row.dataset.batch || "Not set";
+            document.getElementById("inventoryDrawerBarcode").textContent = row.dataset.barcode || "Not set";
+            document.body.classList.add("inventory-detail-open");
+            drawer.setAttribute("aria-hidden", "false");
+        };
+        document.getElementById("inventoryDrawerClose").addEventListener("click", closeInventoryDrawer);
+        drawerBackdrop.addEventListener("click", closeInventoryDrawer);
+        document.getElementById("inventoryDrawerEdit").addEventListener("click", () => { closeInventoryDrawer(); activeRow?.querySelector(".inventory-edit").click(); });
+        document.getElementById("inventoryDrawerRestock").addEventListener("click", () => { closeInventoryDrawer(); activeRow?.querySelector(".inventory-adjust").click(); });
 
         rows.forEach(row => {
+            row.querySelectorAll(".inventory-view").forEach(button => {
+                button.addEventListener("click", () => openInventoryDrawer(row));
+                button.addEventListener("keydown", event => {
+                    if(event.key === "Enter" || event.key === " "){ event.preventDefault(); openInventoryDrawer(row); }
+                });
+            });
             row.querySelector(".inventory-edit").addEventListener("click", () => {
                 editForm.action = `/owner/inventory/${row.dataset.id}/update`;
                 document.getElementById("inventoryEditTitle").textContent = `Edit ${row.dataset.name}`;
@@ -3817,11 +3992,12 @@
             });
         });
         document.querySelectorAll(".inventory-cancel").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
+        document.addEventListener("keydown", event => { if(event.key === "Escape") closeInventoryDrawer(); });
 
         document.getElementById("exportInventory").addEventListener("click", () => {
             const escapeCsv = value => `"${String(value ?? "").replaceAll('"', '""')}"`;
             const records = [["ID","Medicine","Supplier","Category","Batch","Barcode","Expiry","Stock","Threshold","Purchase Price","Selling Price","State"]];
-            rows.filter(row => !row.hidden).forEach(row => records.push([row.dataset.id,row.dataset.name,row.dataset.supplier,row.dataset.category,row.dataset.batch,row.dataset.barcode,row.dataset.expiry,row.dataset.stock,row.dataset.threshold,row.dataset.purchase,row.dataset.price,row.dataset.state]));
+            rows.filter(row => row.dataset.matchesFilter === "true").forEach(row => records.push([row.dataset.id,row.dataset.name,row.dataset.supplier,row.dataset.category,row.dataset.batch,row.dataset.barcode,row.dataset.expiry,row.dataset.stock,row.dataset.threshold,row.dataset.purchase,row.dataset.price,row.dataset.state]));
             const url = URL.createObjectURL(new Blob([records.map(record => record.map(escapeCsv).join(",")).join("\r\n")], {type:"text/csv;charset=utf-8"}));
             const link = document.createElement("a"); link.href = url; link.download = `inventory-${new Date().toISOString().slice(0,10)}.csv`; link.click(); URL.revokeObjectURL(url);
         });
