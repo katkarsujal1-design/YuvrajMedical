@@ -2842,11 +2842,41 @@
         .order-update-form h3{margin:0;color:#0f172a;font-size:21px;}
         .order-update-form p{margin:0;color:#64748b;font-size:13px;}
         .order-update-form label{display:grid;gap:6px;color:#475569;font-size:12px;font-weight:850;}
+        .order-update-form label[hidden]{display:none;}
         .order-update-form select,.order-update-form input{min-height:42px;padding:9px 11px;color:#0f172a;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;font:inherit;}
+        .order-status-picker{position:relative;}
+        .order-status-select{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}
+        .order-status-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:42px;padding:9px 11px;color:#0f172a;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-weight:700;text-align:left;cursor:pointer;}
+        .order-status-trigger::after{content:"";width:8px;height:8px;margin:0 4px 4px 14px;border-right:2px solid #64748b;border-bottom:2px solid #64748b;transform:rotate(45deg);transition:transform .18s ease;}
+        .order-status-picker.open .order-status-trigger{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+        .order-status-picker.open .order-status-trigger::after{margin-bottom:-4px;transform:rotate(225deg);}
+        .order-status-menu{position:absolute;z-index:10;top:calc(100% + 6px);left:0;right:0;display:grid;max-height:230px;padding:6px;overflow-y:auto;background:#fff;border:1px solid #cbd5e1;border-radius:11px;box-shadow:0 16px 34px rgba(15,23,42,.2);opacity:0;visibility:hidden;transform:translateY(-7px);transition:opacity .16s ease,transform .16s ease,visibility .16s;}
+        .order-status-picker.open .order-status-menu{opacity:1;visibility:visible;transform:translateY(0);}
+        .order-status-option{padding:9px 10px;color:#334155;background:transparent;border:0;border-radius:7px;font:inherit;font-weight:700;text-align:left;cursor:pointer;}
+        .order-status-option:hover,.order-status-option:focus-visible{color:#1d4ed8;background:#eff6ff;outline:0;}
+        .order-status-option[aria-selected="true"]{color:#fff;background:#2563eb;}
         .order-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;}
         .orders-flash{margin-bottom:14px;padding:11px 14px;color:#166534;background:#dcfce7;border:1px solid #bbf7d0;border-radius:11px;font-size:13px;font-weight:800;}
         .dark-enterprise .orders-search,.dark-enterprise .orders-filter{color:#e2e8f0;background:#0f172a;border-color:rgba(148,163,184,.25);}
         @media(max-width:760px){.orders-toolbar{align-items:stretch}.orders-search{width:100%}.orders-filter{flex:1}.order-actions{justify-content:flex-start}.enterprise-table td:last-child{min-width:220px;}}
+
+        /* ================= INVENTORY MANAGEMENT ================= */
+        .inventory-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+        .inventory-toolbar input,.inventory-toolbar select{min-height:38px;padding:8px 11px;color:#334155;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font:inherit;font-size:13px;}
+        .inventory-search{width:min(270px,100%);}
+        .inventory-actions{display:flex;gap:6px;flex-wrap:wrap;white-space:nowrap;}
+        .inventory-actions .table-btn{padding:7px 9px;}
+        .inventory-expired{color:#b91c1c;font-weight:900;}
+        .inventory-expiring{color:#b45309;font-weight:900;}
+        .inventory-dialog{width:min(620px,calc(100% - 28px));padding:0;border:0;border-radius:18px;background:#fff;box-shadow:0 30px 90px rgba(2,6,23,.35);}
+        .inventory-dialog::backdrop{background:rgba(15,23,42,.58);backdrop-filter:blur(4px);}
+        .inventory-form{display:grid;gap:15px;padding:24px;}
+        .inventory-form h3{margin:0;color:#0f172a;font-size:21px;}.inventory-form p{margin:5px 0 0;color:#64748b;font-size:13px;}
+        .inventory-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+        .inventory-form label{display:grid;gap:6px;color:#475569;font-size:12px;font-weight:850;}
+        .inventory-form input,.inventory-form select{min-height:42px;padding:9px 11px;color:#0f172a;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;font:inherit;}
+        .inventory-history-note{padding:10px 12px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;font-size:12px;font-weight:700;}
+        @media(max-width:680px){.inventory-form-grid{grid-template-columns:1fr}.inventory-toolbar{align-items:stretch}.inventory-search{width:100%}}
 
         @keyframes rise{
             from{opacity:0; transform:translateY(12px);}
@@ -3209,46 +3239,60 @@
             <dialog class="order-update-dialog" id="orderUpdateDialog">
                 <form class="order-update-form" id="orderUpdateForm" method="POST">
                     <div><h3 id="orderUpdateTitle">Update order</h3><p>Choose the next operational status. Closed orders remain locked.</p></div>
-                    <label>Status<select id="orderUpdateStatus" name="status" required>{% for status in order_statuses %}<option value="{{ status|e }}">{{ status }}</option>{% endfor %}</select></label>
+                    <label>Status
+                        <div class="order-status-picker" id="orderStatusPicker">
+                            <select class="order-status-select" id="orderUpdateStatus" name="status" required tabindex="-1" aria-hidden="true">{% for status in order_statuses %}<option value="{{ status|e }}">{{ status }}</option>{% endfor %}</select>
+                            <button class="order-status-trigger" id="orderStatusTrigger" type="button" aria-haspopup="listbox" aria-expanded="false"><span id="orderStatusValue">Select status</span></button>
+                            <div class="order-status-menu" id="orderStatusMenu" role="listbox" aria-label="Order status">{% for status in order_statuses %}<button class="order-status-option" type="button" role="option" data-value="{{ status|e }}">{{ status }}</button>{% endfor %}</div>
+                        </div>
+                    </label>
                     <label id="deliveryOtpField" hidden>Delivery OTP<input id="orderDeliveryOtp" name="delivery_otp" inputmode="numeric" autocomplete="one-time-code" placeholder="Required when marking delivered"></label>
                     <div class="order-dialog-actions"><button class="table-btn" id="cancelOrderUpdate" type="button">Cancel</button><button class="primary-btn" type="submit">Save status</button></div>
                 </form>
             </dialog>
 
             <section class="dashboard-section" id="inventory">
-                <div class="section-heading"><div><h2>Medicine Inventory</h2><p>Stock, expiry, category, pricing, and availability.</p></div><a class="primary-btn" href="/staff">Manage Inventory</a></div>
+                <div class="section-heading"><div><h2>Medicine Inventory</h2><p>Search, edit, restock, track suppliers, scan barcodes, and monitor expiry.</p></div><div class="inventory-actions"><a class="table-btn" href="/scan_barcode">Scan Barcode</a><a class="primary-btn" href="/staff#addmedicine">Add Medicine</a></div></div>
                 <div class="metric-grid">
                     <article class="metric-card"><h3>Total Medicines</h3><div class="metric-value">{{ total_medicines }}</div><div class="metric-note">Catalog records</div></article>
                     <article class="metric-card"><h3>Available Stock</h3><div class="metric-value">{{ total_medicines - out_of_stock }}</div><div class="metric-note">Items with stock</div></article>
                     <article class="metric-card"><h3>Low Stock</h3><div class="metric-value">{{ low_stock|length }}</div><div class="metric-note">Needs reorder</div></article>
                     <article class="metric-card"><h3>Out of Stock</h3><div class="metric-value">{{ out_of_stock }}</div><div class="metric-note">Unavailable items</div></article>
-                    <article class="metric-card"><h3>Expired</h3><div class="metric-value">0</div><div class="metric-note">Tracked through expiry audits</div></article>
+                    <article class="metric-card"><h3>Expired</h3><div class="metric-value">{{ expired_medicines }}</div><div class="metric-note">Remove or quarantine</div></article>
                     <article class="metric-card"><h3>Near Expiry</h3><div class="metric-value">{{ expiring|length }}</div><div class="metric-note">Next review window</div></article>
                 </div>
 
                 <div class="glass-card table-card" style="margin-top:18px">
-                    <div class="table-header"><div><h2>Inventory Table</h2><p>Latest medicine catalog view</p></div></div>
+                    <div class="table-header"><div><h2>Inventory Table</h2><p>Direct catalog and stock management</p></div><div class="inventory-toolbar"><input class="inventory-search" id="inventorySearch" type="search" placeholder="Search medicine, barcode, supplier…"><select id="inventoryCategory"><option value="">All categories</option>{% for category in medicines|map(attribute='category')|unique|sort %}<option value="{{ category|e }}">{{ category }}</option>{% endfor %}</select><select id="inventoryStatus"><option value="">All stock states</option><option value="available">Available</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="expiring">Near expiry</option><option value="expired">Expired</option></select><button class="table-btn" id="exportInventory" type="button">Export CSV</button></div></div>
                     <div class="table-scroll">
-                        <table class="enterprise-table">
-                            <tr><th>Medicine</th><th>Brand</th><th>Category</th><th>Batch</th><th>Expiry</th><th>Quantity</th><th>MRP</th><th>Selling Price</th><th>Status</th><th>Action</th></tr>
-                            {% for m in medicines[:14] %}
-                            <tr>
+                        <table class="enterprise-table" id="inventoryTable">
+                            <tr><th>Medicine</th><th>Supplier</th><th>Category</th><th>Batch / Barcode</th><th>Expiry</th><th>Quantity</th><th>Cost</th><th>Selling Price</th><th>Status</th><th>Actions</th></tr>
+                            {% for m in medicines %}
+                            <tr class="inventory-row" data-id="{{ m['id'] }}" data-name="{{ m['name']|e }}" data-supplier="{{ (m.get('supplier') or '')|e }}" data-category="{{ (m['category'] or '')|e }}" data-batch="{{ (m.get('batch_number') or '')|e }}" data-barcode="{{ (m.get('barcode') or '')|e }}" data-expiry="{{ m['expiry_date'] or '' }}" data-stock="{{ m['stock'] }}" data-threshold="{{ m.get('low_stock_threshold') or 10 }}" data-price="{{ m['price'] }}" data-purchase="{{ m.get('purchase_price') or 0 }}">
                                 <td>{{ m["name"] }}</td>
-                                <td>Yuvraj Medical</td>
+                                <td>{{ m.get("supplier") or "Not set" }}</td>
                                 <td>{{ m["category"] }}</td>
-                                <td>{{ m["barcode"] }}</td>
-                                <td>{{ m["expiry_date"] }}</td>
+                                <td>{{ m.get("batch_number") or "No batch" }}<br><small>{{ m.get("barcode") or "No barcode" }}</small></td>
+                                <td class="inventory-expiry">{{ m["expiry_date"] or "Not set" }}</td>
                                 <td>{{ m["stock"] }}</td>
+                                <td>&#8377;{{ m.get("purchase_price") or "—" }}</td>
                                 <td>&#8377;{{ m["price"] }}</td>
-                                <td>&#8377;{{ m["price"] }}</td>
-                                <td><span class="pill {% if m['stock'] == 0 %}status-danger{% elif m['stock'] < 10 %}status-warn{% else %}status-ok{% endif %}">{% if m["stock"] == 0 %}Out{% elif m["stock"] < 10 %}Low{% else %}Available{% endif %}</span></td>
-                                <td><a class="table-btn" href="/staff">Edit</a></td>
+                                <td><span class="pill inventory-stock-pill {% if m['stock'] == 0 %}status-danger{% elif m['stock'] <= (m.get('low_stock_threshold') or 10) %}status-warn{% else %}status-ok{% endif %}">{% if m["stock"] == 0 %}Out{% elif m['stock'] <= (m.get('low_stock_threshold') or 10) %}Low{% else %}Available{% endif %}</span></td>
+                                <td><div class="inventory-actions"><button class="table-btn inventory-edit" type="button">Edit</button><button class="table-btn inventory-adjust" type="button">Restock</button><form method="POST" action="/owner/inventory/{{ m['id'] }}/delete" onsubmit="return confirm('Delete {{ m['name']|e }}? This cannot be undone.');"><button class="table-btn" type="submit">Delete</button></form></div></td>
                             </tr>
                             {% endfor %}
+                            <tr id="inventoryNoMatch" hidden><td colspan="10">No medicines match the selected filters.</td></tr>
                         </table>
                     </div>
                 </div>
+                <div class="glass-card table-card" style="margin-top:18px">
+                    <div class="table-header"><div><h2>Stock Movement History</h2><p>Latest restocks, reductions, and manual corrections</p></div></div>
+                    <div class="table-scroll"><table class="enterprise-table"><tr><th>Medicine</th><th>Change</th><th>Previous</th><th>New Stock</th><th>Reason</th><th>Date</th></tr>{% for movement in stock_movements %}<tr><td>{{ movement["medicine_name"] }}</td><td><span class="pill {{ 'status-ok' if movement['change_quantity'] > 0 else 'status-danger' }}">{{ '+' if movement['change_quantity'] > 0 else '' }}{{ movement["change_quantity"] }}</span></td><td>{{ movement["previous_stock"] }}</td><td>{{ movement["new_stock"] }}</td><td>{{ movement["reason"] }}</td><td>{{ movement["created_at"] }}</td></tr>{% else %}<tr><td colspan="6">No stock adjustments recorded yet.</td></tr>{% endfor %}</table></div>
+                </div>
             </section>
+
+            <dialog class="inventory-dialog" id="inventoryEditDialog"><form class="inventory-form" id="inventoryEditForm" method="POST"><div><h3 id="inventoryEditTitle">Edit medicine</h3><p>Update catalog, supplier, pricing, expiry, barcode, and alert settings.</p></div><div class="inventory-form-grid"><label>Medicine name<input id="invName" name="name" required></label><label>Category<input id="invCategory" name="category" required></label><label>Supplier<input id="invSupplier" name="supplier"></label><label>Batch number<input id="invBatch" name="batch_number"></label><label>Barcode<input id="invBarcode" name="barcode"></label><label>Expiry date<input id="invExpiry" name="expiry" type="date"></label><label>Current stock<input id="invStock" name="stock" type="number" min="0" required></label><label>Low-stock alert at<input id="invThreshold" name="low_stock_threshold" type="number" min="0" required></label><label>Purchase price<input id="invPurchase" name="purchase_price" type="number" min="0" step="0.01"></label><label>Selling price<input id="invPrice" name="price" type="number" min="0" step="0.01" required></label></div><div class="order-dialog-actions"><button class="table-btn inventory-cancel" type="button">Cancel</button><button class="primary-btn" type="submit">Save medicine</button></div></form></dialog>
+            <dialog class="inventory-dialog" id="inventoryAdjustDialog"><form class="inventory-form" id="inventoryAdjustForm" method="POST"><div><h3 id="inventoryAdjustTitle">Adjust stock</h3><p>Use a positive quantity to restock or a negative quantity to record damage, expiry, or correction.</p></div><label>Quantity change<input id="invAdjustment" name="quantity" type="number" required placeholder="Example: 25 or -3"></label><label>Reason<input name="reason" required placeholder="Supplier delivery, expired stock, correction…"></label><div class="inventory-history-note">Every adjustment is saved in the stock movement history.</div><div class="order-dialog-actions"><button class="table-btn inventory-cancel" type="button">Cancel</button><button class="primary-btn" type="submit">Save adjustment</button></div></form></dialog>
 
             <section class="dashboard-section" id="prescriptions">
                 <div class="section-heading"><div><h2>Prescription Verification</h2><p>Review queue for prescription based orders.</p></div><a class="primary-btn" href="/staff_prescriptions">Open Queue</a></div>
@@ -3602,6 +3646,10 @@
         const dialog = document.getElementById("orderUpdateDialog");
         const updateForm = document.getElementById("orderUpdateForm");
         const updateStatus = document.getElementById("orderUpdateStatus");
+        const statusPicker = document.getElementById("orderStatusPicker");
+        const statusTrigger = document.getElementById("orderStatusTrigger");
+        const statusValue = document.getElementById("orderStatusValue");
+        const statusOptions = [...document.querySelectorAll(".order-status-option")];
         const otpField = document.getElementById("deliveryOtpField");
         const otpInput = document.getElementById("orderDeliveryOtp");
 
@@ -3643,7 +3691,28 @@
             otpInput.required = delivered;
             if(!delivered) otpInput.value = "";
         };
-        updateStatus.addEventListener("change", syncOtp);
+        const closeStatusMenu = () => {
+            statusPicker.classList.remove("open");
+            statusTrigger.setAttribute("aria-expanded", "false");
+        };
+        const syncStatusPicker = () => {
+            statusValue.textContent = updateStatus.value;
+            statusOptions.forEach(option => option.setAttribute("aria-selected", String(option.dataset.value === updateStatus.value)));
+            syncOtp();
+        };
+        statusTrigger.addEventListener("click", () => {
+            const opening = !statusPicker.classList.contains("open");
+            statusPicker.classList.toggle("open", opening);
+            statusTrigger.setAttribute("aria-expanded", String(opening));
+            if(opening) statusOptions.find(option => option.dataset.value === updateStatus.value)?.focus();
+        });
+        statusOptions.forEach(option => option.addEventListener("click", () => {
+            updateStatus.value = option.dataset.value;
+            syncStatusPicker();
+            closeStatusMenu();
+            statusTrigger.focus();
+        }));
+        document.addEventListener("click", event => { if(!statusPicker.contains(event.target)) closeStatusMenu(); });
         document.getElementById("cancelOrderUpdate").addEventListener("click", () => dialog.close());
         updateForm.addEventListener("submit", event => {
             if(["Cancelled", "Refunded"].includes(updateStatus.value) && !window.confirm(`Mark this order as ${updateStatus.value}? This closes the order workflow.`)) event.preventDefault();
@@ -3657,7 +3726,8 @@
                 updateForm.action = `/update_order_status/${row.dataset.id}`;
                 document.getElementById("orderUpdateTitle").textContent = `Update order #${row.dataset.id}`;
                 updateStatus.value = row.dataset.status;
-                syncOtp();
+                syncStatusPicker();
+                closeStatusMenu();
                 dialog.showModal();
             });
         });
@@ -3675,6 +3745,86 @@
         });
 
         document.addEventListener("keydown", event => { if(event.key === "Escape") closeDrawer(); });
+    })();
+</script>
+<script>
+    /* ================= INVENTORY MANAGEMENT ================= */
+    (() => {
+        const table = document.getElementById("inventoryTable");
+        if(!table) return;
+        const rows = [...table.querySelectorAll(".inventory-row")];
+        const search = document.getElementById("inventorySearch");
+        const category = document.getElementById("inventoryCategory");
+        const status = document.getElementById("inventoryStatus");
+        const noMatch = document.getElementById("inventoryNoMatch");
+        const editDialog = document.getElementById("inventoryEditDialog");
+        const adjustDialog = document.getElementById("inventoryAdjustDialog");
+        const editForm = document.getElementById("inventoryEditForm");
+        const adjustForm = document.getElementById("inventoryAdjustForm");
+
+        const stateFor = row => {
+            const stock = Number(row.dataset.stock || 0);
+            const threshold = Number(row.dataset.threshold || 10);
+            const expiry = row.dataset.expiry ? new Date(`${row.dataset.expiry}T00:00:00`) : null;
+            const now = new Date(); now.setHours(0,0,0,0);
+            const days = expiry ? Math.ceil((expiry - now) / 86400000) : null;
+            if(days !== null && days < 0) return "expired";
+            if(days !== null && days <= 30) return "expiring";
+            if(stock === 0) return "out";
+            if(stock <= threshold) return "low";
+            return "available";
+        };
+        rows.forEach(row => {
+            row.dataset.state = stateFor(row);
+            const expiryCell = row.querySelector(".inventory-expiry");
+            if(row.dataset.state === "expired") expiryCell.classList.add("inventory-expired");
+            if(row.dataset.state === "expiring") expiryCell.classList.add("inventory-expiring");
+        });
+        const filterRows = () => {
+            const query = search.value.trim().toLowerCase();
+            rows.forEach(row => {
+                const haystack = `${row.dataset.name} ${row.dataset.supplier} ${row.dataset.category} ${row.dataset.batch} ${row.dataset.barcode}`.toLowerCase();
+                row.hidden = Boolean((query && !haystack.includes(query)) || (category.value && row.dataset.category !== category.value) || (status.value && row.dataset.state !== status.value));
+            });
+            noMatch.hidden = rows.some(row => !row.hidden);
+        };
+        search.addEventListener("input", filterRows);
+        category.addEventListener("change", filterRows);
+        status.addEventListener("change", filterRows);
+
+        rows.forEach(row => {
+            row.querySelector(".inventory-edit").addEventListener("click", () => {
+                editForm.action = `/owner/inventory/${row.dataset.id}/update`;
+                document.getElementById("inventoryEditTitle").textContent = `Edit ${row.dataset.name}`;
+                document.getElementById("invName").value = row.dataset.name;
+                document.getElementById("invCategory").value = row.dataset.category;
+                document.getElementById("invSupplier").value = row.dataset.supplier;
+                document.getElementById("invBatch").value = row.dataset.batch;
+                document.getElementById("invBarcode").value = row.dataset.barcode;
+                document.getElementById("invExpiry").value = row.dataset.expiry;
+                document.getElementById("invStock").value = row.dataset.stock;
+                document.getElementById("invThreshold").value = row.dataset.threshold;
+                document.getElementById("invPurchase").value = row.dataset.purchase;
+                document.getElementById("invPrice").value = row.dataset.price;
+                editDialog.showModal();
+            });
+            row.querySelector(".inventory-adjust").addEventListener("click", () => {
+                adjustForm.action = `/owner/inventory/${row.dataset.id}/adjust`;
+                document.getElementById("inventoryAdjustTitle").textContent = `Adjust ${row.dataset.name}`;
+                adjustForm.reset();
+                adjustDialog.showModal();
+                document.getElementById("invAdjustment").focus();
+            });
+        });
+        document.querySelectorAll(".inventory-cancel").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
+
+        document.getElementById("exportInventory").addEventListener("click", () => {
+            const escapeCsv = value => `"${String(value ?? "").replaceAll('"', '""')}"`;
+            const records = [["ID","Medicine","Supplier","Category","Batch","Barcode","Expiry","Stock","Threshold","Purchase Price","Selling Price","State"]];
+            rows.filter(row => !row.hidden).forEach(row => records.push([row.dataset.id,row.dataset.name,row.dataset.supplier,row.dataset.category,row.dataset.batch,row.dataset.barcode,row.dataset.expiry,row.dataset.stock,row.dataset.threshold,row.dataset.purchase,row.dataset.price,row.dataset.state]));
+            const url = URL.createObjectURL(new Blob([records.map(record => record.map(escapeCsv).join(",")).join("\r\n")], {type:"text/csv;charset=utf-8"}));
+            const link = document.createElement("a"); link.href = url; link.download = `inventory-${new Date().toISOString().slice(0,10)}.csv`; link.click(); URL.revokeObjectURL(url);
+        });
     })();
 </script>
 <script>

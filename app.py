@@ -246,6 +246,41 @@ def ensure_delivery_feature_schema():
     app.config["DELIVERY_FEATURE_SCHEMA_READY"] = True
 
 
+def ensure_inventory_management_schema():
+    if app.config.get("INVENTORY_MANAGEMENT_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    for column_sql in [
+        "ADD COLUMN batch_number VARCHAR(80) NULL",
+        "ADD COLUMN supplier VARCHAR(160) NULL",
+        "ADD COLUMN purchase_price DECIMAL(10,2) NULL",
+        "ADD COLUMN low_stock_threshold INT NOT NULL DEFAULT 10",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE medicines {column_sql}")
+        except mysql.connector.Error:
+            pass
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS stock_movements (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            medicine_id INT NOT NULL,
+            change_quantity INT NOT NULL,
+            previous_stock INT NOT NULL,
+            new_stock INT NOT NULL,
+            reason VARCHAR(180) NOT NULL,
+            changed_by INT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_stock_medicine (medicine_id),
+            INDEX idx_stock_created (created_at)
+        )
+    """)
+    db.commit()
+    cursor.close()
+    app.config["INVENTORY_MANAGEMENT_SCHEMA_READY"] = True
+
+
 def ensure_payment_schema():
     if app.config.get("PAYMENT_SCHEMA_READY"):
         return
@@ -5801,6 +5836,8 @@ def owner_dashboard():
     if "user" not in flask.session or flask.session["user"]["role"] != "owner":
         return flask.redirect("/login")
 
+    ensure_inventory_management_schema()
+
     db = get_db()
 
     # ================= DATES =================
@@ -6025,7 +6062,8 @@ def owner_dashboard():
 
         FROM medicines
 
-        WHERE stock < 10
+        WHERE stock > 0
+          AND stock <= COALESCE(low_stock_threshold, 10)
 
     """)
     low_stock = cursor.fetchall()
@@ -6053,10 +6091,25 @@ def owner_dashboard():
 
         FROM medicines
 
-        WHERE expiry_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
 
     """)
     expiring =cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute("SELECT COUNT(*) FROM medicines WHERE expiry_date < CURDATE()")
+    expired_medicines = cursor.fetchone()[0]
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT stock_movements.*, medicines.name AS medicine_name
+        FROM stock_movements
+        JOIN medicines ON medicines.id = stock_movements.medicine_id
+        ORDER BY stock_movements.id DESC LIMIT 12
+    """)
+    stock_movements = cursor.fetchall()
     cursor.close()
 
     # ================= STAFF =================
@@ -6209,6 +6262,8 @@ def owner_dashboard():
         low_stock=low_stock,
         out_of_stock=out_of_stock,
         expiring=expiring,
+        expired_medicines=expired_medicines,
+        stock_movements=stock_movements,
 
         staff_list=staff_list,
         total_staff=total_staff,
@@ -6221,6 +6276,105 @@ def owner_dashboard():
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+
+@app.route("/owner/inventory/<int:medicine_id>/update", methods=["POST"])
+def owner_inventory_update(medicine_id):
+    if "user" not in flask.session or flask.session["user"].get("role") != "owner":
+        return flask.redirect("/login")
+    ensure_inventory_management_schema()
+    data = flask.request.form
+    try:
+        price = max(0, float(data.get("price") or 0))
+        purchase_price = max(0, float(data.get("purchase_price") or 0))
+        stock = max(0, int(data.get("stock") or 0))
+        threshold = max(0, int(data.get("low_stock_threshold") or 10))
+    except (TypeError, ValueError):
+        flash("Price, stock, and alert threshold must be valid numbers.")
+        return flask.redirect("/owner_dashboard#inventory")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT stock FROM medicines WHERE id=%s", (medicine_id,))
+    current = cursor.fetchone()
+    if not current:
+        cursor.close()
+        flash("Medicine was not found.")
+        return flask.redirect("/owner_dashboard#inventory")
+    cursor.execute("""
+        UPDATE medicines SET name=%s, category=%s, batch_number=%s, expiry_date=%s,
+            stock=%s, price=%s, purchase_price=%s, supplier=%s, barcode=%s,
+            low_stock_threshold=%s WHERE id=%s
+    """, (
+        (data.get("name") or "").strip(), normalize_category(data.get("category")),
+        (data.get("batch_number") or "").strip() or None, data.get("expiry") or None,
+        stock, price, purchase_price, (data.get("supplier") or "").strip() or None,
+        (data.get("barcode") or "").strip() or None, threshold, medicine_id,
+    ))
+    change = stock - int(current.get("stock") or 0)
+    if change:
+        cursor.execute("""
+            INSERT INTO stock_movements
+                (medicine_id, change_quantity, previous_stock, new_stock, reason, changed_by)
+            VALUES (%s,%s,%s,%s,%s,%s)
+        """, (medicine_id, change, current.get("stock") or 0, stock, "Inventory details edited", flask.session["user"].get("id")))
+    db.commit()
+    cursor.close()
+    flash("Medicine inventory updated.")
+    return flask.redirect("/owner_dashboard#inventory")
+
+
+@app.route("/owner/inventory/<int:medicine_id>/adjust", methods=["POST"])
+def owner_inventory_adjust(medicine_id):
+    if "user" not in flask.session or flask.session["user"].get("role") != "owner":
+        return flask.redirect("/login")
+    ensure_inventory_management_schema()
+    try:
+        quantity = int(flask.request.form.get("quantity") or 0)
+    except (TypeError, ValueError):
+        quantity = 0
+    reason = (flask.request.form.get("reason") or "Manual stock adjustment").strip()[:180]
+    if quantity == 0:
+        flash("Enter a non-zero stock adjustment.")
+        return flask.redirect("/owner_dashboard#inventory")
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT stock FROM medicines WHERE id=%s FOR UPDATE", (medicine_id,))
+    medicine = cursor.fetchone()
+    if not medicine:
+        cursor.close()
+        flash("Medicine was not found.")
+        return flask.redirect("/owner_dashboard#inventory")
+    previous = int(medicine.get("stock") or 0)
+    updated = max(0, previous + quantity)
+    actual_change = updated - previous
+    cursor.execute("UPDATE medicines SET stock=%s WHERE id=%s", (updated, medicine_id))
+    cursor.execute("""
+        INSERT INTO stock_movements
+            (medicine_id, change_quantity, previous_stock, new_stock, reason, changed_by)
+        VALUES (%s,%s,%s,%s,%s,%s)
+    """, (medicine_id, actual_change, previous, updated, reason, flask.session["user"].get("id")))
+    db.commit()
+    cursor.close()
+    flash(f"Stock adjusted by {actual_change:+d}.")
+    return flask.redirect("/owner_dashboard#inventory")
+
+
+@app.route("/owner/inventory/<int:medicine_id>/delete", methods=["POST"])
+def owner_inventory_delete(medicine_id):
+    if "user" not in flask.session or flask.session["user"].get("role") != "owner":
+        return flask.redirect("/login")
+    db = get_db()
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM medicines WHERE id=%s", (medicine_id,))
+        db.commit()
+        flash("Medicine deleted from inventory.")
+    except mysql.connector.Error:
+        db.rollback()
+        flash("This medicine is linked to existing records and cannot be deleted. Set its stock to zero instead.")
+    cursor.close()
+    return flask.redirect("/owner_dashboard#inventory")
 # ================= STAFF DASHBOARD =================
 @app.route("/staff")
 def staff_dashboard():
