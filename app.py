@@ -18,6 +18,7 @@ import pandas as pd
 import mysql.connector
 from mysql.connector import pooling
 import os
+from io import BytesIO
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
@@ -252,15 +253,31 @@ def recommended_purchase_price(selling_price, category=""):
     except (TypeError, ValueError):
         return 0
     category_key = (category or "").strip().lower()
+    if price == 0:
+        return 0
     if any(term in category_key for term in ("supplement", "vitamin", "hair", "personal", "cosmetic")):
-        cost_ratio = 1.12
+        cost_ratio = 0.72
     elif any(term in category_key for term in ("device", "equipment", "thermometer", "first aid")):
-        cost_ratio = 1.10
+        cost_ratio = 0.75
     elif any(term in category_key for term in ("injection", "iv fluid", "anti-tb", "antiviral")):
-        cost_ratio = 1.08
+        cost_ratio = 0.82
     else:
-        cost_ratio = 1.10
+        cost_ratio = 0.78
     return round(price * cost_ratio, 2)
+
+
+def normalize_purchase_price(purchase_price, selling_price, category=""):
+    try:
+        selling = max(0, float(selling_price or 0))
+    except (TypeError, ValueError):
+        selling = 0
+    try:
+        purchase = max(0, float(purchase_price or 0))
+    except (TypeError, ValueError):
+        purchase = 0
+    if selling and (purchase <= 0 or purchase >= selling):
+        return recommended_purchase_price(selling, category)
+    return round(purchase, 2)
 
 
 def ensure_inventory_management_schema():
@@ -274,6 +291,12 @@ def ensure_inventory_management_schema():
         "ADD COLUMN supplier VARCHAR(160) NULL",
         "ADD COLUMN purchase_price DECIMAL(10,2) NULL",
         "ADD COLUMN low_stock_threshold INT NOT NULL DEFAULT 10",
+        "ADD COLUMN manufacturing_date DATE NULL",
+        "ADD COLUMN gst_percent DECIMAL(5,2) NOT NULL DEFAULT 0",
+        "ADD COLUMN brand VARCHAR(120) NULL",
+        "ADD COLUMN medicine_type VARCHAR(80) NULL",
+        "ADD COLUMN disease_category VARCHAR(120) NULL",
+        "ADD COLUMN generic_name VARCHAR(160) NULL",
     ]:
         try:
             cursor.execute(f"ALTER TABLE medicines {column_sql}")
@@ -297,14 +320,24 @@ def ensure_inventory_management_schema():
         UPDATE medicines
         SET purchase_price = ROUND(
             price * CASE
-                WHEN LOWER(COALESCE(category, '')) REGEXP 'supplement|vitamin|hair|personal|cosmetic' THEN 1.12
-                WHEN LOWER(COALESCE(category, '')) REGEXP 'device|equipment|thermometer|first aid' THEN 1.10
-                WHEN LOWER(COALESCE(category, '')) REGEXP 'injection|iv fluid|anti-tb|antiviral' THEN 1.08
-                ELSE 1.10
+                WHEN LOWER(COALESCE(category, '')) REGEXP 'supplement|vitamin|hair|personal|cosmetic' THEN 0.72
+                WHEN LOWER(COALESCE(category, '')) REGEXP 'device|equipment|thermometer|first aid' THEN 0.75
+                WHEN LOWER(COALESCE(category, '')) REGEXP 'injection|iv fluid|anti-tb|antiviral' THEN 0.82
+                ELSE 0.78
             END,
             2
         )
-        WHERE purchase_price IS NULL OR purchase_price <= price
+        WHERE price > 0
+          AND (purchase_price IS NULL OR purchase_price <= 0 OR purchase_price >= price)
+    """)
+    cursor.execute("""
+        UPDATE medicines
+        SET manufacturing_date = CASE
+            WHEN expiry_date IS NOT NULL
+                THEN DATE_SUB(expiry_date, INTERVAL (180 + FLOOR(RAND(id) * 730)) DAY)
+            ELSE DATE_SUB(CURDATE(), INTERVAL (30 + FLOOR(RAND(id) * 1095)) DAY)
+        END
+        WHERE manufacturing_date IS NULL
     """)
     db.commit()
     cursor.close()
@@ -4464,6 +4497,7 @@ def place_order():
         """, (
             user_id,
             family_member_id,
+            0,
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "Pending",
             file_path,
@@ -6492,8 +6526,7 @@ def owner_inventory_update(medicine_id):
     except (TypeError, ValueError):
         flash("Price, stock, and alert threshold must be valid numbers.")
         return flask.redirect("/owner_dashboard#inventory")
-    if purchase_price <= price:
-        purchase_price = recommended_purchase_price(price, data.get("category"))
+    purchase_price = normalize_purchase_price(purchase_price, price, data.get("category"))
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -6589,6 +6622,7 @@ def staff_dashboard():
         return flask.redirect("/")
 
     ensure_payment_schema()
+    ensure_inventory_management_schema()
     db = get_db()
 
 
@@ -6596,6 +6630,8 @@ def staff_dashboard():
     cursor.execute("SELECT * FROM medicines")
     medicines = cursor.fetchall()
     cursor.close()
+    for medicine in medicines:
+        medicine["image_url"] = medicine_image_url(medicine)
 
 
     cursor = db.cursor(dictionary=True)
@@ -6618,10 +6654,24 @@ def staff_dashboard():
 
 
     cursor = db.cursor(dictionary=True)
-    cursor.execute(
-        "SELECT * FROM medicines WHERE stock < 10"
-    )
+    cursor.execute("""
+        SELECT *
+        FROM medicines
+        WHERE stock > 0
+          AND stock <= COALESCE(low_stock_threshold, 10)
+    """)
     low_stock = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT stock_movements.*, medicines.name AS medicine_name
+        FROM stock_movements
+        JOIN medicines ON medicines.id = stock_movements.medicine_id
+        ORDER BY stock_movements.id DESC
+        LIMIT 20
+    """)
+    stock_movements = cursor.fetchall()
     cursor.close()
 
     # ================= REAL DASHBOARD STATS =================
@@ -6632,6 +6682,14 @@ def staff_dashboard():
         "SELECT COUNT(*) FROM orders"
     )
     total_orders =cursor.fetchone()[0]
+    cursor.close()
+
+
+    cursor = db.cursor()
+    cursor.execute(
+        "SELECT COUNT(*) FROM orders WHERE DATE(`date`) = CURDATE()"
+    )
+    today_orders = cursor.fetchone()[0]
     cursor.close()
 
 
@@ -6652,10 +6710,109 @@ def staff_dashboard():
 
     cursor = db.cursor()
     cursor.execute(
+        "SELECT COUNT(*) FROM orders WHERE status='Cancelled'"
+    )
+    cancelled_orders = cursor.fetchone()[0]
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COALESCE(SUM(total), 0)
+        FROM orders
+        WHERE DATE(`date`) = CURDATE()
+          AND status != 'Cancelled'
+    """)
+    revenue_today = cursor.fetchone()[0]
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute(
         "SELECT COUNT(*) FROM medicines"
         )
     total_medicines = cursor.fetchone()[0]
     cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT
+            COALESCE(SUM(stock), 0) AS total_units,
+            COALESCE(SUM(stock * COALESCE(purchase_price, 0)), 0) AS inventory_cost_value,
+            COALESCE(SUM(stock * COALESCE(price, 0)), 0) AS inventory_selling_value,
+            SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) AS out_of_stock_count,
+            SUM(CASE WHEN stock > 0 AND stock <= COALESCE(low_stock_threshold, 10) THEN 1 ELSE 0 END) AS low_stock_count
+        FROM medicines
+    """)
+    inventory_summary = cursor.fetchone() or {}
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id, medicines.name, medicines.stock, COALESCE(SUM(order_items.quantity), 0) AS sold_quantity
+        FROM medicines
+        JOIN order_items ON order_items.medicine_id = medicines.id
+        JOIN orders ON orders.id = order_items.order_id
+        WHERE orders.status != 'Cancelled'
+          AND orders.date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        GROUP BY medicines.id, medicines.name, medicines.stock
+        ORDER BY sold_quantity DESC
+        LIMIT 8
+    """)
+    fast_moving_medicines = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id, medicines.name, medicines.stock, COALESCE(SUM(order_items.quantity), 0) AS sold_quantity
+        FROM medicines
+        LEFT JOIN order_items ON order_items.medicine_id = medicines.id
+        LEFT JOIN orders ON orders.id = order_items.order_id
+            AND orders.status != 'Cancelled'
+            AND orders.date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+        WHERE medicines.stock > 0
+        GROUP BY medicines.id, medicines.name, medicines.stock
+        HAVING sold_quantity BETWEEN 1 AND 5
+        ORDER BY sold_quantity ASC, medicines.stock DESC
+        LIMIT 8
+    """)
+    slow_moving_medicines = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.id, medicines.name, medicines.stock, medicines.expiry_date
+        FROM medicines
+        WHERE medicines.stock > 0
+          AND NOT EXISTS (
+              SELECT 1
+              FROM order_items
+              JOIN orders ON orders.id = order_items.order_id
+              WHERE order_items.medicine_id = medicines.id
+                AND orders.status != 'Cancelled'
+                AND orders.date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+          )
+        ORDER BY medicines.stock DESC, medicines.expiry_date ASC
+        LIMIT 8
+    """)
+    dead_stock_medicines = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM medicines
+        WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+    """)
+    expiring_medicines_count = cursor.fetchone()[0]
+    cursor.close()
+
+    prescription_requests_count = 0
+    try:
+        cursor = db.cursor()
+        cursor.execute("SELECT COUNT(*) FROM prescription_requests")
+        prescription_requests_count = cursor.fetchone()[0]
+        cursor.close()
+    except Exception:
+        prescription_requests_count = 0
 
     return flask.render_template(
         "staff.html",
@@ -6665,9 +6822,20 @@ def staff_dashboard():
 
         # 🔥 SEND REAL VALUES TO HTML
         total_orders=total_orders,
+        today_orders=today_orders,
         pending_orders=pending_orders,
         delivered_orders=delivered_orders,
+        cancelled_orders=cancelled_orders,
+        revenue_today=revenue_today,
         total_medicines=total_medicines,
+        low_stock_count=len(low_stock),
+        expiring_medicines_count=expiring_medicines_count,
+        prescription_requests_count=prescription_requests_count,
+        stock_movements=stock_movements,
+        inventory_summary=inventory_summary,
+        fast_moving_medicines=fast_moving_medicines,
+        slow_moving_medicines=slow_moving_medicines,
+        dead_stock_medicines=dead_stock_medicines,
         order_statuses=ORDER_STATUSES
     )
 
@@ -6685,14 +6853,22 @@ def add_medicine():
 
     try:
 
-        name = flask.request.form.get("name")
+        name = (flask.request.form.get("name") or "").strip()
         department, prescription_required = classify_medicine(name)
         category = normalize_category(flask.request.form.get("category"))
         price = flask.request.form.get("price")
-        purchase_price = recommended_purchase_price(price, category)
+        purchase_price = normalize_purchase_price(flask.request.form.get("purchase_price"), price, category)
         stock = flask.request.form.get("stock")
         expiry = flask.request.form.get("expiry")
         barcode_number = flask.request.form.get("barcode")
+        batch_number = (flask.request.form.get("batch_number") or "").strip() or None
+        manufacturing_date = flask.request.form.get("manufacturing_date") or None
+        gst_percent = flask.request.form.get("gst_percent") or 0
+        brand = (flask.request.form.get("brand") or "").strip() or None
+        medicine_type = normalize_category(flask.request.form.get("medicine_type") or category)
+        disease_category = (flask.request.form.get("disease_category") or "").strip() or None
+        generic_name = (flask.request.form.get("generic_name") or "").strip() or None
+        supplier = (flask.request.form.get("supplier") or "").strip() or None
  
         image_url = None
 
@@ -6728,10 +6904,18 @@ def add_medicine():
                 stock,
                 expiry_date,
                 image,
-                barcode
+                barcode,
+                batch_number,
+                manufacturing_date,
+                gst_percent,
+                brand,
+                medicine_type,
+                disease_category,
+                generic_name,
+                supplier
             )
 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 
         """, (
 
@@ -6744,7 +6928,15 @@ def add_medicine():
             stock,
             expiry,
             image_url,
-            barcode_number
+            barcode_number,
+            batch_number,
+            manufacturing_date,
+            gst_percent,
+            brand,
+            medicine_type,
+            disease_category,
+            generic_name,
+            supplier
 
         ))
 
@@ -6801,9 +6993,25 @@ def bulk_upload():
                 stock = 0
 
             category = normalize_category(row.get("category", ""))
-            purchase_price = recommended_purchase_price(price, category)
+            purchase_price = row.get("purchase_price", None)
+            if pd.isna(purchase_price):
+                purchase_price = None
+            purchase_price = normalize_purchase_price(purchase_price, price, category)
             expiry = str(row.get("expiry", "")).strip()
             department, prescription_required = classify_medicine(name)
+            batch_number = str(row.get("batch_number", "")).strip() or None
+            manufacturing_date = row.get("manufacturing_date", None)
+            if pd.isna(manufacturing_date):
+                manufacturing_date = None
+            gst_percent = row.get("gst_percent", 0)
+            if pd.isna(gst_percent):
+                gst_percent = 0
+            brand = str(row.get("brand", "")).strip() or None
+            medicine_type = normalize_category(row.get("medicine_type", category))
+            disease_category = str(row.get("disease_category", "")).strip() or None
+            generic_name = str(row.get("generic_name", "")).strip() or None
+            supplier = str(row.get("supplier", "")).strip() or None
+            barcode_number = str(row.get("barcode", "")).strip() or None
 
             # ---------------- DUPLICATE CHECK ----------------
 
@@ -6822,9 +7030,17 @@ def bulk_upload():
             # ---------------- INSERT ----------------
             cursor = db.cursor(dictionary=True)
             cursor.execute("""
-                INSERT INTO medicines (name, price, purchase_price, stock, category, department, prescription_required, expiry_date)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (name, price, purchase_price, stock, category, department, prescription_required, expiry))
+                INSERT INTO medicines (
+                    name, price, purchase_price, stock, category, department, prescription_required,
+                    expiry_date, barcode, batch_number, manufacturing_date, gst_percent, brand,
+                    medicine_type, disease_category, generic_name, supplier
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                name, price, purchase_price, stock, category, department, prescription_required,
+                expiry, barcode_number, batch_number, manufacturing_date, gst_percent, brand,
+                medicine_type, disease_category, generic_name, supplier
+            ))
 
             inserted += 1
 
@@ -6839,6 +7055,50 @@ def bulk_upload():
     except Exception as e:
         db.rollback()
         return f"Upload failed: {e}"
+
+
+@app.route("/download_inventory_excel")
+def download_inventory_excel():
+    if "user" not in flask.session:
+        return flask.redirect("/login")
+
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
+
+    ensure_inventory_management_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT
+            id,
+            name,
+            category,
+            medicine_type,
+            manufacturing_date,
+            expiry_date,
+            purchase_price,
+            price AS selling_price,
+            ROUND(COALESCE(price, 0) - COALESCE(purchase_price, 0), 2) AS profit_margin,
+            stock,
+            low_stock_threshold,
+            barcode,
+            image
+        FROM medicines
+        ORDER BY name ASC
+    """)
+    rows = cursor.fetchall()
+    cursor.close()
+
+    output = BytesIO()
+    pd.DataFrame(rows).to_excel(output, index=False, sheet_name="Inventory")
+    output.seek(0)
+    filename = f"medicine_inventory_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
+    return flask.send_file(
+        output,
+        as_attachment=True,
+        download_name=filename,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
 #-----------edit medicine fuc------
 @app.route("/edit_medicine/<int:id>", methods=["POST"])
 def edit_medicine(id):
@@ -6847,37 +7107,178 @@ def edit_medicine(id):
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/")
+
+    ensure_inventory_management_schema()
     category = normalize_category(data.get("category"))
-    purchase_price = recommended_purchase_price(data.get("price"), category)
+    purchase_price = normalize_purchase_price(data.get("purchase_price"), data.get("price"), category)
+    image_url = None
+    file = flask.request.files.get("image")
+    if file and file.filename:
+        image_url = save_image(file)
+    if data.get("barcode"):
+        generate_barcode_image(data.get("barcode"))
+
     cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT image FROM medicines WHERE id=%s", (id,))
+    current = cursor.fetchone() or {}
     cursor.execute("""
         UPDATE medicines
-        SET name=%s, price=%s, purchase_price=%s, stock=%s, category=%s, expiry_date=%s
+        SET name=%s,
+            price=%s,
+            purchase_price=%s,
+            stock=%s,
+            category=%s,
+            expiry_date=%s,
+            image=%s,
+            barcode=%s,
+            batch_number=%s,
+            manufacturing_date=%s,
+            gst_percent=%s,
+            brand=%s,
+            medicine_type=%s,
+            disease_category=%s,
+            generic_name=%s,
+            supplier=%s
         WHERE id=%s
     """, (
-        data["name"],
-        data["price"],
+        (data.get("name") or "").strip(),
+        data.get("price"),
         purchase_price,
-        data["stock"],
+        data.get("stock"),
         category,
-        data["expiry"],
+        data.get("expiry") or None,
+        image_url or current.get("image"),
+        (data.get("barcode") or "").strip() or None,
+        (data.get("batch_number") or "").strip() or None,
+        data.get("manufacturing_date") or None,
+        data.get("gst_percent") or 0,
+        (data.get("brand") or "").strip() or None,
+        normalize_category(data.get("medicine_type") or category),
+        (data.get("disease_category") or "").strip() or None,
+        (data.get("generic_name") or "").strip() or None,
+        (data.get("supplier") or "").strip() or None,
         id
     ))
 
     db.commit()
     cursor.close()
+    if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return flask.jsonify({
+            "ok": True,
+            "medicine_id": id,
+            "message": "Medicine updated."
+        })
     return flask.redirect("/staff")
+
+
+@app.route("/staff/inventory/<int:medicine_id>/stock_action", methods=["POST"])
+def staff_inventory_stock_action(medicine_id):
+    if "user" not in flask.session:
+        return flask.jsonify({"ok": False, "message": "Login required."}), 401
+
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.jsonify({"ok": False, "message": "Not allowed."}), 403
+
+    ensure_inventory_management_schema()
+    action_type = (flask.request.form.get("action_type") or "audit").strip().lower()
+    allowed_actions = {
+        "refill": "Refill Stock",
+        "transfer": "Stock Transfer",
+        "damaged": "Damaged Stock Entry",
+        "returned": "Returned Stock Entry",
+        "audit": "Stock Audit",
+    }
+    if action_type not in allowed_actions:
+        return flask.jsonify({"ok": False, "message": "Invalid stock action."}), 400
+
+    try:
+        quantity = abs(int(flask.request.form.get("quantity") or 0))
+    except (TypeError, ValueError):
+        quantity = 0
+    note = (flask.request.form.get("note") or "").strip()[:120]
+    if quantity <= 0:
+        return flask.jsonify({"ok": False, "message": "Enter a quantity greater than zero."}), 400
+
+    change = quantity
+    if action_type in {"transfer", "damaged"}:
+        change = -quantity
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, name, stock FROM medicines WHERE id=%s FOR UPDATE", (medicine_id,))
+    medicine = cursor.fetchone()
+    if not medicine:
+        cursor.close()
+        return flask.jsonify({"ok": False, "message": "Medicine not found."}), 404
+
+    previous = int(medicine.get("stock") or 0)
+    updated = max(0, previous + change)
+    actual_change = updated - previous
+    reason = allowed_actions[action_type]
+    if note:
+        reason = f"{reason}: {note}"
+
+    cursor.execute("UPDATE medicines SET stock=%s WHERE id=%s", (updated, medicine_id))
+    cursor.execute("""
+        INSERT INTO stock_movements
+            (medicine_id, change_quantity, previous_stock, new_stock, reason, changed_by)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (
+        medicine_id,
+        actual_change,
+        previous,
+        updated,
+        reason,
+        flask.session["user"].get("id")
+    ))
+    db.commit()
+    cursor.close()
+
+    return flask.jsonify({
+        "ok": True,
+        "medicine_id": medicine_id,
+        "medicine_name": medicine.get("name"),
+        "previous_stock": previous,
+        "new_stock": updated,
+        "change": actual_change,
+        "reason": reason,
+    })
 #------------del medicine fuc---------
-@app.route("/delete_medicine/<int:id>")
+@app.route("/delete_medicine/<int:id>", methods=["GET", "POST", "DELETE"])
 def delete_medicine(id):
     db = get_db()
     if "user" not in flask.session:
+        if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return flask.jsonify({"ok": False, "message": "Login required."}), 401
         return flask.redirect("/login")
 
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("DELETE FROM medicines WHERE id=%s", (id,))
-    db.commit()
-    cursor.close()
+    if flask.session["user"]["role"] not in ["owner", "staff"]:
+        if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return flask.jsonify({"ok": False, "message": "Not allowed."}), 403
+        return flask.redirect("/")
+
+    try:
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("DELETE FROM medicines WHERE id=%s", (id,))
+        deleted = cursor.rowcount
+        db.commit()
+        cursor.close()
+    except mysql.connector.Error as error:
+        db.rollback()
+        if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return flask.jsonify({"ok": False, "message": str(error)}), 400
+        flash(f"Delete failed: {error}")
+        return flask.redirect("/staff")
+
+    if flask.request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return flask.jsonify({
+            "ok": True,
+            "deleted": deleted,
+            "medicine_id": id,
+            "message": "Medicine deleted."
+        })
 
     return flask.redirect("/staff")
 
@@ -7486,19 +7887,53 @@ def staff_prescriptions():
 # ================================== approve/reject route ==============================
 @app.route("/review_prescription/<int:request_id>", methods=["POST"])
 def review_prescription(request_id):
+    ajax_request = (
+        flask.request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        or flask.request.args.get("ajax") == "1"
+        or flask.request.form.get("_ajax") == "1"
+        or "application/json" in (flask.request.headers.get("Accept") or "")
+    )
+
+    def review_response(message, category="success", status_code=200, **payload):
+        if ajax_request:
+            return flask.jsonify({
+                "ok": category != "error",
+                "message": message,
+                **payload
+            }), status_code
+
+        flash(message, category)
+        return flask.redirect("/staff_prescriptions")
 
     if "user" not in flask.session:
-        return flask.redirect("/login")
+        return review_response("Please log in again before reviewing prescriptions.", "error", 401)
 
     if flask.session["user"]["role"] not in ["staff", "owner"]:
-        return flask.redirect("/")
+        return review_response("You do not have permission to review prescriptions.", "error", 403)
 
     action = flask.request.form.get("action")
     staff_note = flask.request.form.get("staff_note", "")
 
+    def clean_medicine_list(*values):
+        medicines = []
+        seen = set()
+
+        for value in values:
+            for item in (value or "").replace("\n", ",").split(","):
+                clean_name = item.strip()
+
+                if "(" in clean_name:
+                    clean_name = clean_name.split("(")[0].strip()
+
+                key = clean_name.lower()
+                if clean_name and key not in seen:
+                    medicines.append(clean_name)
+                    seen.add(key)
+
+        return medicines
+
     if action not in ["Approved", "Rejected"]:
-        flash("Invalid action", "error")
-        return flask.redirect("/staff_prescriptions")
+        return review_response("Invalid action", "error", 400)
 
     db = get_db()
 
@@ -7514,53 +7949,63 @@ def review_prescription(request_id):
         prescription = cursor.fetchone()
 
         if not prescription:
-            flash("Prescription request not found", "error")
             cursor.close()
-            return flask.redirect("/staff_prescriptions")
+            return review_response("Prescription request not found", "error", 404)
+
+        if prescription.get("status") in ["Approved", "Rejected"]:
+            cursor.close()
+            return review_response(
+                "This prescription has already been reviewed.",
+                "error",
+                409,
+                status=prescription.get("status"),
+                approved_medicines=prescription.get("approved_medicines") or "Not approved yet",
+                staff_note=prescription.get("staff_note") or "",
+                detected_medicines=prescription.get("detected_medicines") or "",
+                reviewed_at=str(prescription.get("reviewed_at") or "")
+            )
+
+        edited_ocr_medicines = flask.request.form.get(
+            "ocr_medicines",
+            prescription.get("detected_medicines") or ""
+        )
+        detected_text = ", ".join(clean_medicine_list(edited_ocr_medicines))
+        reviewed_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         if action == "Rejected":
             cursor.execute("""
                 UPDATE prescription_requests
                 SET status=%s,
                     staff_note=%s,
+                    detected_medicines=%s,
+                    approved_medicines=NULL,
                     reviewed_at=NOW()
                 WHERE id=%s
             """, (
                 "Rejected",
                 staff_note,
+                detected_text,
                 request_id
             ))
 
             db.commit()
             cursor.close()
 
-            flash("Prescription rejected successfully", "success")
-            return flask.redirect("/staff_prescriptions")
+            return review_response(
+                "Prescription rejected successfully",
+                status="Rejected",
+                approved_medicines="Not approved yet",
+                staff_note=staff_note,
+                detected_medicines=detected_text,
+                reviewed_at=reviewed_at
+            )
 
-        selected_medicines = flask.request.form.getlist("selected_medicines")
         manual_medicines = flask.request.form.get("manual_medicines", "")
-
-        medicine_names = []
-
-        for item in selected_medicines:
-            clean_name = item.strip()
-
-            if "(" in clean_name:
-                clean_name = clean_name.split("(")[0].strip()
-
-            if clean_name:
-                medicine_names.append(clean_name)
-
-        for item in manual_medicines.split(","):
-            clean_name = item.strip()
-
-            if clean_name:
-                medicine_names.append(clean_name)
+        medicine_names = clean_medicine_list(edited_ocr_medicines, manual_medicines)
 
         if not medicine_names:
-            flash("Please select at least one medicine before approval.", "error")
             cursor.close()
-            return flask.redirect("/staff_prescriptions")
+            return review_response("Please add at least one medicine before approval.", "error", 400)
 
         approved_text = ", ".join(medicine_names)
 
@@ -7568,12 +8013,14 @@ def review_prescription(request_id):
             UPDATE prescription_requests
             SET status=%s,
                 staff_note=%s,
+                detected_medicines=%s,
                 approved_medicines=%s,
                 reviewed_at=NOW()
             WHERE id=%s
         """, (
             "Approved",
             staff_note,
+            detected_text,
             approved_text,
             request_id
         ))
@@ -7581,13 +8028,18 @@ def review_prescription(request_id):
         db.commit()
         cursor.close()
 
-        flash("Prescription approved. Customer can now proceed to checkout.", "success")
-        return flask.redirect("/staff_prescriptions")
+        return review_response(
+            "Prescription approved. Customer can now proceed to checkout.",
+            status="Approved",
+            approved_medicines=approved_text,
+            staff_note=staff_note,
+            detected_medicines=detected_text,
+            reviewed_at=reviewed_at
+        )
 
     except Exception as e:
         db.rollback()
-        flash(f"Review failed: {e}", "error")
-        return flask.redirect("/staff_prescriptions")
+        return review_response(f"Review failed: {e}", "error", 500)
 # ================= Types of medicines ================
 @app.route("/type/<medicine_type>")
 def medicine_type_page(medicine_type):

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Staff Prescription Requests</title>
+    <script src="{{ url_for('static', filename='js/preserve_scroll_head.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
@@ -10,6 +11,7 @@
             background: #f8fafc;
             margin: 0;
             padding: 30px;
+            color: #0f172a;
         }
 
         h2 {
@@ -19,89 +21,235 @@
 
         .card {
             background: white;
-            max-width: 950px;
+            max-width: 1120px;
             margin: 20px auto;
             padding: 22px;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
         }
 
-        img {
-            max-width: 260px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
+        .request-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .request-head p {
+            margin: 5px 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 130px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .pending {
+            background: #f59e0b;
+        }
+
+        .approved {
+            background: #16a34a;
+        }
+
+        .rejected {
+            background: #dc2626;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
+            gap: 22px;
+            align-items: start;
+        }
+
+        .viewer-shell,
+        .review-panel,
+        .history-panel {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            background: #ffffff;
+        }
+
+        .viewer-window {
+            height: 420px;
+            overflow: auto;
+            display: grid;
+            place-items: center;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .viewer-window img {
+            max-width: 92%;
+            max-height: 92%;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            transform-origin: center center;
+            transition: transform 0.18s ease;
+        }
+
+        .viewer-window object {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 8px;
+        }
+
+        .viewer-toolbar,
+        .form-actions,
+        .medicine-tools {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .tool-button,
+        .download,
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .tool-button {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .download {
+            background: #2563eb;
+            color: white;
+        }
+
+        .approve {
+            background: #16a34a;
+            color: white;
+        }
+
+        .reject {
+            background: #dc2626;
+            color: white;
+        }
+
+        .secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
         }
 
         pre {
             background: #f1f5f9;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 8px;
             white-space: pre-wrap;
+            margin: 8px 0 16px;
         }
 
         textarea {
             width: 100%;
-            height: 80px;
+            min-height: 90px;
             padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            resize: vertical;
-        }
-
-        button {
-            padding: 10px 18px;
-            border: none;
             border-radius: 8px;
-            color: white;
+            border: 1px solid #cbd5e1;
+            resize: vertical;
+            box-sizing: border-box;
+            font: inherit;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 12px 0 6px;
+        }
+
+        details {
+            margin: 10px 0;
+        }
+
+        summary {
             cursor: pointer;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .hint {
+            color: #64748b;
+            font-size: 0.92rem;
+            margin: 6px 0 0;
+        }
+
+        .history-panel {
+            margin-top: 16px;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 9px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .history-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .history-list li:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .review-message {
+            min-height: 20px;
             margin-top: 10px;
-        }
-
-        .approve {
-            background: #16a34a;
-        }
-
-        .reject {
-            background: #dc2626;
-        }
-
-        .pending {
-            background: #f59e0b;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
             font-weight: bold;
         }
 
-        .approved {
-            background: #16a34a;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+        .review-message.success {
+            color: #047857;
         }
 
-        .rejected {
-            background: #dc2626;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
+        .review-message.error {
+            color: #dc2626;
         }
 
         a {
             color: #2563eb;
-            text-decoration: none;
         }
 
-        .download {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 9px 14px;
-            border-radius: 9px;
-            background: #2563eb;
-            color: white;
-            font-weight: bold;
+        @media (max-width: 860px) {
+            body {
+                padding: 18px;
+            }
+
+            .review-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .viewer-window {
+                height: 340px;
+            }
         }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
@@ -121,69 +269,88 @@
 
 {% if requests_data %}
     {% for req in requests_data %}
-    <div class="card">
-        <p><b>Customer:</b> {{ req.customer_name }} | {{ req.customer_email }} | {{ req.customer_phone }}</p>
-        <p><b>Uploaded:</b> {{ req.created_at }}</p>
+    <div class="card" data-prescription-card>
+        <div class="request-head">
+            <div>
+                <p><b>Customer:</b> {{ req.customer_name }} | {{ req.customer_email }} | {{ req.customer_phone }}</p>
+                <p><b>Uploaded:</b> {{ req.created_at }}</p>
+                <p><b>Request ID:</b> #{{ req.id }}</p>
+            </div>
+            <div>
+                <span class="status-badge
+                    {% if req.status == 'Pending Review' %}pending{% endif %}
+                    {% if req.status == 'Approved' %}approved{% endif %}
+                    {% if req.status == 'Rejected' %}rejected{% endif %}
+                " data-status-badge>
+                    {{ req.status }}
+                </span>
+            </div>
+        </div>
 
-        <p>
-            <b>Status:</b>
-            <span class="
-                {% if req.status == 'Pending Review' %}pending{% endif %}
-                {% if req.status == 'Approved' %}approved{% endif %}
-                {% if req.status == 'Rejected' %}rejected{% endif %}
-            ">
-                {{ req.status }}
-            </span>
-        </p>
+        <div class="review-grid">
+            <section class="viewer-shell">
+                <h3>Uploaded Prescription</h3>
+                <div class="viewer-window" data-viewer>
+                    {% if req.prescription_image.lower().endswith('.pdf') %}
+                        <object data="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}" type="application/pdf">
+                            <p>PDF Prescription: {{ req.prescription_image }}</p>
+                        </object>
+                    {% else %}
+                        <img data-prescription-image src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}" alt="Uploaded prescription">
+                    {% endif %}
+                </div>
+                <div class="viewer-toolbar">
+                    {% if not req.prescription_image.lower().endswith('.pdf') %}
+                        <button class="tool-button" type="button" data-zoom-in>Zoom In</button>
+                        <button class="tool-button" type="button" data-zoom-out>Zoom Out</button>
+                        <button class="tool-button" type="button" data-rotate-left>Rotate Left</button>
+                        <button class="tool-button" type="button" data-rotate-right>Rotate Right</button>
+                        <button class="tool-button" type="button" data-reset-view>Reset</button>
+                    {% endif %}
+                    <a class="download" href="/download_prescription/{{ req.id }}">Download</a>
+                </div>
+            </section>
 
-        <p><b>Prescription Image:</b></p>
-        {% if req.prescription_image.lower().endswith('.pdf') %}
-            <p><b>PDF Prescription:</b> {{ req.prescription_image }}</p>
-        {% else %}
-            <img src="{{ url_for('static', filename='prescriptions/' ~ req.prescription_image) }}">
-        {% endif %}
-        <br>
-        <a class="download" href="/download_prescription/{{ req.id }}">Download Prescription</a>
+            <section class="review-panel">
+                <h3>OCR And Review</h3>
+                <p class="hint">Edit the OCR medicines, add missing names, or remove wrong names before approval.</p>
 
-        <p><b>Higher Percent OCR Options:</b></p>
-        {% if req.detected_medicines %}
-            <pre>{{ req.detected_medicines.split(",")[:5]|join(", ") }}</pre>
-        {% else %}
-            <pre>No clear high-percent medicine matched with database</pre>
-        {% endif %}
+                <details>
+                    <summary>OCR Raw Text</summary>
+                    <pre>{{ req.ocr_text if req.ocr_text else "No OCR text stored." }}</pre>
+                </details>
 
-        <p><b>Staff Approved Medicines:</b></p>
-        <pre>{{ req.approved_medicines if req.approved_medicines else "Not approved yet" }}</pre>
+                <form class="review-form" method="POST" action="/review_prescription/{{ req.id }}">
+                    <label>OCR Detected Medicines</label>
+                    <textarea name="ocr_medicines" rows="5" placeholder="One medicine per line or comma separated">{% if req.detected_medicines %}{{ req.detected_medicines.split(",")|join("\n") }}{% endif %}</textarea>
 
-        <form method="POST" action="/review_prescription/{{ req.id }}">
-            <label><b>Staff Note:</b></label>
-            <textarea name="staff_note" placeholder="Example: Dolo 650 available, Azithromycin requires confirmation">{{ req.staff_note if req.staff_note else "" }}</textarea>
+                    <label>Add Missing Medicines</label>
+                    <textarea name="manual_medicines" rows="3" placeholder="Example: Paracetamol 500mg, ORS, Vitamin D3"></textarea>
 
-            <br>
-            <h4>Higher Percent Options - Select Correct Medicines</h4>
+                    <label>Staff Notes</label>
+                    <textarea name="staff_note" rows="3" placeholder="Example: Dolo 650 available, antibiotic requires confirmation">{{ req.staff_note if req.staff_note else "" }}</textarea>
 
-{% if req.detected_medicines %}
-    {% for med in req.detected_medicines.split(",")[:5] %}
-        <label style="display:block; margin:8px 0;">
-            <input type="checkbox" name="selected_medicines" value="{{ med.split('(')[0].strip() }}" checked>
-            {{ med }}
-        </label>
-    {% endfor %}
-{% else %}
-    <p>No detected medicines</p>
-{% endif %} 
-            
-<label>Add / Correct Medicines Manually</label>
+                    <p><b>Staff Approved Medicines:</b></p>
+                    <pre data-approved-meds>{{ req.approved_medicines if req.approved_medicines else "Not approved yet" }}</pre>
 
-<textarea
-    name="manual_medicines"
-    rows="3"
-    placeholder="Example: Paracetamol 500mg, ORS, Vitamin D3"
-    style="width:100%; padding:12px; border-radius:12px;"
-></textarea>
-            <button class="approve" type="submit" name="action" value="Approved">Approve</button>
-            <button class="reject" type="submit" name="action" value="Rejected">Reject</button>
-        </form>
+                    <div class="form-actions">
+                        <button class="approve" type="submit" name="action" value="Approved">Approve Prescription</button>
+                        <button class="reject" type="submit" name="action" value="Rejected">Reject Prescription</button>
+                    </div>
+                    <div class="review-message" data-review-message></div>
+                </form>
+            </section>
+        </div>
+
+        <section class="history-panel">
+            <h3>Prescription History</h3>
+            <ul class="history-list" data-history>
+                <li><span>Uploaded</span><strong>{{ req.created_at }}</strong></li>
+                <li><span>Status Tracking</span><strong data-history-status>{{ req.status }}</strong></li>
+                <li><span>Reviewed</span><strong data-history-reviewed>{{ req.reviewed_at if req.reviewed_at else "Waiting for review" }}</strong></li>
+                <li><span>Staff Note</span><strong data-history-note>{{ req.staff_note if req.staff_note else "No notes yet" }}</strong></li>
+            </ul>
+        </section>
     </div>
     {% endfor %}
 {% else %}
@@ -194,6 +361,129 @@
     <a href="/staff">Back to Staff Dashboard</a>
 </p>
 
+<script>
+    document.querySelectorAll("[data-prescription-card]").forEach((card) => {
+        const image = card.querySelector("[data-prescription-image]");
+        let zoom = 1;
+        let rotation = 0;
+
+        const renderImage = () => {
+            if (image) {
+                image.style.transform = `scale(${zoom}) rotate(${rotation}deg)`;
+            }
+        };
+
+        const bind = (selector, handler) => {
+            const control = card.querySelector(selector);
+            if (control) {
+                control.addEventListener("click", handler);
+            }
+        };
+
+        bind("[data-zoom-in]", () => {
+            zoom = Math.min(zoom + 0.15, 2.5);
+            renderImage();
+        });
+
+        bind("[data-zoom-out]", () => {
+            zoom = Math.max(zoom - 0.15, 0.55);
+            renderImage();
+        });
+
+        bind("[data-rotate-left]", () => {
+            rotation -= 90;
+            renderImage();
+        });
+
+        bind("[data-rotate-right]", () => {
+            rotation += 90;
+            renderImage();
+        });
+
+        bind("[data-reset-view]", () => {
+            zoom = 1;
+            rotation = 0;
+            renderImage();
+        });
+    });
+
+    document.querySelectorAll(".review-form").forEach((form) => {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const submitter = event.submitter;
+            if (!submitter) {
+                return;
+            }
+
+            const card = form.closest("[data-prescription-card]");
+            const message = card.querySelector("[data-review-message]");
+            const formData = new FormData(form);
+            formData.set("action", submitter.value);
+            formData.set("_ajax", "1");
+            const reviewUrl = new URL(form.getAttribute("action"), window.location.href);
+            reviewUrl.searchParams.set("ajax", "1");
+
+            message.textContent = "Saving review...";
+            message.className = "review-message";
+            submitter.disabled = true;
+
+            try {
+                const response = await fetch(reviewUrl.toString(), {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/json"
+                    }
+                });
+                const responseText = await response.text();
+                let data;
+
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error(
+                        response.redirected
+                            ? "Session expired. Please log in again."
+                            : `Server returned ${response.status}. Please refresh once and try again.`
+                    );
+                }
+
+                if (!response.ok || !data.ok) {
+                    throw new Error(data.message || "Review failed");
+                }
+
+                const statusBadge = card.querySelector("[data-status-badge]");
+                const approvedMeds = card.querySelector("[data-approved-meds]");
+                const historyStatus = card.querySelector("[data-history-status]");
+                const historyReviewed = card.querySelector("[data-history-reviewed]");
+                const historyNote = card.querySelector("[data-history-note]");
+
+                statusBadge.textContent = data.status;
+                statusBadge.className = "status-badge " + (
+                    data.status === "Approved" ? "approved" :
+                    data.status === "Rejected" ? "rejected" :
+                    "pending"
+                );
+                approvedMeds.textContent = data.approved_medicines || "Not approved yet";
+                historyStatus.textContent = data.status;
+                historyReviewed.textContent = data.reviewed_at || "Just now";
+                historyNote.textContent = data.staff_note || "No notes yet";
+                form.querySelector("[name='manual_medicines']").value = "";
+
+                message.textContent = data.message;
+                message.className = "review-message success";
+            } catch (error) {
+                message.textContent = error.message;
+                message.className = "review-message error";
+            } finally {
+                submitter.disabled = false;
+            }
+        });
+    });
+</script>
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+<script src="{{ url_for('static', filename='js/preserve_scroll.js') }}"></script>
 </body>
 </html>

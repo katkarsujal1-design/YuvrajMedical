@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yuvraj Medical - Staff Dashboard</title>
+<script src="{{ url_for('static', filename='js/preserve_scroll_head.js') }}"></script>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
@@ -208,10 +209,24 @@ body{
     border:1px solid rgba(255,255,255,0.5);
     box-shadow:0 10px 30px rgba(0,0,0,0.06);
     transition:0.35s ease;
+    min-height:142px;
 }
 
 .stat:hover{
     transform:translateY(-8px) scale(1.02);
+}
+
+.stat-icon{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:14px;
+    background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(6,182,212,.18));
+    color:var(--primary);
+    font-size:20px;
 }
 
 .stat h3{
@@ -224,6 +239,58 @@ body{
     font-size:34px;
     font-weight:800;
     color:var(--dark);
+}
+
+.quick-actions{
+    margin-top:22px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:16px;
+}
+
+.quick-action{
+    min-height:82px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    text-decoration:none;
+    padding:18px;
+    border-radius:22px;
+    background:linear-gradient(145deg,#ffffff,#f8fafc);
+    border:1px solid rgba(255,255,255,0.75);
+    color:var(--dark);
+    box-shadow:0 12px 28px rgba(15,23,42,0.07);
+    transition:0.3s ease;
+}
+
+.quick-action:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 36px rgba(99,102,241,0.14);
+}
+
+.quick-action span{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#ffffff;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    font-size:18px;
+}
+
+.quick-action strong{
+    display:block;
+    font-size:15px;
+}
+
+.quick-action small{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-weight:700;
 }
 
 .grid{
@@ -337,6 +404,38 @@ body{
     margin-top:28px;
 }
 
+.management-toolbar{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr auto;
+    gap:12px;
+    margin:18px 0;
+}
+
+.management-toolbar input,
+.management-toolbar select{
+    min-height:44px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:0 14px;
+    background:#ffffff;
+    color:var(--dark);
+    font-weight:700;
+}
+
+.toolbar-link{
+    min-height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    padding:0 16px;
+    border-radius:14px;
+    color:#ffffff;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    font-weight:800;
+    white-space:nowrap;
+}
+
 .inventory-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
@@ -371,6 +470,12 @@ body{
     box-shadow:0 22px 45px rgba(99,102,241,0.16);
 }
 
+.med-card.is-removing{
+    opacity:0;
+    transform:scale(.96);
+    pointer-events:none;
+}
+
 .med-top{
     display:flex;
     justify-content:space-between;
@@ -390,6 +495,16 @@ body{
     justify-content:center;
     font-size:28px;
     box-shadow:0 10px 25px rgba(99,102,241,0.28);
+}
+
+.med-image{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    object-fit:cover;
+    border:1px solid rgba(99,102,241,.18);
+    background:#ffffff;
+    box-shadow:0 10px 25px rgba(99,102,241,0.18);
 }
 
 .med-id{
@@ -464,6 +579,144 @@ body{
     color:var(--primary);
     font-weight:800;
     font-size:13px;
+}
+
+.detail-list{
+    margin-top:16px;
+    display:grid;
+    gap:8px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+.detail-list b{
+    color:var(--dark);
+}
+
+.card-actions{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.mini-btn{
+    min-height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    border:0;
+    border-radius:12px;
+    padding:0 12px;
+    color:#ffffff;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    font-weight:800;
+    cursor:pointer;
+}
+
+.mini-btn.danger{
+    background:linear-gradient(135deg,#dc2626,#ef4444);
+}
+
+.edit-details{
+    grid-column:1 / -1;
+}
+
+.edit-details summary{
+    list-style:none;
+    min-height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:#eef2ff;
+    color:var(--primary);
+    font-weight:900;
+    cursor:pointer;
+}
+
+.edit-form{
+    margin-top:14px;
+    display:grid;
+    gap:10px;
+}
+
+.edit-form input,
+.edit-form textarea,
+.edit-form select,
+.form textarea,
+.form select{
+    min-height:42px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:10px 12px;
+    background:#ffffff;
+    color:var(--dark);
+    font-weight:700;
+}
+
+.edit-form textarea,
+.form textarea{
+    min-height:72px;
+    resize:vertical;
+}
+
+.stock-action-form{
+    margin-top:14px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.stock-action-form select,
+.stock-action-form input{
+    min-height:38px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:8px 10px;
+    background:#fff;
+    color:var(--dark);
+    font-weight:700;
+}
+
+.stock-action-form input[name="note"],
+.stock-action-form button{
+    grid-column:1 / -1;
+}
+
+.inventory-insights{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+.insight-list{
+    display:grid;
+    gap:10px;
+}
+
+.insight-row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:#f8fafc;
+    color:var(--dark);
+    font-weight:800;
+}
+
+.insight-row span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+.stock-history-table{
+    width:100%;
 }
 
 .table-wrapper{
@@ -688,6 +941,10 @@ tr:hover{
     .form button{
         grid-column:span 1;
     }
+
+    .management-toolbar{
+        grid-template-columns:1fr;
+    }
 }
 </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
@@ -714,7 +971,7 @@ tr:hover{
         </div>
 
         <div class="menu">
-            <a href="#" class="active">📊 Dashboard</a>
+            <a href="#dashboard-home" class="active">📊 Dashboard</a>
             <a href="#addmedicine">➕ Add Medicine</a>
             <a href="#inventory">💊 Inventory</a>
             <a href="#orders">📦 Orders</a>
@@ -748,58 +1005,120 @@ tr:hover{
         {% endif %}
         {% endwith %}
 
+        <section id="dashboard-home" aria-label="Dashboard Home">
         <div class="stats">
             <div class="stat">
+                <div class="stat-icon">💊</div>
+                <h3>Total Medicines</h3>
+                <p>{{ total_medicines }}</p>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">📦</div>
                 <h3>Total Orders</h3>
                 <p>{{ total_orders }}</p>
             </div>
 
             <div class="stat">
+                <div class="stat-icon">🗓</div>
+                <h3>Today's Orders</h3>
+                <p>{{ today_orders }}</p>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">⏳</div>
                 <h3>Pending Orders</h3>
                 <p>{{ pending_orders }}</p>
             </div>
 
             <div class="stat">
+                <div class="stat-icon">✅</div>
                 <h3>Delivered Orders</h3>
                 <p>{{ delivered_orders }}</p>
             </div>
 
             <div class="stat">
-                <h3>Total Medicines</h3>
-                <p>{{ total_medicines }}</p>
+                <div class="stat-icon">✕</div>
+                <h3>Cancelled Orders</h3>
+                <p>{{ cancelled_orders }}</p>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">₹</div>
+                <h3>Revenue Today</h3>
+                <p>₹{{ "%.2f"|format(revenue_today|float) }}</p>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">!</div>
+                <h3>Low Stock Count</h3>
+                <p>{{ low_stock_count }}</p>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">⏱</div>
+                <h3>Expiring Medicines Count</h3>
+                <p>{{ expiring_medicines_count }}</p>
+            </div>
+
+            <div class="stat">
+                <div class="stat-icon">Rx</div>
+                <h3>Prescription Requests Count</h3>
+                <p>{{ prescription_requests_count }}</p>
             </div>
         </div>
+
+        <div class="quick-actions" aria-label="Quick Action Buttons">
+            <a class="quick-action" href="#addmedicine">
+                <span>➕</span>
+                <div><strong>Add Medicine</strong><small>Create new stock item</small></div>
+            </a>
+            <a class="quick-action" href="#orders">
+                <span>📦</span>
+                <div><strong>Manage Orders</strong><small>Update delivery status</small></div>
+            </a>
+            <a class="quick-action" href="/staff_prescriptions">
+                <span>Rx</span>
+                <div><strong>Prescription Requests</strong><small>Review pending uploads</small></div>
+            </a>
+            <a class="quick-action" href="#inventory">
+                <span>💊</span>
+                <div><strong>View Inventory</strong><small>Check stock and expiry</small></div>
+            </a>
+            <a class="quick-action" href="/scan_barcode">
+                <span>▣</span>
+                <div><strong>Scan Barcode</strong><small>Find medicine quickly</small></div>
+            </a>
+        </div>
+        </section>
 
         <div class="grid">
 
             <div class="panel" id="addmedicine">
                 <h2>➕ Add New Medicine</h2>
 
-                <form class="form" method="POST" action="/add_medicine">
+                <form class="form" method="POST" action="/add_medicine" enctype="multipart/form-data">
                     <input name="name" placeholder="Medicine Name" required>
-                    <select name="category" required style="
-    			padding:15px;
-		        border-radius:16px;
-    			border:1px solid #e2e8f0;
-	            ">
-    			<option value="">Select Type</option>
-    			<option value="Tablet">Tablet</option>
-    			<option value="Capsule">Capsule</option>
-    			<option value="Syrup">Syrup</option>
-    			<option value="Injection">Injection</option>
-    			<option value="Drops">Drops</option>
-    			<option value="Cream">Cream</option>
-    			<option value="Gel">Gel</option>
-    			<option value="Ointment">Ointment</option>
-    			<option value="Powder">Powder</option>
-		    </select> 
-                    <input type="number" name="price" placeholder="Price">
-
-                    <input type="number" name="stock" placeholder="Stock">
-
-                    <input type="date" name="expiry">
-
+                    <select name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Tablet">Tablet</option>
+                        <option value="Capsule">Capsule</option>
+                        <option value="Syrup">Syrup</option>
+                        <option value="Injection">Injection</option>
+                        <option value="Drops">Drops</option>
+                        <option value="Cream">Cream</option>
+                        <option value="Gel">Gel</option>
+                        <option value="Ointment">Ointment</option>
+                        <option value="Powder">Powder</option>
+                    </select>
+                    <input name="medicine_type" placeholder="Medicine Type">
+                    <input type="date" name="manufacturing_date" title="Manufacturing Date">
+                    <input type="date" name="expiry" title="Expiry Date">
+                    <input type="number" name="purchase_price" min="0" step="0.01" placeholder="Purchase Price">
+                    <input type="number" name="price" min="0" step="0.01" placeholder="Selling Price">
+                    <input type="number" name="stock" min="0" placeholder="Stock">
                     <input type="text" name="barcode" placeholder="Barcode Number">
+                    <input type="file" name="image" accept="image/*" capture="environment" title="Upload or Capture Medicine Image">
 
                     <button class="btn">
                         ➕ Add Medicine
@@ -832,28 +1151,50 @@ tr:hover{
         <div class="panel table-panel" id="inventory">
     <h2>💊 Smart Medicine Inventory</h2>
 
-    <a
-        href="/generate_all_barcodes"
-        style="
-            display:inline-block;
-            margin-bottom:15px;
-            padding:12px 18px;
-            background:linear-gradient(135deg,#6366f1,#06b6d4);
-            color:white;
-            text-decoration:none;
-            border-radius:14px;
-            font-weight:800;
-        "
-    >
-        🏷 Generate Missing Barcodes
-    </a>
+    <div class="stats">
+        <div class="stat"><div class="stat-icon">Σ</div><h3>Current Stock</h3><p>{{ inventory_summary.get("total_units") or 0 }}</p></div>
+        <div class="stat"><div class="stat-icon">!</div><h3>Low Stock Alert</h3><p>{{ inventory_summary.get("low_stock_count") or 0 }}</p></div>
+        <div class="stat"><div class="stat-icon">0</div><h3>Out Of Stock Alert</h3><p>{{ inventory_summary.get("out_of_stock_count") or 0 }}</p></div>
+        <div class="stat"><div class="stat-icon">₹</div><h3>Inventory Value</h3><p>₹{{ "%.2f"|format((inventory_summary.get("inventory_selling_value") or 0)|float) }}</p></div>
+    </div>
+
+    <div class="management-toolbar">
+        <input id="medicineSearch" type="search" placeholder="Search medicine, category, barcode...">
+        <select id="medicineFilter">
+            <option value="">All Medicines</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+            <option value="expired">Expired</option>
+            <option value="expiring">Expiring Soon</option>
+            <option value="no-barcode">No Barcode</option>
+        </select>
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+        </select>
+        <a class="toolbar-link" href="/download_inventory_excel">Download Excel</a>
+        <a class="toolbar-link" href="/generate_all_barcodes">Generate Barcodes</a>
+        <a class="toolbar-link" href="/scan_barcode">Barcode Search</a>
+    </div>
 
     <div class="inventory-grid">
                 {% for m in medicines %}
+                {% set selling = m.get("price") or 0 %}
+                {% set purchase = m.get("purchase_price") or 0 %}
+                {% set profit = (selling|float) - (purchase|float) %}
 
-                <div class="med-card">
+                <div class="med-card"
+                     data-name="{{ m.get('name') or '' }}"
+                     data-category="{{ m.get('category') or '' }}"
+                     data-barcode="{{ m.get('barcode') or '' }}"
+                     data-stock="{{ m.get('stock') or 0 }}"
+                     data-threshold="{{ m.get('low_stock_threshold') or 10 }}"
+                     data-expiry="{{ m.get('expiry_date') or '' }}">
                     <div class="med-top">
-                        <div class="med-icon">💊</div>
+                        {% if m.get("image_url") %}
+                            <img class="med-image" src="{{ m.get('image_url') }}" alt="{{ m['name'] }}">
+                        {% else %}
+                            <div class="med-icon">💊</div>
+                        {% endif %}
                         <div class="med-id">#{{ m["id"] }}</div>
                     </div>
 
@@ -865,8 +1206,13 @@ tr:hover{
 
                     <div class="med-info">
                         <div class="med-box">
-                            <span>Price</span>
+                            <span>Selling Price</span>
                             <b>₹{{ m["price"] }}</b>
+                        </div>
+
+                        <div class="med-box">
+                            <span>Purchase Price</span>
+                            <b>₹{{ m.get("purchase_price") or 0 }}</b>
                         </div>
 
                         <div class="med-box">
@@ -880,10 +1226,20 @@ tr:hover{
                                 <b class="stock-good">{{ m["stock"] }} Left</b>
                             {% endif %}
                         </div>
+
+                        <div class="med-box">
+                            <span>Profit Margin</span>
+                            <b class="{% if profit >= 0 %}stock-good{% else %}stock-out{% endif %}">₹{{ "%.2f"|format(profit) }}</b>
+                        </div>
                     </div>
 
                     <div class="expiry-pill">
                         Expiry: {{ m["expiry_date"] }}
+                    </div>
+
+                    <div class="detail-list">
+                        <div><b>Type:</b> {{ m.get("medicine_type") or m.get("category") or "General" }}</div>
+                        <div><b>Manufacturing:</b> {{ m.get("manufacturing_date") or "Not set" }}</div>
                     </div>
 
                     {% if m["barcode"] %}
@@ -891,9 +1247,107 @@ tr:hover{
                         Barcode: {{ m["barcode"] }}
                     </div>
                     {% endif %}
+
+                    <div class="card-actions">
+                        <a class="mini-btn" href="/medicine/{{ m['id'] }}">View Details</a>
+                        <a class="mini-btn danger medicine-delete" href="/delete_medicine/{{ m['id'] }}">Delete</a>
+                        <details class="edit-details">
+                            <summary>Edit Medicine</summary>
+                            <form class="edit-form medicine-edit-form" method="POST" action="/edit_medicine/{{ m['id'] }}" enctype="multipart/form-data">
+                                <input name="name" value="{{ m.get('name') or '' }}" required>
+                                <input name="category" value="{{ m.get('category') or '' }}" required>
+                                <input name="medicine_type" value="{{ m.get('medicine_type') or '' }}" placeholder="Medicine Type">
+                                <input name="manufacturing_date" type="date" value="{{ m.get('manufacturing_date') or '' }}">
+                                <input name="expiry" type="date" value="{{ m.get('expiry_date') or '' }}">
+                                <input name="purchase_price" type="number" min="0" step="0.01" value="{{ m.get('purchase_price') or 0 }}" placeholder="Purchase Price">
+                                <input name="price" type="number" min="0" step="0.01" value="{{ m.get('price') or 0 }}" placeholder="Selling Price">
+                                <input name="stock" type="number" min="0" value="{{ m.get('stock') or 0 }}" placeholder="Stock">
+                                <input name="barcode" value="{{ m.get('barcode') or '' }}" placeholder="Barcode">
+                                <input name="image" type="file" accept="image/*" capture="environment">
+                                <button class="mini-btn" type="submit">Save Changes</button>
+                            </form>
+                        </details>
+                        <details class="edit-details">
+                            <summary>Stock Action</summary>
+                            <form class="stock-action-form" method="POST" action="/staff/inventory/{{ m['id'] }}/stock_action">
+                                <select name="action_type">
+                                    <option value="refill">Refill Stock</option>
+                                    <option value="transfer">Stock Transfer</option>
+                                    <option value="damaged">Damaged Stock Entry</option>
+                                    <option value="returned">Returned Stock Entry</option>
+                                    <option value="audit">Stock Audit</option>
+                                </select>
+                                <input name="quantity" type="number" min="1" required placeholder="Quantity">
+                                <input name="note" placeholder="Reason / location / audit note">
+                                <button class="mini-btn" type="submit">Save Stock Action</button>
+                            </form>
+                        </details>
+                    </div>
                 </div>
 
                 {% endfor %}
+            </div>
+        </div>
+
+        <div class="inventory-insights">
+            <div class="panel">
+                <h2>Inventory Analytics</h2>
+                <div class="insight-list">
+                    <div class="insight-row"><strong>Cost Value</strong><span>₹{{ "%.2f"|format((inventory_summary.get("inventory_cost_value") or 0)|float) }}</span></div>
+                    <div class="insight-row"><strong>Selling Value</strong><span>₹{{ "%.2f"|format((inventory_summary.get("inventory_selling_value") or 0)|float) }}</span></div>
+                    <div class="insight-row"><strong>Potential Margin</strong><span>₹{{ "%.2f"|format(((inventory_summary.get("inventory_selling_value") or 0)|float) - ((inventory_summary.get("inventory_cost_value") or 0)|float)) }}</span></div>
+                </div>
+            </div>
+            <div class="panel">
+                <h2>Fast Moving Medicines</h2>
+                <div class="insight-list">
+                    {% for med in fast_moving_medicines %}
+                    <div class="insight-row"><strong>{{ med["name"] }}</strong><span>{{ med["sold_quantity"] }} sold</span></div>
+                    {% else %}
+                    <div class="insight-row"><strong>No sales yet</strong><span>Last 30 days</span></div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel">
+                <h2>Slow Moving Medicines</h2>
+                <div class="insight-list">
+                    {% for med in slow_moving_medicines %}
+                    <div class="insight-row"><strong>{{ med["name"] }}</strong><span>{{ med["sold_quantity"] }} sold</span></div>
+                    {% else %}
+                    <div class="insight-row"><strong>No slow movers</strong><span>Last 90 days</span></div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel">
+                <h2>Dead Stock Analysis</h2>
+                <div class="insight-list">
+                    {% for med in dead_stock_medicines %}
+                    <div class="insight-row"><strong>{{ med["name"] }}</strong><span>{{ med["stock"] }} in stock</span></div>
+                    {% else %}
+                    <div class="insight-row"><strong>No dead stock</strong><span>Last 90 days</span></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="panel table-panel">
+            <h2>Stock History</h2>
+            <div class="table-wrapper">
+                <table class="stock-history-table" id="stockHistoryTable">
+                    <tr><th>Medicine</th><th>Change</th><th>Previous</th><th>Current</th><th>Reason</th><th>Date</th></tr>
+                    {% for movement in stock_movements %}
+                    <tr>
+                        <td>{{ movement["medicine_name"] }}</td>
+                        <td>{{ "+" if movement["change_quantity"] > 0 else "" }}{{ movement["change_quantity"] }}</td>
+                        <td>{{ movement["previous_stock"] }}</td>
+                        <td>{{ movement["new_stock"] }}</td>
+                        <td>{{ movement["reason"] }}</td>
+                        <td>{{ movement["created_at"] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6">No stock history yet.</td></tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
 
@@ -978,5 +1432,248 @@ tr:hover{
 </div>
 
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+<script src="{{ url_for('static', filename='js/preserve_scroll.js') }}"></script>
+<script>
+(() => {
+    const cards = [...document.querySelectorAll(".med-card")];
+    const search = document.getElementById("medicineSearch");
+    const status = document.getElementById("medicineFilter");
+    const category = document.getElementById("categoryFilter");
+    if (!cards.length || !search || !status || !category) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const soon = new Date(today);
+    soon.setDate(soon.getDate() + 30);
+
+    const categoryMap = new Map();
+    cards.forEach(card => {
+        const label = (card.dataset.category || "General").trim() || "General";
+        const key = label.toLowerCase();
+        if (!categoryMap.has(key)) categoryMap.set(key, label);
+    });
+    [...categoryMap.entries()].sort((a, b) => a[1].localeCompare(b[1])).forEach(([key, label]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = label;
+        category.appendChild(option);
+    });
+
+    const expiryDate = card => {
+        if (!card.dataset.expiry) return null;
+        const parsed = new Date(card.dataset.expiry);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    };
+
+    const matchesStatus = card => {
+        const selected = status.value;
+        const stock = Number(card.dataset.stock || 0);
+        const threshold = Number(card.dataset.threshold || 10);
+        const expiry = expiryDate(card);
+        if (!selected) return true;
+        if (selected === "low") return stock > 0 && stock <= threshold;
+        if (selected === "out") return stock === 0;
+        if (selected === "expired") return expiry && expiry < today;
+        if (selected === "expiring") return expiry && expiry >= today && expiry <= soon;
+        if (selected === "no-barcode") return !(card.dataset.barcode || "").trim();
+        return true;
+    };
+
+    const applyFilters = () => {
+        const query = search.value.trim().toLowerCase();
+        const selectedCategory = category.value;
+        cards.forEach(card => {
+            const haystack = [
+                card.dataset.name,
+                card.dataset.category,
+                card.dataset.barcode
+            ].join(" ").toLowerCase();
+            const categoryMatch = !selectedCategory || (card.dataset.category || "").toLowerCase() === selectedCategory;
+            const visible = (!query || haystack.includes(query)) && categoryMatch && matchesStatus(card);
+            card.style.display = visible ? "" : "none";
+        });
+    };
+
+    [search, status, category].forEach(control => control.addEventListener("input", applyFilters));
+    [status, category].forEach(control => control.addEventListener("change", applyFilters));
+})();
+
+(() => {
+    document.querySelectorAll(".medicine-delete").forEach((link) => {
+        link.addEventListener("click", async (event) => {
+            event.preventDefault();
+            if (!window.confirm("Delete this medicine?")) return;
+
+            const card = link.closest(".med-card");
+            link.style.pointerEvents = "none";
+            link.textContent = "Deleting...";
+
+            try {
+                const response = await fetch(link.href, {
+                    method: "DELETE",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/json"
+                    }
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok || !result.ok) {
+                    throw new Error(result.message || "Delete failed");
+                }
+
+                if (card) {
+                    card.classList.add("is-removing");
+                    setTimeout(() => {
+                        card.remove();
+                    }, 220);
+                }
+            } catch (error) {
+                link.style.pointerEvents = "";
+                link.textContent = "Delete";
+                alert(error.message || "Delete failed");
+            }
+        });
+    });
+})();
+
+(() => {
+    const money = value => {
+        const number = Number(value || 0);
+        return Number.isFinite(number) ? number.toFixed(2) : "0.00";
+    };
+
+    document.querySelectorAll(".medicine-edit-form").forEach((form) => {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button ? button.textContent : "";
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Saving...";
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/json"
+                    }
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok || !result.ok) {
+                    throw new Error(result.message || "Save failed");
+                }
+
+                const card = form.closest(".med-card");
+                if (card) {
+                    const name = form.elements.name?.value || "";
+                    const categoryValue = form.elements.category?.value || "";
+                    const selling = Number(form.elements.price?.value || 0);
+                    const purchase = Number(form.elements.purchase_price?.value || 0);
+                    const profit = selling - purchase;
+                    const stock = Number(form.elements.stock?.value || 0);
+                    const expiry = form.elements.expiry?.value || "";
+                    const manufacturing = form.elements.manufacturing_date?.value || "Not set";
+                    const barcode = form.elements.barcode?.value || "";
+
+                    card.dataset.name = name;
+                    card.dataset.category = categoryValue;
+                    card.dataset.barcode = barcode;
+                    card.dataset.stock = String(stock);
+                    card.dataset.expiry = expiry;
+                    card.querySelector("h3").textContent = name;
+                    card.querySelector(".med-category").textContent = categoryValue;
+                    const boxes = card.querySelectorAll(".med-box b");
+                    if (boxes[0]) boxes[0].textContent = `₹${money(selling)}`;
+                    if (boxes[1]) boxes[1].textContent = `₹${money(purchase)}`;
+                    if (boxes[2]) {
+                        boxes[2].textContent = `${stock} Left`;
+                        boxes[2].className = stock === 0 ? "stock-out" : stock < 10 ? "stock-low" : "stock-good";
+                    }
+                    if (boxes[3]) {
+                        boxes[3].textContent = `₹${money(profit)}`;
+                        boxes[3].className = profit >= 0 ? "stock-good" : "stock-out";
+                    }
+                    const expiryPill = card.querySelector(".expiry-pill");
+                    if (expiryPill) expiryPill.textContent = `Expiry: ${expiry}`;
+                    const detailItems = card.querySelectorAll(".detail-list div");
+                    if (detailItems[0]) detailItems[0].innerHTML = `<b>Type:</b> ${form.elements.medicine_type?.value || categoryValue || "General"}`;
+                    if (detailItems[1]) detailItems[1].innerHTML = `<b>Manufacturing:</b> ${manufacturing}`;
+                    const barcodePill = [...card.querySelectorAll(".expiry-pill")].find(pill => pill.textContent.trim().startsWith("Barcode:"));
+                    if (barcodePill) barcodePill.textContent = `Barcode: ${barcode}`;
+                }
+
+                form.closest("details")?.removeAttribute("open");
+            } catch (error) {
+                alert(error.message || "Save failed");
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            }
+        });
+    });
+})();
+
+(() => {
+    document.querySelectorAll(".stock-action-form").forEach((form) => {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button ? button.textContent : "";
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Saving...";
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/json"
+                    }
+                });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok || !result.ok) {
+                    throw new Error(result.message || "Stock action failed");
+                }
+
+                const card = form.closest(".med-card");
+                if (card) {
+                    card.dataset.stock = String(result.new_stock);
+                    const stockBox = card.querySelectorAll(".med-box b")[2];
+                    if (stockBox) {
+                        stockBox.textContent = `${result.new_stock} Left`;
+                        stockBox.className = result.new_stock === 0 ? "stock-out" : result.new_stock < Number(card.dataset.threshold || 10) ? "stock-low" : "stock-good";
+                    }
+                    const quantityInput = form.elements.quantity;
+                    const noteInput = form.elements.note;
+                    if (quantityInput) quantityInput.value = "";
+                    if (noteInput) noteInput.value = "";
+                    form.closest("details")?.removeAttribute("open");
+                }
+
+                const history = document.getElementById("stockHistoryTable");
+                if (history) {
+                    const row = history.insertRow(1);
+                    row.innerHTML = `<td>${result.medicine_name || ""}</td><td>${result.change > 0 ? "+" : ""}${result.change}</td><td>${result.previous_stock}</td><td>${result.new_stock}</td><td>${result.reason || ""}</td><td>Just now</td>`;
+                }
+            } catch (error) {
+                alert(error.message || "Stock action failed");
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            }
+        });
+    });
+})();
+</script>
 </body>
 </html>
