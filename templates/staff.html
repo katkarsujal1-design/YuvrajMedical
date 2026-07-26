@@ -293,6 +293,119 @@ body{
     font-weight:700;
 }
 
+.notification-panel{
+    margin-top:24px;
+    background:rgba(255,255,255,0.9);
+    border:1px solid rgba(255,255,255,0.72);
+    border-radius:24px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(15,23,42,0.07);
+}
+
+.notification-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.notification-header h2{
+    color:var(--dark);
+    font-size:22px;
+}
+
+.notification-total{
+    min-width:42px;
+    height:42px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    color:white;
+    font-weight:900;
+}
+
+.notification-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px;
+}
+
+.notification-card{
+    text-decoration:none;
+    display:grid;
+    grid-template-columns:46px 1fr auto;
+    align-items:center;
+    gap:12px;
+    min-height:92px;
+    padding:16px;
+    border-radius:18px;
+    background:#f8fafc;
+    border:1px solid var(--border);
+    color:var(--text);
+}
+
+.notification-icon{
+    width:46px;
+    height:46px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    background:#e0f2fe;
+}
+
+.notification-card h3{
+    font-size:14px;
+    color:var(--dark);
+}
+
+.notification-card p{
+    margin-top:5px;
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.35;
+}
+
+.notification-count{
+    min-width:34px;
+    height:34px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    background:#e2e8f0;
+    color:var(--dark);
+}
+
+.notification-card.warning .notification-icon,
+.notification-card.warning .notification-count{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.notification-card.danger .notification-icon,
+.notification-card.danger .notification-count{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.notification-card.info .notification-icon,
+.notification-card.info .notification-count{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.notification-card.ok .notification-icon,
+.notification-card.ok .notification-count{
+    background:#dcfce7;
+    color:#15803d;
+}
+
 .grid{
     display:grid;
     grid-template-columns:2fr 1fr;
@@ -715,6 +828,585 @@ body{
     font-size:12px;
 }
 
+.report-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:14px;
+    margin:16px 0 22px;
+}
+
+.report-card{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:#ffffff;
+    box-shadow:0 12px 24px rgba(15,23,42,.06);
+}
+
+.report-card span{
+    display:block;
+    color:#64748b;
+    font-size:12px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+.report-card strong{
+    display:block;
+    margin-top:7px;
+    color:var(--dark);
+    font-size:24px;
+}
+
+.report-table{
+    width:100%;
+}
+
+.dashboard-charts{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:22px;
+}
+
+.chart-panel{
+    background:rgba(255,255,255,0.88);
+    border:1px solid rgba(255,255,255,0.65);
+    border-radius:26px;
+    padding:24px;
+    box-shadow:0 12px 35px rgba(15,23,42,0.07);
+}
+
+.chart-panel h2{
+    color:var(--dark);
+    font-size:22px;
+    margin-bottom:18px;
+}
+
+.bar-chart{
+    height:220px;
+    display:flex;
+    align-items:end;
+    gap:12px;
+    padding:18px 8px 4px;
+    border-radius:18px;
+    background:linear-gradient(180deg,#f8fafc,#ffffff);
+    border:1px solid var(--border);
+}
+
+.bar-item{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    gap:9px;
+    height:100%;
+}
+
+.bar-value{
+    width:100%;
+    min-height:8px;
+    border-radius:10px 10px 4px 4px;
+    background:linear-gradient(180deg,var(--accent),var(--primary));
+    box-shadow:0 10px 18px rgba(99,102,241,.18);
+}
+
+.bar-label{
+    width:100%;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:900;
+    text-align:center;
+    overflow-wrap:anywhere;
+}
+
+.donut-chart{
+    display:grid;
+    grid-template-columns:150px 1fr;
+    gap:20px;
+    align-items:center;
+}
+
+.donut-ring{
+    width:150px;
+    aspect-ratio:1;
+    border-radius:50%;
+    background:conic-gradient(#16a34a 0 var(--delivered-share), #f59e0b var(--delivered-share) var(--pending-share), #dc2626 var(--pending-share) 100%);
+    display:grid;
+    place-items:center;
+    box-shadow:0 15px 28px rgba(15,23,42,.11);
+}
+
+.donut-ring::after{
+    content:attr(data-total);
+    width:92px;
+    aspect-ratio:1;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:#ffffff;
+    color:var(--dark);
+    font-size:28px;
+    font-weight:950;
+}
+
+.chart-legend{
+    display:grid;
+    gap:11px;
+}
+
+.legend-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:11px 12px;
+    border-radius:14px;
+    background:#f8fafc;
+    border:1px solid var(--border);
+    color:var(--dark);
+    font-weight:900;
+}
+
+.legend-row span{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+}
+
+.legend-dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:var(--dot);
+}
+
+.staff-home{
+    --dash-green:#16a34a;
+    --dash-blue:#2563eb;
+    --dash-purple:#7c3aed;
+    --dash-orange:#f97316;
+    --dash-red:#ef4444;
+    display:grid;
+    gap:18px;
+}
+
+.staff-home .stats{
+    grid-template-columns:repeat(5,minmax(160px,1fr));
+    gap:18px;
+    margin-top:20px;
+}
+
+.dashboard-stat{
+    position:relative;
+    overflow:hidden;
+    min-height:164px;
+    padding:22px;
+    border-radius:18px;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    box-shadow:0 14px 34px rgba(15,23,42,.07);
+}
+
+.dashboard-stat::after{
+    content:"";
+    position:absolute;
+    left:118px;
+    right:16px;
+    bottom:18px;
+    height:34px;
+    background:linear-gradient(135deg,transparent 10%,color-mix(in srgb,var(--metric-color) 24%,transparent) 10% 18%,transparent 18% 29%,color-mix(in srgb,var(--metric-color) 30%,transparent) 29% 37%,transparent 37% 48%,color-mix(in srgb,var(--metric-color) 34%,transparent) 48% 58%,transparent 58% 70%,color-mix(in srgb,var(--metric-color) 40%,transparent) 70% 78%,transparent 78%);
+    clip-path:polygon(0 80%,18% 62%,32% 70%,48% 36%,64% 58%,82% 22%,100% 34%,100% 100%,0 100%);
+    opacity:.9;
+}
+
+.dashboard-stat .stat-icon{
+    width:54px;
+    height:54px;
+    margin:0 0 15px;
+    border-radius:50%;
+    color:#ffffff;
+    background:linear-gradient(135deg,color-mix(in srgb,var(--metric-color) 72%,#ffffff),var(--metric-color));
+    box-shadow:0 14px 24px color-mix(in srgb,var(--metric-color) 24%,transparent);
+}
+
+.dashboard-stat h3{
+    color:#0f172a;
+    font-size:14px;
+    font-weight:900;
+}
+
+.dashboard-stat p{
+    margin-top:8px;
+    font-size:30px;
+    line-height:1;
+}
+
+.metric-change{
+    display:flex;
+    gap:7px;
+    align-items:center;
+    margin-top:20px;
+    color:#059669;
+    font-size:12px;
+    font-weight:900;
+}
+
+.metric-change.danger{
+    color:#ef4444;
+}
+
+.metric-change small{
+    color:#64748b;
+    font-weight:800;
+}
+
+.dashboard-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.4fr) minmax(320px,.95fr);
+    gap:18px;
+}
+
+.dashboard-card{
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 14px 34px rgba(15,23,42,.06);
+}
+
+.dashboard-card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    margin-bottom:16px;
+}
+
+.dashboard-card h2{
+    color:#0f172a;
+    font-size:21px;
+}
+
+.dashboard-link{
+    color:#047857;
+    font-size:13px;
+    font-weight:900;
+    text-decoration:underline;
+}
+
+.sales-summary{
+    display:flex;
+    align-items:end;
+    gap:14px;
+    margin-bottom:14px;
+}
+
+.sales-summary span{
+    display:block;
+    color:#64748b;
+    font-size:13px;
+    font-weight:800;
+}
+
+.sales-summary strong{
+    display:block;
+    margin-top:4px;
+    color:#0f172a;
+    font-size:30px;
+}
+
+.sales-badge{
+    display:inline-flex;
+    align-items:center;
+    min-height:30px;
+    padding:0 12px;
+    border-radius:999px;
+    color:#047857;
+    background:#d1fae5;
+    font-size:12px;
+    font-weight:900;
+}
+
+.sales-chart{
+    height:230px;
+    display:grid;
+    grid-template-columns:48px 1fr;
+    gap:10px;
+}
+
+.sales-axis{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding:8px 0 28px;
+    color:#64748b;
+    font-size:12px;
+    font-weight:800;
+}
+
+.sales-bars{
+    display:flex;
+    align-items:end;
+    gap:24px;
+    padding:8px 10px 0;
+    border-bottom:1px solid #e5e7eb;
+    background:repeating-linear-gradient(to top,#ffffff 0,#ffffff 47px,#eef2f7 48px);
+}
+
+.sales-bar-wrap{
+    flex:1;
+    min-width:34px;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    gap:9px;
+}
+
+.sales-bar{
+    width:min(52px,100%);
+    min-height:8px;
+    border-radius:7px 7px 0 0;
+    background:linear-gradient(180deg,#86efac,#059669);
+    box-shadow:0 12px 20px rgba(5,150,105,.18);
+}
+
+.sales-bar-label{
+    min-height:20px;
+    color:#475569;
+    font-size:12px;
+    font-weight:900;
+}
+
+.status-mix{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:18px;
+    align-items:center;
+}
+
+.status-ring{
+    width:178px;
+    aspect-ratio:1;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:conic-gradient(#22c55e 0 var(--delivered-share), #f59e0b var(--delivered-share) var(--pending-share), #ef4444 var(--pending-share) var(--cancelled-share), #3b82f6 var(--cancelled-share) 100%);
+}
+
+.status-ring-core{
+    width:104px;
+    aspect-ratio:1;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:#ffffff;
+    color:#0f172a;
+    font-weight:900;
+    text-align:center;
+    box-shadow:inset 0 0 0 1px #e5e7eb;
+}
+
+.status-ring-core strong{
+    display:block;
+    font-size:28px;
+}
+
+.status-ring-core span{
+    display:block;
+    margin-top:3px;
+    color:#334155;
+    font-size:12px;
+}
+
+.activity-list,
+.compact-table{
+    display:grid;
+    gap:0;
+}
+
+.activity-row{
+    display:grid;
+    grid-template-columns:44px 1fr auto;
+    gap:12px;
+    align-items:center;
+    min-height:66px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.activity-row:last-child{
+    border-bottom:0;
+}
+
+.activity-icon,
+.rank-pill{
+    width:40px;
+    height:40px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:#ecfdf5;
+    color:#059669;
+    font-weight:900;
+}
+
+.seller-name{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.activity-row strong,
+.compact-row strong{
+    color:#0f172a;
+    font-size:14px;
+}
+
+.activity-row small,
+.compact-row small{
+    display:block;
+    margin-top:3px;
+    color:#64748b;
+    font-size:12px;
+    font-weight:700;
+}
+
+.activity-time{
+    color:#64748b;
+    font-size:12px;
+    font-weight:800;
+}
+
+.dashboard-bottom{
+    display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(320px,.95fr);
+    gap:18px;
+}
+
+.compact-row{
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:14px;
+    align-items:center;
+    min-height:52px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.compact-row:last-child{
+    border-bottom:0;
+}
+
+.status-pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:28px;
+    padding:0 11px;
+    border-radius:999px;
+    color:#ea580c;
+    background:#ffedd5;
+    font-size:12px;
+    font-weight:900;
+}
+
+.status-pill.critical{
+    color:#dc2626;
+    background:#fee2e2;
+}
+
+.dashboard-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.dash-action{
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    border-radius:12px;
+    text-decoration:none;
+    color:#0f172a;
+    background:linear-gradient(135deg,#ffffff,var(--action-bg));
+    border:1px solid var(--action-border);
+    font-weight:900;
+}
+
+.dash-action span{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:var(--action-color);
+    background:color-mix(in srgb,var(--action-color) 13%,#ffffff);
+    font-size:20px;
+}
+
+.dashboard-search{
+    flex:1;
+    max-width:520px;
+    min-width:260px;
+    position:relative;
+}
+
+.dashboard-search input{
+    width:100%;
+    min-height:52px;
+    border:1px solid #dbe3ef;
+    border-radius:12px;
+    padding:0 48px 0 18px;
+    background:#ffffff;
+    color:#0f172a;
+    font-weight:700;
+}
+
+.dashboard-search span{
+    position:absolute;
+    right:17px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    font-size:20px;
+}
+
+.topbar-profile{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.profile-avatar{
+    width:46px;
+    height:46px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:linear-gradient(135deg,#bbf7d0,#22c55e);
+    color:#064e3b;
+    font-weight:950;
+}
+
+.topbar-profile strong{
+    display:block;
+    color:#0f172a;
+    font-size:14px;
+}
+
+.topbar-profile small{
+    display:block;
+    color:#64748b;
+    font-size:12px;
+    font-weight:800;
+}
+
 .stock-history-table{
     width:100%;
 }
@@ -815,6 +1507,164 @@ tr:hover{
     cursor:pointer;
 }
 
+.orders-toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin:14px 0;
+}
+
+.orders-toolbar input,
+.orders-toolbar select{
+    min-height:40px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:9px 12px;
+    color:var(--dark);
+    background:#ffffff;
+    font-weight:700;
+}
+
+.orders-toolbar input{
+    min-width:min(320px,100%);
+}
+
+.order-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-bottom:10px;
+}
+
+.order-action{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:32px;
+    padding:7px 10px;
+    border-radius:10px;
+    color:#ffffff;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    font-size:12px;
+    font-weight:800;
+    text-decoration:none;
+}
+
+.order-action.secondary{
+    color:var(--dark);
+    background:#eef2ff;
+}
+
+.customer-details{
+    display:grid;
+    gap:3px;
+    font-size:12px;
+    color:#64748b;
+    margin-top:5px;
+}
+
+.floating-ai-assistant{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:1400;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    color:#ffffff;
+    text-decoration:none;
+    font-size:24px;
+    background:linear-gradient(135deg,#7f1d4e,#0f766e);
+    box-shadow:0 14px 30px rgba(15,23,42,.22);
+    transition:.25s;
+}
+
+.floating-ai-assistant:hover{
+    transform:translateY(-4px);
+}
+
+.floating-ai-assistant::after{
+    content:"AI";
+    position:absolute;
+    top:-5px;
+    right:-5px;
+    min-width:22px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    padding:0 5px;
+    border-radius:999px;
+    color:#4c1d3d;
+    background:#fde68a;
+    border:2px solid #ffffff;
+    font-size:10px;
+    font-weight:950;
+    line-height:1;
+    box-shadow:0 8px 16px rgba(15,23,42,.18);
+}
+
+.delivery-management-grid{
+    display:grid;
+    grid-template-columns:minmax(320px,.9fr) minmax(360px,1.1fr);
+    gap:16px;
+    align-items:start;
+}
+
+.delivery-tool{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:#ffffff;
+}
+
+.delivery-tool form{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+}
+
+.delivery-tool label{
+    display:grid;
+    gap:6px;
+    font-size:12px;
+    font-weight:800;
+    color:#475569;
+}
+
+.delivery-tool input,
+.delivery-tool select{
+    min-height:38px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:8px 10px;
+    font:inherit;
+}
+
+.delivery-tool button{
+    grid-column:1 / -1;
+    min-height:40px;
+    border:0;
+    border-radius:12px;
+    color:#ffffff;
+    background:linear-gradient(135deg,var(--primary),var(--accent));
+    font-weight:800;
+    cursor:pointer;
+}
+
+.delivery-area-table{
+    width:100%;
+}
+
+@media(max-width:900px){
+    .delivery-management-grid{
+        grid-template-columns:1fr;
+    }
+}
+
 .payment-cell{
     min-width:260px;
     text-align:left;
@@ -907,6 +1757,17 @@ tr:hover{
     .grid{
         grid-template-columns:1fr;
     }
+
+    .staff-home .stats,
+    .dashboard-layout,
+    .dashboard-bottom{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .dashboard-layout .dashboard-card:first-child,
+    .dashboard-layout .dashboard-card:nth-child(3){
+        grid-column:1 / -1;
+    }
 }
 
 @media(max-width:850px){
@@ -933,6 +1794,17 @@ tr:hover{
         gap:18px;
     }
 
+    .dashboard-search{
+        max-width:none;
+        min-width:0;
+        width:100%;
+    }
+
+    .topbar-profile{
+        width:100%;
+        flex-wrap:wrap;
+    }
+
     .form{
         grid-template-columns:1fr;
     }
@@ -944,6 +1816,27 @@ tr:hover{
 
     .management-toolbar{
         grid-template-columns:1fr;
+    }
+
+    .donut-chart{
+        grid-template-columns:1fr;
+        justify-items:center;
+    }
+
+    .staff-home .stats,
+    .dashboard-layout,
+    .dashboard-bottom,
+    .status-mix,
+    .dashboard-actions{
+        grid-template-columns:1fr;
+    }
+
+    .sales-chart{
+        grid-template-columns:38px 1fr;
+    }
+
+    .sales-bars{
+        gap:12px;
     }
 }
 </style>
@@ -971,10 +1864,12 @@ tr:hover{
         </div>
 
         <div class="menu">
-            <a href="#dashboard-home" class="active">📊 Dashboard</a>
-            <a href="#addmedicine">➕ Add Medicine</a>
-            <a href="#inventory">💊 Inventory</a>
-            <a href="#orders">📦 Orders</a>
+            <a href="{{ url_for('staff_dashboard') }}" class="{% if staff_section == 'dashboard' %}active{% endif %}">📊 Dashboard</a>
+            <a href="{{ url_for('staff_dashboard', section='notifications') }}" class="{% if staff_section == 'notifications' %}active{% endif %}">🔔 Notifications</a>
+            <a href="{{ url_for('staff_dashboard', section='add-medicine') }}" class="{% if staff_section == 'add-medicine' %}active{% endif %}">➕ Add Medicine</a>
+            <a href="{{ url_for('staff_dashboard', section='inventory') }}" class="{% if staff_section == 'inventory' %}active{% endif %}">💊 Inventory</a>
+            <a href="{{ url_for('staff_dashboard', section='delivery') }}" class="{% if staff_section == 'delivery' %}active{% endif %}">🚚 Delivery</a>
+            <a href="{{ url_for('staff_dashboard', section='orders') }}" class="{% if staff_section == 'orders' %}active{% endif %}">📦 Orders</a>
             <a href="/scan_barcode">📷 Scan Barcode</a>
             <a href="/profile">👤 Profile</a>
             <a href="/owner_dashboard">🧑‍💼 Owner Dashboard</a>
@@ -987,12 +1882,22 @@ tr:hover{
 
         <div class="topbar">
             <div>
-                <h1>💊 Staff Dashboard</h1>
-                <p>Smart Pharmacy Management System</p>
+                <h1>{% if staff_section == 'dashboard' %}Good Morning, {{ session.get("user", {}).get("name", "Staff") }}{% else %}💊 {{ staff_section_title|default("Staff Dashboard") }}{% endif %}</h1>
+                <p>{% if staff_section == 'dashboard' %}Here's what's happening at the pharmacy today.{% else %}Smart Pharmacy Management System{% endif %}</p>
             </div>
 
-            <div class="profile-area">
-                <a href="/profile" class="button profile-btn">👤 Profile</a>
+            <div class="dashboard-search">
+                <input type="search" placeholder="Search medicines, orders, customers..." aria-label="Search dashboard">
+                <span>⌕</span>
+            </div>
+
+            <div class="topbar-profile">
+                <a href="{{ url_for('staff_dashboard', section='notifications') }}" class="button profile-btn">🔔 {{ staff_notifications|sum(attribute="count") }}</a>
+                <a href="/profile" class="profile-avatar" aria-label="Profile">{{ (session.get("user", {}).get("name", "S")[:1])|upper }}</a>
+                <div>
+                    <strong>{{ session.get("user", {}).get("name", "Staff") }}</strong>
+                    <small>Pharmacist</small>
+                </div>
                 <a href="/logout" class="button logout-btn">Logout</a>
             </div>
         </div>
@@ -1005,93 +1910,208 @@ tr:hover{
         {% endif %}
         {% endwith %}
 
-        <section id="dashboard-home" aria-label="Dashboard Home">
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-icon">💊</div>
-                <h3>Total Medicines</h3>
-                <p>{{ total_medicines }}</p>
+        {% if staff_section == 'dashboard' %}
+        {% set max_sales = [
+            sales_report.get("daily_sales") or 0,
+            sales_report.get("weekly_sales") or 0,
+            sales_report.get("monthly_sales") or 0,
+            sales_report.get("yearly_sales") or 0
+        ]|max %}
+        {% set order_total_for_chart = (pending_orders or 0) + (delivered_orders or 0) + (cancelled_orders or 0) %}
+        {% set delivered_degrees = ((delivered_orders or 0) / order_total_for_chart * 360) if order_total_for_chart else 0 %}
+        {% set pending_degrees = delivered_degrees + (((pending_orders or 0) / order_total_for_chart * 360) if order_total_for_chart else 0) %}
+        {% set cancelled_degrees = pending_degrees + (((cancelled_orders or 0) / order_total_for_chart * 360) if order_total_for_chart else 0) %}
+        <section class="staff-home" id="dashboard-home" aria-label="Dashboard Home">
+            <div class="stats">
+                <div class="stat dashboard-stat" style="--metric-color:#16a34a;">
+                    <div class="stat-icon">💊</div>
+                    <h3>Total Medicines</h3>
+                    <p>{{ total_medicines }}</p>
+                    <div class="metric-change">▲ 8.5% <small>vs yesterday</small></div>
+                </div>
+
+                <div class="stat dashboard-stat" style="--metric-color:#2563eb;">
+                    <div class="stat-icon">📦</div>
+                    <h3>Total Orders</h3>
+                    <p>{{ total_orders }}</p>
+                    <div class="metric-change">▲ 12.3% <small>vs yesterday</small></div>
+                </div>
+
+                <div class="stat dashboard-stat" style="--metric-color:#7c3aed;">
+                    <div class="stat-icon">🧾</div>
+                    <h3>Today's Orders</h3>
+                    <p>{{ today_orders }}</p>
+                    <div class="metric-change">▲ 33.3% <small>vs yesterday</small></div>
+                </div>
+
+                <div class="stat dashboard-stat" style="--metric-color:#f97316;">
+                    <div class="stat-icon">⌛</div>
+                    <h3>Pending Orders</h3>
+                    <p>{{ pending_orders }}</p>
+                    <div class="metric-change danger">▼ 12.5% <small>vs yesterday</small></div>
+                </div>
+
+                <div class="stat dashboard-stat" style="--metric-color:#16a34a;">
+                    <div class="stat-icon">✓</div>
+                    <h3>Delivered Orders</h3>
+                    <p>{{ delivered_orders }}</p>
+                    <div class="metric-change">▲ 10% <small>vs yesterday</small></div>
+                </div>
             </div>
 
-            <div class="stat">
-                <div class="stat-icon">📦</div>
-                <h3>Total Orders</h3>
-                <p>{{ total_orders }}</p>
+            <div class="dashboard-layout">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-head">
+                        <h2>Sales Overview</h2>
+                        <span class="sales-badge">This Week</span>
+                    </div>
+                    <div class="sales-summary">
+                        <div>
+                            <span>Total Sales</span>
+                            <strong>₹{{ "%.2f"|format((sales_report.get("weekly_sales") or 0)|float) }}</strong>
+                        </div>
+                        <div class="sales-badge">▲ 12.6%</div>
+                        <span>vs last week</span>
+                    </div>
+                    <div class="sales-chart">
+                        <div class="sales-axis">
+                            <span>₹{{ "%.0f"|format((max_sales or 0)|float) }}</span>
+                            <span>₹{{ "%.0f"|format(((max_sales or 0)|float) * .66) }}</span>
+                            <span>₹{{ "%.0f"|format(((max_sales or 0)|float) * .33) }}</span>
+                            <span>₹0</span>
+                        </div>
+                        <div class="sales-bars">
+                            {% for item in [
+                                {"label":"Today", "value": sales_report.get("daily_sales") or 0},
+                                {"label":"Week", "value": sales_report.get("weekly_sales") or 0},
+                                {"label":"Month", "value": sales_report.get("monthly_sales") or 0},
+                                {"label":"Year", "value": sales_report.get("yearly_sales") or 0}
+                            ] %}
+                            <div class="sales-bar-wrap" title="{{ item.label }}: ₹{{ '%.2f'|format(item.value|float) }}">
+                                <div class="sales-bar" style="height:{{ 8 + ((item.value|float) / (max_sales|float) * 92 if max_sales else 0) }}%;"></div>
+                                <div class="sales-bar-label">{{ item.label }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-head">
+                        <h2>Order Status Mix</h2>
+                    </div>
+                    <div class="status-mix">
+                        <div class="status-ring" style="--delivered-share:{{ delivered_degrees }}deg; --pending-share:{{ pending_degrees }}deg; --cancelled-share:{{ cancelled_degrees }}deg;">
+                            <div class="status-ring-core"><div><strong>{{ order_total_for_chart }}</strong><span>Total Orders</span></div></div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#22c55e;"></i>Delivered</span><strong>{{ delivered_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#f59e0b;"></i>Pending</span><strong>{{ pending_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#ef4444;"></i>Cancelled</span><strong>{{ cancelled_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#3b82f6;"></i>Today</span><strong>{{ today_orders }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="dashboard-card-head">
+                        <h2>Recent Activity</h2>
+                        <a class="dashboard-link" href="{{ url_for('staff_dashboard', section='orders') }}">View All</a>
+                    </div>
+                    <div class="activity-list">
+                        {% for o in orders[:5] %}
+                        <div class="activity-row">
+                            <div class="activity-icon">{% if o["status"] == "Delivered" %}✓{% elif o["status"] == "Cancelled" %}✕{% else %}□{% endif %}</div>
+                            <div>
+                                <strong>Order #ORD{{ o["id"] }} {{ (o["status"] or "received")|lower }}</strong>
+                                <small>Customer: {{ o["customer_name"] }}</small>
+                            </div>
+                            <div class="activity-time">{{ o["date"] }}</div>
+                        </div>
+                        {% else %}
+                        <div class="activity-row"><div class="activity-icon">□</div><div><strong>No recent orders</strong><small>New activity will appear here.</small></div><div></div></div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
-            <div class="stat">
-                <div class="stat-icon">🗓</div>
-                <h3>Today's Orders</h3>
-                <p>{{ today_orders }}</p>
-            </div>
+            <div class="dashboard-bottom">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-head">
+                        <h2>Low Stock Alert</h2>
+                        <a class="dashboard-link" href="{{ url_for('staff_dashboard', section='inventory') }}">View All</a>
+                    </div>
+                    <div class="compact-table">
+                        {% for med in low_stock[:5] %}
+                        <div class="compact-row">
+                            <div><strong>{{ med["name"] }}</strong><small>{{ med.get("category") or "Medicine" }}</small></div>
+                            <strong>{{ med["stock"] }} units</strong>
+                            <span class="status-pill {% if med['stock'] <= 10 %}critical{% endif %}">{{ "Critical" if med["stock"] <= 10 else "Low Stock" }}</span>
+                        </div>
+                        {% else %}
+                        <div class="compact-row"><div><strong>No low stock items</strong><small>Inventory levels look healthy.</small></div><strong>-</strong><span class="status-pill">OK</span></div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-            <div class="stat">
-                <div class="stat-icon">⏳</div>
-                <h3>Pending Orders</h3>
-                <p>{{ pending_orders }}</p>
-            </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-card-head">
+                        <h2>Top Selling Medicines</h2>
+                        <a class="dashboard-link" href="{{ url_for('staff_dashboard', section='inventory') }}">View All</a>
+                    </div>
+                    <div class="compact-table">
+                        {% for med in top_selling_medicines[:5] %}
+                        <div class="compact-row">
+                            <div><strong><span class="rank-pill">{{ loop.index }}</span> {{ med["name"] }}</strong></div>
+                            <strong>{{ med["sold_quantity"] }}</strong>
+                            <small>₹{{ "%.2f"|format((med["revenue"] or 0)|float) }}</small>
+                        </div>
+                        {% else %}
+                        <div class="compact-row"><div><strong>No medicine sales yet</strong><small>Sales will appear here.</small></div><strong>-</strong><small>₹0.00</small></div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-            <div class="stat">
-                <div class="stat-icon">✅</div>
-                <h3>Delivered Orders</h3>
-                <p>{{ delivered_orders }}</p>
+                <div class="dashboard-card">
+                    <div class="dashboard-card-head">
+                        <h2>Quick Actions</h2>
+                    </div>
+                    <div class="dashboard-actions">
+                        <a class="dash-action" style="--action-bg:#ecfdf5;--action-border:#bbf7d0;--action-color:#16a34a;" href="{{ url_for('staff_dashboard', section='add-medicine') }}"><span>＋</span>Add Medicine</a>
+                        <a class="dash-action" style="--action-bg:#eff6ff;--action-border:#bfdbfe;--action-color:#2563eb;" href="{{ url_for('staff_dashboard', section='orders') }}"><span>□</span>Manage Orders</a>
+                        <a class="dash-action" style="--action-bg:#f5f3ff;--action-border:#ddd6fe;--action-color:#7c3aed;" href="/staff_prescriptions"><span>Rx</span>Prescriptions</a>
+                        <a class="dash-action" style="--action-bg:#fff7ed;--action-border:#fed7aa;--action-color:#f97316;" href="{{ url_for('staff_dashboard', section='inventory') }}"><span>◇</span>Inventory</a>
+                        <a class="dash-action" style="--action-bg:#ecfeff;--action-border:#a5f3fc;--action-color:#0891b2;" href="/scan_barcode"><span>▥</span>Scan Barcode</a>
+                        <a class="dash-action" style="--action-bg:#fef2f2;--action-border:#fecaca;--action-color:#ef4444;" href="{{ url_for('staff_dashboard') }}#reports-analytics"><span>▥</span>Analytics</a>
+                    </div>
+                </div>
             </div>
-
-            <div class="stat">
-                <div class="stat-icon">✕</div>
-                <h3>Cancelled Orders</h3>
-                <p>{{ cancelled_orders }}</p>
-            </div>
-
-            <div class="stat">
-                <div class="stat-icon">₹</div>
-                <h3>Revenue Today</h3>
-                <p>₹{{ "%.2f"|format(revenue_today|float) }}</p>
-            </div>
-
-            <div class="stat">
-                <div class="stat-icon">!</div>
-                <h3>Low Stock Count</h3>
-                <p>{{ low_stock_count }}</p>
-            </div>
-
-            <div class="stat">
-                <div class="stat-icon">⏱</div>
-                <h3>Expiring Medicines Count</h3>
-                <p>{{ expiring_medicines_count }}</p>
-            </div>
-
-            <div class="stat">
-                <div class="stat-icon">Rx</div>
-                <h3>Prescription Requests Count</h3>
-                <p>{{ prescription_requests_count }}</p>
-            </div>
-        </div>
-
-        <div class="quick-actions" aria-label="Quick Action Buttons">
-            <a class="quick-action" href="#addmedicine">
-                <span>➕</span>
-                <div><strong>Add Medicine</strong><small>Create new stock item</small></div>
-            </a>
-            <a class="quick-action" href="#orders">
-                <span>📦</span>
-                <div><strong>Manage Orders</strong><small>Update delivery status</small></div>
-            </a>
-            <a class="quick-action" href="/staff_prescriptions">
-                <span>Rx</span>
-                <div><strong>Prescription Requests</strong><small>Review pending uploads</small></div>
-            </a>
-            <a class="quick-action" href="#inventory">
-                <span>💊</span>
-                <div><strong>View Inventory</strong><small>Check stock and expiry</small></div>
-            </a>
-            <a class="quick-action" href="/scan_barcode">
-                <span>▣</span>
-                <div><strong>Scan Barcode</strong><small>Find medicine quickly</small></div>
-            </a>
-        </div>
         </section>
+        {% endif %}
 
+        {% if staff_section == 'notifications' %}
+        <div class="notification-panel" id="notifications" aria-label="Notifications">
+            <div class="notification-header">
+                <h2>🔔 Notifications</h2>
+                <div class="notification-total">{{ staff_notifications|sum(attribute="count") }}</div>
+            </div>
+
+            <div class="notification-grid">
+                {% for notice in staff_notifications %}
+                <a class="notification-card {{ notice.tone }}" href="{{ notice.target }}">
+                    <div class="notification-icon">🔔</div>
+                    <div>
+                        <h3>{{ notice.title }}</h3>
+                        <p>{{ notice.message }}</p>
+                    </div>
+                    <div class="notification-count">{{ notice.count }}</div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if staff_section == 'add-medicine' %}
         <div class="grid">
 
             <div class="panel" id="addmedicine">
@@ -1147,7 +2167,9 @@ tr:hover{
             </div>
 
         </div>
+        {% endif %}
 
+        {% if staff_section == 'inventory' %}
         <div class="panel table-panel" id="inventory">
     <h2>💊 Smart Medicine Inventory</h2>
 
@@ -1350,9 +2372,101 @@ tr:hover{
                 </table>
             </div>
         </div>
+        {% endif %}
 
+        {% if staff_section == 'delivery' %}
+        <div class="panel table-panel" id="delivery-management">
+            <h2>🚚 Delivery Management</h2>
+            <p class="section-note">Delivery is accepted only from the Santacruz branch coverage: Bandra, Khar, Santacruz, Vile Parle, Andheri, Jogeshwari, and Goregaon.</p>
+            <div class="delivery-management-grid">
+                <div class="delivery-tool">
+                    <h3>Delivery Charges Calculator</h3>
+                    <form id="deliveryChargeCalculator">
+                        <label>Order Total
+                            <input id="deliveryCalcTotal" type="number" min="0" step="0.01" value="0">
+                        </label>
+                        <label>Delivery Area
+                            <select id="deliveryCalcArea">
+                                {% for area in delivery_areas %}
+                                    {% if area.is_active %}
+                                        <option value="{{ area.base_charge }}" data-free="{{ area.free_delivery_minimum }}" data-eta="{{ area.estimated_time }}">{{ area.area_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>Calculated Charge
+                            <input id="deliveryCalcResult" type="text" readonly value="₹0">
+                        </label>
+                        <label>Estimated Time
+                            <input id="deliveryCalcEta" type="text" readonly value="{% if delivery_areas %}{{ delivery_areas[0].estimated_time }}{% else %}1-2 business days{% endif %}">
+                        </label>
+                        <button type="submit">Calculate Delivery Charge</button>
+                    </form>
+                </div>
+
+                <div class="delivery-tool">
+                    <h3>Delivery Area Management</h3>
+                    <form method="POST" action="/staff/delivery_area">
+                        <label>Area Name
+                            <input name="area_name" required placeholder="Example: Vile Parle">
+                        </label>
+                        <label>Base Charge
+                            <input name="base_charge" type="number" min="0" step="0.01" value="40">
+                        </label>
+                        <label>Free Delivery Minimum
+                            <input name="free_delivery_minimum" type="number" min="0" step="0.01" value="500">
+                        </label>
+                        <label>Estimated Time
+                            <input name="estimated_time" value="1-2 business days">
+                        </label>
+                        <label>Status
+                            <select name="is_active">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </label>
+                        <button type="submit">Save Delivery Area</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="delivery-area-table">
+                    <tr>
+                        <th>Area</th>
+                        <th>Base Charge</th>
+                        <th>Free Above</th>
+                        <th>ETA</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for area in delivery_areas %}
+                    <tr>
+                        <td>{{ area.area_name }}</td>
+                        <td>₹{{ area.base_charge }}</td>
+                        <td>₹{{ area.free_delivery_minimum }}</td>
+                        <td>{{ area.estimated_time }}</td>
+                        <td>{{ "Active" if area.is_active else "Inactive" }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5">No delivery areas configured yet.</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if staff_section == 'orders' %}
         <div class="panel table-panel" id="orders">
             <h2>📦 Recent Orders</h2>
+            <div class="orders-toolbar">
+                <input id="staffOrderSearch" type="search" placeholder="Search order, customer, phone, email...">
+                <select id="staffOrderStatusFilter" aria-label="Filter orders by status">
+                    <option value="">All Statuses</option>
+                    {% for status in order_statuses %}
+                        <option value="{{ status|lower }}">{{ status }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
             <div class="table-wrapper">
                 <table>
@@ -1367,9 +2481,16 @@ tr:hover{
                     </tr>
 
                     {% for o in orders %}
-                    <tr>
+                    <tr class="staff-order-row" data-status="{{ o['status']|lower }}" data-search="{{ o['id'] }} {{ o['customer_name'] }} {{ o.get('customer_email') or '' }} {{ o.get('customer_phone') or '' }} {{ o.get('delivery_address') or o.get('customer_address') or '' }}">
                         <td>{{ o["id"] }}</td>
-                        <td>{{ o["customer_name"] }}</td>
+                        <td>
+                            <strong>{{ o["customer_name"] }}</strong>
+                            <div class="customer-details">
+                                <span>{{ o.get("customer_phone") or "No phone" }}</span>
+                                <span>{{ o.get("customer_email") or "No email" }}</span>
+                                <span>{{ o.get("delivery_address") or o.get("customer_address") or "No address" }}</span>
+                            </div>
+                        </td>
                         <td>₹{{ o["total"] }}</td>
                         <td>{{ o["date"] }}</td>
 
@@ -1407,6 +2528,11 @@ tr:hover{
                         </td>
 
                         <td>
+                            <div class="order-actions">
+                                <a class="order-action" href="/staff/orders/{{ o['id'] }}/invoice" target="_blank">Print Invoice</a>
+                                <a class="order-action secondary" href="/staff/orders/{{ o['id'] }}/invoice_pdf">Download PDF</a>
+                                <a class="order-action secondary" href="/staff/orders/{{ o['id'] }}/packing_slip" target="_blank">Packing Slip</a>
+                            </div>
                             <form class="status-form" method="POST" action="/update_order_status/{{ o['id'] }}">
                                 <select name="status" aria-label="Update order status">
                                     {% for status in order_statuses %}
@@ -1414,6 +2540,16 @@ tr:hover{
                                     {% endfor %}
                                 </select>
                                 <input name="courier_name" placeholder="Courier" value="{{ o.get('courier_name') or '' }}">
+                                <input name="delivery_partner" placeholder="Delivery Partner" value="{{ o.get('delivery_partner') or o.get('courier_name') or '' }}">
+                                <select name="delivery_area" aria-label="Delivery area">
+                                    <option value="">Select Area</option>
+                                    {% for area in delivery_areas %}
+                                        {% if area.is_active %}
+                                            <option value="{{ area.area_name }}" {% if o.get("delivery_area") == area.area_name %}selected{% endif %}>{{ area.area_name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <input name="delivery_charge" type="number" min="0" step="0.01" placeholder="Delivery Charge" value="{{ o.get('delivery_charge') or 0 }}">
                                 <input name="courier_tracking_id" placeholder="Tracking ID" value="{{ o.get('courier_tracking_id') or '' }}">
                                 <input name="courier_tracking_url" placeholder="Tracking URL" value="{{ o.get('courier_tracking_url') or '' }}">
                                 <input name="delivery_notes" placeholder="Delivery notes" value="{{ o.get('delivery_notes') or '' }}">
@@ -1426,6 +2562,7 @@ tr:hover{
                 </table>
             </div>
         </div>
+        {% endif %}
 
     </div>
 
@@ -1433,7 +2570,56 @@ tr:hover{
 
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 <script src="{{ url_for('static', filename='js/preserve_scroll.js') }}"></script>
+<a class="floating-ai-assistant" href="{{ url_for('chatbot') }}" aria-label="Open AI Chatbot">🤖</a>
 <script>
+(() => {
+    const rows = [...document.querySelectorAll(".staff-order-row")];
+    const search = document.getElementById("staffOrderSearch");
+    const status = document.getElementById("staffOrderStatusFilter");
+    if (!rows.length || !search || !status) return;
+
+    const applyOrderFilters = () => {
+        const query = search.value.trim().toLowerCase();
+        const selectedStatus = status.value;
+
+        rows.forEach(row => {
+            const matchesSearch = !query || (row.dataset.search || "").toLowerCase().includes(query);
+            const matchesStatus = !selectedStatus || row.dataset.status === selectedStatus;
+            row.style.display = matchesSearch && matchesStatus ? "" : "none";
+        });
+    };
+
+    search.addEventListener("input", applyOrderFilters);
+    status.addEventListener("change", applyOrderFilters);
+})();
+
+(() => {
+    const form = document.getElementById("deliveryChargeCalculator");
+    const total = document.getElementById("deliveryCalcTotal");
+    const area = document.getElementById("deliveryCalcArea");
+    const result = document.getElementById("deliveryCalcResult");
+    const eta = document.getElementById("deliveryCalcEta");
+    if (!form || !total || !area || !result || !eta) return;
+
+    const calculate = () => {
+        const selected = area.options[area.selectedIndex];
+        const orderTotal = Number(total.value || 0);
+        const baseCharge = Number(selected?.value || 0);
+        const freeMinimum = Number(selected?.dataset.free || 0);
+        const charge = freeMinimum && orderTotal >= freeMinimum ? 0 : baseCharge;
+        result.value = `₹${charge.toFixed(2)}`;
+        eta.value = selected?.dataset.eta || "1-2 business days";
+    };
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        calculate();
+    });
+    total.addEventListener("input", calculate);
+    area.addEventListener("change", calculate);
+    calculate();
+})();
+
 (() => {
     const cards = [...document.querySelectorAll(".med-card")];
     const search = document.getElementById("medicineSearch");

@@ -5,6 +5,10 @@ import hashlib
 import re
 import secrets
 import base64
+import cv2
+import pytesseract
+from PIL import Image
+import numpy as np
 import requests
 from dotenv import load_dotenv
 from google import genai
@@ -126,6 +130,7 @@ ORDER_STATUSES = [
     "Pending",
     "Approved",
     "Packed",
+    "Ready For Delivery",
     "Out For Delivery",
     "Delivered",
     "Cancelled",
@@ -136,6 +141,7 @@ ORDER_STATUS_STEPS = [
     "Pending",
     "Approved",
     "Packed",
+    "Ready For Delivery",
     "Out For Delivery",
     "Delivered",
 ]
@@ -167,6 +173,80 @@ REVIEW_TYPES = [
     "Delivery Experience",
     "Issue Report",
 ]
+
+DELIVERY_SERVICE_AREAS = [
+    {
+        "area_name": "Santacruz",
+        "aliases": ["santacruz", "santa cruz", "santacruz east", "santacruz west"],
+        "base_charge": 20,
+        "free_delivery_minimum": 99,
+        "estimated_time": "45-90 minutes from Santacruz branch",
+    },
+    {
+        "area_name": "Vile Parle",
+        "aliases": ["vile parle", "vileparle", "parle", "parla", "vile parle east", "vile parle west"],
+        "base_charge": 25,
+        "free_delivery_minimum": 99,
+        "estimated_time": "60-120 minutes from Santacruz branch",
+    },
+    {
+        "area_name": "Khar",
+        "aliases": ["khar", "khar east", "khar west"],
+        "base_charge": 30,
+        "free_delivery_minimum": 199,
+        "estimated_time": "1-2 hours from Santacruz branch",
+    },
+    {
+        "area_name": "Bandra",
+        "aliases": ["bandra", "bandra east", "bandra west"],
+        "base_charge": 40,
+        "free_delivery_minimum": 199,
+        "estimated_time": "1-2 hours from Santacruz branch",
+    },
+    {
+        "area_name": "Andheri",
+        "aliases": ["andheri", "andheri east", "andheri west"],
+        "base_charge": 50,
+        "free_delivery_minimum": 299,
+        "estimated_time": "2-4 hours from Santacruz branch",
+    },
+    {
+        "area_name": "Jogeshwari",
+        "aliases": ["jogeshwari", "jogeshwari east", "jogeshwari west"],
+        "base_charge": 60,
+        "free_delivery_minimum": 399,
+        "estimated_time": "4-6 hours from Santacruz branch",
+    },
+    {
+        "area_name": "Goregaon",
+        "aliases": ["goregaon", "goregaon east", "goregaon west"],
+        "base_charge": 70,
+        "free_delivery_minimum": 499,
+        "estimated_time": "Next day from Santacruz branch",
+    },
+]
+
+
+def normalize_area_text(value):
+    return re.sub(r"[^a-z0-9]+", " ", (value or "").lower()).strip()
+
+
+def match_delivery_area(address):
+    normalized = f" {normalize_area_text(address)} "
+    for area in DELIVERY_SERVICE_AREAS:
+        for alias in area["aliases"]:
+            if f" {normalize_area_text(alias)} " in normalized:
+                return area
+    return None
+
+
+def delivery_charge_for_area(subtotal, area):
+    if not area:
+        return 0
+    subtotal = float(subtotal or 0)
+    if subtotal <= 0 or subtotal >= float(area["free_delivery_minimum"]):
+        return 0
+    return float(area["base_charge"])
 
 
 def ensure_order_management_schema():
@@ -222,6 +302,7 @@ def ensure_delivery_feature_schema():
                 WHEN status='Pending' THEN 'Order Received'
                 WHEN status='Approved' THEN 'Delivery Scheduled'
                 WHEN status='Packed' THEN 'Packed For Pickup'
+                WHEN status='Ready For Delivery' THEN 'Ready For Delivery'
                 WHEN status='Out For Delivery' THEN 'Out For Delivery'
                 WHEN status='Delivered' THEN 'Delivered'
                 WHEN status='Cancelled' THEN 'Delivery Cancelled'
@@ -245,6 +326,72 @@ def ensure_delivery_feature_schema():
     db.commit()
     cursor.close()
     app.config["DELIVERY_FEATURE_SCHEMA_READY"] = True
+
+
+def ensure_delivery_management_schema():
+    if app.config.get("DELIVERY_MANAGEMENT_SCHEMA_READY"):
+        return
+
+    ensure_delivery_feature_schema()
+    db = get_db()
+    cursor = db.cursor()
+    for column_sql in [
+        "ADD COLUMN delivery_partner VARCHAR(120) NULL",
+        "ADD COLUMN delivery_area VARCHAR(120) NULL",
+        "ADD COLUMN delivery_charge DECIMAL(10,2) NOT NULL DEFAULT 0",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE orders {column_sql}")
+        except mysql.connector.Error:
+            pass
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS delivery_areas (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            area_name VARCHAR(120) NOT NULL UNIQUE,
+            base_charge DECIMAL(10,2) NOT NULL DEFAULT 40,
+            free_delivery_minimum DECIMAL(10,2) NOT NULL DEFAULT 500,
+            estimated_time VARCHAR(80) NOT NULL DEFAULT '1-2 business days',
+            is_active TINYINT(1) NOT NULL DEFAULT 1,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cursor.execute("""
+        UPDATE delivery_areas
+        SET is_active=0,
+            estimated_time='Outside Santacruz branch delivery coverage'
+        WHERE area_name IN ('Virar', 'Nalasopara', 'Vasai')
+    """)
+    for area in DELIVERY_SERVICE_AREAS:
+        try:
+            cursor.execute("""
+                INSERT INTO delivery_areas (area_name, base_charge, free_delivery_minimum, estimated_time)
+                VALUES (%s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    base_charge=VALUES(base_charge),
+                    free_delivery_minimum=VALUES(free_delivery_minimum),
+                    estimated_time=VALUES(estimated_time),
+                    is_active=1
+            """, (
+                area["area_name"],
+                area["base_charge"],
+                area["free_delivery_minimum"],
+                area["estimated_time"],
+            ))
+        except mysql.connector.Error:
+            pass
+    cursor.execute("""
+        UPDATE orders
+        SET delivery_partner = COALESCE(NULLIF(delivery_partner, ''), NULLIF(courier_name, ''), 'Yuvraj Local Delivery'),
+            delivery_area = COALESCE(NULLIF(delivery_area, ''), 'Local'),
+            delivery_charge = CASE
+                WHEN delivery_charge IS NULL THEN CASE WHEN COALESCE(total, 0) >= 500 THEN 0 ELSE 40 END
+                ELSE delivery_charge
+            END
+    """)
+    db.commit()
+    cursor.close()
+    app.config["DELIVERY_MANAGEMENT_SCHEMA_READY"] = True
 
 
 def recommended_purchase_price(selling_price, category=""):
@@ -479,6 +626,26 @@ def ensure_reviews_feedback_schema():
     app.config["REVIEWS_FEEDBACK_SCHEMA_READY"] = True
 
 
+def ensure_customer_management_schema():
+    if app.config.get("CUSTOMER_MANAGEMENT_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+    for column_sql in [
+        "ADD COLUMN is_blocked TINYINT(1) NOT NULL DEFAULT 0",
+        "ADD COLUMN block_reason VARCHAR(255) NULL",
+        "ADD COLUMN blocked_at DATETIME NULL",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE users {column_sql}")
+        except mysql.connector.Error:
+            pass
+    db.commit()
+    cursor.close()
+    app.config["CUSTOMER_MANAGEMENT_SCHEMA_READY"] = True
+
+
 def add_notification(user_id, notification_type, title, message, target_url, dedupe_key):
     ensure_notification_schema()
     db = get_db()
@@ -660,6 +827,7 @@ def delivery_status_for_order_status(status):
         "Pending": "Order Received",
         "Approved": "Delivery Scheduled",
         "Packed": "Packed For Pickup",
+        "Ready For Delivery": "Ready For Delivery",
         "Out For Delivery": "Out For Delivery",
         "Delivered": "Delivered",
         "Cancelled": "Delivery Cancelled",
@@ -992,11 +1160,7 @@ PRESCRIPTION_FOLDER = "static/prescriptions"
 
 def read_prescription_text(image_path):
     try:
-        import cv2
-        import pytesseract
-        from PIL import Image
-        import numpy as np
-
+        
         # Read image
         img = cv2.imread(image_path)
 
@@ -2603,6 +2767,7 @@ def login():
 
     if flask.request.method == "POST":
 
+        ensure_customer_management_schema()
         email = flask.request.form["email"].strip().lower()
         password = flask.request.form["password"]
         db = get_db()
@@ -2616,6 +2781,13 @@ def login():
         user = cursor.fetchone()
 
         if user:
+            if user.get("role") == "customer" and user.get("is_blocked"):
+                cursor.close()
+                log_login_activity(db, user["id"], email, "blocked", "Customer account is blocked")
+                return render_login(
+                    error="Your customer account is blocked. Please contact Yuvraj Medical support."
+                )
+
             locked_until = user.get("locked_until")
 
             if locked_until and locked_until > datetime.now():
@@ -3652,10 +3824,10 @@ DELIVERED_ORDER_POINT_BONUS = 10
 REWARD_CASHBACK_RATE = 0.01
 
 
-def calculate_cart_totals(subtotal):
+def calculate_cart_totals(subtotal, delivery_area=None):
     coupon_code = flask.session.get("cart_coupon")
     coupon = CART_COUPONS.get(coupon_code)
-    delivery_charge = 0 if subtotal == 0 or subtotal >= 500 else 40
+    delivery_charge = delivery_charge_for_area(subtotal, delivery_area) if delivery_area else (0 if subtotal == 0 or subtotal >= 500 else 40)
     discount = 0
     coupon_message = None
 
@@ -3679,7 +3851,9 @@ def calculate_cart_totals(subtotal):
         "payable_total": payable_total,
         "coupon_code": coupon_code if coupon else None,
         "coupon_message": coupon_message,
-        "estimated_delivery": "1-2 business days"
+        "estimated_delivery": delivery_area["estimated_time"] if delivery_area else "Enter address at checkout for exact delivery estimate",
+        "delivery_area": delivery_area["area_name"] if delivery_area else None,
+        "free_delivery_minimum": delivery_area["free_delivery_minimum"] if delivery_area else 500
     }
 
 
@@ -4320,6 +4494,7 @@ def checkout():
         return flask.redirect("/login")
 
     ensure_payment_schema()
+    ensure_delivery_management_schema()
     ensure_family_health_schema()
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -4336,7 +4511,12 @@ def checkout():
     cursor.close()
 
     subtotal = sum(item["price"] * item["quantity"] for item in cart_items)
-    totals = calculate_cart_totals(subtotal)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT address FROM users WHERE id=%s", (flask.session["user"]["id"],))
+    user_row = cursor.fetchone() or {}
+    cursor.close()
+    delivery_area = match_delivery_area(user_row.get("address"))
+    totals = calculate_cart_totals(subtotal, delivery_area)
 
     return flask.render_template(
         "checkout.html",
@@ -4356,6 +4536,7 @@ def place_order():
         return flask.redirect("/login")
 
     ensure_payment_schema()
+    ensure_delivery_management_schema()
     ensure_family_health_schema()
     db = get_db()
 
@@ -4416,6 +4597,12 @@ def place_order():
             cursor.execute("SELECT address FROM users WHERE id=%s", (user_id,))
             user_row = cursor.fetchone() or {}
             delivery_address = user_row.get("address") or "Delivery address not provided"
+
+        delivery_area = match_delivery_area(delivery_address)
+        if not delivery_area:
+            db.rollback()
+            flash("Delivery is available only near the Santacruz branch: Bandra, Khar, Santacruz, Vile Parle, Andheri, Jogeshwari, and Goregaon.")
+            return flask.redirect("/checkout")
 
         # ================= PRESCRIPTION UPLOAD =================
         file = flask.request.files.get("prescription")
@@ -4487,13 +4674,16 @@ def place_order():
                 delivery_otp,
                 delivery_notes,
                 delivery_address,
+                delivery_partner,
+                delivery_area,
+                delivery_charge,
                 delivery_updated_at,
                 payment_method,
                 payment_status,
                 payment_reference,
                 payment_screenshot
             )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             user_id,
             family_member_id,
@@ -4505,6 +4695,9 @@ def place_order():
             delivery_otp,
             delivery_notes,
             delivery_address,
+            "Yuvraj Local Delivery",
+            delivery_area["area_name"],
+            0,
             datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             payment_method,
             "Pending Verification" if payment_method in MANUAL_PAYMENT_METHODS else "Pending COD",
@@ -4549,17 +4742,19 @@ def place_order():
                 item["id"]
             ))
 
-        totals = calculate_cart_totals(total)
+        totals = calculate_cart_totals(total, delivery_area)
         total = totals["payable_total"]
 
         # ================= UPDATE TOTAL =================
         cursor = db.cursor(dictionary=True)
         cursor.execute("""
             UPDATE orders
-            SET total=%s
+            SET total=%s,
+                delivery_charge=%s
             WHERE id=%s
         """, (
             total,
+            totals["delivery_charge"],
             order_id
         ))
 
@@ -4797,6 +4992,101 @@ def get_owner_order(order_id):
     return order, items
 
 
+def get_staff_order(order_id):
+    """Return an order and its line items for staff or owner workflows."""
+    ensure_payment_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT orders.*,
+               users.name AS customer_name,
+               users.email AS customer_email,
+               users.phone AS customer_phone,
+               users.address AS customer_address
+        FROM orders
+        JOIN users ON users.id = orders.user_id
+        WHERE orders.id=%s
+    """, (order_id,))
+    order = cursor.fetchone()
+    if not order:
+        cursor.close()
+        return None, []
+    cursor.execute("""
+        SELECT medicines.id AS medicine_id, medicines.name,
+               order_items.quantity, order_items.price
+        FROM order_items
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE order_items.order_id=%s
+        ORDER BY medicines.name
+    """, (order_id,))
+    items = cursor.fetchall()
+    cursor.close()
+    return order, items
+
+
+def make_simple_pdf(lines):
+    def escape_pdf_text(value):
+        return str(value).replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+
+    text_commands = ["BT", "/F1 11 Tf", "50 790 Td", "14 TL"]
+    for line in lines:
+        text_commands.append(f"({escape_pdf_text(line)}) Tj")
+        text_commands.append("T*")
+    text_commands.append("ET")
+    stream = "\n".join(text_commands).encode("latin-1", "replace")
+
+    objects = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+        b"<< /Length " + str(len(stream)).encode("ascii") + b" >>\nstream\n" + stream + b"\nendstream",
+    ]
+
+    output = BytesIO()
+    output.write(b"%PDF-1.4\n")
+    offsets = [0]
+    for index, obj in enumerate(objects, start=1):
+        offsets.append(output.tell())
+        output.write(f"{index} 0 obj\n".encode("ascii"))
+        output.write(obj)
+        output.write(b"\nendobj\n")
+
+    xref_start = output.tell()
+    output.write(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
+    output.write(b"0000000000 65535 f \n")
+    for offset in offsets[1:]:
+        output.write(f"{offset:010d} 00000 n \n".encode("ascii"))
+    output.write(f"trailer << /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_start}\n%%EOF".encode("ascii"))
+    return output.getvalue()
+
+
+def order_invoice_pdf_response(order, items):
+    lines = [
+        "Yuvraj Medical - Invoice",
+        f"Order: #{order['id']}",
+        f"Date: {order.get('date') or ''}",
+        f"Customer: {order.get('customer_name') or ''}",
+        f"Phone: {order.get('customer_phone') or ''}",
+        f"Email: {order.get('customer_email') or ''}",
+        f"Status: {order.get('status') or ''}",
+        f"Payment: {order.get('payment_method') or 'Cash On Delivery'} / {order.get('payment_status') or 'Pending'}",
+        "Items:",
+    ]
+    for item in items:
+        quantity = item.get("quantity") or 0
+        price = float(item.get("price") or 0)
+        lines.append(f"- {item.get('name')} x {quantity} @ Rs. {price:.2f} = Rs. {price * float(quantity or 0):.2f}")
+    lines.extend([
+        f"Total: Rs. {float(order.get('total') or 0):.2f}",
+        f"Delivery Address: {order.get('delivery_address') or order.get('customer_address') or 'Not provided'}",
+    ])
+    response = flask.make_response(make_simple_pdf(lines))
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = f"attachment; filename=invoice-{order['id']}.pdf"
+    return response
+
+
 @app.route("/owner/orders/<int:order_id>/invoice")
 def owner_order_invoice(order_id):
     if "user" not in flask.session or flask.session["user"]["role"] != "owner":
@@ -4810,6 +5100,37 @@ def owner_order_invoice(order_id):
     response.headers["Content-Type"] = "text/html; charset=utf-8"
     response.headers["Content-Disposition"] = f"attachment; filename=invoice-{order_id}.html"
     return response
+
+
+@app.route("/staff/orders/<int:order_id>/invoice")
+def staff_order_invoice(order_id):
+    if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/login")
+    order, items = get_staff_order(order_id)
+    if not order:
+        abort(404)
+    invoice_image = static_image_data_uri("images/order-card-visual-premium.png")
+    return flask.render_template("invoice.html", order=order, items=items, invoice_image=invoice_image)
+
+
+@app.route("/staff/orders/<int:order_id>/invoice_pdf")
+def staff_order_invoice_pdf(order_id):
+    if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/login")
+    order, items = get_staff_order(order_id)
+    if not order:
+        abort(404)
+    return order_invoice_pdf_response(order, items)
+
+
+@app.route("/staff/orders/<int:order_id>/packing_slip")
+def staff_order_packing_slip(order_id):
+    if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/login")
+    order, items = get_staff_order(order_id)
+    if not order:
+        abort(404)
+    return flask.render_template("packing_slip.html", order=order, items=items)
 
 
 @app.route("/payment_history")
@@ -5602,6 +5923,43 @@ def verify_payment(payment_id):
     return flask.redirect("/staff#orders")
 
 
+@app.route("/staff/delivery_area", methods=["POST"])
+def save_delivery_area():
+    if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
+        return flask.redirect("/login")
+
+    ensure_delivery_management_schema()
+    area_name = (flask.request.form.get("area_name") or "").strip()
+    estimated_time = (flask.request.form.get("estimated_time") or "").strip() or "1-2 business days"
+    is_active = 1 if flask.request.form.get("is_active") == "1" else 0
+    try:
+        base_charge = max(0, float(flask.request.form.get("base_charge") or 0))
+        free_delivery_minimum = max(0, float(flask.request.form.get("free_delivery_minimum") or 0))
+    except (TypeError, ValueError):
+        flash("Delivery area charges must be valid numbers.")
+        return flask.redirect("/staff#delivery-management")
+
+    if not area_name:
+        flash("Delivery area name is required.")
+        return flask.redirect("/staff#delivery-management")
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("""
+        INSERT INTO delivery_areas (area_name, base_charge, free_delivery_minimum, estimated_time, is_active)
+        VALUES (%s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE
+            base_charge=VALUES(base_charge),
+            free_delivery_minimum=VALUES(free_delivery_minimum),
+            estimated_time=VALUES(estimated_time),
+            is_active=VALUES(is_active)
+    """, (area_name, base_charge, free_delivery_minimum, estimated_time, is_active))
+    db.commit()
+    cursor.close()
+    flash(f"Delivery area {area_name} saved.")
+    return flask.redirect("/staff#delivery-management")
+
+
 def build_customer_dashboard_context(db, user_id):
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -5807,7 +6165,7 @@ def update_order_status(order_id):
     if "user" not in flask.session or flask.session["user"]["role"] not in ["owner", "staff"]:
         return flask.redirect("/login")
 
-    ensure_delivery_feature_schema()
+    ensure_delivery_management_schema()
     status = flask.request.form.get("status")
     if status not in ORDER_STATUSES:
         flash("Invalid order status.")
@@ -5826,7 +6184,13 @@ def update_order_status(order_id):
     courier_tracking_id = (flask.request.form.get("courier_tracking_id") or "").strip()
     courier_tracking_url = (flask.request.form.get("courier_tracking_url") or "").strip()
     delivery_notes = (flask.request.form.get("delivery_notes") or "").strip()
+    delivery_partner = (flask.request.form.get("delivery_partner") or "").strip()
+    delivery_area = (flask.request.form.get("delivery_area") or "").strip()
     submitted_delivery_otp = (flask.request.form.get("delivery_otp") or "").strip()
+    try:
+        delivery_charge = max(0, float(flask.request.form.get("delivery_charge") or 0))
+    except (TypeError, ValueError):
+        delivery_charge = 0
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -5852,6 +6216,9 @@ def update_order_status(order_id):
             courier_tracking_id=COALESCE(NULLIF(%s, ''), courier_tracking_id),
             courier_tracking_url=COALESCE(NULLIF(%s, ''), courier_tracking_url),
             delivery_notes=COALESCE(NULLIF(%s, ''), delivery_notes),
+            delivery_partner=COALESCE(NULLIF(%s, ''), delivery_partner),
+            delivery_area=COALESCE(NULLIF(%s, ''), delivery_area),
+            delivery_charge=%s,
             delivery_updated_at=%s
         WHERE id=%s
     """, (
@@ -5863,6 +6230,9 @@ def update_order_status(order_id):
         courier_tracking_id,
         courier_tracking_url,
         delivery_notes,
+        delivery_partner or courier_name,
+        delivery_area,
+        delivery_charge,
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         order_id
     ))
@@ -6061,6 +6431,125 @@ def owner_revenue_api():
     return flask.jsonify(build_revenue_dashboard(get_db(), end, start, end))
 
 
+@app.route("/owner/customers/<int:user_id>/block", methods=["POST"])
+def owner_toggle_customer_block(user_id):
+    if "user" not in flask.session or flask.session["user"].get("role") != "owner":
+        return flask.redirect("/login")
+
+    ensure_customer_management_schema()
+    action = flask.request.form.get("action")
+    if action not in ["block", "unblock"]:
+        flash("Invalid customer action.")
+        return flask.redirect("/owner_dashboard#customers")
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT id, name, role FROM users WHERE id=%s", (user_id,))
+    customer = cursor.fetchone()
+    if not customer or customer.get("role") != "customer":
+        cursor.close()
+        flash("Customer was not found.")
+        return flask.redirect("/owner_dashboard#customers")
+
+    if action == "block":
+        reason = (flask.request.form.get("block_reason") or "Blocked by owner").strip()[:255]
+        cursor.execute("""
+            UPDATE users
+            SET is_blocked=1,
+                block_reason=%s,
+                blocked_at=%s
+            WHERE id=%s AND role='customer'
+        """, (reason, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), user_id))
+        flash(f"{customer['name']} has been blocked.")
+    else:
+        cursor.execute("""
+            UPDATE users
+            SET is_blocked=0,
+                block_reason=NULL,
+                blocked_at=NULL
+            WHERE id=%s AND role='customer'
+        """, (user_id,))
+        flash(f"{customer['name']} has been unblocked.")
+
+    db.commit()
+    cursor.close()
+    return flask.redirect("/owner_dashboard#customers")
+
+
+@app.route("/owner/customers/<int:user_id>")
+def owner_customer_details(user_id):
+    if "user" not in flask.session or flask.session["user"].get("role") != "owner":
+        return flask.redirect("/login")
+
+    ensure_customer_management_schema()
+    ensure_family_health_schema()
+    ensure_reviews_feedback_schema()
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id=%s AND role='customer'", (user_id,))
+    customer = cursor.fetchone()
+    if not customer:
+        cursor.close()
+        abort(404)
+
+    cursor.execute("""
+        SELECT orders.*,
+               GROUP_CONCAT(CONCAT(medicines.name, ' x ', order_items.quantity) ORDER BY medicines.name SEPARATOR ', ') AS item_summary
+        FROM orders
+        LEFT JOIN order_items ON order_items.order_id = orders.id
+        LEFT JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.user_id=%s
+        GROUP BY orders.id
+        ORDER BY orders.id DESC
+    """, (user_id,))
+    orders = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT *
+        FROM prescription_requests
+        WHERE user_id=%s
+        ORDER BY created_at DESC
+    """, (user_id,))
+    prescriptions = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT *
+        FROM delivery_addresses
+        WHERE user_id=%s
+        ORDER BY is_default DESC, id DESC
+    """, (user_id,))
+    addresses = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT reviews_feedback.*,
+               medicines.name AS medicine_name,
+               orders.status AS order_status
+        FROM reviews_feedback
+        LEFT JOIN medicines ON medicines.id = reviews_feedback.medicine_id
+        LEFT JOIN orders ON orders.id = reviews_feedback.order_id
+        WHERE reviews_feedback.user_id=%s
+        ORDER BY reviews_feedback.created_at DESC, reviews_feedback.id DESC
+    """, (user_id,))
+    feedback_items = cursor.fetchall()
+    cursor.close()
+
+    delivered_orders = [order for order in orders if order.get("status") == "Delivered"]
+    delivered_spent = sum(rupees_value(order.get("total")) for order in delivered_orders)
+    loyalty_points = int(delivered_spent // LOYALTY_RUPEES_PER_POINT) + len(delivered_orders) * DELIVERED_ORDER_POINT_BONUS
+
+    return flask.render_template(
+        "owner_customer_details.html",
+        customer=customer,
+        orders=orders,
+        prescriptions=prescriptions,
+        addresses=addresses,
+        feedback_items=feedback_items,
+        loyalty_points=loyalty_points,
+        delivered_orders=len(delivered_orders),
+        total_spent=sum(rupees_value(order.get("total")) for order in orders if order.get("status") != "Cancelled"),
+    )
+
+
 # ================= OWNER DASHBOARD =================
 @app.route("/owner_dashboard")
 def owner_dashboard():
@@ -6069,6 +6558,9 @@ def owner_dashboard():
         return flask.redirect("/login")
 
     ensure_inventory_management_schema()
+    ensure_customer_management_schema()
+    ensure_family_health_schema()
+    ensure_reviews_feedback_schema()
 
     db = get_db()
 
@@ -6090,44 +6582,86 @@ def owner_dashboard():
 
     user_search = flask.request.args.get("user_search", "")
 
+    customer_search_sql = ""
+    customer_params = []
     if user_search:
+        customer_search_sql = """
+            AND (
+                users.name LIKE %s
+                OR users.email LIKE %s
+                OR users.phone LIKE %s
+                OR users.address LIKE %s
+            )
+        """
+        customer_params = [f"%{user_search}%"] * 4
 
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(f"""
+        SELECT users.*,
+               COALESCE(order_stats.total_orders, 0) AS total_orders,
+               COALESCE(order_stats.delivered_orders, 0) AS delivered_orders,
+               COALESCE(order_stats.total_spent, 0) AS total_spent,
+               order_stats.last_order_date,
+               COALESCE(prescription_stats.prescription_count, 0) AS prescription_count,
+               COALESCE(prescription_stats.pending_prescriptions, 0) AS pending_prescriptions,
+               (
+                   SELECT status
+                   FROM prescription_requests
+                   WHERE prescription_requests.user_id = users.id
+                   ORDER BY created_at DESC
+                   LIMIT 1
+               ) AS latest_prescription_status,
+               COALESCE(address_stats.address_count, 0) AS address_count,
+               address_stats.default_address,
+               COALESCE(feedback_stats.feedback_count, 0) AS feedback_count,
+               feedback_stats.latest_feedback_status,
+               feedback_stats.latest_feedback_type,
+               feedback_stats.latest_feedback_message
+        FROM users
+        LEFT JOIN (
+            SELECT user_id,
+                   COUNT(*) AS total_orders,
+                   SUM(CASE WHEN status='Delivered' THEN 1 ELSE 0 END) AS delivered_orders,
+                   COALESCE(SUM(CASE WHEN status != 'Cancelled' THEN total ELSE 0 END), 0) AS total_spent,
+                   MAX(date) AS last_order_date
+            FROM orders
+            GROUP BY user_id
+        ) order_stats ON order_stats.user_id = users.id
+        LEFT JOIN (
+            SELECT user_id,
+                   COUNT(*) AS prescription_count,
+                   SUM(CASE WHEN status='Pending Review' THEN 1 ELSE 0 END) AS pending_prescriptions
+            FROM prescription_requests
+            GROUP BY user_id
+        ) prescription_stats ON prescription_stats.user_id = users.id
+        LEFT JOIN (
+            SELECT user_id,
+                   COUNT(*) AS address_count,
+                   MAX(CASE WHEN is_default=1 THEN address ELSE NULL END) AS default_address
+            FROM delivery_addresses
+            GROUP BY user_id
+        ) address_stats ON address_stats.user_id = users.id
+        LEFT JOIN (
+            SELECT user_id,
+                   COUNT(*) AS feedback_count,
+                   SUBSTRING_INDEX(GROUP_CONCAT(status ORDER BY created_at DESC SEPARATOR '||'), '||', 1) AS latest_feedback_status,
+                   SUBSTRING_INDEX(GROUP_CONCAT(review_type ORDER BY created_at DESC SEPARATOR '||'), '||', 1) AS latest_feedback_type,
+                   SUBSTRING_INDEX(GROUP_CONCAT(message ORDER BY created_at DESC SEPARATOR '||'), '||', 1) AS latest_feedback_message
+            FROM reviews_feedback
+            GROUP BY user_id
+        ) feedback_stats ON feedback_stats.user_id = users.id
+        WHERE users.role='customer'
+        {customer_search_sql}
+        ORDER BY users.id DESC
+    """, tuple(customer_params))
+    users_list = cursor.fetchall()
+    cursor.close()
 
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-
-            SELECT * FROM users
-
-            WHERE name LIKE %s
-               OR email LIKE %s
-               OR role LIKE %s
-
-            ORDER BY id ASC
-
-        """, (
-
-            f"%{user_search}%",
-
-            f"%{user_search}%",
-
-            f"%{user_search}%"
-
-        ))
-        users_list = cursor.fetchall()
-        cursor.close()
-
-    else:
-
-
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-
-            SELECT * FROM users
-            ORDER BY id ASC
-
-        """)
-        users_list = cursor.fetchall()
-        cursor.close()
+    for customer in users_list:
+        delivered_spent = rupees_value(customer.get("total_spent"))
+        delivered_orders = int(customer.get("delivered_orders") or 0)
+        customer["loyalty_points"] = int(delivered_spent // LOYALTY_RUPEES_PER_POINT) + delivered_orders * DELIVERED_ORDER_POINT_BONUS
+        customer["contact"] = customer.get("phone") or ""
 
     # ================= SALES =================
 
@@ -6611,8 +7145,19 @@ def owner_inventory_delete(medicine_id):
     cursor.close()
     return flask.redirect("/owner_dashboard#inventory")
 # ================= STAFF DASHBOARD =================
+STAFF_DASHBOARD_SECTIONS = {
+    "dashboard": "Staff Dashboard",
+    "notifications": "Notifications",
+    "add-medicine": "Add Medicine",
+    "inventory": "Inventory",
+    "delivery": "Delivery Management",
+    "orders": "Orders",
+}
+
+
 @app.route("/staff")
-def staff_dashboard():
+@app.route("/staff/<section>")
+def staff_dashboard(section="dashboard"):
 
     if "user" not in flask.session:
         return flask.redirect("/login")
@@ -6621,7 +7166,14 @@ def staff_dashboard():
     if flask.session["user"]["role"] not in ["owner", "staff"]:
         return flask.redirect("/")
 
+    if section == "reports":
+        return flask.redirect(flask.url_for("staff_dashboard"))
+
+    if section not in STAFF_DASHBOARD_SECTIONS:
+        flask.abort(404)
+
     ensure_payment_schema()
+    ensure_delivery_management_schema()
     ensure_inventory_management_schema()
     db = get_db()
 
@@ -6638,6 +7190,9 @@ def staff_dashboard():
     cursor.execute("""
         SELECT orders.*,
                users.name AS customer_name,
+               users.email AS customer_email,
+               users.phone AS customer_phone,
+               users.address AS customer_address,
                payments.id AS payment_id,
                payments.method AS payment_method,
                payments.transaction_id AS payment_transaction_id,
@@ -6650,6 +7205,15 @@ def staff_dashboard():
         ORDER BY orders.id DESC
     """)
     orders = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT *
+        FROM delivery_areas
+        ORDER BY is_active DESC, area_name ASC
+    """)
+    delivery_areas = cursor.fetchall()
     cursor.close()
 
 
@@ -6723,6 +7287,79 @@ def staff_dashboard():
           AND status != 'Cancelled'
     """)
     revenue_today = cursor.fetchone()[0]
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT
+            COALESCE(SUM(CASE WHEN DATE(`date`) = CURDATE() THEN total ELSE 0 END), 0) AS daily_sales,
+            COALESCE(SUM(CASE WHEN `date` >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN total ELSE 0 END), 0) AS weekly_sales,
+            COALESCE(SUM(CASE WHEN YEAR(`date`) = YEAR(CURDATE()) AND MONTH(`date`) = MONTH(CURDATE()) THEN total ELSE 0 END), 0) AS monthly_sales,
+            COALESCE(SUM(CASE WHEN YEAR(`date`) = YEAR(CURDATE()) THEN total ELSE 0 END), 0) AS yearly_sales,
+            COUNT(*) AS total_orders,
+            SUM(CASE WHEN status='Delivered' THEN 1 ELSE 0 END) AS delivered_orders,
+            SUM(CASE WHEN status='Out For Delivery' THEN 1 ELSE 0 END) AS out_for_delivery_orders,
+            SUM(CASE WHEN status='Ready For Delivery' THEN 1 ELSE 0 END) AS ready_for_delivery_orders
+        FROM orders
+        WHERE status != 'Cancelled'
+    """)
+    sales_report = cursor.fetchone() or {}
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT COALESCE(SUM(order_items.quantity * (order_items.price - COALESCE(medicines.purchase_price, order_items.price * 0.78))), 0) AS profit
+        FROM order_items
+        JOIN orders ON orders.id = order_items.order_id
+        LEFT JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.status != 'Cancelled'
+          AND YEAR(orders.date) = YEAR(CURDATE())
+          AND MONTH(orders.date) = MONTH(CURDATE())
+    """)
+    profit_report = cursor.fetchone() or {}
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT medicines.name,
+               SUM(order_items.quantity) AS sold_quantity,
+               COALESCE(SUM(order_items.quantity * order_items.price), 0) AS revenue
+        FROM order_items
+        JOIN orders ON orders.id = order_items.order_id
+        JOIN medicines ON medicines.id = order_items.medicine_id
+        WHERE orders.status != 'Cancelled'
+        GROUP BY medicines.id, medicines.name
+        ORDER BY sold_quantity DESC
+        LIMIT 6
+    """)
+    top_selling_medicines = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT users.name,
+               users.phone,
+               COUNT(orders.id) AS order_count,
+               COALESCE(SUM(CASE WHEN orders.status != 'Cancelled' THEN orders.total ELSE 0 END), 0) AS total_spent
+        FROM orders
+        JOIN users ON users.id = orders.user_id
+        GROUP BY users.id, users.name, users.phone
+        ORDER BY total_spent DESC, order_count DESC
+        LIMIT 6
+    """)
+    top_customers = cursor.fetchall()
+    cursor.close()
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT
+            COUNT(*) AS total_prescriptions,
+            SUM(CASE WHEN status='Pending Review' THEN 1 ELSE 0 END) AS pending,
+            SUM(CASE WHEN status='Approved' THEN 1 ELSE 0 END) AS approved,
+            SUM(CASE WHEN status='Rejected' THEN 1 ELSE 0 END) AS rejected
+        FROM prescription_requests
+    """)
+    prescription_report = cursor.fetchone() or {}
     cursor.close()
 
     cursor = db.cursor()
@@ -6805,6 +7442,89 @@ def staff_dashboard():
     expiring_medicines_count = cursor.fetchone()[0]
     cursor.close()
 
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM medicines
+        WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+    """)
+    urgent_expiry_count = cursor.fetchone()[0]
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM orders
+        WHERE DATE(`date`) = CURDATE()
+          AND status='Pending'
+    """)
+    new_order_alert_count = cursor.fetchone()[0]
+    cursor.close()
+
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM orders
+        WHERE status IN ('Approved', 'Packed', 'Ready For Delivery', 'Out For Delivery')
+    """)
+    delivery_alert_count = cursor.fetchone()[0]
+    cursor.close()
+
+    ensure_reviews_feedback_schema()
+    cursor = db.cursor()
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM reviews_feedback
+        WHERE status='Submitted'
+    """)
+    customer_message_alert_count = cursor.fetchone()[0]
+    cursor.close()
+
+    staff_notifications = [
+        {
+            "title": "Low Stock Notification",
+            "count": len(low_stock),
+            "message": "Medicines are below their stock threshold.",
+            "target": flask.url_for("staff_dashboard", section="inventory"),
+            "tone": "warning" if low_stock else "ok"
+        },
+        {
+            "title": "Expiry Alert",
+            "count": urgent_expiry_count,
+            "message": "Medicines expire within 7 days.",
+            "target": flask.url_for("staff_dashboard", section="inventory"),
+            "tone": "danger" if urgent_expiry_count else "ok"
+        },
+        {
+            "title": "New Order Alert",
+            "count": new_order_alert_count,
+            "message": "Pending orders placed today.",
+            "target": flask.url_for("staff_dashboard", section="orders"),
+            "tone": "info" if new_order_alert_count else "ok"
+        },
+        {
+            "title": "Prescription Upload Alert",
+            "count": prescription_report.get("pending") or 0,
+            "message": "Prescription uploads need review.",
+            "target": "/staff_prescriptions",
+            "tone": "info" if (prescription_report.get("pending") or 0) else "ok"
+        },
+        {
+            "title": "Delivery Alert",
+            "count": delivery_alert_count,
+            "message": "Orders need packing, dispatch, or delivery follow-up.",
+            "target": flask.url_for("staff_dashboard", section="delivery"),
+            "tone": "warning" if delivery_alert_count else "ok"
+        },
+        {
+            "title": "Customer Message Alert",
+            "count": customer_message_alert_count,
+            "message": "New customer feedback or messages are waiting.",
+            "target": flask.url_for("staff_dashboard", section="notifications"),
+            "tone": "info" if customer_message_alert_count else "ok"
+        }
+    ]
+
     prescription_requests_count = 0
     try:
         cursor = db.cursor()
@@ -6818,6 +7538,7 @@ def staff_dashboard():
         "staff.html",
         medicines=medicines,
         orders=orders,
+        delivery_areas=delivery_areas,
         low_stock=low_stock,
 
         # 🔥 SEND REAL VALUES TO HTML
@@ -6831,12 +7552,20 @@ def staff_dashboard():
         low_stock_count=len(low_stock),
         expiring_medicines_count=expiring_medicines_count,
         prescription_requests_count=prescription_requests_count,
+        sales_report=sales_report,
+        profit_report=profit_report,
+        top_selling_medicines=top_selling_medicines,
+        top_customers=top_customers,
+        prescription_report=prescription_report,
+        staff_notifications=staff_notifications,
         stock_movements=stock_movements,
         inventory_summary=inventory_summary,
         fast_moving_medicines=fast_moving_medicines,
         slow_moving_medicines=slow_moving_medicines,
         dead_stock_medicines=dead_stock_medicines,
-        order_statuses=ORDER_STATUSES
+        order_statuses=ORDER_STATUSES,
+        staff_section=section,
+        staff_section_title=STAFF_DASHBOARD_SECTIONS[section]
     )
 
 #---------- ADD MEDICINE -------------
@@ -6952,7 +7681,7 @@ def add_medicine():
 
         flash(f"Error: {e}")
 
-    return flask.redirect("/staff")
+    return flask.redirect(flask.url_for("staff_dashboard", section="inventory"))
 #------------bulk upload medicine-----------
 @app.route("/bulk_upload", methods=["POST"])
 def bulk_upload():
@@ -7050,7 +7779,7 @@ def bulk_upload():
         # ---------------- MESSAGE ----------------
         flash(f"{inserted} medicines uploaded successfully, {skipped} skipped (duplicates)")
 
-        return flask.redirect("/staff")
+        return flask.redirect(flask.url_for("staff_dashboard", section="inventory"))
 
     except Exception as e:
         db.rollback()

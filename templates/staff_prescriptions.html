@@ -333,9 +333,13 @@
                     <p><b>Staff Approved Medicines:</b></p>
                     <pre data-approved-meds>{{ req.approved_medicines if req.approved_medicines else "Not approved yet" }}</pre>
 
-                    <div class="form-actions">
-                        <button class="approve" type="submit" name="action" value="Approved">Approve Prescription</button>
-                        <button class="reject" type="submit" name="action" value="Rejected">Reject Prescription</button>
+                    <div class="form-actions" data-review-actions>
+                        {% if req.status == "Pending Review" %}
+                            <button class="approve" type="submit" name="action" value="Approved">Approve Prescription</button>
+                            <button class="reject" type="submit" name="action" value="Rejected">Reject Prescription</button>
+                        {% else %}
+                            <strong>This prescription is already {{ req.status|lower }}.</strong>
+                        {% endif %}
                     </div>
                     <div class="review-message" data-review-message></div>
                 </form>
@@ -471,6 +475,10 @@
                 historyReviewed.textContent = data.reviewed_at || "Just now";
                 historyNote.textContent = data.staff_note || "No notes yet";
                 form.querySelector("[name='manual_medicines']").value = "";
+                const reviewActions = card.querySelector("[data-review-actions]");
+                if (reviewActions && ["Approved", "Rejected"].includes(data.status)) {
+                    reviewActions.innerHTML = `<strong>This prescription is already ${data.status.toLowerCase()}.</strong>`;
+                }
 
                 message.textContent = data.message;
                 message.className = "review-message success";

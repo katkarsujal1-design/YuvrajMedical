@@ -2550,6 +2550,86 @@
             background:#f8fafc;
         }
 
+        .customer-main strong,
+        .customer-stack strong{
+            display:block;
+            color:#0f172a;
+            font-weight:950;
+        }
+
+        .customer-main span,
+        .customer-stack span{
+            display:block;
+            margin-top:4px;
+            color:#64748b;
+            font-size:12px;
+            line-height:1.35;
+        }
+
+        .customer-actions{
+            display:grid;
+            gap:8px;
+            min-width:170px;
+        }
+
+        .customer-actions form{
+            display:grid;
+            gap:7px;
+            margin:0;
+        }
+
+        .customer-actions input{
+            min-height:34px;
+            border:1px solid var(--line);
+            border-radius:10px;
+            padding:0 10px;
+            font:inherit;
+            font-size:12px;
+        }
+
+        .floating-ai-assistant{
+            position:fixed;
+            right:20px;
+            bottom:20px;
+            z-index:1400;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            width:56px;
+            height:56px;
+            border-radius:50%;
+            color:#ffffff;
+            text-decoration:none;
+            font-size:24px;
+            background:linear-gradient(135deg,#7f1d4e,#0f766e);
+            box-shadow:0 14px 30px rgba(15,23,42,.22);
+            transition:.25s;
+        }
+
+        .floating-ai-assistant:hover{
+            transform:translateY(-4px);
+        }
+
+        .floating-ai-assistant::after{
+            content:"AI";
+            position:absolute;
+            top:-5px;
+            right:-5px;
+            min-width:22px;
+            height:22px;
+            display:grid;
+            place-items:center;
+            padding:0 5px;
+            border-radius:999px;
+            color:#4c1d3d;
+            background:#fde68a;
+            border:2px solid #ffffff;
+            font-size:10px;
+            font-weight:950;
+            line-height:1;
+            box-shadow:0 8px 16px rgba(15,23,42,.18);
+        }
+
         .status-badge,
         .badge,
         .pill{
@@ -3391,19 +3471,94 @@
             <section class="dashboard-section" id="customers">
                 <div class="glass-card table-card">
                     <div class="table-header">
-                        <div><h2>Customer Insights</h2><p>Newest customers, loyalty candidates, frequent buyers, and growth.</p></div>
+                        <div><h2>Customer Management</h2><p>View customers, purchases, prescriptions, addresses, loyalty, feedback, and account access.</p></div>
                         <form class="table-toolbar" method="GET" action="#customers">
-                            <input name="user_search" placeholder="Search users" value="{{ request.args.get('user_search','') }}" style="min-height:36px;border:1px solid var(--line);border-radius:12px;padding:0 12px">
+                            <input name="user_search" placeholder="Search customers" value="{{ request.args.get('user_search','') }}" style="min-height:36px;border:1px solid var(--line);border-radius:12px;padding:0 12px">
                             <button class="table-btn" type="submit">Search</button>
                         </form>
                     </div>
                     <div class="table-scroll">
                         <table class="enterprise-table">
-                            <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Address</th><th>Role</th></tr>
-                            {% for u in users_list %}
-                            <tr class="selectable-row" data-title="{{ u['name']|e }}" data-subtitle="{{ u['role']|title }} Profile" data-id="{{ u['id']|e }}" data-email="{{ u['email']|e }}" data-contact="{{ (u['phone'] if u['phone'] else u['contact'])|e }}" data-address="{{ u['address']|e }}" data-status="{{ u['role']|title }}">
-                                <td>#{{ u["id"] }}</td><td>{{ u["name"] }}</td><td>{{ u["email"] }}</td><td>{{ u["phone"] if u["phone"] else u["contact"] }}</td><td>{{ u["address"] }}</td><td><span class="pill status-info">{{ u["role"] }}</span></td>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Purchase History</th>
+                                <th>Prescriptions</th>
+                                <th>Addresses</th>
+                                <th>Loyalty</th>
+                                <th>Feedback</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
+                            {% for u in users_list %}
+                            <tr class="selectable-row" data-title="{{ u['name']|e }}" data-subtitle="Customer Profile" data-id="{{ u['id']|e }}" data-email="{{ u['email']|e }}" data-contact="{{ u['contact']|e }}" data-address="{{ u['address']|e }}" data-status="{{ 'Blocked' if u.get('is_blocked') else 'Active' }}">
+                                <td>
+                                    <div class="customer-main">
+                                        <strong>#{{ u["id"] }} · {{ u["name"] }}</strong>
+                                        <span>{{ u["email"] }}</span>
+                                        <span>{{ u["contact"] or "No phone" }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="customer-stack">
+                                        <strong>{{ u.total_orders }} orders</strong>
+                                        <span>Spent ₹{{ "%.2f"|format(u.total_spent or 0) }}</span>
+                                        <span>Last: {{ u.last_order_date or "No orders yet" }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="customer-stack">
+                                        <strong>{{ u.prescription_count }} uploaded</strong>
+                                        <span>{{ u.pending_prescriptions }} pending</span>
+                                        <span>Latest: {{ u.latest_prescription_status or "None" }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="customer-stack">
+                                        <strong>{{ u.address_count }} saved</strong>
+                                        <span>{{ u.default_address or u.address or "No address" }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="customer-stack">
+                                        <strong>{{ u.loyalty_points }} pts</strong>
+                                        <span>{{ u.delivered_orders }} delivered orders</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="customer-stack">
+                                        <strong>{{ u.feedback_count }} feedback</strong>
+                                        <span>{{ u.latest_feedback_type or "No feedback" }}</span>
+                                        <span>{{ (u.latest_feedback_message or "")[:70] }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if u.get("is_blocked") %}
+                                        <span class="pill status-danger">Blocked</span>
+                                        <div class="customer-stack"><span>{{ u.block_reason or "No reason added" }}</span></div>
+                                    {% else %}
+                                        <span class="pill status-ok">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="customer-actions">
+                                        <a class="table-btn" href="/owner/customers/{{ u['id'] }}">View Details</a>
+                                        {% if u.get("is_blocked") %}
+                                            <form method="POST" action="/owner/customers/{{ u['id'] }}/block">
+                                                <input type="hidden" name="action" value="unblock">
+                                                <button class="table-btn" type="submit">Unblock Customer</button>
+                                            </form>
+                                        {% else %}
+                                            <form method="POST" action="/owner/customers/{{ u['id'] }}/block" onsubmit="return confirm('Block this customer account?')">
+                                                <input type="hidden" name="action" value="block">
+                                                <input name="block_reason" placeholder="Block reason">
+                                                <button class="table-btn" type="submit">Block Customer</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="8">No customers found.</td></tr>
                             {% endfor %}
                         </table>
                     </div>
@@ -3549,6 +3704,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<a class="floating-ai-assistant" href="{{ url_for('chatbot') }}" aria-label="Open AI Chatbot">🤖</a>
+
 <script>
     /* ================= REVENUE COMPARISON DASHBOARD ================= */
     (() => {

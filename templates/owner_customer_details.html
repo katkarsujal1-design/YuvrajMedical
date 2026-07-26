@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Details - {{ customer.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+    <style>
+        body{margin:0;font-family:Arial,sans-serif;background:#f8fafc;color:#0f172a}
+        .page{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:28px 0 44px}
+        .top{display:flex;justify-content:space-between;gap:16px;align-items:start;margin-bottom:18px}
+        .top h1{margin:0;color:#0f766e}
+        .back{display:inline-flex;align-items:center;min-height:38px;padding:0 13px;border-radius:8px;background:#0f766e;color:white;text-decoration:none;font-weight:800}
+        .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+        .card,.panel{background:white;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
+        .card{padding:15px}.card span{display:block;color:#64748b;font-size:12px;font-weight:900;text-transform:uppercase}.card strong{display:block;margin-top:7px;font-size:24px}
+        .panel{margin-bottom:16px;overflow:hidden}.panel h2{margin:0;padding:16px 18px;border-bottom:1px solid #e2e8f0;color:#0f766e}
+        table{width:100%;border-collapse:collapse}th,td{padding:12px 14px;border-top:1px solid #e2e8f0;text-align:left;font-size:14px;vertical-align:top}th{background:#f8fafc;color:#475569;text-transform:uppercase;font-size:12px}
+        .status{display:inline-flex;padding:6px 10px;border-radius:999px;background:#e0f2fe;color:#0369a1;font-weight:900;font-size:12px}.blocked{background:#fee2e2;color:#b91c1c}.active{background:#dcfce7;color:#047857}
+        .block-form{display:flex;gap:8px;flex-wrap:wrap}.block-form input{min-height:36px;border:1px solid #cbd5e1;border-radius:8px;padding:0 10px}.block-form button{border:0;border-radius:8px;padding:0 12px;font-weight:900;cursor:pointer}.danger{background:#dc2626;color:white}.ok{background:#16a34a;color:white}
+        .floating-ai-assistant{position:fixed;right:20px;bottom:20px;z-index:1400;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;color:#fff;text-decoration:none;font-size:24px;background:linear-gradient(135deg,#7f1d4e,#0f766e);box-shadow:0 14px 30px rgba(15,23,42,.22);transition:.25s}.floating-ai-assistant:hover{transform:translateY(-4px)}.floating-ai-assistant::after{content:"AI";position:absolute;top:-5px;right:-5px;min-width:22px;height:22px;display:grid;place-items:center;padding:0 5px;border-radius:999px;color:#4c1d3d;background:#fde68a;border:2px solid #fff;font-size:10px;font-weight:950;line-height:1;box-shadow:0 8px 16px rgba(15,23,42,.18)}
+        @media(max-width:860px){.grid{grid-template-columns:1fr 1fr}.top{flex-direction:column}table{min-width:760px}.panel{overflow:auto}}
+    </style>
+</head>
+<body class="yvm-pro-page">
+    <main class="page">
+        <div class="top">
+            <div>
+                <h1>{{ customer.name }}</h1>
+                <p>{{ customer.email }} | {{ customer.phone or "No phone" }}</p>
+                <span class="status {{ 'blocked' if customer.is_blocked else 'active' }}">{{ "Blocked" if customer.is_blocked else "Active" }}</span>
+            </div>
+            <a class="back" href="/owner_dashboard#customers">Back to Customers</a>
+        </div>
+
+        <div class="grid">
+            <div class="card"><span>Total Spent</span><strong>₹{{ "%.2f"|format(total_spent) }}</strong></div>
+            <div class="card"><span>Orders</span><strong>{{ orders|length }}</strong></div>
+            <div class="card"><span>Loyalty Points</span><strong>{{ loyalty_points }}</strong></div>
+            <div class="card"><span>Prescriptions</span><strong>{{ prescriptions|length }}</strong></div>
+        </div>
+
+        <section class="panel">
+            <h2>Account Control</h2>
+            <div style="padding:16px 18px">
+                {% if customer.is_blocked %}
+                    <p><strong>Block reason:</strong> {{ customer.block_reason or "No reason added" }}</p>
+                    <form class="block-form" method="POST" action="/owner/customers/{{ customer.id }}/block">
+                        <input type="hidden" name="action" value="unblock">
+                        <button class="ok" type="submit">Unblock Customer</button>
+                    </form>
+                {% else %}
+                    <form class="block-form" method="POST" action="/owner/customers/{{ customer.id }}/block" onsubmit="return confirm('Block this customer account?')">
+                        <input type="hidden" name="action" value="block">
+                        <input name="block_reason" placeholder="Block reason">
+                        <button class="danger" type="submit">Block Customer</button>
+                    </form>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Customer Purchase History</h2>
+            <table>
+                <tr><th>Order</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th>Delivery</th></tr>
+                {% for order in orders %}
+                <tr><td>#{{ order.id }}</td><td>{{ order.date }}</td><td>{{ order.item_summary or "No items" }}</td><td>₹{{ order.total }}</td><td>{{ order.status }}</td><td>{{ order.delivery_address or "No address" }}</td></tr>
+                {% else %}
+                <tr><td colspan="6">No orders yet.</td></tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section class="panel">
+            <h2>Customer Prescriptions</h2>
+            <table>
+                <tr><th>ID</th><th>Uploaded</th><th>Status</th><th>Detected Medicines</th><th>Staff Note</th></tr>
+                {% for item in prescriptions %}
+                <tr><td>#{{ item.id }}</td><td>{{ item.created_at }}</td><td>{{ item.status }}</td><td>{{ item.detected_medicines or "None" }}</td><td>{{ item.staff_note or "No note" }}</td></tr>
+                {% else %}
+                <tr><td colspan="5">No prescriptions uploaded.</td></tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section class="panel">
+            <h2>Customer Addresses</h2>
+            <table>
+                <tr><th>Label</th><th>Name</th><th>Phone</th><th>Address</th><th>Default</th></tr>
+                {% for address in addresses %}
+                <tr><td>{{ address.label }}</td><td>{{ address.name }}</td><td>{{ address.phone }}</td><td>{{ address.address }}</td><td>{{ "Yes" if address.is_default else "No" }}</td></tr>
+                {% else %}
+                <tr><td colspan="5">{{ customer.address or "No saved addresses." }}</td></tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section class="panel">
+            <h2>Customer Feedback</h2>
+            <table>
+                <tr><th>Type</th><th>Rating</th><th>Title</th><th>Message</th><th>Status</th><th>Date</th></tr>
+                {% for item in feedback_items %}
+                <tr><td>{{ item.review_type }}</td><td>{{ item.rating or "-" }}</td><td>{{ item.title or "-" }}</td><td>{{ item.message }}</td><td>{{ item.status }}</td><td>{{ item.created_at }}</td></tr>
+                {% else %}
+                <tr><td colspan="6">No feedback submitted.</td></tr>
+                {% endfor %}
+            </table>
+        </section>
+    </main>
+    <a class="floating-ai-assistant" href="{{ url_for('chatbot') }}" aria-label="Open AI Chatbot">🤖</a>
+</body>
+</html>
