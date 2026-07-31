@@ -35,6 +35,11 @@ from family_health import (
 )
 
 load_dotenv()
+import os
+
+print("Current directory:", os.getcwd())
+print("Does .env exist?", os.path.exists(".env"))
+print("Does .env.txt exist?", os.path.exists(".env.txt"))
 
 app = Flask(__name__)
 
@@ -78,6 +83,12 @@ db_pool = None
 
 def get_db_pool():
     global db_pool
+
+    print("DB_HOST =", os.environ.get("DB_HOST"))
+    print("DB_USER =", os.environ.get("DB_USER"))
+    print("DB_NAME =", os.environ.get("DB_NAME"))
+    print("DB_PASSWORD =", os.environ.get("DB_PASSWORD"))
+
     if db_pool is None:
         db_pool = pooling.MySQLConnectionPool(
             pool_name="mypool",
@@ -87,6 +98,7 @@ def get_db_pool():
             password=os.environ.get("DB_PASSWORD"),
             database=os.environ.get("DB_NAME")
         )
+
     return db_pool
 
 

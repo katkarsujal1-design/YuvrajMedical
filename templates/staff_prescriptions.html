@@ -5,9 +5,10 @@
     <script src="{{ url_for('static', filename='js/preserve_scroll_head.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
             background: #f8fafc;
             margin: 0;
             padding: 30px;
@@ -16,7 +17,7 @@
 
         h2 {
             text-align: center;
-            color: #2563eb;
+            color: #102033;
         }
 
         .card {
@@ -251,8 +252,143 @@
                 height: 340px;
             }
         }
+
+        body.yvm-page-staff-prescriptions {
+            background:
+                linear-gradient(rgba(15, 23, 42, .026) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, .026) 1px, transparent 1px),
+                radial-gradient(circle at 8% 10%, rgba(8, 145, 178, .15), transparent 26%),
+                radial-gradient(circle at 88% 5%, rgba(138, 36, 89, .14), transparent 24%),
+                linear-gradient(180deg, #f8fbfd 0%, #ffffff 42%, #f3faf8 100%);
+            background-size: 34px 34px, 34px 34px, auto, auto, auto;
+        }
+
+        .rx-page-head {
+            max-width: 1120px;
+            margin: 0 auto 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 20px;
+            border: 1px solid rgba(148, 163, 184, .28);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .9);
+            box-shadow: 0 18px 44px rgba(15, 23, 42, .08);
+            backdrop-filter: blur(14px);
+        }
+
+        .rx-page-head h2 {
+            margin: 0;
+            text-align: left;
+            font-size: clamp(24px, 3vw, 36px);
+            background: linear-gradient(135deg, #102033, #0f766e 58%, #8a2459);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .rx-page-head p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .back-link,
+        .download,
+        button {
+            border-radius: 8px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 14px;
+            color: #0f766e;
+            background: linear-gradient(180deg, #ffffff, #ecfeff);
+            border: 1px solid rgba(8, 145, 178, .24);
+            text-decoration: none;
+            font-weight: 800;
+            white-space: nowrap;
+            box-shadow: 0 10px 22px rgba(8, 145, 178, .08);
+        }
+
+        .card {
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, .28);
+            box-shadow: 0 18px 44px rgba(15, 23, 42, .08);
+        }
+
+        .request-head {
+            align-items: center;
+        }
+
+        .viewer-shell,
+        .review-panel,
+        .history-panel {
+            border-radius: 12px;
+            border-color: rgba(148, 163, 184, .28);
+            background: linear-gradient(145deg, rgba(255, 255, 255, .98), rgba(248, 252, 252, .94));
+        }
+
+        .viewer-window {
+            border-radius: 10px;
+            background:
+                linear-gradient(rgba(15, 23, 42, .035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, .035) 1px, transparent 1px),
+                #f8fafc;
+            background-size: 24px 24px;
+        }
+
+        .status-badge.pending {
+            background: linear-gradient(135deg, #b7791f, #f59e0b);
+        }
+
+        .status-badge.approved,
+        .approve,
+        .download {
+            background: linear-gradient(135deg, #0f766e, #16a34a);
+        }
+
+        .status-badge.rejected,
+        .reject {
+            background: linear-gradient(135deg, #be123c, #8a2459);
+        }
+
+        .tool-button,
+        .secondary {
+            color: #0f766e;
+            background: linear-gradient(180deg, #ffffff, #ecfeff);
+            border: 1px solid rgba(8, 145, 178, .24);
+        }
+
+        textarea,
+        pre {
+            border: 1px solid rgba(148, 163, 184, .34);
+            background: rgba(255, 255, 255, .95);
+        }
+
+        .empty-state {
+            max-width: 620px;
+            margin: 26px auto;
+            padding: 28px;
+            text-align: center;
+            color: #64748b;
+            border: 1px solid rgba(148, 163, 184, .28);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .9);
+            box-shadow: 0 18px 44px rgba(15, 23, 42, .08);
+        }
+
+        @media (max-width: 760px) {
+            .rx-page-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-staff-prescriptions">
 
@@ -265,7 +401,13 @@
     <span></span>
 </div>
 
-<h2>Prescription Review Requests</h2>
+<header class="rx-page-head">
+    <div>
+        <h2>Prescription Review Requests</h2>
+        <p>Verify uploaded prescriptions, adjust OCR results, and record staff notes.</p>
+    </div>
+    <a class="back-link" href="/staff">Back to Staff Dashboard</a>
+</header>
 
 {% if requests_data %}
     {% for req in requests_data %}
@@ -358,11 +500,11 @@
     </div>
     {% endfor %}
 {% else %}
-    <p style="text-align:center;">No prescription requests found.</p>
+    <div class="empty-state">No prescription requests found.</div>
 {% endif %}
 
 <p style="text-align:center;">
-    <a href="/staff">Back to Staff Dashboard</a>
+    <a class="back-link" href="/staff">Back to Staff Dashboard</a>
 </p>
 
 <script>

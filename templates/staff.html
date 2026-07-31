@@ -8,6 +8,7 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
     <style>
 :root{
     --primary:#6366f1;
@@ -50,17 +51,107 @@ body{
 
 .sidebar{
     width:270px;
-    background:linear-gradient(180deg,#0f172a,#1e293b,#111827);
-    color:white;
-    position:fixed;
-    top:0;
-    left:0;
     height:100vh;
-    padding:25px 18px;
-    overflow-y:auto;
+    position:fixed;
+    left:0;
+    top:0;
+    background:#0f172a;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:25px;
+    overflow:auto;
     z-index:1000;
-    box-shadow:10px 0 30px rgba(0,0,0,0.15);
 }
+
+.logo-box{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:35px;
+}
+
+.logo-box h2{
+    color:white;
+    font-size:28px;
+    margin:0;
+}
+
+.logo-box p{
+    color:#cbd5e1;
+    font-size:14px;
+    margin-top:3px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    color:#e2e8f0;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:15px;
+    transition:.3s;
+    font-weight:600;
+}
+
+.menu a span{
+    font-size:22px;
+}
+
+.menu a:hover{
+    background:#1e293b;
+    transform:translateX(6px);
+}
+
+.menu a.active{
+    background:linear-gradient(90deg,#2563eb,#06b6d4);
+    color:white;
+}
+
+.sidebar-bottom{
+    margin-top:30px;
+}
+
+.staff-card{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:#22c55e;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:bold;
+    color:white;
+}
+
+.logout-btn{
+    display:block;
+    width:100%;
+    background:linear-gradient(135deg,#2563eb,#0f766e);
+    color:white;
+    text-align:center;
+    padding:14px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:600;
+}
+
 
 .logo{
     text-align:center;
@@ -176,7 +267,7 @@ body{
 }
 
 .logout-btn{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
+    background:linear-gradient(135deg,#2563eb,#0f766e);
     color:white;
 }
 
@@ -1017,7 +1108,7 @@ body{
     right:16px;
     bottom:18px;
     height:34px;
-    background:linear-gradient(135deg,transparent 10%,color-mix(in srgb,var(--metric-color) 24%,transparent) 10% 18%,transparent 18% 29%,color-mix(in srgb,var(--metric-color) 30%,transparent) 29% 37%,transparent 37% 48%,color-mix(in srgb,var(--metric-color) 34%,transparent) 48% 58%,transparent 58% 70%,color-mix(in srgb,var(--metric-color) 40%,transparent) 70% 78%,transparent 78%);
+    background:linear-gradient(135deg,transparent 10%,rgba(15,118,110,.14) 10% 18%,transparent 18% 29%,rgba(8,145,178,.18) 29% 37%,transparent 37% 48%,rgba(138,36,89,.14) 48% 58%,transparent 58% 70%,rgba(15,118,110,.22) 70% 78%,transparent 78%);
     clip-path:polygon(0 80%,18% 62%,32% 70%,48% 36%,64% 58%,82% 22%,100% 34%,100% 100%,0 100%);
     opacity:.9;
 }
@@ -1028,8 +1119,8 @@ body{
     margin:0 0 15px;
     border-radius:50%;
     color:#ffffff;
-    background:linear-gradient(135deg,color-mix(in srgb,var(--metric-color) 72%,#ffffff),var(--metric-color));
-    box-shadow:0 14px 24px color-mix(in srgb,var(--metric-color) 24%,transparent);
+    background:linear-gradient(135deg,var(--metric-color),#0f766e);
+    box-shadow:0 14px 24px rgba(15,118,110,.20);
 }
 
 .dashboard-stat h3{
@@ -1346,7 +1437,8 @@ body{
     place-items:center;
     border-radius:50%;
     color:var(--action-color);
-    background:color-mix(in srgb,var(--action-color) 13%,#ffffff);
+    background:#ffffff;
+    border:1px solid var(--action-border);
     font-size:20px;
 }
 
@@ -1839,51 +1931,939 @@ tr:hover{
         gap:12px;
     }
 }
+/* =========================
+   PAGE LOADER
+========================= */
+
+#pageLoader{
+    position:fixed;
+    inset:0;
+    background:#f8fafc;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+    transition:opacity .4s ease, visibility .4s ease;
+}
+
+#pageLoader.hidden{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.loader-circle{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    border:6px solid #e5e7eb;
+    border-top:6px solid #6366f1;
+    animation:spin .8s linear infinite;
+    margin:auto;
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+/* Hide page until loaded */
+
+body.loading{
+    overflow:hidden;
+}
+
+body.loading .layout{
+    opacity:0;
+}
+
+body.loaded .layout{
+    opacity:1;
+    transition:opacity .5s ease;
+}
+
+/* =========================
+   STAFF PREMIUM EXPERIENCE
+========================= */
+
+body.yvm-page-staff{
+    --primary:#0f766e;
+    --secondary:#8a2459;
+    --accent:#0891b2;
+    --dark:#102033;
+    --text:#18263a;
+    --muted:#64748b;
+    --border:rgba(148,163,184,.32);
+    background:
+        linear-gradient(rgba(15,23,42,.026) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(15,23,42,.026) 1px,transparent 1px),
+        radial-gradient(circle at 8% 10%,rgba(8,145,178,.15),transparent 26%),
+        radial-gradient(circle at 88% 5%,rgba(138,36,89,.14),transparent 24%),
+        linear-gradient(180deg,#f8fbfd 0%,#ffffff 42%,#f3faf8 100%);
+    background-size:34px 34px,34px 34px,auto,auto,auto;
+}
+
+.layout{
+    isolation:isolate;
+}
+
+.sidebar{
+    width:286px;
+    padding:22px;
+    background:
+        linear-gradient(180deg,rgba(16,32,51,.98),rgba(8,47,73,.96)),
+        #102033;
+    border-right:1px solid rgba(255,255,255,.08);
+    box-shadow:22px 0 54px rgba(15,23,42,.18);
+}
+
+.sidebar::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+        radial-gradient(circle at 22% 0%,rgba(20,184,166,.22),transparent 28%),
+        radial-gradient(circle at 95% 20%,rgba(183,121,31,.16),transparent 24%);
+}
+
+.sidebar > *{
+    position:relative;
+    z-index:1;
+}
+
+.logo-box{
+    min-height:88px;
+    padding:14px;
+    margin-bottom:22px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    background:rgba(255,255,255,.06);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.logo-box img{
+    box-shadow:0 14px 26px rgba(0,0,0,.18);
+}
+
+.logo-box h2{
+    font-size:25px;
+    letter-spacing:0;
+}
+
+.logo-box p,
+.staff-info small{
+    color:#b7c7d8;
+}
+
+.menu{
+    gap:8px;
+}
+
+.menu a{
+    min-height:48px;
+    border-radius:10px;
+    padding:12px 14px;
+    color:#d9e7ef;
+    border:1px solid transparent;
+    font-size:14px;
+}
+
+.menu a span{
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:rgba(255,255,255,.07);
+    font-size:16px;
+}
+
+.ai-ui-icon{
+    display:inline-grid;
+    place-items:center;
+    flex:0 0 auto;
+    background-color:#0f172a;
+    background-image:var(--icon-img);
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+    border:1px solid rgba(20,184,166,.32);
+    box-shadow:0 0 0 2px rgba(255,255,255,.74),0 12px 26px rgba(15,23,42,.18);
+    color:transparent !important;
+    font-size:0;
+    overflow:hidden;
+}
+
+.ai-dashboard{--icon-img:url("/static/images/ai-feature-hero-premium.png");}
+.ai-notification{--icon-img:url("/static/images/notification-center-premium.png");}
+.ai-medicine{--icon-img:url("/static/images/medicine-product-fallback-premium.png");}
+.ai-inventory{--icon-img:url("/static/images/promo-health-essentials-products-premium.png");}
+.ai-delivery{--icon-img:url("/static/images/rewards_ai/delivery-truck.png");}
+.ai-orders{--icon-img:url("/static/images/order-management-premium.png");}
+.ai-prescription{--icon-img:url("/static/images/dashboard-prescription-ai.png");}
+.ai-settings{--icon-img:url("/static/images/profile-tool-icon-ai.png");}
+.ai-sales{--icon-img:url("/static/images/payment_history_ai/total-spent.png");}
+.ai-pending{--icon-img:url("/static/images/payment_history_ai/pending-payment.png");}
+.ai-success{--icon-img:url("/static/images/payment_history_ai/successful-payment.png");}
+.ai-upload{--icon-img:url("/static/images/news_offers/upload-prescription.webp");}
+.ai-night{--icon-img:url("/static/images/profile-page-bg-ai.png");}
+
+.menu a:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.10);
+    transform:translateX(4px);
+}
+
+.menu a.active{
+    background:linear-gradient(135deg,#8a2459,#0f766e);
+    box-shadow:0 16px 30px rgba(15,118,110,.25);
+}
+
+.main{
+    margin-left:286px;
+    width:calc(100% - 286px);
+    padding:24px clamp(18px,2.4vw,34px) 42px;
+}
+
+.topbar{
+    position:sticky;
+    top:18px;
+    z-index:50;
+    border-radius:14px;
+    padding:18px;
+    background:rgba(255,255,255,.88);
+    border:1px solid rgba(148,163,184,.28);
+    box-shadow:0 18px 46px rgba(15,23,42,.10);
+}
+
+.topbar h1{
+    font-size:clamp(24px,3vw,36px);
+    line-height:1.08;
+    color:#102033;
+    background:none;
+    -webkit-text-fill-color:#102033;
+}
+
+.dashboard-search input,
+.management-toolbar input,
+.management-toolbar select,
+.orders-toolbar input,
+.orders-toolbar select,
+.form input,
+.form select,
+.form textarea,
+.edit-form input,
+.edit-form select,
+.edit-form textarea,
+.status-form input,
+.status-form select,
+.delivery-tool input,
+.delivery-tool select{
+    border-radius:8px;
+    border-color:rgba(148,163,184,.38);
+    box-shadow:0 1px 0 rgba(255,255,255,.7), inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.button,
+.btn,
+.mini-btn,
+.toolbar-link,
+.order-action,
+.dash-action,
+.action-btn,
+.tool-button,
+.delivery-tool button,
+.status-form button{
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+    background:linear-gradient(135deg,#8a2459,#0f766e);
+    box-shadow:0 14px 28px rgba(15,118,110,.18);
+}
+
+.button::after,
+.btn::after,
+.mini-btn::after,
+.toolbar-link::after,
+.order-action::after,
+.dash-action::after,
+.action-btn::after,
+.tool-button::after,
+.delivery-tool button::after,
+.status-form button::after{
+    content:"";
+    position:absolute;
+    inset:-70% auto -70% -55%;
+    width:42%;
+    transform:rotate(18deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.58),transparent);
+    opacity:0;
+    transition:transform .55s ease,opacity .22s ease;
+    pointer-events:none;
+}
+
+.button:hover::after,
+.btn:hover::after,
+.mini-btn:hover::after,
+.toolbar-link:hover::after,
+.order-action:hover::after,
+.dash-action:hover::after,
+.action-btn:hover::after,
+.tool-button:hover::after,
+.delivery-tool button:hover::after,
+.status-form button:hover::after{
+    opacity:1;
+    transform:translateX(360%) rotate(18deg);
+}
+
+.theme-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    min-width:132px;
+    padding:11px 14px;
+    border:0;
+    cursor:pointer;
+    font:inherit;
+    white-space:nowrap;
+    flex-shrink:0;
+    color:#ffffff;
+    background:linear-gradient(135deg,#111827,#0f766e);
+}
+
+.theme-toggle .ai-ui-icon{
+    width:24px;
+    height:24px;
+    border-radius:7px;
+}
+
+.profile-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+}
+
+.profile-btn .ai-ui-icon,
+.heading-icon{
+    width:28px;
+    height:28px;
+    border-radius:8px;
+}
+
+.heading-icon{
+    vertical-align:middle;
+    margin-right:8px;
+}
+
+.profile-btn,
+.order-action.secondary{
+    color:#0f766e;
+    background:linear-gradient(180deg,#ffffff,#ecfeff);
+    border:1px solid rgba(8,145,178,.22);
+    box-shadow:0 10px 22px rgba(8,145,178,.08);
+}
+
+.logout-btn{
+    background:linear-gradient(135deg,#2563eb,#0f766e) !important;
+    color:#ffffff;
+    border:1px solid rgba(59,130,246,.28);
+    box-shadow:0 14px 28px rgba(37,99,235,.22);
+}
+
+.alert{
+    border-radius:10px;
+    background:linear-gradient(135deg,#0f766e,#0891b2);
+    box-shadow:0 14px 30px rgba(15,118,110,.18);
+}
+
+.panel,
+.dashboard-card,
+.notification-panel,
+.stat,
+.dashboard-stat,
+.med-card,
+.chart-panel,
+.delivery-tool,
+.payment-card,
+.report-card{
+    border-radius:14px;
+    border:1px solid rgba(148,163,184,.28);
+    background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,252,252,.94));
+    box-shadow:0 18px 44px rgba(15,23,42,.08);
+}
+
+.panel:hover,
+.dashboard-card:hover,
+.stat:hover,
+.med-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(8,145,178,.24);
+}
+
+.panel h2,
+.dashboard-card h2,
+.notification-header h2{
+    letter-spacing:0;
+    color:#102033;
+}
+
+.stats{
+    gap:16px;
+}
+
+.stat,
+.dashboard-stat{
+    min-height:136px;
+}
+
+.stat-icon,
+.med-icon,
+.notification-total,
+.profile-avatar,
+.avatar{
+    background:linear-gradient(135deg,#8a2459,#0f766e);
+    color:#ffffff;
+}
+
+.stat-icon.ai-ui-icon,
+.notification-icon.ai-ui-icon,
+.activity-icon.ai-ui-icon,
+.dash-action .ai-ui-icon,
+.upload-icon.ai-ui-icon,
+.med-icon.ai-ui-icon,
+.avatar.ai-ui-icon,
+.profile-avatar.ai-ui-icon{
+    color:transparent !important;
+    background-color:#0f172a;
+    background-image:var(--icon-img);
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+    border-color:rgba(20,184,166,.32);
+}
+
+.stat-icon.ai-ui-icon{
+    border-radius:16px;
+}
+
+.notification-icon.ai-ui-icon,
+.activity-icon.ai-ui-icon{
+    width:46px;
+    height:46px;
+    border-radius:14px;
+}
+
+.dash-action .ai-ui-icon{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+}
+
+.upload-icon.ai-ui-icon{
+    width:74px;
+    height:74px;
+    margin:0 auto;
+    border-radius:20px;
+}
+
+.dashboard-stat::after{
+    opacity:.55;
+}
+
+.metric-change,
+.dashboard-link,
+.payment-card a{
+    color:#0f766e;
+}
+
+.dashboard-card-head{
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(148,163,184,.22);
+}
+
+.dashboard-actions{
+    align-items:stretch;
+}
+
+.dash-action{
+    border-radius:10px;
+    box-shadow:0 12px 26px rgba(15,23,42,.06);
+}
+
+.inventory-grid{
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+
+.med-card{
+    padding:20px;
+}
+
+.med-card::before{
+    width:150px;
+    height:150px;
+    background:radial-gradient(circle,rgba(8,145,178,.15),transparent 70%);
+}
+
+.med-id,
+.expiry-pill,
+.status-pill,
+.payment-badge{
+    border-radius:999px;
+    border:1px solid rgba(148,163,184,.22);
+}
+
+.table-wrapper{
+    border:1px solid rgba(148,163,184,.24);
+    border-radius:12px;
+    background:#ffffff;
+}
+
+table{
+    margin-top:0;
+}
+
+th{
+    background:linear-gradient(180deg,#f8fafc,#eef7f7);
+    color:#475569;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    font-size:11px;
+}
+
+td{
+    color:#26364b;
+}
+
+tr:hover{
+    transform:none;
+    background:#f8fcfc;
+}
+
+.pending,
+.delivered,
+.cancelled{
+    border-radius:999px;
+}
+
+.pending{background:linear-gradient(135deg,#b7791f,#f59e0b);}
+.delivered{background:linear-gradient(135deg,#0f766e,#16a34a);}
+.cancelled{background:linear-gradient(135deg,#be123c,#8a2459);}
+
+.floating-ai-assistant{
+    background:linear-gradient(135deg,#8a2459,#0f766e);
+    box-shadow:0 18px 38px rgba(15,23,42,.24);
+}
+
+body.staff-night{
+    --dark:#f8fafc;
+    --text:#e5edf7;
+    --muted:#a7b7ca;
+    --border:rgba(148,163,184,.24);
+    color:#f8fafc;
+    background:#020617 !important;
+}
+
+html.staff-night-root{
+    background:#020617;
+}
+
+body.staff-night .layout,
+body.staff-night .main{
+    color:#f8fafc;
+    background:#020617;
+}
+
+body.staff-night .sidebar{
+    background:linear-gradient(180deg,#020617,#07111f);
+    border-color:rgba(148,163,184,.16);
+    box-shadow:22px 0 54px rgba(0,0,0,.40);
+}
+
+body.staff-night .sidebar::before{
+    background:radial-gradient(circle at 20% 0%,rgba(20,184,166,.13),transparent 30%);
+}
+
+body.staff-night .logo-box,
+body.staff-night .menu a,
+body.staff-night .staff-card{
+    color:#f8fafc;
+    background:rgba(15,23,42,.78);
+    border-color:rgba(148,163,184,.18);
+}
+
+body.staff-night .menu a.active{
+    color:#ffffff;
+    background:linear-gradient(135deg,#164e63,#0f766e);
+}
+
+body.staff-night .topbar,
+body.staff-night .panel,
+body.staff-night .dashboard-card,
+body.staff-night .notification-panel,
+body.staff-night .stat,
+body.staff-night .dashboard-stat,
+body.staff-night .med-card,
+body.staff-night .chart-panel,
+body.staff-night .delivery-tool,
+body.staff-night .payment-card,
+body.staff-night .report-card{
+    color:#f8fafc;
+    background:linear-gradient(145deg,#0f172a,#111827 68%) !important;
+    border-color:rgba(148,163,184,.18);
+    box-shadow:0 20px 52px rgba(0,0,0,.28);
+}
+
+body.staff-night .topbar h1{
+    color:#ffffff !important;
+    background:none !important;
+    -webkit-text-fill-color:#ffffff !important;
+}
+
+body.staff-night .topbar p,
+body.staff-night .topbar strong,
+body.staff-night .topbar small,
+body.staff-night .topbar span,
+body.staff-night .panel h2,
+body.staff-night .dashboard-card h2,
+body.staff-night .notification-header h2,
+body.staff-night .dashboard-stat h3,
+body.staff-night .dashboard-stat p,
+body.staff-night .activity-row strong,
+body.staff-night .compact-row strong,
+body.staff-night .med-card h3,
+body.staff-night .med-category,
+body.staff-night .med-box span,
+body.staff-night .med-box b,
+body.staff-night .detail-list,
+body.staff-night .detail-list b,
+body.staff-night .sales-summary span,
+body.staff-night .sales-summary strong,
+body.staff-night .sales-axis,
+body.staff-night .sales-bar-label,
+body.staff-night .activity-row small,
+body.staff-night .activity-time,
+body.staff-night .compact-row small,
+body.staff-night .legend-row,
+body.staff-night .payment-card span,
+body.staff-night .customer-details,
+body.staff-night td{
+    color:#f8fafc !important;
+}
+
+body.staff-night .main :where(h1,h2,h3,h4,p,span,small,strong,b,label,summary,td,th,div,a){
+    color:#f8fafc !important;
+    -webkit-text-fill-color:#f8fafc;
+}
+
+body.staff-night .ai-ui-icon,
+body.staff-night .ai-ui-icon *{
+    color:transparent !important;
+    -webkit-text-fill-color:transparent !important;
+    font-size:0;
+}
+
+body.staff-night .ai-ui-icon{
+    background-color:#020617;
+    border-color:rgba(103,232,249,.42);
+    box-shadow:0 0 0 2px rgba(255,255,255,.08),0 0 22px rgba(20,184,166,.22),0 12px 26px rgba(0,0,0,.35);
+}
+
+body.staff-night .dashboard-search input,
+body.staff-night input,
+body.staff-night select,
+body.staff-night textarea,
+body.staff-night .table-wrapper,
+body.staff-night .legend-row,
+body.staff-night .compact-row,
+body.staff-night .med-box,
+body.staff-night .insight-row,
+body.staff-night pre{
+    color:#f8fafc !important;
+    background-color:#020617 !important;
+    border-color:rgba(148,163,184,.24) !important;
+}
+
+body.staff-night input::placeholder,
+body.staff-night textarea::placeholder{
+    color:#94a3b8;
+}
+
+body.staff-night .sales-bars,
+body.staff-night .viewer-window,
+body.staff-night .bar-chart{
+    background:
+        repeating-linear-gradient(to top,#020617 0,#020617 47px,#172033 48px) !important;
+    border-color:rgba(148,163,184,.18);
+}
+
+body.staff-night .status-ring-core,
+body.staff-night .donut-ring::after{
+    background:#020617;
+    color:#f8fafc;
+    box-shadow:inset 0 0 0 1px rgba(148,163,184,.22);
+}
+
+body.staff-night .profile-btn,
+body.staff-night .order-action.secondary,
+body.staff-night .tool-button,
+body.staff-night .secondary{
+    color:#f8fafc !important;
+    background:linear-gradient(135deg,#0f172a,#164e63) !important;
+    border-color:rgba(148,163,184,.22) !important;
+}
+
+body.staff-night .theme-toggle{
+    color:#ffffff;
+    background:linear-gradient(135deg,#0f766e,#164e63);
+}
+
+body.staff-night .logout-btn{
+    color:#ffffff !important;
+    background:linear-gradient(135deg,#1d4ed8,#0f766e) !important;
+    border-color:rgba(96,165,250,.34) !important;
+    box-shadow:0 14px 30px rgba(37,99,235,.30) !important;
+}
+
+/* Final icon rendering layer: keeps AI images visible over older icon backgrounds. */
+body.yvm-page-staff .ai-ui-icon{
+    position:relative;
+    display:inline-grid !important;
+    place-items:center !important;
+    color:transparent !important;
+    -webkit-text-fill-color:transparent !important;
+    font-size:0 !important;
+    line-height:0 !important;
+    background:#0f172a !important;
+    border:1px solid rgba(20,184,166,.38) !important;
+    box-shadow:0 0 0 2px rgba(255,255,255,.82),0 12px 28px rgba(15,23,42,.18) !important;
+    overflow:hidden !important;
+}
+
+body.yvm-page-staff .ai-ui-icon::before{
+    content:"";
+    width:86%;
+    height:86%;
+    display:block;
+    border-radius:inherit;
+    background-image:var(--icon-img);
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:contain;
+    filter:saturate(1.18) contrast(1.12);
+}
+
+body.yvm-page-staff .menu a .ai-ui-icon,
+body.yvm-page-staff .heading-icon,
+body.yvm-page-staff .profile-btn .ai-ui-icon{
+    background:#102033 !important;
+}
+
+body.yvm-page-staff .stat-icon.ai-ui-icon,
+body.yvm-page-staff .notification-icon.ai-ui-icon,
+body.yvm-page-staff .activity-icon.ai-ui-icon,
+body.yvm-page-staff .med-icon.ai-ui-icon,
+body.yvm-page-staff .upload-icon.ai-ui-icon{
+    background:#ffffff !important;
+}
+
+body.yvm-page-staff .stat-icon.ai-ui-icon::before,
+body.yvm-page-staff .notification-icon.ai-ui-icon::before,
+body.yvm-page-staff .activity-icon.ai-ui-icon::before,
+body.yvm-page-staff .med-icon.ai-ui-icon::before,
+body.yvm-page-staff .upload-icon.ai-ui-icon::before{
+    width:92%;
+    height:92%;
+}
+
+body.staff-night .ai-ui-icon{
+    background:#020617 !important;
+    border-color:rgba(103,232,249,.44) !important;
+    box-shadow:0 0 0 2px rgba(255,255,255,.10),0 0 24px rgba(20,184,166,.26),0 12px 28px rgba(0,0,0,.42) !important;
+}
+
+body.staff-night .ai-ui-icon::before{
+    filter:saturate(1.25) contrast(1.18) brightness(1.05);
+}
+
+body.staff-night th{
+    background:linear-gradient(180deg,#102033,#0f172a);
+    color:#cbd5e1;
+}
+
+body.staff-night tr:hover{
+    background:rgba(20,184,166,.08);
+}
+
+#pageLoader{
+    background:#f8fbfd;
+}
+
+.loader-circle{
+    border-top-color:#0f766e;
+}
+
+@media(max-width:1100px){
+    .topbar{
+        position:relative;
+        top:auto;
+        flex-wrap:wrap;
+    }
+
+    .dashboard-search{
+        order:3;
+        max-width:none;
+        width:100%;
+    }
+}
+
+@media(max-width:850px){
+    .sidebar{
+        width:100%;
+        border-right:0;
+        border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:18px;
+    }
+
+    .menu{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+
+@media(max-width:650px){
+    .menu{
+        grid-template-columns:1fr;
+    }
+
+    .topbar-profile,
+    .profile-area{
+        align-items:flex-start;
+    }
+
+    .status-form{
+        min-width:0;
+        grid-template-columns:1fr;
+    }
+}
 </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
 </head>
 
-<body class="yvm-pro-page yvm-page-staff">
+<body class="loading yvm-pro-page yvm-page-staff">
+    <div id="pageLoader">
+    <div class="loader-box">
+        <div class="loader-circle"></div>
+    </div>
+</div>
 
 <div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+    <span aria-hidden="true">&nbsp;</span>
+    <span aria-hidden="true">&nbsp;</span>
+    <span aria-hidden="true">&nbsp;</span>
+    <span aria-hidden="true">&nbsp;</span>
+    <span aria-hidden="true">&nbsp;</span>
+    <span aria-hidden="true">&nbsp;</span>
 </div>
 
 <div class="layout">
 
     <div class="sidebar">
-        <div class="logo">
-            <div class="logo-circle">💊</div>
-            <h2>Yuvraj Medical</h2>
-            <p>Professional Staff Panel</p>
+
+    <div>
+
+        <div class="logo-box">
+            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}"
+                 alt="Yuvraj Medical"
+                 style="width:65px;height:65px;border-radius:18px;">
+
+            <div>
+                <h2>Yuvraj</h2>
+                <p>Trusted Online Pharmacy</p>
+            </div>
         </div>
 
-        <div class="menu">
-            <a href="{{ url_for('staff_dashboard') }}" class="{% if staff_section == 'dashboard' %}active{% endif %}">📊 Dashboard</a>
-            <a href="{{ url_for('staff_dashboard', section='notifications') }}" class="{% if staff_section == 'notifications' %}active{% endif %}">🔔 Notifications</a>
-            <a href="{{ url_for('staff_dashboard', section='add-medicine') }}" class="{% if staff_section == 'add-medicine' %}active{% endif %}">➕ Add Medicine</a>
-            <a href="{{ url_for('staff_dashboard', section='inventory') }}" class="{% if staff_section == 'inventory' %}active{% endif %}">💊 Inventory</a>
-            <a href="{{ url_for('staff_dashboard', section='delivery') }}" class="{% if staff_section == 'delivery' %}active{% endif %}">🚚 Delivery</a>
-            <a href="{{ url_for('staff_dashboard', section='orders') }}" class="{% if staff_section == 'orders' %}active{% endif %}">📦 Orders</a>
-            <a href="/scan_barcode">📷 Scan Barcode</a>
-            <a href="/profile">👤 Profile</a>
-            <a href="/owner_dashboard">🧑‍💼 Owner Dashboard</a>
-	    <a href="/staff_prescriptions">Prescription Requests</a>
-            <a href="/logout">🚪 Logout</a>
-        </div>
+        <nav class="menu" aria-label="Staff dashboard sections">
+
+            <a href="{{ url_for('staff_dashboard', section='dashboard') }}" class="{% if staff_section == 'dashboard' %}active{% endif %}">
+                <span class="ai-ui-icon ai-dashboard" aria-hidden="true">&nbsp;</span>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('staff_dashboard', section='notifications') }}" class="{% if staff_section == 'notifications' %}active{% endif %}">
+                <span class="ai-ui-icon ai-notification" aria-hidden="true">&nbsp;</span>
+                Notifications
+            </a>
+
+            <a href="{{ url_for('staff_dashboard', section='add-medicine') }}" class="{% if staff_section == 'add-medicine' %}active{% endif %}">
+                <span class="ai-ui-icon ai-medicine" aria-hidden="true">&nbsp;</span>
+                Add Medicine
+            </a>
+
+            <a href="{{ url_for('staff_dashboard', section='inventory') }}" class="{% if staff_section == 'inventory' %}active{% endif %}">
+                <span class="ai-ui-icon ai-inventory" aria-hidden="true">&nbsp;</span>
+                Inventory
+            </a>
+
+            <a href="{{ url_for('staff_dashboard', section='delivery') }}" class="{% if staff_section == 'delivery' %}active{% endif %}">
+                <span class="ai-ui-icon ai-delivery" aria-hidden="true">&nbsp;</span>
+                Delivery
+            </a>
+
+            <a href="{{ url_for('staff_dashboard', section='orders') }}" class="{% if staff_section == 'orders' %}active{% endif %}">
+                <span class="ai-ui-icon ai-orders" aria-hidden="true">&nbsp;</span>
+                Orders
+            </a>
+
+            <a href="/staff_prescriptions">
+                <span class="ai-ui-icon ai-prescription" aria-hidden="true">&nbsp;</span>
+                Prescription Requests
+            </a>
+
+            <a href="/profile">
+                <span class="ai-ui-icon ai-settings" aria-hidden="true">&nbsp;</span>
+                Settings
+            </a>
+
+        </nav>
+
     </div>
+
+    <div class="sidebar-bottom">
+
+        <div class="staff-card">
+
+            <div class="avatar ai-ui-icon ai-settings" aria-label="Staff profile" role="img">&nbsp;</div>
+
+            <div class="staff-info">
+                <strong>{{ session.get("user", {}).get("name", "Staff") }}</strong>
+                <small>Pharmacist</small>
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="bottom-btn logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</div>
 
     <div class="main">
 
         <div class="topbar">
             <div>
-                <h1>{% if staff_section == 'dashboard' %}Good Morning, {{ session.get("user", {}).get("name", "Staff") }}{% else %}💊 {{ staff_section_title|default("Staff Dashboard") }}{% endif %}</h1>
-                <p>{% if staff_section == 'dashboard' %}Here's what's happening at the pharmacy today.{% else %}Smart Pharmacy Management System{% endif %}</p>
+                <h1>{% if staff_section == 'dashboard' %}Good Morning, {{ session.get("user", {}).get("name", "Staff") }}{% else %}{{ staff_section_title|default("Staff Dashboard") }}{% endif %}</h1>
+                <p>{% if staff_section == 'dashboard' %}Today's pharmacy workbench, tuned for fast decisions.{% else %}Manage pharmacy operations with clear controls and live context.{% endif %}</p>
             </div>
 
             <div class="dashboard-search">
@@ -1892,8 +2872,12 @@ tr:hover{
             </div>
 
             <div class="topbar-profile">
-                <a href="{{ url_for('staff_dashboard', section='notifications') }}" class="button profile-btn">🔔 {{ staff_notifications|sum(attribute="count") }}</a>
-                <a href="/profile" class="profile-avatar" aria-label="Profile">{{ (session.get("user", {}).get("name", "S")[:1])|upper }}</a>
+                <button class="button theme-toggle" type="button" id="staffThemeToggle" aria-pressed="false">
+                    <span class="ai-ui-icon ai-night" aria-hidden="true">&nbsp;</span>
+                    <span data-theme-label>Night Mode</span>
+                </button>
+                <a href="{{ url_for('staff_dashboard', section='notifications') }}" class="button profile-btn"><span class="ai-ui-icon ai-notification" aria-hidden="true">&nbsp;</span>{{ staff_notifications|sum(attribute="count") }}</a>
+                <a href="/profile" class="profile-avatar ai-ui-icon ai-settings" aria-label="Profile">&nbsp;</a>
                 <div>
                     <strong>{{ session.get("user", {}).get("name", "Staff") }}</strong>
                     <small>Pharmacist</small>
@@ -1924,35 +2908,35 @@ tr:hover{
         <section class="staff-home" id="dashboard-home" aria-label="Dashboard Home">
             <div class="stats">
                 <div class="stat dashboard-stat" style="--metric-color:#16a34a;">
-                    <div class="stat-icon">💊</div>
+                    <div class="stat-icon ai-ui-icon ai-medicine" aria-hidden="true">&nbsp;</div>
                     <h3>Total Medicines</h3>
                     <p>{{ total_medicines }}</p>
                     <div class="metric-change">▲ 8.5% <small>vs yesterday</small></div>
                 </div>
 
                 <div class="stat dashboard-stat" style="--metric-color:#2563eb;">
-                    <div class="stat-icon">📦</div>
+                    <div class="stat-icon ai-ui-icon ai-orders" aria-hidden="true">&nbsp;</div>
                     <h3>Total Orders</h3>
                     <p>{{ total_orders }}</p>
                     <div class="metric-change">▲ 12.3% <small>vs yesterday</small></div>
                 </div>
 
                 <div class="stat dashboard-stat" style="--metric-color:#7c3aed;">
-                    <div class="stat-icon">🧾</div>
+                    <div class="stat-icon ai-ui-icon ai-sales" aria-hidden="true">&nbsp;</div>
                     <h3>Today's Orders</h3>
                     <p>{{ today_orders }}</p>
                     <div class="metric-change">▲ 33.3% <small>vs yesterday</small></div>
                 </div>
 
                 <div class="stat dashboard-stat" style="--metric-color:#f97316;">
-                    <div class="stat-icon">⌛</div>
+                    <div class="stat-icon ai-ui-icon ai-pending" aria-hidden="true">&nbsp;</div>
                     <h3>Pending Orders</h3>
                     <p>{{ pending_orders }}</p>
                     <div class="metric-change danger">▼ 12.5% <small>vs yesterday</small></div>
                 </div>
 
                 <div class="stat dashboard-stat" style="--metric-color:#16a34a;">
-                    <div class="stat-icon">✓</div>
+                    <div class="stat-icon ai-ui-icon ai-success" aria-hidden="true">&nbsp;</div>
                     <h3>Delivered Orders</h3>
                     <p>{{ delivered_orders }}</p>
                     <div class="metric-change">▲ 10% <small>vs yesterday</small></div>
@@ -1976,8 +2960,8 @@ tr:hover{
                     <div class="sales-chart">
                         <div class="sales-axis">
                             <span>₹{{ "%.0f"|format((max_sales or 0)|float) }}</span>
-                            <span>₹{{ "%.0f"|format(((max_sales or 0)|float) * .66) }}</span>
-                            <span>₹{{ "%.0f"|format(((max_sales or 0)|float) * .33) }}</span>
+                            <span>₹{{ "%.0f"|format(((max_sales or 0)|float) * 0.66) }}</span>
+                            <span>₹{{ "%.0f"|format(((max_sales or 0)|float) * 0.33) }}</span>
                             <span>₹0</span>
                         </div>
                         <div class="sales-bars">
@@ -2005,10 +2989,10 @@ tr:hover{
                             <div class="status-ring-core"><div><strong>{{ order_total_for_chart }}</strong><span>Total Orders</span></div></div>
                         </div>
                         <div class="chart-legend">
-                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#22c55e;"></i>Delivered</span><strong>{{ delivered_orders }}</strong></div>
-                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#f59e0b;"></i>Pending</span><strong>{{ pending_orders }}</strong></div>
-                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#ef4444;"></i>Cancelled</span><strong>{{ cancelled_orders }}</strong></div>
-                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#3b82f6;"></i>Today</span><strong>{{ today_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#22c55e;" aria-hidden="true">&nbsp;</i>Delivered</span><strong>{{ delivered_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#f59e0b;" aria-hidden="true">&nbsp;</i>Pending</span><strong>{{ pending_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#ef4444;" aria-hidden="true">&nbsp;</i>Cancelled</span><strong>{{ cancelled_orders }}</strong></div>
+                            <div class="legend-row"><span><i class="legend-dot" style="--dot:#3b82f6;" aria-hidden="true">&nbsp;</i>Today</span><strong>{{ today_orders }}</strong></div>
                         </div>
                     </div>
                 </div>
@@ -2021,7 +3005,7 @@ tr:hover{
                     <div class="activity-list">
                         {% for o in orders[:5] %}
                         <div class="activity-row">
-                            <div class="activity-icon">{% if o["status"] == "Delivered" %}✓{% elif o["status"] == "Cancelled" %}✕{% else %}□{% endif %}</div>
+                            <div class="activity-icon ai-ui-icon {% if o['status'] == 'Delivered' %}ai-success{% elif o['status'] == 'Cancelled' %}ai-notification{% else %}ai-orders{% endif %}" aria-hidden="true">&nbsp;</div>
                             <div>
                                 <strong>Order #ORD{{ o["id"] }} {{ (o["status"] or "received")|lower }}</strong>
                                 <small>Customer: {{ o["customer_name"] }}</small>
@@ -2029,7 +3013,7 @@ tr:hover{
                             <div class="activity-time">{{ o["date"] }}</div>
                         </div>
                         {% else %}
-                        <div class="activity-row"><div class="activity-icon">□</div><div><strong>No recent orders</strong><small>New activity will appear here.</small></div><div></div></div>
+                        <div class="activity-row"><div class="activity-icon ai-ui-icon ai-orders" aria-hidden="true">&nbsp;</div><div><strong>No recent orders</strong><small>New activity will appear here.</small></div><div class="activity-time">-</div></div>
                         {% endfor %}
                     </div>
                 </div>
@@ -2077,12 +3061,11 @@ tr:hover{
                         <h2>Quick Actions</h2>
                     </div>
                     <div class="dashboard-actions">
-                        <a class="dash-action" style="--action-bg:#ecfdf5;--action-border:#bbf7d0;--action-color:#16a34a;" href="{{ url_for('staff_dashboard', section='add-medicine') }}"><span>＋</span>Add Medicine</a>
-                        <a class="dash-action" style="--action-bg:#eff6ff;--action-border:#bfdbfe;--action-color:#2563eb;" href="{{ url_for('staff_dashboard', section='orders') }}"><span>□</span>Manage Orders</a>
-                        <a class="dash-action" style="--action-bg:#f5f3ff;--action-border:#ddd6fe;--action-color:#7c3aed;" href="/staff_prescriptions"><span>Rx</span>Prescriptions</a>
-                        <a class="dash-action" style="--action-bg:#fff7ed;--action-border:#fed7aa;--action-color:#f97316;" href="{{ url_for('staff_dashboard', section='inventory') }}"><span>◇</span>Inventory</a>
-                        <a class="dash-action" style="--action-bg:#ecfeff;--action-border:#a5f3fc;--action-color:#0891b2;" href="/scan_barcode"><span>▥</span>Scan Barcode</a>
-                        <a class="dash-action" style="--action-bg:#fef2f2;--action-border:#fecaca;--action-color:#ef4444;" href="{{ url_for('staff_dashboard') }}#reports-analytics"><span>▥</span>Analytics</a>
+                        <a class="dash-action" style="--action-bg:#ecfdf5;--action-border:#bbf7d0;--action-color:#16a34a;" href="{{ url_for('staff_dashboard', section='add-medicine') }}"><span class="ai-ui-icon ai-medicine" aria-hidden="true">&nbsp;</span>Add Medicine</a>
+                        <a class="dash-action" style="--action-bg:#eff6ff;--action-border:#bfdbfe;--action-color:#2563eb;" href="{{ url_for('staff_dashboard', section='orders') }}"><span class="ai-ui-icon ai-orders" aria-hidden="true">&nbsp;</span>Manage Orders</a>
+                        <a class="dash-action" style="--action-bg:#f5f3ff;--action-border:#ddd6fe;--action-color:#7c3aed;" href="/staff_prescriptions"><span class="ai-ui-icon ai-prescription" aria-hidden="true">&nbsp;</span>Prescriptions</a>
+                        <a class="dash-action" style="--action-bg:#fff7ed;--action-border:#fed7aa;--action-color:#f97316;" href="{{ url_for('staff_dashboard', section='inventory') }}"><span class="ai-ui-icon ai-inventory" aria-hidden="true">&nbsp;</span>Inventory</a>
+                        <a class="dash-action" style="--action-bg:#ecfeff;--action-border:#a5f3fc;--action-color:#0891b2;" href="/scan_barcode"><span class="ai-ui-icon ai-dashboard" aria-hidden="true">&nbsp;</span>Scan Barcode</a>
                     </div>
                 </div>
             </div>
@@ -2092,14 +3075,14 @@ tr:hover{
         {% if staff_section == 'notifications' %}
         <div class="notification-panel" id="notifications" aria-label="Notifications">
             <div class="notification-header">
-                <h2>🔔 Notifications</h2>
+                <h2><span class="heading-icon ai-ui-icon ai-notification" aria-hidden="true">&nbsp;</span> Notifications</h2>
                 <div class="notification-total">{{ staff_notifications|sum(attribute="count") }}</div>
             </div>
 
             <div class="notification-grid">
                 {% for notice in staff_notifications %}
                 <a class="notification-card {{ notice.tone }}" href="{{ notice.target }}">
-                    <div class="notification-icon">🔔</div>
+                    <div class="notification-icon ai-ui-icon ai-notification" aria-hidden="true">&nbsp;</div>
                     <div>
                         <h3>{{ notice.title }}</h3>
                         <p>{{ notice.message }}</p>
@@ -2115,7 +3098,7 @@ tr:hover{
         <div class="grid">
 
             <div class="panel" id="addmedicine">
-                <h2>➕ Add New Medicine</h2>
+                <h2><span class="heading-icon ai-ui-icon ai-medicine" aria-hidden="true">&nbsp;</span> Add New Medicine</h2>
 
                 <form class="form" method="POST" action="/add_medicine" enctype="multipart/form-data">
                     <input name="name" placeholder="Medicine Name" required>
@@ -2138,22 +3121,22 @@ tr:hover{
                     <input type="number" name="price" min="0" step="0.01" placeholder="Selling Price">
                     <input type="number" name="stock" min="0" placeholder="Stock">
                     <input type="text" name="barcode" placeholder="Barcode Number">
-                    <input type="file" name="image" accept="image/*" capture="environment" title="Upload or Capture Medicine Image">
+                    <input type="file" name="image" accept="image/*" title="Upload Medicine Image">
 
                     <button class="btn">
-                        ➕ Add Medicine
+                        Add Medicine
                     </button>
                 </form>
             </div>
 
             <div class="panel">
-                <h2>📂 Bulk Upload</h2>
+                <h2><span class="heading-icon ai-ui-icon ai-upload" aria-hidden="true">&nbsp;</span> Bulk Upload</h2>
 
                 <form method="POST" action="/bulk_upload" enctype="multipart/form-data">
                     <label class="upload-box">
-                        <div class="upload-icon">📤</div>
-                        <div class="upload-title">Upload Excel File</div>
-                        <div class="upload-sub">Drag & Drop or Click Here</div>
+                        <span class="upload-icon ai-ui-icon ai-upload" aria-hidden="true">&nbsp;</span>
+                        <span class="upload-title">Upload Excel File</span>
+                        <span class="upload-sub">Drag & Drop or Click Here</span>
 
                         <input type="file" name="file" required>
                     </label>
@@ -2171,13 +3154,13 @@ tr:hover{
 
         {% if staff_section == 'inventory' %}
         <div class="panel table-panel" id="inventory">
-    <h2>💊 Smart Medicine Inventory</h2>
+    <h2><span class="heading-icon ai-ui-icon ai-inventory" aria-hidden="true">&nbsp;</span> Smart Medicine Inventory</h2>
 
     <div class="stats">
-        <div class="stat"><div class="stat-icon">Σ</div><h3>Current Stock</h3><p>{{ inventory_summary.get("total_units") or 0 }}</p></div>
-        <div class="stat"><div class="stat-icon">!</div><h3>Low Stock Alert</h3><p>{{ inventory_summary.get("low_stock_count") or 0 }}</p></div>
-        <div class="stat"><div class="stat-icon">0</div><h3>Out Of Stock Alert</h3><p>{{ inventory_summary.get("out_of_stock_count") or 0 }}</p></div>
-        <div class="stat"><div class="stat-icon">₹</div><h3>Inventory Value</h3><p>₹{{ "%.2f"|format((inventory_summary.get("inventory_selling_value") or 0)|float) }}</p></div>
+        <div class="stat"><div class="stat-icon ai-ui-icon ai-inventory" aria-hidden="true">&nbsp;</div><h3>Current Stock</h3><p>{{ inventory_summary.get("total_units") or 0 }}</p></div>
+        <div class="stat"><div class="stat-icon ai-ui-icon ai-pending" aria-hidden="true">&nbsp;</div><h3>Low Stock Alert</h3><p>{{ inventory_summary.get("low_stock_count") or 0 }}</p></div>
+        <div class="stat"><div class="stat-icon ai-ui-icon ai-notification" aria-hidden="true">&nbsp;</div><h3>Out Of Stock Alert</h3><p>{{ inventory_summary.get("out_of_stock_count") or 0 }}</p></div>
+        <div class="stat"><div class="stat-icon ai-ui-icon ai-sales" aria-hidden="true">&nbsp;</div><h3>Inventory Value</h3><p>₹{{ "%.2f"|format((inventory_summary.get("inventory_selling_value") or 0)|float) }}</p></div>
     </div>
 
     <div class="management-toolbar">
@@ -2215,7 +3198,7 @@ tr:hover{
                         {% if m.get("image_url") %}
                             <img class="med-image" src="{{ m.get('image_url') }}" alt="{{ m['name'] }}">
                         {% else %}
-                            <div class="med-icon">💊</div>
+                            <div class="med-icon ai-ui-icon ai-medicine" aria-hidden="true">&nbsp;</div>
                         {% endif %}
                         <div class="med-id">#{{ m["id"] }}</div>
                     </div>
@@ -2285,7 +3268,7 @@ tr:hover{
                                 <input name="price" type="number" min="0" step="0.01" value="{{ m.get('price') or 0 }}" placeholder="Selling Price">
                                 <input name="stock" type="number" min="0" value="{{ m.get('stock') or 0 }}" placeholder="Stock">
                                 <input name="barcode" value="{{ m.get('barcode') or '' }}" placeholder="Barcode">
-                                <input name="image" type="file" accept="image/*" capture="environment">
+                                <input name="image" type="file" accept="image/*">
                                 <button class="mini-btn" type="submit">Save Changes</button>
                             </form>
                         </details>
@@ -2376,7 +3359,7 @@ tr:hover{
 
         {% if staff_section == 'delivery' %}
         <div class="panel table-panel" id="delivery-management">
-            <h2>🚚 Delivery Management</h2>
+            <h2><span class="heading-icon ai-ui-icon ai-delivery" aria-hidden="true">&nbsp;</span> Delivery Management</h2>
             <p class="section-note">Delivery is accepted only from the Santacruz branch coverage: Bandra, Khar, Santacruz, Vile Parle, Andheri, Jogeshwari, and Goregaon.</p>
             <div class="delivery-management-grid">
                 <div class="delivery-tool">
@@ -2457,7 +3440,7 @@ tr:hover{
 
         {% if staff_section == 'orders' %}
         <div class="panel table-panel" id="orders">
-            <h2>📦 Recent Orders</h2>
+            <h2><span class="heading-icon ai-ui-icon ai-orders" aria-hidden="true">&nbsp;</span> Recent Orders</h2>
             <div class="orders-toolbar">
                 <input id="staffOrderSearch" type="search" placeholder="Search order, customer, phone, email...">
                 <select id="staffOrderStatusFilter" aria-label="Filter orders by status">
@@ -2860,6 +3843,52 @@ tr:hover{
         });
     });
 })();
+</script>
+<script>
+(() => {
+    const body = document.body;
+    const toggle = document.getElementById("staffThemeToggle");
+    const label = toggle ? toggle.querySelector("[data-theme-label]") : null;
+    const storageKey = "yvm-staff-theme";
+
+    const applyTheme = (mode) => {
+        const isNight = mode === "night";
+        body.classList.toggle("staff-night", isNight);
+        document.documentElement.classList.toggle("staff-night-root", isNight);
+        if (toggle) {
+            toggle.setAttribute("aria-pressed", String(isNight));
+        }
+        if (label) {
+            label.textContent = isNight ? "Day Mode" : "Night Mode";
+        }
+    };
+
+    applyTheme(localStorage.getItem(storageKey) || "day");
+
+    if (toggle) {
+        toggle.addEventListener("click", () => {
+            const nextMode = body.classList.contains("staff-night") ? "day" : "night";
+            localStorage.setItem(storageKey, nextMode);
+            applyTheme(nextMode);
+        });
+    }
+})();
+</script>
+<script>
+
+window.addEventListener("load",function(){
+
+    const loader=document.getElementById("pageLoader");
+
+    document.body.classList.remove("loading");
+    document.body.classList.add("loaded");
+
+    if (loader) {
+        loader.classList.add("hidden");
+    }
+
+});
+
 </script>
 </body>
 </html>
