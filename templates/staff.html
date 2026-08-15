@@ -2077,25 +2077,37 @@ body.yvm-page-staff{
     height:28px;
     display:grid;
     place-items:center;
-    border-radius:8px;
-    background:rgba(255,255,255,.07);
+    border-radius:12px;
+    background:transparent;
+    border:1px solid rgba(20,184,166,.26);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
     font-size:16px;
 }
 
 .ai-ui-icon{
+    position:relative;
     display:inline-grid;
     place-items:center;
     flex:0 0 auto;
-    background-color:#0f172a;
+    background:transparent;
+    border:none;
+    box-shadow:none;
+    color:transparent !important;
+    font-size:0;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+.ai-ui-icon::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
     background-image:var(--icon-img);
     background-position:center;
     background-repeat:no-repeat;
     background-size:cover;
-    border:1px solid rgba(20,184,166,.32);
-    box-shadow:0 0 0 2px rgba(255,255,255,.74),0 12px 26px rgba(15,23,42,.18);
-    color:transparent !important;
-    font-size:0;
-    overflow:hidden;
+    box-shadow:0 0 0 1px rgba(255,255,255,.28),0 12px 26px rgba(15,23,42,.15);
 }
 
 .ai-dashboard{--icon-img:url("/static/images/ai-feature-hero-premium.png");}
@@ -2568,9 +2580,11 @@ body.staff-night .ai-ui-icon *{
 }
 
 body.staff-night .ai-ui-icon{
-    background-color:#020617;
-    border-color:rgba(103,232,249,.42);
-    box-shadow:0 0 0 2px rgba(255,255,255,.08),0 0 22px rgba(20,184,166,.22),0 12px 26px rgba(0,0,0,.35);
+    background-color: #020617;
+    border-color: rgba(103, 232, 249, .42);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, .08), 0 0 22px rgba(20, 184, 166, .22), 0 12px 26px rgba(0, 0, 0, .35);
+    /* Improve visibility of AI images in night mode */
+    filter: brightness(1.25) contrast(1.12) saturate(1.06);
 }
 
 body.staff-night .dashboard-search input,
@@ -2591,6 +2605,60 @@ body.staff-night pre{
 body.staff-night input::placeholder,
 body.staff-night textarea::placeholder{
     color:#94a3b8;
+}
+
+/* Night-mode overrides to ensure readable text and controls */
+body.staff-night .main :where(h1,h2,h3,h4,p,span,small,strong,b,label,summary,td,th,div,a){
+    color: #f8fafc !important;
+}
+
+body.staff-night input,
+body.staff-night select,
+body.staff-night textarea{
+    color: #f8fafc !important;
+    background-color: #07111f !important;
+    border-color: rgba(148, 163, 184, .14) !important;
+}
+
+body.staff-night .button,
+body.staff-night .btn,
+body.staff-night .mini-btn,
+body.staff-night .toolbar-link,
+body.staff-night .order-action,
+body.staff-night .dash-action,
+body.staff-night .action-btn,
+body.staff-night .tool-button,
+body.staff-night .delivery-tool button,
+body.staff-night .status-form button{
+    color: #f8fafc !important;
+}
+
+/* Ensure legend dots and small badges are visible */
+body.staff-night .legend-dot{ outline: 1px solid rgba(255, 255, 255, .06); }
+body.staff-night .status-pill{ color: #0f172a !important; background: linear-gradient(135deg, #fef3c7, #fde68a) !important; }
+
+/* Slightly lighten AI-images when used as icons so details remain visible */
+body.staff-night .ai-ui-icon::before{ box-shadow: 0 0 0 1px rgba(255, 255, 255, .06) inset, 0 10px 22px rgba(0, 0, 0, .48); }
+
+/* Fix inventory action buttons in night mode */
+body.staff-night .mini-btn{
+    background: linear-gradient(135deg,#064e3b,#0f766e) !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5) !important;
+}
+
+body.staff-night .mini-btn.danger{
+    background: linear-gradient(135deg,#7f1d1d,#be123c) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Ensure detail summary buttons reflect night style */
+body.staff-night .edit-details summary{
+    background: linear-gradient(135deg,#0f172a,#122033) !important;
+    color: #f8fafc !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
 }
 
 body.staff-night .sales-bars,
@@ -2629,6 +2697,41 @@ body.staff-night .logout-btn{
     box-shadow:0 14px 30px rgba(37,99,235,.30) !important;
 }
 
+/* Fix: darken upload box and notification cards in night mode */
+body.staff-night .upload-box{
+    background: linear-gradient(145deg,#071018,#081624) !important;
+    border-color: rgba(255,255,255,0.04) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6) inset, 0 12px 34px rgba(0,0,0,0.6) !important;
+    color: #e6f6f6 !important;
+}
+
+body.staff-night .upload-box .upload-icon.ai-ui-icon::before{
+    filter: brightness(1.3) contrast(1.08) saturate(1.05) !important;
+    opacity: 0.98 !important;
+}
+
+body.staff-night .notification-card{
+    background: linear-gradient(145deg,#071018,#081624) !important;
+    border-color: rgba(255,255,255,0.04) !important;
+    color: #e6f6f6 !important;
+}
+
+body.staff-night .notification-card .notification-icon.ai-ui-icon::before{
+    filter: brightness(1.15) contrast(1.05) saturate(1.08) !important;
+}
+
+/* Top selling medicine icons / rank pills */
+body.staff-night .rank-pill{
+    background: linear-gradient(135deg,#0f172a,#122033) !important;
+    color: #e6f6f6 !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+body.staff-night .med-icon.ai-ui-icon::before,
+body.staff-night .stat-icon.ai-ui-icon::before{
+    filter: brightness(1.2) contrast(1.06) saturate(1.08) !important;
+}
+
 /* Final icon rendering layer: keeps AI images visible over older icon backgrounds. */
 body.yvm-page-staff .ai-ui-icon{
     position:relative;
@@ -2638,29 +2741,30 @@ body.yvm-page-staff .ai-ui-icon{
     -webkit-text-fill-color:transparent !important;
     font-size:0 !important;
     line-height:0 !important;
-    background:#0f172a !important;
-    border:1px solid rgba(20,184,166,.38) !important;
-    box-shadow:0 0 0 2px rgba(255,255,255,.82),0 12px 28px rgba(15,23,42,.18) !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
     overflow:hidden !important;
 }
 
 body.yvm-page-staff .ai-ui-icon::before{
     content:"";
-    width:86%;
-    height:86%;
+    position:absolute;
+    inset:0;
     display:block;
-    border-radius:inherit;
+    border-radius:12px;
     background-image:var(--icon-img);
     background-position:center;
     background-repeat:no-repeat;
-    background-size:contain;
+    background-size:cover;
     filter:saturate(1.18) contrast(1.12);
+    box-shadow:0 0 0 1px rgba(255,255,255,.2),0 12px 24px rgba(15,23,42,.18);
 }
 
 body.yvm-page-staff .menu a .ai-ui-icon,
 body.yvm-page-staff .heading-icon,
 body.yvm-page-staff .profile-btn .ai-ui-icon{
-    background:#102033 !important;
+    background:transparent !important;
 }
 
 body.yvm-page-staff .stat-icon.ai-ui-icon,
@@ -2755,10 +2859,361 @@ body.staff-night tr:hover{
         grid-template-columns:1fr;
     }
 }
+
+/* =========================
+   STAFF PREMIUM REFINEMENT
+========================= */
+
+body.yvm-page-staff{
+    --staff-ink:#102033;
+    --staff-teal:#0f766e;
+    --staff-cyan:#0891b2;
+    --staff-rose:#8a2459;
+    --staff-gold:#b7791f;
+    --staff-surface:rgba(255,255,255,.92);
+    --staff-line:rgba(148,163,184,.30);
+}
+
+body.yvm-page-staff .layout::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:
+        linear-gradient(135deg,rgba(15,118,110,.08),transparent 28%),
+        linear-gradient(315deg,rgba(183,121,31,.08),transparent 25%);
+}
+
+body.yvm-page-staff .logo-box{
+    min-height:96px;
+    align-items:center;
+}
+
+body.yvm-page-staff .logo-box img{
+    width:70px !important;
+    height:70px !important;
+    padding:5px;
+    object-fit:contain;
+    background:#ffffff;
+    border:1px solid rgba(255,255,255,.70);
+}
+
+body.yvm-page-staff .logo-box h2{
+    font-size:24px;
+    line-height:1;
+}
+
+body.yvm-page-staff .logo-box h2::after{
+    content:" Medical";
+    color:#9eeadf;
+    font-weight:700;
+}
+
+body.yvm-page-staff .sidebar-bottom .staff-card{
+    padding:12px;
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+    background:rgba(255,255,255,.07);
+}
+
+body.yvm-page-staff .topbar{
+    display:grid;
+    grid-template-columns:minmax(250px,1fr) minmax(210px,280px) minmax(260px,520px) auto;
+    gap:18px;
+    align-items:center;
+    overflow:hidden;
+}
+
+body.yvm-page-staff .topbar::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    background:
+        linear-gradient(90deg,rgba(255,255,255,.96),rgba(255,255,255,.82) 54%,rgba(236,254,255,.88)),
+        radial-gradient(circle at 76% 20%,rgba(8,145,178,.14),transparent 28%);
+}
+
+.topbar-brand{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    min-height:32px;
+    margin-bottom:10px;
+    padding:5px 10px 5px 6px;
+    border:1px solid rgba(15,118,110,.18);
+    border-radius:999px;
+    color:var(--staff-teal);
+    background:#ffffff;
+    font-size:12px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+.topbar-brand img{
+    width:24px;
+    height:24px;
+    object-fit:contain;
+    border-radius:50%;
+}
+
+.staff-hero-art{
+    position:relative;
+    min-height:132px;
+    border-radius:12px;
+    border:1px solid rgba(15,118,110,.16);
+    background:
+        linear-gradient(135deg,rgba(16,32,51,.18),rgba(15,118,110,.08)),
+        var(--staff-hero-image, url("/static/images/ai-feature-hero-premium.png")) center/cover no-repeat;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.70),0 18px 34px rgba(15,23,42,.10);
+    overflow:hidden;
+}
+
+.staff-hero-art::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(16,32,51,.04),rgba(255,255,255,.18) 48%,rgba(15,118,110,.20));
+}
+
+.staff-hero-art img{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+    z-index:1;
+    width:54px;
+    height:54px;
+    object-fit:contain;
+    padding:6px;
+    border-radius:14px;
+    background:rgba(255,255,255,.90);
+    box-shadow:0 14px 26px rgba(15,23,42,.16);
+}
+
+.layout[data-staff-section="dashboard"]{--staff-hero-image:url("/static/images/ai-feature-hero-premium.png");}
+.layout[data-staff-section="notifications"]{--staff-hero-image:url("/static/images/notification-center-premium.png");}
+.layout[data-staff-section="add-medicine"]{--staff-hero-image:url("/static/images/medicine-product-fallback-premium.png");}
+.layout[data-staff-section="inventory"]{--staff-hero-image:url("/static/images/promo-health-essentials-products-premium.png");}
+.layout[data-staff-section="delivery"]{--staff-hero-image:url("/static/images/rewards_ai/delivery-truck.png");}
+.layout[data-staff-section="orders"]{--staff-hero-image:url("/static/images/order-management-premium.png");}
+
+body.yvm-page-staff .dashboard-search{
+    max-width:none;
+    min-width:220px;
+}
+
+body.yvm-page-staff .topbar-profile{
+    justify-content:flex-end;
+    flex-wrap:wrap;
+}
+
+body.yvm-page-staff .stats,
+body.yvm-page-staff .staff-home .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+}
+
+body.yvm-page-staff .panel,
+body.yvm-page-staff .dashboard-card,
+body.yvm-page-staff .notification-panel,
+body.yvm-page-staff .stat,
+body.yvm-page-staff .dashboard-stat,
+body.yvm-page-staff .med-card,
+body.yvm-page-staff .delivery-tool,
+body.yvm-page-staff .payment-card{
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,252,252,.93)),
+        #ffffff;
+    border-color:var(--staff-line);
+}
+
+body.yvm-page-staff .panel,
+body.yvm-page-staff .notification-panel,
+body.yvm-page-staff .table-panel{
+    position:relative;
+    overflow:hidden;
+}
+
+body.yvm-page-staff .panel::before,
+body.yvm-page-staff .notification-panel::before{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:4px;
+    background:linear-gradient(90deg,var(--staff-rose),var(--staff-teal),var(--staff-gold));
+}
+
+body.yvm-page-staff .dashboard-stat{
+    min-height:154px;
+}
+
+body.yvm-page-staff .dashboard-stat p,
+body.yvm-page-staff .stat p{
+    color:var(--staff-ink);
+}
+
+body.yvm-page-staff .management-toolbar,
+body.yvm-page-staff .orders-toolbar{
+    padding:12px;
+    border:1px solid rgba(148,163,184,.24);
+    border-radius:12px;
+    background:rgba(248,250,252,.72);
+}
+
+body.yvm-page-staff .inventory-grid{
+    align-items:stretch;
+}
+
+body.yvm-page-staff .med-image,
+body.yvm-page-staff .med-icon{
+    width:72px;
+    height:72px;
+    border-radius:16px;
+    object-fit:cover;
+    background:#ffffff;
+}
+
+body.yvm-page-staff .med-info{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+body.yvm-page-staff .card-actions{
+    gap:8px;
+}
+
+body.yvm-page-staff .table-wrapper{
+    max-width:100%;
+    overflow:auto;
+}
+
+body.yvm-page-staff th,
+body.yvm-page-staff td{
+    vertical-align:top;
+}
+
+body.yvm-page-staff .order-actions{
+    min-width:280px;
+}
+
+body.yvm-page-staff .status-form{
+    min-width:min(420px,80vw);
+}
+
+body.staff-night .topbar::before{
+    background:linear-gradient(90deg,rgba(15,23,42,.96),rgba(17,24,39,.92),rgba(8,47,73,.82));
+}
+
+body.staff-night .topbar-brand{
+    color:#d1fae5 !important;
+    background:rgba(15,23,42,.82);
+    border-color:rgba(103,232,249,.22);
+}
+
+body.staff-night .staff-hero-art{
+    border-color:rgba(103,232,249,.16);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 34px rgba(0,0,0,.28);
+}
+
+body.staff-night .layout::after{
+    background:
+        linear-gradient(135deg,rgba(20,184,166,.08),transparent 28%),
+        linear-gradient(315deg,rgba(138,36,89,.09),transparent 24%);
+}
+
+body.staff-night .panel::before,
+body.staff-night .notification-panel::before{
+    background:linear-gradient(90deg,#164e63,#0f766e,#8a2459);
+}
+
+body.staff-night .staff-hero-art img{
+    background:rgba(255,255,255,.88);
+}
+
+body.staff-night .staff-hero-art::after{
+    background:linear-gradient(135deg,rgba(2,6,23,.42),rgba(15,23,42,.22),rgba(20,184,166,.16));
+}
+
+body.staff-night .topbar-brand img{
+    background:#ffffff;
+}
+
+body.staff-night .dashboard-stat p,
+body.staff-night .stat p,
+body.staff-night .stock-good,
+body.staff-night .stock-low,
+body.staff-night .stock-out{
+    color:#f8fafc !important;
+}
+
+body.staff-night .management-toolbar,
+body.staff-night .orders-toolbar{
+    background:rgba(15,23,42,.72);
+    border-color:rgba(148,163,184,.20);
+}
+
+body.staff-night .payment-badge,
+body.staff-night .status-pill,
+body.staff-night .expiry-pill,
+body.staff-night .med-id{
+    background:rgba(8,47,73,.82);
+    border-color:rgba(103,232,249,.18);
+    color:#e0f2fe !important;
+}
+
+body.staff-night .pending,
+body.staff-night .delivered,
+body.staff-night .cancelled{
+    color:#ffffff !important;
+}
+
+body.staff-night .dashboard-link,
+body.staff-night summary{
+    color:#67e8f9 !important;
+}
+
+@media(max-width:1280px){
+    body.yvm-page-staff .topbar{
+        grid-template-columns:minmax(250px,1fr) minmax(230px,420px) auto;
+    }
+
+    .staff-hero-art{
+        display:none;
+    }
+}
+
+@media(max-width:850px){
+    body.yvm-page-staff .topbar{
+        grid-template-columns:1fr;
+    }
+
+    body.yvm-page-staff .topbar-profile{
+        justify-content:flex-start;
+    }
+
+    body.yvm-page-staff .dashboard-search{
+        min-width:0;
+    }
+}
 </style>
 </head>
 
 <body class="loading yvm-pro-page yvm-page-staff">
+    <script>
+    (() => {
+        try {
+            if (localStorage.getItem("yvm-staff-theme") === "night") {
+                document.body.classList.add("staff-night");
+                document.documentElement.classList.add("staff-night-root");
+                document.documentElement.dataset.staffTheme = "night";
+            }
+        } catch (error) {
+            document.documentElement.dataset.staffTheme = "day";
+        }
+    })();
+    </script>
     <div id="pageLoader">
     <div class="loader-box">
         <div class="loader-circle"></div>
@@ -2774,7 +3229,7 @@ body.staff-night tr:hover{
     <span aria-hidden="true">&nbsp;</span>
 </div>
 
-<div class="layout">
+<div class="layout" data-staff-section="{{ staff_section }}">
 
     <div class="sidebar">
 
@@ -2862,8 +3317,16 @@ body.staff-night tr:hover{
 
         <div class="topbar">
             <div>
+                <div class="topbar-brand">
+                    <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical">
+                    <span>Yuvraj Medical Staff Console</span>
+                </div>
                 <h1>{% if staff_section == 'dashboard' %}Good Morning, {{ session.get("user", {}).get("name", "Staff") }}{% else %}{{ staff_section_title|default("Staff Dashboard") }}{% endif %}</h1>
                 <p>{% if staff_section == 'dashboard' %}Today's pharmacy workbench, tuned for fast decisions.{% else %}Manage pharmacy operations with clear controls and live context.{% endif %}</p>
+            </div>
+
+            <div class="staff-hero-art" aria-hidden="true">
+                <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="">
             </div>
 
             <div class="dashboard-search">
@@ -3850,11 +4313,27 @@ body.staff-night tr:hover{
     const toggle = document.getElementById("staffThemeToggle");
     const label = toggle ? toggle.querySelector("[data-theme-label]") : null;
     const storageKey = "yvm-staff-theme";
+    const readStoredTheme = () => {
+        try {
+            return localStorage.getItem(storageKey);
+        } catch (error) {
+            return null;
+        }
+    };
+
+    const writeStoredTheme = (mode) => {
+        try {
+            localStorage.setItem(storageKey, mode);
+        } catch (error) {
+            document.documentElement.dataset.staffThemeStorage = "unavailable";
+        }
+    };
 
     const applyTheme = (mode) => {
         const isNight = mode === "night";
         body.classList.toggle("staff-night", isNight);
         document.documentElement.classList.toggle("staff-night-root", isNight);
+        document.documentElement.dataset.staffTheme = isNight ? "night" : "day";
         if (toggle) {
             toggle.setAttribute("aria-pressed", String(isNight));
         }
@@ -3863,12 +4342,12 @@ body.staff-night tr:hover{
         }
     };
 
-    applyTheme(localStorage.getItem(storageKey) || "day");
+    applyTheme(readStoredTheme() || "day");
 
     if (toggle) {
         toggle.addEventListener("click", () => {
             const nextMode = body.classList.contains("staff-night") ? "day" : "night";
-            localStorage.setItem(storageKey, nextMode);
+            writeStoredTheme(nextMode);
             applyTheme(nextMode);
         });
     }

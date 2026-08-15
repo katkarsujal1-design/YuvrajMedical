@@ -3173,7 +3173,59 @@ def logout():
 
 
 # ================= PROFILE =================
+def ensure_prescription_request_schema():
+    if app.config.get("PRESCRIPTION_REQUEST_SCHEMA_READY"):
+        return
+
+    db = get_db()
+    cursor = db.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS prescription_requests (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            family_member_id INT NULL,
+            prescription_image VARCHAR(255) NOT NULL,
+            ocr_text TEXT NULL,
+            detected_medicines TEXT NULL,
+            approved_medicines TEXT NULL,
+            status VARCHAR(80) NOT NULL DEFAULT 'Pending Review',
+            staff_note TEXT NULL,
+            reviewed_at DATETIME NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NULL,
+            INDEX idx_prescription_user (user_id),
+            INDEX idx_prescription_status (status),
+            INDEX idx_prescription_created (created_at)
+        )
+    """)
+
+    for column_sql in [
+        "family_member_id INT NULL",
+        "prescription_image VARCHAR(255) NULL",
+        "ocr_text TEXT NULL",
+        "detected_medicines TEXT NULL",
+        "approved_medicines TEXT NULL",
+        "status VARCHAR(80) NOT NULL DEFAULT 'Pending Review'",
+        "staff_note TEXT NULL",
+        "reviewed_at DATETIME NULL",
+        "created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP",
+        "updated_at DATETIME NULL",
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE prescription_requests ADD COLUMN {column_sql}")
+        except Exception as exc:
+            message = str(exc).lower()
+            if "duplicate column" not in message and "already exists" not in message and "1060" not in message:
+                pass
+
+    db.commit()
+    cursor.close()
+    app.config["PRESCRIPTION_REQUEST_SCHEMA_READY"] = True
+
+
 def ensure_family_health_schema():
+    ensure_prescription_request_schema()
     if app.config.get("FAMILY_HEALTH_SCHEMA_READY"):
         return
 
@@ -7187,6 +7239,7 @@ def staff_dashboard(section="dashboard"):
     ensure_payment_schema()
     ensure_delivery_management_schema()
     ensure_inventory_management_schema()
+    ensure_prescription_request_schema()
     db = get_db()
 
 
@@ -8314,6 +8367,7 @@ def upload_prescription():
         return flask.redirect("/login")
 
     user_id = flask.session["user"]["id"]
+    ensure_prescription_request_schema()
 
     if flask.request.method == "POST":
         prescription = flask.request.files.get("prescription")
@@ -8386,6 +8440,7 @@ def download_prescription(request_id):
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    ensure_prescription_request_schema()
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
@@ -8428,6 +8483,7 @@ def delete_prescription(request_id):
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    ensure_prescription_request_schema()
     db = get_db()
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -8468,6 +8524,7 @@ def my_prescriptions():
         return flask.redirect("/login")
 
     user_id = flask.session["user"]["id"]
+    ensure_prescription_request_schema()
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
@@ -8498,6 +8555,7 @@ def checkout_prescription(request_id):
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    ensure_prescription_request_schema()
     db = get_db()
     user_id = flask.session["user"]["id"]
 
@@ -8528,6 +8586,7 @@ def add_prescription_to_cart(request_id):
     if "user" not in flask.session:
         return flask.redirect("/login")
 
+    ensure_prescription_request_schema()
     db = get_db()
     user_id = flask.session["user"]["id"]
 
@@ -8608,6 +8667,7 @@ def staff_prescriptions():
     if flask.session["user"]["role"] not in ["staff", "owner"]:
         return flask.redirect("/")
 
+    ensure_prescription_request_schema()
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
@@ -8652,6 +8712,7 @@ def review_prescription(request_id):
     if flask.session["user"]["role"] not in ["staff", "owner"]:
         return review_response("You do not have permission to review prescriptions.", "error", 403)
 
+    ensure_prescription_request_schema()
     action = flask.request.form.get("action")
     staff_note = flask.request.form.get("staff_note", "")
 

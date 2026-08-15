@@ -197,6 +197,27 @@ CREATE TABLE IF NOT EXISTS notifications (
 """)
 
 # -------------------------------
+# PRESCRIPTION REQUESTS TABLE
+# -------------------------------
+c.execute("""
+CREATE TABLE IF NOT EXISTS prescription_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    family_member_id INTEGER,
+    prescription_image TEXT NOT NULL,
+    ocr_text TEXT,
+    detected_medicines TEXT,
+    approved_medicines TEXT,
+    status TEXT DEFAULT 'Pending Review',
+    staff_note TEXT,
+    reviewed_at TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+)
+""")
+
+# -------------------------------
 # SAFE MIGRATION (NO DATA LOSS)
 # -------------------------------
 
