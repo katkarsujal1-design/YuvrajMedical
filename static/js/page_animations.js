@@ -4,6 +4,31 @@ document.addEventListener("DOMContentLoaded", () => {
     document.documentElement.classList.add("yvm-animate-ready");
     const body = document.body;
 
+    const setupScrollRail = () => {
+        if (document.getElementById("yvm-scroll-rail")) return;
+        const rail = document.createElement("div");
+        rail.id = "yvm-scroll-rail";
+        rail.className = "yvm-scroll-rail";
+        rail.setAttribute("aria-hidden", "true");
+        rail.innerHTML = '<span class="yvm-scroll-thumb"></span>';
+        document.body.appendChild(rail);
+
+        const update = () => {
+            const root = document.documentElement;
+            const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
+            const progress = maxScroll ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+            rail.style.setProperty("--yvm-scroll-progress", progress.toFixed(4));
+            rail.classList.toggle("is-visible", maxScroll > 24);
+        };
+
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update);
+        window.setTimeout(update, 300);
+    };
+
+    setupScrollRail();
+
     const panel = document.getElementById("yvm-account-panel");
     const overlay = document.getElementById("yvm-side-overlay");
     const toggle = document.querySelector(".yvm-menu-toggle");

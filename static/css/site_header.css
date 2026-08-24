@@ -1,6 +1,8 @@
 html {
     min-height: 100%;
     background: #f6f9fb;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 body {
@@ -9,6 +11,68 @@ body {
         linear-gradient(135deg, rgba(255,255,255,.90) 0%, rgba(238,248,246,.88) 46%, rgba(255,247,237,.86) 100%),
         url("/static/images/profile-page-bg-ai.png") center/cover fixed no-repeat !important;
     background-color: #f6f9fb !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+}
+
+.yvm-scroll-rail {
+    position: fixed;
+    top: 96px;
+    right: 10px;
+    bottom: 96px;
+    z-index: 2200;
+    width: 7px;
+    border: 1px solid rgba(148, 163, 184, .22);
+    border-radius: 999px;
+    background: rgba(255,255,255,.48);
+    box-shadow: 0 14px 38px rgba(15,23,42,.12);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .22s ease;
+}
+
+.yvm-scroll-rail.is-visible {
+    opacity: 1;
+}
+
+.yvm-scroll-thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(180deg, #8a2459, #0f766e, #06b6d4);
+    box-shadow: 0 0 18px rgba(6,182,212,.32);
+    transform: scaleY(var(--yvm-scroll-progress, 0));
+    transform-origin: top;
+}
+
+@media (max-width: 720px) {
+    .yvm-scroll-rail {
+        top: auto;
+        right: 18px;
+        bottom: 12px;
+        left: 18px;
+        width: auto;
+        height: 5px;
+    }
+
+    .yvm-scroll-thumb {
+        transform: scaleX(var(--yvm-scroll-progress, 0));
+        transform-origin: left;
+    }
 }
 
 .yvm-site-header {

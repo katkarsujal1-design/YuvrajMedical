@@ -2,6 +2,7 @@ import flask
 from flask import Flask, render_template, request, redirect, session, g, jsonify, make_response, abort, send_from_directory
 #import pymysql
 import hashlib
+import logging
 import re
 import secrets
 import base64
@@ -9,7 +10,6 @@ import cv2
 import pytesseract
 from PIL import Image
 import numpy as np
-import requests
 from dotenv import load_dotenv
 from google import genai
 from rapidfuzz import fuzz
@@ -27,6 +27,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from urllib.parse import quote
+from services.sms_service import (
+    SmsServiceError,
+    mask_phone,
+    normalize_indian_phone,
+    render_sms_template,
+    send_manual_otp,
+    send_otp as send_2factor_otp,
+    send_transactional_sms,
+    verify_otp as verify_2factor_otp,
+)
 from family_health import (
     COMMON_FAMILY_RELATIONS,
     build_family_member_options,
@@ -36,6 +46,8 @@ from family_health import (
 
 load_dotenv()
 import os
+
+logger = logging.getLogger(__name__)
 
 print("Current directory:", os.getcwd())
 print("Does .env exist?", os.path.exists(".env"))
@@ -87,7 +99,6 @@ def get_db_pool():
     print("DB_HOST =", os.environ.get("DB_HOST"))
     print("DB_USER =", os.environ.get("DB_USER"))
     print("DB_NAME =", os.environ.get("DB_NAME"))
-    print("DB_PASSWORD =", os.environ.get("DB_PASSWORD"))
 
     if db_pool is None:
         db_pool = pooling.MySQLConnectionPool(
@@ -191,21 +202,21 @@ DELIVERY_SERVICE_AREAS = [
         "area_name": "Santacruz",
         "aliases": ["santacruz", "santa cruz", "santacruz east", "santacruz west"],
         "base_charge": 20,
-        "free_delivery_minimum": 99,
+        "free_delivery_minimum": 100,
         "estimated_time": "45-90 minutes from Santacruz branch",
     },
     {
         "area_name": "Vile Parle",
         "aliases": ["vile parle", "vileparle", "parle", "parla", "vile parle east", "vile parle west"],
         "base_charge": 25,
-        "free_delivery_minimum": 99,
+        "free_delivery_minimum": 100,
         "estimated_time": "60-120 minutes from Santacruz branch",
     },
     {
         "area_name": "Khar",
         "aliases": ["khar", "khar east", "khar west"],
         "base_charge": 30,
-        "free_delivery_minimum": 199,
+        "free_delivery_minimum": 100,
         "estimated_time": "1-2 hours from Santacruz branch",
     },
     {
@@ -872,10 +883,117 @@ def order_tracking_steps(status):
     ]
 
 
+ORDER_SMS_TEMPLATE_BY_STATUS = {
+    "Approved": "order_confirmed",
+    "Packed": "order_packed",
+    "Ready For Delivery": "order_ready_for_delivery",
+    "Out For Delivery": "order_out_for_delivery",
+    "Delivered": "order_delivered",
+    "Cancelled": "order_cancelled",
+    "Refunded": "order_refunded",
+}
+
+PAYMENT_SMS_TEMPLATE_BY_STATUS = {
+    "Verified": "payment_successful",
+    "Rejected": "payment_failed",
+}
+
+PRESCRIPTION_SMS_TEMPLATE_BY_STATUS = {
+    "Approved": "prescription_approved",
+    "Rejected": "prescription_rejected",
+    "Needs Clarification": "prescription_clarification",
+}
+
+
+def send_customer_sms(phone, template_key, **context):
+    if not phone:
+        logger.info("SMS skipped for %s: customer phone missing", template_key)
+        return False
+
+    try:
+        message = render_sms_template(template_key, **context)
+        result = send_transactional_sms(phone, message, template_key=template_key)
+    except (ValueError, SmsServiceError) as error:
+        logger.warning("SMS failed for %s: %s", template_key, error)
+        return False
+
+    if not result.ok:
+        logger.warning("SMS provider did not send %s: %s", template_key, result.message)
+        return False
+
+    logger.info("SMS sent for %s", template_key)
+    return True
+
+
+def order_customer_phone(order_id):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT orders.id, orders.user_id, users.phone
+        FROM orders
+        JOIN users ON users.id = orders.user_id
+        WHERE orders.id=%s
+    """, (order_id,))
+    row = cursor.fetchone()
+    cursor.close()
+    return row
+
+
+def user_phone(user_id):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT phone FROM users WHERE id=%s", (user_id,))
+    row = cursor.fetchone()
+    cursor.close()
+    return row.get("phone") if row else None
+
+
+def notify_order_status_sms(order_id, status):
+    template_key = ORDER_SMS_TEMPLATE_BY_STATUS.get(status)
+    if not template_key:
+        return True
+    row = order_customer_phone(order_id)
+    if not row:
+        return False
+    return send_customer_sms(row.get("phone"), template_key, order_id=order_id)
+
+
+def notify_payment_status_sms(order_id, payment_status):
+    template_key = PAYMENT_SMS_TEMPLATE_BY_STATUS.get(payment_status)
+    if not template_key:
+        return True
+    row = order_customer_phone(order_id)
+    if not row:
+        return False
+    return send_customer_sms(row.get("phone"), template_key, order_id=order_id)
+
+
+def notify_prescription_status_sms(request_id, status):
+    template_key = PRESCRIPTION_SMS_TEMPLATE_BY_STATUS.get(status)
+    if not template_key:
+        return True
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT users.phone
+        FROM prescription_requests
+        JOIN users ON users.id = prescription_requests.user_id
+        WHERE prescription_requests.id=%s
+    """, (request_id,))
+    row = cursor.fetchone()
+    cursor.close()
+    if not row:
+        return False
+    return send_customer_sms(row.get("phone"), template_key, request_id=request_id)
+
+
 LOGIN_MAX_FAILED_ATTEMPTS = 5
 LOGIN_LOCK_MINUTES = 15
 OTP_EXPIRY_MINUTES = 10
-OTP_RESEND_SECONDS = 10
+OTP_RESEND_SECONDS = 45
+SMS_OTP_EXPIRY_MINUTES = 5
+SMS_OTP_MAX_ATTEMPTS = 5
+SMS_OTP_MAX_RESENDS = 3
 
 
 def ensure_auth_security_schema():
@@ -986,64 +1104,6 @@ def create_otp(db, user_id, email, purpose):
     return otp
 
 
-def normalize_fast2sms_number(phone):
-    digits = re.sub(r"\D", "", str(phone or ""))
-
-    if digits.startswith("91") and len(digits) == 12:
-        digits = digits[2:]
-
-    if len(digits) != 10:
-        return None
-
-    return digits
-
-
-def send_phone_otp(phone, otp):
-    sms_otp_mode = os.environ.get("SMS_OTP_MODE", "live").strip().lower()
-    fast2sms_api_key = os.environ.get("FAST2SMS_API_KEY")
-    fast2sms_url = os.environ.get("FAST2SMS_API_URL", "https://www.fast2sms.com/dev/bulkV2")
-    fast2sms_number = normalize_fast2sms_number(phone)
-
-    if sms_otp_mode != "live":
-        print(f"Development registration OTP for {phone}: {otp}")
-        return True, f"Development OTP: {otp}"
-
-    if not fast2sms_number:
-        print(f"SMS OTP not sent: Fast2SMS requires a valid 10 digit Indian mobile number. Got {phone}.")
-        return False, "Use a valid 10 digit Indian mobile number."
-
-    if fast2sms_api_key and fast2sms_api_key != "your_api_key_here":
-        try:
-            response = requests.post(
-                fast2sms_url,
-                headers={
-                    "authorization": fast2sms_api_key,
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Cache-Control": "no-cache",
-                },
-                data={
-                    "route": "otp",
-                    "variables_values": str(otp),
-                    "numbers": fast2sms_number,
-                },
-                timeout=10
-            )
-            response.raise_for_status()
-            result = response.json()
-            if result.get("return") is True:
-                return True, None
-
-            print("Fast2SMS OTP send failed:", result)
-            return False, result.get("message") or "Fast2SMS rejected the OTP request."
-        except (ValueError, requests.RequestException) as error:
-            print("Fast2SMS OTP send failed:", error)
-            return False, "Fast2SMS request failed. Check the API key, wallet balance, and network."
-
-    print(f"Registration OTP for {phone}: {otp}")
-    print("SMS OTP not sent: set FAST2SMS_API_KEY to enable Fast2SMS delivery.")
-    return False, "FAST2SMS_API_KEY is missing or still set to the placeholder."
-
-
 def verify_otp(db, email, purpose, otp):
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
@@ -1067,6 +1127,141 @@ def verify_otp(db, email, purpose, otp):
 
     cursor.close()
     return False
+
+
+def _otp_session_key(purpose):
+    return f"sms_otp_{purpose}"
+
+
+def _otp_now():
+    return datetime.now()
+
+
+def _otp_timestamp(value):
+    try:
+        return datetime.fromisoformat(str(value))
+    except (TypeError, ValueError):
+        return None
+
+
+def start_sms_otp_challenge(purpose, phone, identity, payload=None, force_resend=False):
+    session_key = _otp_session_key(purpose)
+    existing = flask.session.get(session_key) or {}
+    now = _otp_now()
+    try:
+        normalized_phone = normalize_indian_phone(phone)
+    except ValueError as error:
+        return False, str(error), 0
+
+    expires_at = _otp_timestamp(existing.get("expires_at"))
+    next_resend_at = _otp_timestamp(existing.get("next_resend_at"))
+    same_binding = (
+        existing.get("identity") == identity
+        and existing.get("phone") == normalized_phone
+        and expires_at
+        and expires_at > now
+    )
+
+    if same_binding and next_resend_at and next_resend_at > now and not force_resend:
+        seconds = max(1, int((next_resend_at - now).total_seconds()))
+        return False, f"Please wait {seconds}s before requesting another OTP.", seconds
+
+    resend_count = int(existing.get("resend_count") or 0) if same_binding else 0
+    if same_binding and resend_count >= SMS_OTP_MAX_RESENDS:
+        return False, "Too many OTP resend attempts. Please restart verification.", 0
+
+    otp_mode = os.getenv("TWOFACTOR_OTP_MODE", "manual_sms").strip().lower()
+    local_otp_hash = None
+    try:
+        if otp_mode == "manual_sms":
+            sms_live = os.getenv("SMS_ENABLED", "true").strip().lower() not in {"0", "false", "no", "off"}
+            otp_value = f"{secrets.randbelow(1000000):06d}" if sms_live else os.getenv("SMS_TEST_OTP", "123456")
+            result = send_manual_otp(phone, otp_value, purpose=purpose)
+            local_otp_hash = hash_otp(otp_value)
+        else:
+            result = send_2factor_otp(phone, purpose=purpose)
+    except ValueError as error:
+        return False, str(error), 0
+
+    if not result.ok or not result.session_id:
+        return False, result.message, 0
+
+    expires_at = now + timedelta(minutes=SMS_OTP_EXPIRY_MINUTES)
+    next_resend_at = now + timedelta(seconds=OTP_RESEND_SECONDS)
+    flask.session[session_key] = {
+        "session_id": result.session_id,
+        "otp_hash": local_otp_hash,
+        "otp_mode": otp_mode,
+        "phone": normalized_phone,
+        "identity": identity,
+        "purpose": purpose,
+        "payload": payload or existing.get("payload") or {},
+        "attempts": 0,
+        "resend_count": resend_count + 1,
+        "created_at": now.isoformat(),
+        "expires_at": expires_at.isoformat(),
+        "next_resend_at": next_resend_at.isoformat(),
+    }
+    flask.session.modified = True
+    logger.info("OTP requested for %s (%s)", mask_phone(normalized_phone), purpose)
+    return True, "OTP sent successfully.", OTP_RESEND_SECONDS
+
+
+def verify_sms_otp_challenge(purpose, otp, identity=None, phone=None):
+    session_key = _otp_session_key(purpose)
+    challenge = flask.session.get(session_key)
+    now = _otp_now()
+
+    if not challenge:
+        return False, "OTP session expired. Please request a new OTP.", None
+
+    expires_at = _otp_timestamp(challenge.get("expires_at"))
+    if not expires_at or expires_at < now:
+        flask.session.pop(session_key, None)
+        flask.session.modified = True
+        return False, "OTP expired. Please request a new OTP.", None
+
+    if identity and challenge.get("identity") != identity:
+        return False, "OTP session does not match this account.", None
+
+    if phone:
+        try:
+            normalized_phone = normalize_indian_phone(phone)
+        except ValueError as error:
+            return False, str(error), None
+        if challenge.get("phone") != normalized_phone:
+            return False, "OTP session does not match this phone number.", None
+
+    attempts = int(challenge.get("attempts") or 0)
+    if attempts >= SMS_OTP_MAX_ATTEMPTS:
+        flask.session.pop(session_key, None)
+        flask.session.modified = True
+        return False, "Too many incorrect OTP attempts. Please request a new OTP.", None
+
+    if challenge.get("otp_hash"):
+        otp_valid = check_password_hash(str(challenge.get("otp_hash")), str(otp or ""))
+        result = type("OtpResult", (), {
+            "ok": otp_valid,
+            "message": "OTP verified." if otp_valid else "Invalid OTP.",
+        })()
+    else:
+        result = verify_2factor_otp(challenge.get("session_id"), otp)
+
+    if not result.ok:
+        challenge["attempts"] = attempts + 1
+        flask.session[session_key] = challenge
+        flask.session.modified = True
+        remaining = max(0, SMS_OTP_MAX_ATTEMPTS - challenge["attempts"])
+        if remaining == 0:
+            flask.session.pop(session_key, None)
+            flask.session.modified = True
+            return False, "Too many incorrect OTP attempts. Please request a new OTP.", None
+        return False, f"{result.message} {remaining} attempt(s) left.", None
+
+    flask.session.pop(session_key, None)
+    flask.session.modified = True
+    logger.info("OTP verification succeeded for %s", purpose)
+    return True, "OTP verified.", challenge.get("payload") or {}
 
 
 def log_login_activity(db, user_id, email, status, reason):
@@ -2838,15 +3033,22 @@ def login():
             # ================= LOGIN SUCCESS =================
             if pass_login:
                 if user.get("two_factor_enabled"):
-                    otp = create_otp(db, user["id"], user["email"], "login_2fa")
                     flask.session.clear()
                     flask.session["pending_2fa_user_id"] = user["id"]
                     flask.session["pending_2fa_email"] = user["email"]
+                    sms_ok, sms_message, _ = start_sms_otp_challenge(
+                        "login_2fa",
+                        user.get("phone") or "",
+                        str(user["id"]),
+                        payload={"user_id": user["id"], "email": user["email"], "phone": user.get("phone")},
+                    )
                     cursor.close()
                     log_login_activity(db, user["id"], email, "pending_2fa", "Password accepted, OTP required")
+                    if not sms_ok:
+                        return render_login(error=f"2FA OTP could not be sent. {sms_message}")
                     return render_login(
                         show_2fa=True,
-                        message=f"2FA code generated for this login: {otp}"
+                        message=f"2FA code sent to {mask_phone(user.get('phone'))}."
                     )
 
                 cursor.close()
@@ -2891,9 +3093,14 @@ def two_factor():
     otp = flask.request.form.get("otp", "")
     db = get_db()
 
-    if not verify_otp(db, email, "login_2fa", otp):
+    otp_ok, otp_message, _ = verify_sms_otp_challenge(
+        "login_2fa",
+        otp,
+        identity=str(flask.session["pending_2fa_user_id"]),
+    )
+    if not otp_ok:
         log_login_activity(db, flask.session["pending_2fa_user_id"], email, "failed", "Invalid 2FA OTP")
-        return render_login(show_2fa=True, error="Invalid or expired 2FA code.")
+        return render_login(show_2fa=True, error=otp_message)
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT * FROM users WHERE id=%s", (flask.session["pending_2fa_user_id"],))
@@ -2925,8 +3132,19 @@ def two_factor_setup():
         cursor.close()
         return render_login(message="Two-factor authentication disabled.")
 
-    otp = create_otp(db, flask.session["user"]["id"], flask.session["user"]["email"], "2fa_setup")
-    return render_login(message=f"Enter this setup code to enable 2FA: {otp}", show_2fa_setup=True)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT phone FROM users WHERE id=%s", (flask.session["user"]["id"],))
+    user = cursor.fetchone() or {}
+    cursor.close()
+    sms_ok, sms_message, _ = start_sms_otp_challenge(
+        "2fa_setup",
+        user.get("phone") or "",
+        str(flask.session["user"]["id"]),
+        payload={"user_id": flask.session["user"]["id"], "phone": user.get("phone")},
+    )
+    if not sms_ok:
+        return render_login(error=f"2FA setup OTP could not be sent. {sms_message}")
+    return render_login(message=f"Enter the setup code sent to {mask_phone(user.get('phone'))}.", show_2fa_setup=True)
 
 
 @app.route("/two_factor/enable", methods=["POST"])
@@ -2937,8 +3155,13 @@ def two_factor_enable():
     otp = flask.request.form.get("otp", "")
     db = get_db()
 
-    if not verify_otp(db, flask.session["user"]["email"], "2fa_setup", otp):
-        return render_login(error="Invalid or expired setup code.", show_2fa_setup=True)
+    otp_ok, otp_message, _ = verify_sms_otp_challenge(
+        "2fa_setup",
+        otp,
+        identity=str(flask.session["user"]["id"]),
+    )
+    if not otp_ok:
+        return render_login(error=otp_message, show_2fa_setup=True)
 
     cursor = db.cursor()
     cursor.execute(
@@ -2979,6 +3202,145 @@ def remove_device(device_id):
     db.commit()
     cursor.close()
     return flask.redirect("/devices")
+
+
+@app.route("/forgot_password", methods=["GET", "POST"])
+def forgot_password():
+    step = flask.request.form.get("step", "request")
+    form = {}
+
+    if flask.request.method == "POST" and step == "request":
+        identifier = flask.request.form.get("identifier", "").strip()
+        form["identifier"] = identifier
+        if not identifier:
+            return flask.render_template("forgot_password.html", error="Enter your registered email or mobile number.", form=form)
+
+        db = get_db()
+        cursor = db.cursor(dictionary=True)
+        if "@" in identifier:
+            cursor.execute("SELECT id, email, phone FROM users WHERE email=%s LIMIT 1", (identifier.lower(),))
+        else:
+            try:
+                phone = normalize_indian_phone(identifier)
+            except ValueError:
+                phone = identifier
+            cursor.execute("SELECT id, email, phone FROM users WHERE phone=%s LIMIT 1", (phone,))
+        user = cursor.fetchone()
+        cursor.close()
+
+        if not user or not user.get("phone"):
+            return flask.render_template("forgot_password.html", error="No account with a verified mobile number was found.", form=form)
+
+        try:
+            normalized_phone = normalize_indian_phone(user["phone"])
+        except ValueError:
+            return flask.render_template("forgot_password.html", error="This account does not have a valid Indian mobile number.", form=form)
+
+        payload = {
+            "user_id": user["id"],
+            "email": user["email"],
+            "phone": normalized_phone,
+            "phone_masked": mask_phone(normalized_phone),
+        }
+        ok, message, resend_seconds = start_sms_otp_challenge(
+            "forgot_password",
+            normalized_phone,
+            str(user["id"]),
+            payload=payload,
+        )
+        if not ok:
+            return flask.render_template("forgot_password.html", error=message, form=form)
+
+        return flask.render_template(
+            "forgot_password.html",
+            step="verify",
+            message=f"OTP sent to {mask_phone(normalized_phone)}.",
+            masked_phone=mask_phone(normalized_phone),
+            resend_seconds=resend_seconds,
+            form=form,
+        )
+
+    if flask.request.method == "POST" and step == "resend":
+        challenge = flask.session.get(_otp_session_key("forgot_password")) or {}
+        payload = challenge.get("payload") or {}
+        phone = payload.get("phone")
+        user_id = payload.get("user_id")
+        if not phone or not user_id:
+            return flask.render_template("forgot_password.html", error="OTP session expired. Please start again.")
+
+        ok, message, resend_seconds = start_sms_otp_challenge(
+            "forgot_password",
+            phone,
+            str(user_id),
+            payload=payload,
+        )
+        return flask.render_template(
+            "forgot_password.html",
+            step="verify",
+            message=f"OTP resent to {mask_phone(phone)}." if ok else None,
+            error=None if ok else message,
+            masked_phone=mask_phone(phone),
+            resend_seconds=resend_seconds,
+            form=form,
+        )
+
+    if flask.request.method == "POST" and step == "verify":
+        challenge = flask.session.get(_otp_session_key("forgot_password")) or {}
+        payload = challenge.get("payload") or {}
+        otp = flask.request.form.get("otp", "").strip()
+        ok, message, verified_payload = verify_sms_otp_challenge(
+            "forgot_password",
+            otp,
+            identity=str(payload.get("user_id")),
+            phone=payload.get("phone"),
+        )
+        if not ok:
+            return flask.render_template(
+                "forgot_password.html",
+                step="verify",
+                error=message,
+                masked_phone=mask_phone(payload.get("phone", "")),
+                form=form,
+            )
+
+        flask.session["forgot_password_verified"] = {
+            "user_id": verified_payload["user_id"],
+            "email": verified_payload["email"],
+            "expires_at": (_otp_now() + timedelta(minutes=10)).isoformat(),
+        }
+        flask.session.modified = True
+        return flask.render_template("forgot_password.html", step="reset", message="OTP verified. Set a new password.")
+
+    if flask.request.method == "POST" and step == "reset":
+        verified = flask.session.get("forgot_password_verified") or {}
+        expires_at = _otp_timestamp(verified.get("expires_at"))
+        if not verified or not expires_at or expires_at < _otp_now():
+            flask.session.pop("forgot_password_verified", None)
+            return flask.render_template("forgot_password.html", error="Password reset session expired. Please start again.")
+
+        new_password = flask.request.form.get("new_password", "")
+        confirm_password = flask.request.form.get("confirm_password", "")
+        if len(new_password) < 6:
+            return flask.render_template("forgot_password.html", step="reset", error="New password must be at least 6 characters.")
+        if new_password != confirm_password:
+            return flask.render_template("forgot_password.html", step="reset", error="New password and confirmation do not match.")
+
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute("""
+            UPDATE users
+            SET hashed_password=%s,
+                password=NULL,
+                failed_login_attempts=0,
+                locked_until=NULL
+            WHERE id=%s
+        """, (generate_password_hash(new_password), verified["user_id"]))
+        db.commit()
+        cursor.close()
+        flask.session.pop("forgot_password_verified", None)
+        return flask.render_template("forgot_password.html", success="Password reset successfully. You can login now.")
+
+    return flask.render_template("forgot_password.html", step="request", form=form)
 # ================= REGISTER =================
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -3009,7 +3371,11 @@ def register():
 
         try:
             ensure_referral_schema()
-            required_fields = ["name", "email", "phone", "password", "address"]
+            pending_challenge = flask.session.get(_otp_session_key("register_account")) or {}
+            has_pending_registration = bool((pending_challenge.get("payload") or {}).get("hashed_password"))
+            required_fields = ["name", "email", "phone", "address"]
+            if not has_pending_registration:
+                required_fields.append("password")
             if any(not form_data[field] for field in required_fields):
                 return flask.render_template(
                     "register.html",
@@ -3017,10 +3383,19 @@ def register():
                     form=form_data
                 )
 
+            try:
+                form_data["phone"] = normalize_indian_phone(form_data["phone"])
+            except ValueError as error:
+                return flask.render_template(
+                    "register.html",
+                    error=str(error),
+                    form=form_data
+                )
+
             cursor = db.cursor(dictionary=True)
             cursor.execute(
-                "SELECT id FROM users WHERE email=%s OR phone=%s LIMIT 1",
-                (form_data["email"], form_data["phone"])
+                "SELECT id FROM users WHERE email=%s LIMIT 1",
+                (form_data["email"],)
             )
             existing_user = cursor.fetchone()
             cursor.close()
@@ -3028,7 +3403,7 @@ def register():
             if existing_user:
                 return flask.render_template(
                     "register.html",
-                    error="An account with this email or phone already exists.",
+                    error="An account with this email already exists.",
                     form=form_data
                 )
 
@@ -3043,18 +3418,35 @@ def register():
                     )
 
             if action == "send_otp":
-                otp = create_otp(db, None, form_data["email"], "register_account")
-                sms_sent, sms_message = send_phone_otp(form_data["phone"], otp)
-                message = sms_message or "OTP sent to your phone number. Please enter it below."
-                if not sms_sent:
-                    message = f"OTP could not be sent. {sms_message}"
+                if form_data["password"]:
+                    pending_registration = {
+                        key: value
+                        for key, value in form_data.items()
+                        if key != "password"
+                    }
+                    pending_registration["hashed_password"] = generate_password_hash(form_data["password"])
+                else:
+                    pending_registration = (pending_challenge.get("payload") or {}).copy()
+                    pending_registration.update({
+                        key: value
+                        for key, value in form_data.items()
+                        if key not in {"password", "hashed_password"}
+                    })
+                pending_registration["phone_masked"] = mask_phone(form_data["phone"])
+                sms_sent, sms_message, resend_seconds = start_sms_otp_challenge(
+                    "register_account",
+                    form_data["phone"],
+                    form_data["email"],
+                    payload=pending_registration,
+                )
                 return flask.render_template(
                     "register.html",
-                    message=message if sms_sent else None,
-                    error=None if sms_sent else message,
+                    message=f"OTP sent to {mask_phone(form_data['phone'])}. Please enter it below." if sms_sent else None,
+                    error=None if sms_sent else f"OTP could not be sent. {sms_message}",
                     otp_sent=True,
-                    resend_seconds=OTP_RESEND_SECONDS,
-                    form=form_data
+                    resend_seconds=resend_seconds,
+                    masked_phone=mask_phone(form_data["phone"]),
+                    form={**form_data, "password": ""}
                 )
 
             otp = flask.request.form.get("otp", "").strip()
@@ -3065,16 +3457,24 @@ def register():
                     form=form_data
                 )
 
-            if not verify_otp(db, form_data["email"], "register_account", otp):
+            otp_ok, otp_message, pending_registration = verify_sms_otp_challenge(
+                "register_account",
+                otp,
+                identity=form_data["email"],
+                phone=form_data["phone"],
+            )
+            if not otp_ok:
                 return flask.render_template(
                     "register.html",
-                    error="Invalid or expired OTP. Please send a new OTP.",
+                    error=otp_message,
                     otp_sent=True,
+                    masked_phone=mask_phone(form_data["phone"]),
                     form=form_data
                 )
 
-            hashed_password = generate_password_hash(form_data["password"])
-            role = "staff" if form_data["role"] == "staff" else "customer"
+            form_data = pending_registration or form_data
+            hashed_password = form_data["hashed_password"]
+            role = "staff" if form_data.get("role") == "staff" else "customer"
 
             # -------- CUSTOMER --------
             if role == "customer":
@@ -3469,15 +3869,17 @@ def profile_manage(section):
 
             elif section == "change_mobile":
                 phone = flask.request.form.get("phone", "").strip()
-                if not normalize_fast2sms_number(phone):
-                    error = "Enter a valid 10 digit mobile number."
+                try:
+                    normalized_phone = normalize_indian_phone(phone)
+                except ValueError as validation_error:
+                    error = str(validation_error)
                 else:
                     cursor = db.cursor()
                     cursor.execute("""
                         UPDATE users
                         SET phone=%s, mobile_verified=0
                         WHERE id=%s
-                    """, (phone, user_id))
+                    """, (normalized_phone, user_id))
                     db.commit()
                     cursor.close()
                     message = "Mobile number updated. Please verify it."
@@ -3486,22 +3888,32 @@ def profile_manage(section):
                 action = flask.request.form.get("action")
                 user, _, _ = get_profile_context(user_id)
                 if action == "send_otp":
-                    otp = create_otp(db, user_id, user["email"], "verify_mobile")
-                    sms_sent, sms_message = send_phone_otp(user["phone"], otp)
-                    message = sms_message or "OTP sent to your mobile number."
+                    sms_sent, sms_message, _ = start_sms_otp_challenge(
+                        "verify_mobile",
+                        user.get("phone") or "",
+                        str(user_id),
+                        payload={"user_id": user_id, "phone": user.get("phone")},
+                    )
+                    message = f"OTP sent to {mask_phone(user.get('phone'))}."
                     if not sms_sent:
                         error = sms_message or "Could not send OTP."
                         message = None
                 else:
                     otp = flask.request.form.get("otp", "").strip()
-                    if verify_otp(db, user["email"], "verify_mobile", otp):
+                    otp_ok, otp_message, _ = verify_sms_otp_challenge(
+                        "verify_mobile",
+                        otp,
+                        identity=str(user_id),
+                        phone=user.get("phone"),
+                    )
+                    if otp_ok:
                         cursor = db.cursor()
                         cursor.execute("UPDATE users SET mobile_verified=1 WHERE id=%s", (user_id,))
                         db.commit()
                         cursor.close()
                         message = "Mobile number verified successfully."
                     else:
-                        error = "Invalid or expired mobile OTP."
+                        error = otp_message
 
             elif section == "verify_email":
                 action = flask.request.form.get("action")
@@ -4538,8 +4950,12 @@ def cart():
     """, (user_id,))
     wishlist_items = cursor.fetchall()
 
+    cursor.execute("SELECT address FROM users WHERE id=%s", (user_id,))
+    user_row = cursor.fetchone() or {}
+    delivery_area = match_delivery_area(user_row.get("address"))
+
     cursor.close()
-    totals = calculate_cart_totals(subtotal_total)
+    totals = calculate_cart_totals(subtotal_total, delivery_area)
     return flask.render_template(
         "cart.html",
         items=items,
@@ -5957,7 +6373,7 @@ def verify_payment(payment_id):
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT order_id FROM payments WHERE id=%s", (payment_id,))
+    cursor.execute("SELECT order_id, status FROM payments WHERE id=%s", (payment_id,))
     payment = cursor.fetchone()
     if not payment:
         cursor.close()
@@ -5983,6 +6399,8 @@ def verify_payment(payment_id):
     """, (action, payment["order_id"]))
     db.commit()
     cursor.close()
+    if payment.get("status") != action:
+        notify_payment_status_sms(payment["order_id"], action)
     flash(f"Payment marked as {action}.")
     return flask.redirect("/staff#orders")
 
@@ -6199,6 +6617,8 @@ def cancel_order(order_id):
 
     db.commit()
     cursor.close()
+    if order.get("status") != "Cancelled":
+        notify_order_status_sms(order_id, "Cancelled")
     return flask.redirect("/my_orders")
 # ================= DELIVER ORDER (ADD HERE) =================
 @app.route("/deliver_order/<int:id>")
@@ -6210,6 +6630,8 @@ def deliver_order(id):
     db = get_db()
 
     cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT status FROM orders WHERE id=%s", (id,))
+    existing_order = cursor.fetchone() or {}
     cursor.execute("""
         UPDATE orders
         SET status='Delivered',
@@ -6220,6 +6642,8 @@ def deliver_order(id):
 
     db.commit()
     cursor.close()
+    if existing_order.get("status") != "Delivered":
+        notify_order_status_sms(id, "Delivered")
 
     return flask.redirect("/staff")
 
@@ -6259,7 +6683,7 @@ def update_order_status(order_id):
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT delivery_otp FROM orders WHERE id=%s", (order_id,))
+    cursor.execute("SELECT status, delivery_otp FROM orders WHERE id=%s", (order_id,))
     existing_order = cursor.fetchone() or {}
     if status == "Delivered" and existing_order.get("delivery_otp") and submitted_delivery_otp != existing_order["delivery_otp"]:
         cursor.close()
@@ -6302,7 +6726,12 @@ def update_order_status(order_id):
     ))
     db.commit()
     cursor.close()
+    sms_ok = True
+    if existing_order.get("status") != status:
+        sms_ok = notify_order_status_sms(order_id, status)
     flash(f"Order #{order_id} updated to {status}.")
+    if not sms_ok:
+        flash("Order was updated, but SMS notification could not be sent.")
     destination = "/owner_dashboard#orders" if flask.session["user"]["role"] == "owner" else "/staff#orders"
     return flask.redirect(destination)
 # ================= REVENUE ANALYTICS =================
@@ -6455,6 +6884,7 @@ def build_revenue_dashboard(db, anchor_date=None, chart_start=None, chart_end=No
             "best_month": monthly_labels[best_month_index] if best_month_index is not None else "No sales yet",
         },
         "range": {"start": chart_start.isoformat(), "end": chart_end.isoformat()},
+        "previous_range": {"start": previous_start.isoformat(), "end": previous_end.isoformat()},
     }
 
 
@@ -8424,10 +8854,12 @@ def upload_prescription():
             detected_text,
             "Pending Review"
         ))
+        request_id = cursor.lastrowid
 
         db.commit()
         cursor.close()
 
+        send_customer_sms(user_phone(user_id), "prescription_received", request_id=request_id)
         flash("Prescription uploaded successfully. Staff will review it shortly.", "success")
         return flask.redirect("/my_prescriptions")
 
@@ -8792,6 +9224,7 @@ def review_prescription(request_id):
 
             db.commit()
             cursor.close()
+            notify_prescription_status_sms(request_id, "Rejected")
 
             return review_response(
                 "Prescription rejected successfully",
@@ -8829,6 +9262,7 @@ def review_prescription(request_id):
 
         db.commit()
         cursor.close()
+        notify_prescription_status_sms(request_id, "Approved")
 
         return review_response(
             "Prescription approved. Customer can now proceed to checkout.",

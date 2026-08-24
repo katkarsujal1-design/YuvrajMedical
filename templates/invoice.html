@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Invoice #{{ order["id"] }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -27,7 +26,6 @@
     <span></span>
 </div>
 
-{% include "partials/site_header.html" %}
 <main class="invoice">
     <div class="head">
         <div class="brand"><h1>Yuvraj Medical</h1><p>Trusted Online Pharmacy</p></div>

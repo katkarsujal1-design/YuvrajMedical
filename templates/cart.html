@@ -335,18 +335,18 @@
 
     <section class="delivery-progress" aria-label="Free delivery progress">
         <div class="progress-top">
-            {% if totals.subtotal >= 500 %}
+            {% if totals.subtotal >= totals.free_delivery_minimum %}
                 <strong>Free Delivery Unlocked</strong>
                 <span>Your cart qualifies for free delivery.</span>
             {% else %}
-                <strong>Add Rs. {{ 500 - totals.subtotal }} more for FREE delivery</strong>
-                <span>Free delivery starts at Rs. 500.</span>
+                <strong>Add Rs. {{ totals.free_delivery_minimum - totals.subtotal }} more for FREE delivery</strong>
+                <span>Free delivery starts at Rs. {{ totals.free_delivery_minimum }}.</span>
             {% endif %}
         </div>
-        {% if totals.subtotal >= 500 %}
-            <progress class="progress-meter" max="500" value="500" aria-label="Free delivery unlocked"></progress>
+        {% if totals.subtotal >= totals.free_delivery_minimum %}
+            <progress class="progress-meter" max="{{ totals.free_delivery_minimum }}" value="{{ totals.free_delivery_minimum }}" aria-label="Free delivery unlocked"></progress>
         {% else %}
-            <progress class="progress-meter" max="500" value="{{ totals.subtotal }}" aria-label="Free delivery progress"></progress>
+            <progress class="progress-meter" max="{{ totals.free_delivery_minimum }}" value="{{ totals.subtotal }}" aria-label="Free delivery progress"></progress>
         {% endif %}
     </section>
 
@@ -553,7 +553,7 @@
 
             <div class="delivery-box">
                 <b>Delivery information</b>
-                <span>Estimated delivery: {{ totals.estimated_delivery }}. Free delivery on cart subtotal Rs. 500 and above.</span>
+                <span>Estimated delivery: {{ totals.estimated_delivery }}. Free delivery on cart subtotal Rs. {{ totals.free_delivery_minimum }} and above.</span>
             </div>
 
             <div class="secure-row" aria-label="Secure payment options">

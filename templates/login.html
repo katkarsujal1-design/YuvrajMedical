@@ -6,72 +6,59 @@
 <title>Login - Yuvraj Medical & Chemist</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}?v=legend-20260821-4">
 </head>
 
 <body class="yvm-pro-page yvm-page-login">
-<a class="public-chatbot-link" href="{{ url_for('chatbot') }}">AI Chatbot</a>
+<main class="ym-login-stage" data-has-server-state="{{ 'true' if message or error or show_2fa or show_2fa_setup or show_activity or show_devices else 'false' }}">
+    <div class="ym-bg-shade" aria-hidden="true"></div>
+    <div class="ym-medical-grid" aria-hidden="true"></div>
+    <div class="ym-scan-ring ym-scan-ring-one" aria-hidden="true"></div>
+    <div class="ym-scan-ring ym-scan-ring-two" aria-hidden="true"></div>
+    <div class="ym-pulse-line" aria-hidden="true"></div>
 
-<div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
+    <div class="ym-white-particles" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
-<main class="enterprise-login" data-has-server-state="{{ 'true' if message or error or show_2fa or show_2fa_setup or show_activity or show_devices else 'false' }}">
-    <div class="ambient-glow" aria-hidden="true"></div>
-    <div class="particle-field" aria-hidden="true"></div>
-    <div class="light-ray ray-left" aria-hidden="true"></div>
-    <div class="light-ray ray-right" aria-hidden="true"></div>
-
-    <svg class="ambient-ecg" viewBox="0 0 900 120" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 68 H150 L174 68 L196 32 L236 104 L272 68 H420 L444 68 L464 48 L488 68 H620 L646 68 L674 24 L716 106 L754 68 H900"/>
-    </svg>
-
-    <section class="intro-stage" aria-label="Yuvraj Medical secure login intro">
-
-        <div class="medical-icons" aria-hidden="true">
-            <span>+</span>
-            <span>💊</span>
-            <span>🛡</span>
-            <span>🧬</span>
+    <section class="ym-login-showcase" aria-hidden="true">
+        <span class="ym-showcase-kicker">Yuvraj Medical & Chemist</span>
+        <h2>Protected access for faster care.</h2>
+        <p>Manage prescriptions, orders, rewards, and support through a secure medical dashboard.</p>
+        <div class="ym-showcase-stats">
+            <span><strong>24/7</strong> Pharmacy access</span>
+            <span><strong>2FA</strong> Secure sign-in</span>
+            <span><strong>Fast</strong> Order support</span>
         </div>
+    </section>
 
-        <svg class="hero-ecg hero-ecg-left" viewBox="0 0 520 120" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 62 H185 L205 62 L222 38 L245 92 L268 62 H520"/>
-        </svg>
-
-        <svg class="hero-ecg hero-ecg-right" viewBox="0 0 520 120" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 62 H250 L270 62 L292 28 L316 98 L342 62 H520"/>
-        </svg>
-
-        <div class="logo-formation" aria-hidden="true">
-            <span class="orbit-ring ring-one"></span>
-            <span class="orbit-ring ring-two"></span>
-            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical & Chemist ">
-            <h1>Yuvraj Medical</h1>
-            <p>& Chemist</p>
-            <span class="logo-light"></span>
-        </div>
-
-  </section> 
-
-    <section class="auth-shell" aria-label="Yuvraj Medical login">
-        
-        <div class="brand-lockup">
-            <img src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical & Chemist">
-            <div>
-                <h1>Yuvraj Medical</h1>
-                <p>Secure healthcare platform</p>
+    <section class="ym-login-panel class-1" aria-label="Yuvraj Medical login">
+        <div class="ym-panel-inner">
+            <div class="ym-brand-lockup">
+                <div class="ym-logo-orbit">
+                    <img class="ym-login-logo" src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical & Chemist">
+                </div>
+                <div>
+                    <span>Secure Portal</span>
+                    <strong>Yuvraj Medical</strong>
+                </div>
             </div>
-        </div>
 
-        <div class="auth-card">
-            <h2>Welcome Back</h2>
-            <p class="subtitle">Login to continue accessing your dashboard.</p>
+            <div class="ym-auth-card">
+            <span class="ym-access-chip">Customer login</span>
+            <h1>Welcome Back</h1>
+            <p class="ym-subtitle">Sign in to continue with your prescriptions, orders, rewards, and care support.</p>
 
             {% if message %}
             <div class="alert success">{{ message }}</div>
@@ -82,42 +69,57 @@
             {% endif %}
 
             {% if show_2fa %}
-            <form method="POST" action="/two_factor" class="auth-form">
-                <label for="otp">Enter 2FA OTP</label>
-                <input id="otp" name="otp" inputmode="numeric" maxlength="6" required>
-                <button type="submit" class="login-btn">Verify 2FA</button>
+            <form method="POST" action="/two_factor" class="ym-auth-form">
+                <div class="ym-field">
+                    <label for="otp">Enter 2FA OTP</label>
+                    <div class="ym-input-shell">
+                        <span class="ym-field-icon" aria-hidden="true">••</span>
+                        <input id="otp" name="otp" inputmode="numeric" maxlength="6" required>
+                    </div>
+                </div>
+                <button type="submit" class="ym-login-btn">Verify 2FA</button>
             </form>
             {% else %}
-            <form method="POST" class="auth-form">
-                <label for="email">Email</label>
-                <input id="email" type="email" name="email" autocomplete="email" required>
+            <form method="POST" class="ym-auth-form">
+                <div class="ym-field">
+                    <label for="email">Email</label>
+                    <div class="ym-input-shell">
+                        <span class="ym-field-icon" aria-hidden="true">@</span>
+                        <input id="email" type="email" name="email" autocomplete="email" required>
+                    </div>
+                </div>
 
-                <label for="password">Password</label>
-                <input id="password" type="password" name="password" autocomplete="current-password" required>
+                <div class="ym-field">
+                    <label for="password">Password</label>
+                    <div class="ym-input-shell">
+                        <span class="ym-field-icon" aria-hidden="true">+</span>
+                        <input id="password" type="password" name="password" autocomplete="current-password" required>
+                    </div>
+                </div>
 
-                <div class="form-options">
-                    <label class="remember-option">
+                <div class="ym-form-options">
+                    <label class="ym-remember-option">
                         <input type="checkbox" name="remember">
                         <span>Remember Me</span>
                     </label>
-                    <a class="muted-link" href="/login">Forgot Password</a>
+                    <a class="ym-muted-link" href="/forgot_password">Forgot Password</a>
                 </div>
 
-                <button type="submit" class="login-btn">Login Securely</button>
+                <button type="submit" class="ym-login-btn">Login</button>
             </form>
             {% endif %}
 
-            <p class="links">New user? <a href="/register">Create Account</a></p>
-            <p class="links">Need help? <a href="{{ url_for('chatbot') }}">Open AI Chatbot</a></p>
+            <p class="ym-links"><span>New user?</span> <a href="/register">Create Account</a></p>
 
-            <div class="security-panel">
+            {% if session.get("user") or show_2fa_setup or show_activity or show_devices %}
+            <div class="ym-account-panel">
+                {% if session.get("user") %}
                 <div class="security-title">Account security</div>
                 <div class="security-grid">
                     <a class="security-link" href="/login_activity">Login activity</a>
                     <a class="security-link" href="/devices">Devices</a>
                 </div>
 
-                {% if session.get("user") %}
                 <div class="inline-actions">
                     <form method="POST" action="/two_factor/setup">
                         <input type="hidden" name="action" value="enable">
@@ -130,9 +132,14 @@
                 </div>
 
                 {% if show_2fa_setup %}
-                <form method="POST" action="/two_factor/enable" class="auth-form compact-form">
-                    <label for="setup-otp">2FA setup OTP</label>
-                    <input id="setup-otp" name="otp" inputmode="numeric" maxlength="6" required>
+                <form method="POST" action="/two_factor/enable" class="ym-auth-form compact-form">
+                    <div class="ym-field">
+                        <label for="setup-otp">2FA setup OTP</label>
+                        <div class="ym-input-shell">
+                            <span class="ym-field-icon" aria-hidden="true">••</span>
+                            <input id="setup-otp" name="otp" inputmode="numeric" maxlength="6" required>
+                        </div>
+                    </div>
                     <button type="submit" class="mini-btn">Enable 2FA</button>
                 </form>
                 {% endif %}
@@ -167,10 +174,11 @@
                 </div>
                 {% endif %}
             </div>
+            {% endif %}
+            </div>
         </div>
     </section>
 </main>
 <script src="{{ url_for('static', filename='js/login.js') }}"></script>
-<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 </body>
 </html>

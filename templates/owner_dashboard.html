@@ -2025,9 +2025,40 @@
             font-weight:850;
         }
 
+        .page-context{
+            display:grid;
+            gap:2px;
+            min-width:150px;
+            padding:0 4px;
+        }
+
+        .page-context span{
+            color:#94a3b8;
+            font-size:11px;
+            font-weight:950;
+            letter-spacing:.1em;
+            text-transform:uppercase;
+        }
+
+        .page-context strong{
+            color:#0f172a;
+            font-size:17px;
+            line-height:1.1;
+            font-weight:950;
+        }
+
         .dashboard-section{
             margin-bottom:22px;
             animation:rise 0.55s ease both;
+        }
+
+        .dashboard-section[hidden]{
+            display:none!important;
+        }
+
+        .dashboard-section.active-page{
+            display:block;
+            animation:ownerPageIn .28s ease both;
         }
 
         .section-heading{
@@ -2035,7 +2066,13 @@
             justify-content:space-between;
             align-items:flex-end;
             gap:16px;
-            margin-bottom:14px;
+            margin-bottom:18px;
+            padding:18px 20px;
+            border:1px solid rgba(148,163,184,.20);
+            border-radius:18px;
+            background:
+                linear-gradient(135deg,rgba(255,255,255,.92),rgba(248,250,252,.78));
+            box-shadow:0 16px 38px rgba(15,23,42,.07);
         }
 
         .section-heading h2{
@@ -2050,6 +2087,20 @@
             color:var(--muted);
             font-size:13px;
             font-weight:650;
+        }
+
+        #overview > .section-heading,
+        #analytics > .section-heading,
+        #orders > .table-card > .table-header,
+        #inventory > .section-heading{
+            border-color:rgba(148,163,184,.16);
+            background:linear-gradient(135deg,rgba(15,23,42,.48),rgba(30,41,59,.40));
+            box-shadow:0 18px 44px rgba(2,6,23,.20);
+        }
+
+        @keyframes ownerPageIn{
+            from{opacity:.35;transform:translateY(8px);}
+            to{opacity:1;transform:translateY(0);}
         }
 
         .welcome-card,
@@ -2263,10 +2314,10 @@
         #reports{--section-rgb:236,72,153;--section-accent:#db2777;}
         #notifications{--section-rgb:244,63,94;--section-accent:#e11d48;}
         #quick-actions{--section-rgb:37,99,235;--section-accent:#2563eb;}
-        #brands{--section-rgb:14,165,233;--section-accent:#0284c7;}
+        #engagement{--section-rgb:14,165,233;--section-accent:#0284c7;}
 
         #analytics,#orders,#inventory,#prescriptions,#customers,#staff-hub,
-        #delivery,#payments,#reports,#notifications,#quick-actions,#brands{
+        #delivery,#payments,#reports,#notifications,#quick-actions,#engagement{
             position:relative;
             isolation:isolate;
             overflow:hidden;
@@ -2281,7 +2332,7 @@
 
         #analytics::before,#orders::before,#inventory::before,#prescriptions::before,
         #customers::before,#staff-hub::before,#delivery::before,#payments::before,
-        #reports::before,#notifications::before,#quick-actions::before,#brands::before{
+        #reports::before,#notifications::before,#quick-actions::before,#engagement::before{
             content:"";
             position:absolute;
             inset:0 auto 0 0;
@@ -2292,14 +2343,14 @@
         #analytics .glass-card,#orders .glass-card,#inventory .glass-card,
         #prescriptions .glass-card,#customers .glass-card,#staff-hub .glass-card,
         #delivery .glass-card,#payments .glass-card,#reports .quick-card,
-        #notifications .glass-card,#quick-actions .quick-card,#brands .glass-card,
+        #notifications .glass-card,#quick-actions .quick-card,#engagement .glass-card,
         #inventory .metric-card,#prescriptions .metric-card,#payments .metric-card{
             border-color:rgba(var(--section-rgb),.20);
             box-shadow:0 14px 34px rgba(var(--section-rgb),.10);
         }
 
         #analytics .glass-card h3,#delivery .glass-card h3,#notifications .glass-card h3,
-        #brands .glass-card h3,#inventory .metric-card h3,#prescriptions .metric-card h3,
+        #engagement .glass-card h3,#inventory .metric-card h3,#prescriptions .metric-card h3,
         #payments .metric-card h3{
             color:var(--section-accent);
         }
@@ -2734,27 +2785,120 @@
             margin-bottom:8px;
         }
 
+        .calendar-card{
+            overflow:hidden;
+            padding:18px;
+            background:
+                radial-gradient(circle at 100% 0,rgba(14,165,233,.16),transparent 34%),
+                linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,250,252,.90));
+        }
+
+        .calendar-head{
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            gap:12px;
+            margin-bottom:14px;
+        }
+
+        .calendar-head span{
+            display:block;
+            color:#64748b;
+            font-size:11px;
+            font-weight:950;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+
+        .calendar-head strong{
+            display:block;
+            margin-top:3px;
+            color:#0f172a;
+            font-size:18px;
+            font-weight:950;
+            line-height:1.15;
+        }
+
+        .calendar-today-pill{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-height:30px;
+            padding:7px 10px;
+            border:1px solid rgba(14,165,233,.22);
+            border-radius:999px;
+            color:#075985;
+            background:#e0f2fe;
+            font-size:11px;
+            font-weight:950;
+            white-space:nowrap;
+        }
+
         .mini-calendar{
             display:grid;
             grid-template-columns:repeat(7,1fr);
-            gap:6px;
-            margin-top:12px;
+            gap:7px;
+            padding:10px;
+            border:1px solid rgba(148,163,184,.16);
+            border-radius:16px;
+            background:
+                linear-gradient(rgba(15,23,42,.025) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(15,23,42,.025) 1px,transparent 1px),
+                rgba(255,255,255,.62);
+            background-size:24px 24px,24px 24px,100% 100%;
         }
 
         .mini-calendar span{
+            position:relative;
             display:grid;
             place-items:center;
             aspect-ratio:1;
-            border-radius:10px;
+            min-width:0;
+            border:1px solid transparent;
+            border-radius:11px;
             color:#64748b;
-            background:#f1f5f9;
+            background:rgba(241,245,249,.82);
             font-size:12px;
             font-weight:850;
         }
 
+        .mini-calendar .weekday{
+            aspect-ratio:auto;
+            min-height:22px;
+            border:0;
+            color:#0f766e;
+            background:transparent;
+            font-size:10px;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+
+        .mini-calendar .muted-day{
+            color:#cbd5e1;
+            background:rgba(248,250,252,.58);
+        }
+
         .mini-calendar .active-day{
             color:#ffffff;
-            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            border-color:rgba(255,255,255,.52);
+            background:linear-gradient(135deg,#2563eb,#06b6d4);
+            box-shadow:0 10px 24px rgba(37,99,235,.24);
+        }
+
+        .mini-calendar .has-task::after{
+            content:"";
+            position:absolute;
+            bottom:5px;
+            width:4px;
+            height:4px;
+            border-radius:50%;
+            background:#10b981;
+            box-shadow:0 0 0 3px rgba(16,185,129,.14);
+        }
+
+        .mini-calendar .active-day.has-task::after{
+            background:#ffffff;
+            box-shadow:0 0 0 3px rgba(255,255,255,.22);
         }
 
         .dashboard-footer{
@@ -2789,7 +2933,8 @@
         .dark-enterprise .section-heading h2,
         .dark-enterprise .metric-value,
         .dark-enterprise .list-item strong,
-        .dark-enterprise .table-header h2{
+        .dark-enterprise .table-header h2,
+        .dark-enterprise .page-context strong{
             color:#f8fafc;
         }
 
@@ -2801,7 +2946,7 @@
         .dark-enterprise #analytics,.dark-enterprise #orders,.dark-enterprise #inventory,
         .dark-enterprise #prescriptions,.dark-enterprise #customers,.dark-enterprise #staff-hub,
         .dark-enterprise #delivery,.dark-enterprise #payments,.dark-enterprise #reports,
-        .dark-enterprise #notifications,.dark-enterprise #quick-actions,.dark-enterprise #brands{
+        .dark-enterprise #notifications,.dark-enterprise #quick-actions,.dark-enterprise #engagement{
             background:
                 radial-gradient(circle at 96% 0,rgba(var(--section-rgb),.20),transparent 34%),
                 linear-gradient(145deg,#172033,#111827 64%);
@@ -2823,6 +2968,17 @@
         #analytics > .section-heading p,
         #analytics .revenue-chart-card .section-heading p,
         #analytics .revenue-insights .section-heading p{color:#94a3b8;}
+        #analytics .revenue-chart-card > .section-heading,
+        #analytics .revenue-insights > .section-heading{
+            align-items:center;
+            border-color:rgba(148,163,184,.16);
+            background:linear-gradient(135deg,rgba(15,23,42,.66),rgba(30,41,59,.52));
+            box-shadow:0 14px 34px rgba(2,6,23,.18);
+        }
+        #analytics .revenue-chart-growth{
+            color:#0f172a;
+            background:rgba(226,232,240,.92);
+        }
         #analytics .glass-card,
         #analytics .revenue-comparison-card,
         #analytics .revenue-insight-grid .list-item{
@@ -2864,12 +3020,115 @@
         .revenue-card-details span{display:flex;justify-content:space-between;gap:12px;color:#94a3b8;font-size:12px;font-weight:700;}
         .revenue-card-details strong{color:#e2e8f0;}
         .revenue-chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:18px;}
-        .revenue-chart-card{min-width:0;}
+        .revenue-chart-card{
+            min-width:0;
+            padding:16px;
+            overflow:hidden;
+            background:
+                radial-gradient(circle at 16% 10%,rgba(6,182,212,.18),transparent 28%),
+                radial-gradient(circle at 88% 6%,rgba(37,99,235,.16),transparent 30%),
+                linear-gradient(145deg,rgba(30,41,59,.96),rgba(15,23,42,.92));
+        }
         .revenue-chart-growth{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap;}
         .revenue-chart-growth.increase{color:#047857;background:#dcfce7;}
         .revenue-chart-growth.decrease{color:#b91c1c;background:#fee2e2;}
         .revenue-chart-growth.neutral{color:#475569;background:#e2e8f0;}
-        .revenue-canvas-wrap{position:relative;height:300px;}
+        .revenue-range-note{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:10px;
+            margin:-6px 0 12px;
+        }
+        .revenue-range-note span{
+            display:grid;
+            gap:3px;
+            min-width:0;
+            padding:9px 11px;
+            border:1px solid rgba(125,211,252,.14);
+            border-radius:12px;
+            color:#cbd5e1;
+            background:rgba(15,23,42,.40);
+            font-size:12px;
+            font-weight:850;
+        }
+        .revenue-range-note strong{
+            color:#7dd3fc;
+            font-size:10px;
+            font-weight:950;
+            letter-spacing:.08em;
+            text-transform:uppercase;
+        }
+        .revenue-range-note em{
+            overflow:hidden;
+            color:#f8fafc;
+            font-style:normal;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+        .revenue-canvas-wrap{
+            position:relative;
+            height:320px;
+            padding:14px 8px 4px;
+            border:1px solid rgba(148,163,184,.14);
+            border-radius:16px;
+            background:
+                linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+                linear-gradient(180deg,rgba(15,23,42,.50),rgba(15,23,42,.20));
+            background-size:36px 36px,36px 36px,100% 100%;
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 -28px 54px rgba(2,6,23,.18);
+        }
+        .revenue-canvas-wrap::after{
+            content:"";
+            position:absolute;
+            inset:auto 18px 14px;
+            height:42px;
+            border-radius:50%;
+            background:rgba(6,182,212,.20);
+            filter:blur(22px);
+            pointer-events:none;
+        }
+        .revenue-canvas-wrap canvas{
+            position:relative;
+            z-index:1;
+        }
+        .revenue-donut-wrap{
+            display:grid;
+            place-items:center;
+        }
+        .revenue-donut-wrap canvas{
+            max-width:100%;
+            max-height:100%;
+        }
+        .revenue-donut-center{
+            position:absolute;
+            z-index:2;
+            display:grid;
+            place-items:center;
+            width:138px;
+            height:138px;
+            padding:18px;
+            text-align:center;
+            border:1px solid rgba(125,211,252,.20);
+            border-radius:50%;
+            background:
+                radial-gradient(circle at 50% 0,rgba(34,211,238,.18),transparent 52%),
+                rgba(15,23,42,.78);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 18px 40px rgba(2,6,23,.26);
+            pointer-events:none;
+        }
+        .revenue-donut-center strong{
+            color:#f8fafc;
+            font-size:24px;
+            font-weight:950;
+            line-height:1.08;
+        }
+        .revenue-donut-center span{
+            color:#93c5fd;
+            font-size:11px;
+            font-weight:850;
+            text-transform:uppercase;
+        }
         .revenue-insight-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
         .revenue-insight-grid .list-item{align-items:flex-start;flex-direction:column;min-height:92px;}
         .revenue-insight-grid .list-item strong{font-size:13px;line-height:1.45;}
@@ -2880,7 +3139,7 @@
         @keyframes revenueSkeleton{to{background-position:-200% 0;}}
         .dark-enterprise .custom-revenue-range input{color:#e2e8f0;background:#0f172a;border-color:rgba(148,163,184,.25);}
         @media(max-width:1180px){.revenue-insight-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
-        @media(max-width:760px){.revenue-chart-grid,.revenue-insight-grid{grid-template-columns:1fr;}.revenue-canvas-wrap{height:250px;}.revenue-filter-buttons{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}.revenue-filter-buttons .table-btn{flex:0 0 auto;}.revenue-loading{grid-template-columns:1fr;}}
+        @media(max-width:760px){.revenue-chart-grid,.revenue-insight-grid,.revenue-range-note{grid-template-columns:1fr;}.revenue-canvas-wrap{height:280px;}.revenue-filter-buttons{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;}.revenue-filter-buttons .table-btn{flex:0 0 auto;}.revenue-loading{grid-template-columns:1fr;}}
 
         /* ================= RECENT ORDERS CONTROLS ================= */
         #orders{
@@ -3006,6 +3265,356 @@
         .inventory-detail-actions{display:flex;gap:8px;margin-top:18px}.inventory-detail-actions button{flex:1;}
         @media(max-width:680px){.inventory-form-grid{grid-template-columns:1fr}.inventory-toolbar{align-items:stretch}.inventory-search{width:100%}}
 
+        /* ================= OWNER PAGE POLISH ================= */
+        .enterprise-main{
+            background:
+                linear-gradient(rgba(15,23,42,.025) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(15,23,42,.025) 1px,transparent 1px);
+            background-size:34px 34px;
+            border-left:1px solid rgba(148,163,184,.12);
+        }
+
+        .enterprise-nav{
+            padding:4px;
+            border:1px solid rgba(148,163,184,.10);
+            border-radius:18px;
+            background:rgba(255,255,255,.035);
+        }
+
+        .enterprise-nav a{
+            position:relative;
+            overflow:hidden;
+        }
+
+        .enterprise-nav a::before{
+            content:"";
+            position:absolute;
+            inset:8px auto 8px 0;
+            width:3px;
+            border-radius:999px;
+            background:transparent;
+            transition:.18s ease;
+        }
+
+        .enterprise-nav a:hover::before,
+        .enterprise-nav a.active::before{
+            background:#67e8f9;
+        }
+
+        .enterprise-nav a.active .nav-icon{
+            color:#0f172a;
+            background:#e0f2fe;
+        }
+
+        .topbar{
+            border-radius:16px;
+            background:
+                linear-gradient(135deg,rgba(255,255,255,.94),rgba(248,250,252,.86));
+        }
+
+        .dashboard-section:not(#dashboard):not(#overview):not(#analytics):not(#orders):not(#inventory){
+            background:
+                radial-gradient(circle at 100% 0,rgba(var(--section-rgb),.13),transparent 30%),
+                linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,250,252,.92));
+        }
+
+        .dashboard-section > .section-heading,
+        .dashboard-section > .glass-card.table-card > .table-header{
+            position:relative;
+            overflow:hidden;
+        }
+
+        .dashboard-section > .section-heading::after,
+        .dashboard-section > .glass-card.table-card > .table-header::after{
+            content:"";
+            position:absolute;
+            inset:0 0 auto;
+            height:3px;
+            background:linear-gradient(90deg,var(--section-accent, #2563eb),rgba(var(--section-rgb,37,99,235),.25),transparent);
+        }
+
+        .glass-card,
+        .metric-card,
+        .quick-card,
+        .table-card{
+            position:relative;
+            border-radius:14px;
+            border-color:rgba(148,163,184,.20);
+        }
+
+        .metric-card{
+            min-height:138px;
+            background:
+                linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,250,252,.88));
+        }
+
+        .metric-card::after,
+        .glass-card::after,
+        .quick-card::after{
+            content:"";
+            position:absolute;
+            inset:auto 14px 0;
+            height:2px;
+            border-radius:999px 999px 0 0;
+            background:linear-gradient(90deg,transparent,rgba(var(--section-rgb,37,99,235),.35),transparent);
+            opacity:.7;
+            pointer-events:none;
+        }
+
+        .quick-card{
+            min-height:86px;
+            align-items:center;
+            background:
+                linear-gradient(135deg,rgba(255,255,255,.98),rgba(248,250,252,.92));
+        }
+
+        .quick-card strong{
+            color:#0f172a;
+            line-height:1.25;
+        }
+
+        .panel-grid .glass-card{
+            min-height:145px;
+            display:grid;
+            align-content:start;
+            gap:10px;
+        }
+
+        .panel-grid .glass-card h3,
+        .metric-card h3{
+            letter-spacing:.08em;
+        }
+
+        .table-card{
+            background:rgba(255,255,255,.92);
+        }
+
+        .enterprise-table{
+            border-collapse:separate;
+            border-spacing:0 8px;
+            padding:0 10px 10px;
+        }
+
+        .enterprise-table th{
+            border-top:0;
+        }
+
+        .enterprise-table td{
+            border-top:0;
+            border-bottom:1px solid rgba(148,163,184,.16);
+        }
+
+        .enterprise-table tr td:first-child{
+            border-radius:12px 0 0 12px;
+        }
+
+        .enterprise-table tr td:last-child{
+            border-radius:0 12px 12px 0;
+        }
+
+        .table-btn,
+        .primary-btn,
+        .ghost-btn,
+        .quick-add{
+            border-radius:10px;
+        }
+
+        .table-btn:hover,
+        .primary-btn:hover,
+        .ghost-btn:hover,
+        .quick-add:hover{
+            transform:translateY(-1px);
+        }
+
+        #engagement .panel-grid{
+            grid-template-columns:repeat(3,minmax(0,1fr));
+        }
+
+        #engagement .glass-card{
+            min-height:210px;
+            padding:22px;
+        }
+
+        #engagement .glass-card h3{
+            font-size:18px;
+            letter-spacing:0;
+        }
+
+        #engagement .list-item{
+            border-color:rgba(14,165,233,.18);
+            background:rgba(255,255,255,.78);
+        }
+
+        .dark-enterprise .enterprise-main{
+            background:
+                linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+            background-size:34px 34px;
+        }
+
+        .dark-enterprise .page-context span{
+            color:#94a3b8;
+        }
+
+        /* ================= NIGHT MODE POLISH ================= */
+        .dark-enterprise{
+            color:#e2e8f0;
+            background:#020617;
+        }
+
+        .dark-enterprise .enterprise-dashboard{
+            --ink:#f8fafc;
+            --muted:#94a3b8;
+            --soft:#111827;
+            --line:rgba(148,163,184,.18);
+            --glass:rgba(15,23,42,.82);
+            --shadow:0 24px 70px rgba(0,0,0,.34);
+            background:
+                radial-gradient(circle at 12% 0,rgba(37,99,235,.18),transparent 30%),
+                radial-gradient(circle at 88% 10%,rgba(6,182,212,.14),transparent 28%),
+                #020617;
+        }
+
+        .dark-enterprise .enterprise-main{
+            border-left-color:rgba(148,163,184,.12);
+            background-color:#020617;
+        }
+
+        .dark-enterprise .enterprise-aside{
+            background:
+                linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+                #020617;
+            background-size:28px 28px,28px 28px,100% 100%;
+        }
+
+        .dark-enterprise .topbar{
+            background:linear-gradient(135deg,rgba(15,23,42,.94),rgba(30,41,59,.88));
+            box-shadow:0 18px 48px rgba(0,0,0,.30);
+        }
+
+        .dark-enterprise .top-search input{
+            color:#f8fafc;
+            background:transparent;
+        }
+
+        .dark-enterprise .top-search input::placeholder{
+            color:#94a3b8;
+        }
+
+        .dark-enterprise .top-search span,
+        .dark-enterprise .date-pill,
+        .dark-enterprise .metric-note,
+        .dark-enterprise .section-heading p,
+        .dark-enterprise .table-header p,
+        .dark-enterprise .list-item span,
+        .dark-enterprise .dashboard-footer{
+            color:#94a3b8;
+        }
+
+        .dark-enterprise .quick-add,
+        .dark-enterprise .primary-btn{
+            color:#ffffff;
+            border-color:transparent;
+            background:linear-gradient(135deg,#2563eb,#06b6d4);
+        }
+
+        .dark-enterprise .mode-toggle{
+            color:#bae6fd;
+            background:linear-gradient(135deg,rgba(14,165,233,.18),rgba(37,99,235,.20));
+            border-color:rgba(125,211,252,.24);
+        }
+
+        .dark-enterprise .dashboard-section:not(#dashboard):not(#overview):not(#analytics):not(#orders):not(#inventory){
+            background:
+                radial-gradient(circle at 100% 0,rgba(var(--section-rgb),.20),transparent 34%),
+                linear-gradient(145deg,rgba(30,41,59,.92),rgba(15,23,42,.94));
+            border-color:rgba(var(--section-rgb),.24);
+        }
+
+        .dark-enterprise .section-heading,
+        .dark-enterprise .table-header,
+        .dark-enterprise .dashboard-section > .section-heading,
+        .dark-enterprise .dashboard-section > .glass-card.table-card > .table-header{
+            border-color:rgba(148,163,184,.16);
+            background:linear-gradient(135deg,rgba(15,23,42,.78),rgba(30,41,59,.64));
+            box-shadow:0 18px 44px rgba(0,0,0,.24);
+        }
+
+        .dark-enterprise .glass-card,
+        .dark-enterprise .metric-card,
+        .dark-enterprise .quick-card,
+        .dark-enterprise .table-card{
+            color:#e2e8f0;
+            border-color:rgba(148,163,184,.16);
+            background:linear-gradient(145deg,rgba(30,41,59,.90),rgba(15,23,42,.88));
+            box-shadow:0 20px 54px rgba(0,0,0,.26);
+        }
+
+        .dark-enterprise .quick-card strong,
+        .dark-enterprise .glass-card h3,
+        .dark-enterprise .metric-card h3{
+            color:#f8fafc;
+        }
+
+        .dark-enterprise .enterprise-table td,
+        .dark-enterprise .list-item{
+            color:#e2e8f0;
+            background:rgba(15,23,42,.70);
+            border-color:rgba(148,163,184,.14);
+        }
+
+        .dark-enterprise .calendar-card{
+            background:
+                radial-gradient(circle at 100% 0,rgba(14,165,233,.20),transparent 34%),
+                linear-gradient(145deg,rgba(30,41,59,.92),rgba(15,23,42,.90));
+        }
+
+        .dark-enterprise .calendar-head strong,
+        .dark-enterprise .revenue-donut-center strong{
+            color:#f8fafc;
+        }
+
+        .dark-enterprise .mini-calendar{
+            border-color:rgba(148,163,184,.16);
+            background:
+                linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),
+                rgba(15,23,42,.58);
+            background-size:24px 24px,24px 24px,100% 100%;
+        }
+
+        .dark-enterprise .mini-calendar span{
+            color:#cbd5e1;
+            background:rgba(30,41,59,.82);
+        }
+
+        .dark-enterprise .mini-calendar .weekday{
+            color:#67e8f9;
+            background:transparent;
+        }
+
+        .dark-enterprise .mini-calendar .muted-day{
+            color:#64748b;
+            background:rgba(15,23,42,.52);
+        }
+
+        .dark-enterprise .calendar-today-pill{
+            color:#cffafe;
+            background:rgba(8,145,178,.20);
+            border-color:rgba(103,232,249,.22);
+        }
+
+        @media(max-width:980px){
+            .page-context{
+                width:100%;
+            }
+
+            #engagement .panel-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
         @keyframes rise{
             from{opacity:0; transform:translateY(12px);}
             to{opacity:1; transform:translateY(0);}
@@ -3124,28 +3733,27 @@
                 <a class="active" href="#dashboard"><span class="nav-icon">DB</span><span>Dashboard</span></a>
                 <a href="#analytics"><span class="nav-icon">AN</span><span>Analytics</span></a>
                 <a href="#orders"><span class="nav-icon">OR</span><span>Orders</span></a>
-                <a href="#inventory"><span class="nav-icon">RX</span><span>Medicines</span></a>
                 <a href="#inventory"><span class="nav-icon">IN</span><span>Inventory</span></a>
                 <a href="#prescriptions"><span class="nav-icon">PR</span><span>Prescriptions</span></a>
                 <a href="#customers"><span class="nav-icon">CU</span><span>Customers</span></a>
                 <a href="#staff-hub"><span class="nav-icon">ST</span><span>Staff</span></a>
                 <a href="#delivery"><span class="nav-icon">DL</span><span>Delivery</span></a>
-                <a href="#brands"><span class="nav-icon">BR</span><span>Brands</span></a>
-                <a href="#categories"><span class="nav-icon">HC</span><span>Health Categories</span></a>
-                <a href="#offers"><span class="nav-icon">OF</span><span>Offers</span></a>
+                <a href="#engagement"><span class="nav-icon">CE</span><span>Customer Engagement</span></a>
                 <a href="#payments"><span class="nav-icon">PY</span><span>Payments</span></a>
-                <a href="#reviews"><span class="nav-icon">RV</span><span>Reviews</span></a>
                 <a href="#notifications"><span class="nav-icon">NO</span><span>Notifications</span></a>
                 <a href="#reports"><span class="nav-icon">RP</span><span>Reports</span></a>
                 <a href="/profile"><span class="nav-icon">SE</span><span>Settings</span></a>
-                <a href="#security"><span class="nav-icon">SC</span><span>Security</span></a>
-                <a href="#support"><span class="nav-icon">SP</span><span>Support</span></a>
                 <a href="/logout"><span class="nav-icon">LO</span><span>Logout</span></a>
             </nav>
         </aside>
 
         <main class="enterprise-main">
             <header class="topbar">
+                <div class="page-context" aria-live="polite">
+                    <span>Current Page</span>
+                    <strong id="ownerActivePageTitle">Dashboard</strong>
+                </div>
+
                 <form class="top-search" method="GET" action="#customers">
                     <span>Search</span>
                     <input type="text" name="user_search" placeholder="Search customers, staff, orders..." value="{{ request.args.get('user_search','') }}">
@@ -3288,10 +3896,20 @@
                 <div class="revenue-chart-grid">
                     <article class="glass-card revenue-chart-card">
                         <div class="section-heading">
-                            <div><h2>Revenue Chart</h2><p>Monthly revenue movement</p></div>
+                            <div><h2>Period Revenue Split</h2><p>Current and previous date ranges are shown below</p></div>
                             <span class="revenue-chart-growth neutral" id="revenueChartGrowth">— 0%</span>
                         </div>
-                        <div class="revenue-canvas-wrap"><canvas id="revenueGrowthChart"></canvas></div>
+                        <div class="revenue-range-note">
+                            <span><strong>Current</strong><em id="currentRevenueRange">Loading...</em></span>
+                            <span><strong>Previous</strong><em id="previousRevenueRange">Loading...</em></span>
+                        </div>
+                        <div class="revenue-canvas-wrap revenue-donut-wrap">
+                            <canvas id="revenueGrowthChart"></canvas>
+                            <div class="revenue-donut-center" aria-live="polite">
+                                <strong id="periodRevenueTotal">&#8377;0</strong>
+                                <span>Selected period</span>
+                            </div>
+                        </div>
                     </article>
                     <article class="glass-card revenue-chart-card">
                         <div class="section-heading"><div><h2>Monthly Revenue</h2><p>Month-by-month performance</p></div></div>
@@ -3380,7 +3998,7 @@
             </dialog>
 
             <section class="dashboard-section" id="inventory">
-                <div class="section-heading"><div><h2>Medicine Inventory</h2><p>Search, edit, restock, track suppliers, scan barcodes, and monitor expiry.</p></div><div class="inventory-actions"><a class="table-btn" href="/scan_barcode">Scan Barcode</a><a class="primary-btn" href="/staff#addmedicine">Add Medicine</a></div></div>
+                <div class="section-heading"><div><h2>Inventory</h2><p>Manage medicine catalog records and inventory stock controls from one page.</p></div><div class="inventory-actions"><a class="table-btn" href="/scan_barcode">Scan Barcode</a><a class="primary-btn" href="/staff#addmedicine">Add Medicine</a></div></div>
                 <div class="metric-grid">
                     <article class="metric-card"><h3>Total Medicines</h3><div class="metric-value">{{ total_medicines }}</div><div class="metric-note">Catalog records</div></article>
                     <article class="metric-card"><h3>Available Stock</h3><div class="metric-value">{{ total_medicines - out_of_stock }}</div><div class="metric-note">Items with stock</div></article>
@@ -3628,7 +4246,6 @@
                     <div class="glass-card"><h3>New Orders</h3><div class="metric-value">{{ pending_orders }}</div></div>
                     <div class="glass-card"><h3>Customer Messages</h3><div class="metric-value">0</div></div>
                     <div class="glass-card"><h3>System Updates</h3><p class="metric-note">Database connected. Dashboard active.</p></div>
-                    <div class="glass-card" id="security"><h3>Security</h3><p class="metric-note">Owner-only protected route.</p></div>
                 </div>
             </section>
 
@@ -3637,22 +4254,21 @@
                 <div class="quick-grid">
                     <a class="quick-card" href="/staff"><span class="action-icon">AM</span><strong>Add Medicine</strong></a>
                     <a class="quick-card" href="/staff_prescriptions"><span class="action-icon">VP</span><strong>Verify Prescription</strong></a>
-                    <a class="quick-card" href="#brands"><span class="action-icon">AB</span><strong>Add Brand</strong></a>
-                    <a class="quick-card" href="#categories"><span class="action-icon">AC</span><strong>Add Category</strong></a>
-                    <a class="quick-card" href="#offers"><span class="action-icon">OF</span><strong>Create Offer</strong></a>
+                    <a class="quick-card" href="#engagement"><span class="action-icon">HC</span><strong>Health Categories</strong></a>
+                    <a class="quick-card" href="#engagement"><span class="action-icon">OF</span><strong>Create Offer</strong></a>
+                    <a class="quick-card" href="#engagement"><span class="action-icon">RV</span><strong>Review Feedback</strong></a>
                     <a class="quick-card" href="#delivery"><span class="action-icon">DL</span><strong>Manage Delivery</strong></a>
                     <button class="quick-card" type="button"><span class="action-icon">BK</span><strong>Backup Database</strong></button>
                     <button class="quick-card" type="button" onclick="window.print()"><span class="action-icon">EX</span><strong>Export Inventory</strong></button>
                 </div>
             </section>
 
-            <section class="dashboard-section" id="brands">
+            <section class="dashboard-section" id="engagement">
+                <div class="section-heading"><div><h2>Customer Engagement</h2><p>Health categories, promotional offers, and customer review signals in one place.</p></div></div>
                 <div class="panel-grid">
-                    <div class="glass-card"><h3>Brands</h3><p class="metric-note">Brand management surface prepared for inventory grouping.</p></div>
                     <div class="glass-card" id="categories"><h3>Health Categories</h3><div class="list-stack">{% for m in medicines[:5] %}<div class="list-item"><strong>{{ m["category"] }}</strong><span>{{ m["name"] }}</span></div>{% endfor %}</div></div>
-                    <div class="glass-card" id="offers"><h3>Offers</h3><p class="metric-note">Promotional campaigns can be connected here.</p></div>
-                    <div class="glass-card" id="reviews"><h3>Reviews</h3><p class="metric-note">Customer review feed ready for feedback integration.</p></div>
-                    <div class="glass-card" id="support"><h3>Support</h3><p class="metric-note">Owner support and issue tracking panel.</p></div>
+                    <div class="glass-card" id="offers"><h3>Offers</h3><p class="metric-note">Plan store-wide promotions, cart offers, and seasonal customer campaigns.</p></div>
+                    <div class="glass-card" id="reviews"><h3>Reviews</h3><p class="metric-note">Track customer feedback, medicine reviews, and service experience signals.</p></div>
                 </div>
             </section>
 
@@ -3682,11 +4298,13 @@
                     </div>
                 </div>
 
-                <div class="glass-card">
-                    <h3>Calendar</h3>
-                    <div class="mini-calendar">
-                        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-                        <span>1</span><span>2</span><span>3</span><span>4</span><span class="active-day">5</span><span>6</span><span>7</span>
+                <div class="glass-card calendar-card">
+                    <div class="calendar-head">
+                        <div><span>Calendar</span><strong id="ownerCalendarMonth">This Month</strong></div>
+                        <div class="calendar-today-pill" id="ownerCalendarToday">Today</div>
+                    </div>
+                    <div class="mini-calendar" id="ownerMiniCalendar" aria-label="Current month calendar">
+                        <span class="weekday">M</span><span class="weekday">T</span><span class="weekday">W</span><span class="weekday">T</span><span class="weekday">F</span><span class="weekday">S</span><span class="weekday">S</span>
                     </div>
                 </div>
 
@@ -3719,6 +4337,9 @@
         const customForm = document.getElementById("customRevenueRange");
         const startInput = document.getElementById("revenueStartDate");
         const endInput = document.getElementById("revenueEndDate");
+        const periodTotal = document.getElementById("periodRevenueTotal");
+        const currentRangeLabel = document.getElementById("currentRevenueRange");
+        const previousRangeLabel = document.getElementById("previousRevenueRange");
         let activeRequest = null;
 
         const money = value => new Intl.NumberFormat("en-IN", {
@@ -3726,6 +4347,27 @@
             maximumFractionDigits:2
         }).format(Number(value || 0));
         const currency = value => `₹${money(value)}`;
+        const shortDate = value => new Intl.DateTimeFormat("en-IN", {
+            day:"2-digit",
+            month:"short",
+            year:"numeric"
+        }).format(new Date(`${value}T00:00:00`));
+        const dateRangeLabel = range => {
+            if(!range?.start || !range?.end) return "Not available";
+            return range.start === range.end
+                ? shortDate(range.start)
+                : `${shortDate(range.start)} - ${shortDate(range.end)}`;
+        };
+        const chartGradient = (context, stops, vertical = true) => {
+            const {chart} = context;
+            const {ctx, chartArea} = chart;
+            if(!chartArea) return stops[0][1];
+            const gradient = vertical
+                ? ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
+                : ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+            stops.forEach(([offset, color]) => gradient.addColorStop(offset, color));
+            return gradient;
+        };
 
         function animateValue(element, target){
             const end = Number(target || 0);
@@ -3744,28 +4386,93 @@
             responsive:true,
             maintainAspectRatio:false,
             interaction:{intersect:false,mode:"index"},
+            animation:{duration:850,easing:"easeOutQuart"},
             plugins:{
                 legend:{display:false},
-                tooltip:{callbacks:{label:context => ` ${context.dataset.label}: ${currency(context.parsed.y)}`}}
+                tooltip:{
+                    backgroundColor:"rgba(15,23,42,.96)",
+                    titleColor:"#f8fafc",
+                    bodyColor:"#e2e8f0",
+                    borderColor:"rgba(125,211,252,.24)",
+                    borderWidth:1,
+                    displayColors:true,
+                    usePointStyle:true,
+                    padding:12,
+                    callbacks:{label:context => ` ${context.dataset.label || "Revenue"}: ${currency(context.parsed.y)}`}
+                }
             },
             scales:{
-                x:{grid:{display:false},ticks:{color:"#94a3b8",maxRotation:0,autoSkip:true,maxTicksLimit:10}},
-                y:{beginAtZero:true,grid:{color:"rgba(148,163,184,.14)"},ticks:{color:"#94a3b8",callback:value => `₹${money(value)}`}}
+                x:{
+                    border:{display:false},
+                    grid:{display:false},
+                    ticks:{color:"#8fb3d9",maxRotation:0,autoSkip:true,maxTicksLimit:10,font:{size:11,weight:"700"}}
+                },
+                y:{
+                    beginAtZero:true,
+                    border:{display:false},
+                    grid:{color:"rgba(148,163,184,.13)",drawTicks:false},
+                    ticks:{color:"#8fb3d9",padding:10,font:{size:11,weight:"700"},callback:value => `₹${money(value)}`}
+                }
             }
         };
 
         const growthChart = new Chart(document.getElementById("revenueGrowthChart"), {
-            type:"line",
-            data:{labels:[],datasets:[
-                {label:"Current period",data:[],borderColor:"#2563eb",backgroundColor:"rgba(37,99,235,.12)",fill:true,tension:.36,pointRadius:2,pointHoverRadius:5,borderWidth:3},
-                {label:"Previous period",data:[],borderColor:"#94a3b8",backgroundColor:"transparent",fill:false,tension:.36,pointRadius:0,pointHoverRadius:4,borderWidth:2,borderDash:[6,5]}
-            ]},
-            options:{...commonOptions,plugins:{...commonOptions.plugins,legend:{display:true,position:"bottom",align:"start",labels:{usePointStyle:true,boxWidth:7,color:"#94a3b8",font:{weight:"700"}}}}}
+            type:"doughnut",
+            data:{labels:["No revenue"],datasets:[{
+                label:"Revenue split",
+                data:[1],
+                backgroundColor:context => {
+                    const label = context.chart.data.labels[context.dataIndex];
+                    if(label === "No revenue") return "rgba(148,163,184,.34)";
+                    return context.dataIndex === 0
+                        ? chartGradient(context, [[0,"#67e8f9"],[.52,"#06b6d4"],[1,"#2563eb"]])
+                        : chartGradient(context, [[0,"#bbf7d0"],[.52,"#22c55e"],[1,"#047857"]]);
+                },
+                hoverBackgroundColor:context => context.dataIndex === 0 ? "#67e8f9" : "#86efac",
+                borderColor:"rgba(15,23,42,.82)",
+                borderWidth:5,
+                spacing:5,
+                hoverOffset:10
+            }]},
+            options:{
+                responsive:true,
+                maintainAspectRatio:false,
+                cutout:"68%",
+                animation:{animateRotate:true,animateScale:true,duration:850,easing:"easeOutQuart"},
+                plugins:{
+                    legend:{display:true,position:"bottom",labels:{usePointStyle:true,boxWidth:8,boxHeight:8,color:"#cbd5e1",padding:18,font:{weight:"850"}}},
+                    tooltip:{
+                        backgroundColor:"rgba(15,23,42,.96)",
+                        titleColor:"#f8fafc",
+                        bodyColor:"#e2e8f0",
+                        borderColor:"rgba(125,211,252,.24)",
+                        borderWidth:1,
+                        displayColors:true,
+                        usePointStyle:true,
+                        padding:12,
+                        callbacks:{
+                            label:context => context.label === "No revenue"
+                                ? " No revenue in this range"
+                                : ` ${context.label}: ${currency(context.raw)}`
+                        }
+                    }
+                }
+            }
         });
         const monthlyChart = new Chart(document.getElementById("monthlyRevenueChart"), {
             type:"bar",
-            data:{labels:[],datasets:[{data:[],backgroundColor:"rgba(6,182,212,.78)",hoverBackgroundColor:"#2563eb",borderRadius:7,maxBarThickness:34}]},
-            options:commonOptions
+            data:{labels:[],datasets:[{
+                label:"Monthly revenue",
+                data:[],
+                backgroundColor:context => chartGradient(context, [[0,"#67e8f9"],[.55,"#06b6d4"],[1,"#2563eb"]]),
+                hoverBackgroundColor:context => chartGradient(context, [[0,"#bbf7d0"],[.48,"#22c55e"],[1,"#0891b2"]]),
+                borderColor:"rgba(255,255,255,.22)",
+                borderWidth:1,
+                borderRadius:{topLeft:8,topRight:8,bottomLeft:3,bottomRight:3},
+                borderSkipped:false,
+                maxBarThickness:38
+            }]},
+            options:{...commonOptions,plugins:{...commonOptions.plugins,tooltip:{...commonOptions.plugins.tooltip,callbacks:{label:context => ` Monthly revenue: ${currency(context.parsed.y)}`}}}}
         });
 
         function updateCard(key, comparison){
@@ -3795,12 +4502,17 @@
 
         function renderRevenue(data){
             Object.entries(data.cards).forEach(([key, comparison]) => updateCard(key, comparison));
-            growthChart.data.labels = data.charts.daily.labels;
-            growthChart.data.datasets[0].data = data.charts.daily.values;
-            growthChart.data.datasets[1].data = data.charts.daily.previous_values;
-            growthChart.update();
             const chartGrowth = document.getElementById("revenueChartGrowth");
             const comparison = data.selected_period;
+            const currentRevenue = Number(comparison.current || 0);
+            const previousRevenue = Number(comparison.previous || 0);
+            const hasPeriodRevenue = currentRevenue + previousRevenue > 0;
+            growthChart.data.labels = hasPeriodRevenue ? ["Current period", "Previous period"] : ["No revenue"];
+            growthChart.data.datasets[0].data = hasPeriodRevenue ? [currentRevenue, previousRevenue] : [1];
+            growthChart.update();
+            if(periodTotal) periodTotal.textContent = currency(currentRevenue);
+            if(currentRangeLabel) currentRangeLabel.textContent = dateRangeLabel(data.range);
+            if(previousRangeLabel) previousRangeLabel.textContent = dateRangeLabel(data.previous_range);
             const indicator = comparison.trend === "increase" ? "▲" : comparison.trend === "decrease" ? "▼" : "—";
             chartGrowth.className = `revenue-chart-growth ${comparison.trend}`;
             chartGrowth.textContent = `${indicator} ${Math.abs(comparison.growth_percentage).toFixed(2)}%`;
@@ -3967,6 +4679,48 @@
         });
 
         document.addEventListener("keydown", event => { if(event.key === "Escape") closeDrawer(); });
+    })();
+</script>
+<script>
+    /* ================= OWNER MINI CALENDAR ================= */
+    (() => {
+        const calendar = document.getElementById("ownerMiniCalendar");
+        const monthLabel = document.getElementById("ownerCalendarMonth");
+        const todayLabel = document.getElementById("ownerCalendarToday");
+        if(!calendar || !monthLabel || !todayLabel) return;
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const previousMonthDays = new Date(year, month, 0).getDate();
+        const leadingDays = (firstDay.getDay() + 6) % 7;
+        const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
+        const taskDays = new Set([today.getDate(), today.getDate() + 2, Math.max(1, today.getDate() - 3)]);
+
+        monthLabel.textContent = today.toLocaleDateString(undefined, {month:"long", year:"numeric"});
+        todayLabel.textContent = today.toLocaleDateString(undefined, {weekday:"short", day:"numeric"});
+        calendar.innerHTML = dayNames.map(day => `<span class="weekday">${day}</span>`).join("");
+
+        for(let index = 0; index < 42; index += 1){
+            const cell = document.createElement("span");
+            const dayNumber = index - leadingDays + 1;
+            let label = dayNumber;
+            if(dayNumber < 1){
+                label = previousMonthDays + dayNumber;
+                cell.classList.add("muted-day");
+            }else if(dayNumber > daysInMonth){
+                label = dayNumber - daysInMonth;
+                cell.classList.add("muted-day");
+            }else{
+                if(dayNumber === today.getDate()) cell.classList.add("active-day");
+                if(taskDays.has(dayNumber)) cell.classList.add("has-task");
+            }
+            cell.textContent = label;
+            calendar.appendChild(cell);
+        }
     })();
 </script>
 <script>
@@ -4165,6 +4919,61 @@
     (() => {
         const dashboard = document.getElementById("enterpriseDashboard");
         const dateTarget = document.getElementById("currentDate");
+        const pageTitle = document.getElementById("ownerActivePageTitle");
+        const sections = [...document.querySelectorAll(".enterprise-main > .dashboard-section")];
+        const navLinks = [...document.querySelectorAll(".enterprise-nav a[href^='#']")];
+        const pageLabels = {
+            dashboard: "Dashboard",
+            analytics: "Analytics",
+            orders: "Orders",
+            inventory: "Inventory",
+            prescriptions: "Prescriptions",
+            customers: "Customers",
+            "staff-hub": "Staff",
+            delivery: "Delivery",
+            payments: "Payments",
+            reports: "Reports",
+            notifications: "Notifications",
+            "quick-actions": "Quick Actions",
+            engagement: "Customer Engagement"
+        };
+        const hashAliases = {
+            overview: "dashboard",
+            categories: "engagement",
+            offers: "engagement",
+            reviews: "engagement"
+        };
+        const dashboardGroup = new Set(["dashboard", "overview"]);
+
+        const normalizePage = hash => {
+            const raw = String(hash || "").replace(/^#/, "") || "dashboard";
+            const candidate = hashAliases[raw] || raw;
+            return pageLabels[candidate] ? candidate : "dashboard";
+        };
+
+        const activateOwnerPage = hash => {
+            const rawHash = String(hash || "").replace(/^#/, "") || "dashboard";
+            const page = normalizePage(hash);
+            sections.forEach(section => {
+                const visible = page === "dashboard"
+                    ? dashboardGroup.has(section.id)
+                    : section.id === page;
+                section.hidden = !visible;
+                section.classList.toggle("active-page", visible);
+            });
+            navLinks.forEach(link => {
+                const linkHash = String(link.getAttribute("href") || "").replace(/^#/, "");
+                const linkPage = normalizePage(linkHash);
+                const active = linkHash === rawHash || (!hashAliases[rawHash] && !hashAliases[linkHash] && linkPage === page);
+                link.classList.toggle("active", active);
+            });
+            if(pageTitle) pageTitle.textContent = pageLabels[page];
+            if(location.hash !== `#${page}` && !hashAliases[String(location.hash || "").replace(/^#/, "")]){
+                history.replaceState(null, "", `#${page}`);
+            }
+            requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+        };
+
         if(dateTarget){
             dateTarget.textContent = new Date().toLocaleDateString(undefined, {
                 weekday:"short",
@@ -4178,11 +4987,39 @@
             dashboard.classList.toggle("sidebar-collapsed");
         });
 
-        document.querySelector("[data-toggle-theme]")?.addEventListener("click", () => {
-            document.body.classList.toggle("dark-enterprise");
+        const themeToggle = document.querySelector("[data-toggle-theme]");
+        const applyTheme = isDark => {
+            document.body.classList.toggle("dark-enterprise", isDark);
+            if(themeToggle){
+                themeToggle.textContent = isDark ? "DAY" : "DM";
+                themeToggle.setAttribute("aria-pressed", String(isDark));
+                themeToggle.setAttribute("title", isDark ? "Switch to day mode" : "Switch to night mode");
+            }
+        };
+        applyTheme(localStorage.getItem("ownerTheme") === "dark");
+        themeToggle?.addEventListener("click", () => {
+            const isDark = !document.body.classList.contains("dark-enterprise");
+            localStorage.setItem("ownerTheme", isDark ? "dark" : "light");
+            applyTheme(isDark);
         });
+
+        document.addEventListener("click", event => {
+            const link = event.target.closest("a[href^='#']");
+            if(!link || !dashboard.contains(link)) return;
+            const targetHash = link.getAttribute("href");
+            const targetPage = normalizePage(targetHash);
+            if(!pageLabels[targetPage]) return;
+            event.preventDefault();
+            history.pushState(null, "", `#${targetHash.replace(/^#/, "")}`);
+            activateOwnerPage(targetHash);
+            document.querySelector(`#${targetPage}`)?.scrollIntoView({block:"start"});
+        });
+
+        window.addEventListener("hashchange", () => activateOwnerPage(location.hash));
+        activateOwnerPage(location.hash);
     })();
 </script>
+<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
 <script src="{{ url_for('static', filename='js/preserve_scroll.js') }}"></script>
 <!-- Legacy duplicate dashboard removed: the enterprise shell above is the single owner UI. -->
 </body>

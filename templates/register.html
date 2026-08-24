@@ -3,458 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register | Yuvraj Medical</title>
+<title>Create Account - Yuvraj Medical & Chemist</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/site_header.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/page_animations.css') }}">
-    <style>
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    font-family:"Segoe UI",Arial,sans-serif;
-    min-height:100vh;
-    background:
-        linear-gradient(135deg,rgba(0,88,130,.92),rgba(13,148,136,.88)),
-        url("/static/images/hero-doctor-clean.png");
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:25px;
-}
-
-.register-wrapper{
-    width:100%;
-    max-width:1050px;
-    display:grid;
-    grid-template-columns:1fr 1.2fr;
-    background:white;
-    border-radius:24px;
-    overflow:hidden;
-    box-shadow:0 30px 80px rgba(0,0,0,.25);
-}
-
-.left-panel{
-    background:linear-gradient(135deg,#0f766e,#0284c7);
-    color:white;
-    padding:50px 40px;
-    position:relative;
-}
-
-.left-panel img{
-    width:84px;
-    height:84px;
-    object-fit:cover;
-    border-radius:18px;
-    margin-bottom:20px;
-    background:white;
-}
-
-.left-panel h1{
-    font-size:42px;
-    margin:0 0 15px;
-    line-height:1.12;
-}
-
-.left-panel p{
-    line-height:1.8;
-    color:#e0f2fe;
-}
-
-.feature{
-    margin-top:16px;
-    background:rgba(255,255,255,.15);
-    padding:14px 18px;
-    border-radius:12px;
-}
-
-.form-panel{
-    padding:45px;
-}
-
-.form-panel h2{
-    margin:0;
-    font-size:34px;
-    color:#0f172a;
-}
-
-.subtitle{
-    color:#64748b;
-    margin:8px 0 25px;
-}
-
-.alert{
-    padding:12px 14px;
-    border-radius:12px;
-    margin-bottom:18px;
-    font-weight:700;
-    line-height:1.5;
-}
-
-.alert.success{
-    background:#ecfdf5;
-    border:1px solid #bbf7d0;
-    color:#166534;
-}
-
-.alert.error{
-    background:#fef2f2;
-    border:1px solid #fecaca;
-    color:#991b1b;
-}
-
-.step-box{
-    display:flex;
-    gap:12px;
-    margin-bottom:25px;
-}
-
-.step{
-    flex:1;
-    padding:12px;
-    border-radius:12px;
-    background:#e0f2fe;
-    color:#0369a1;
-    text-align:center;
-    font-weight:900;
-}
-
-.step.active{
-    background:linear-gradient(135deg,#0ea5e9,#10b981);
-    color:white;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px;
-}
-
-.form-group{
-    margin-bottom:16px;
-}
-
-.form-group label{
-    display:block;
-    font-weight:800;
-    margin-bottom:7px;
-    color:#334155;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    padding:13px 15px;
-    border-radius:12px;
-    border:1px solid #cbd5e1;
-    outline:none;
-    font-size:15px;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    border-color:#0ea5e9;
-    box-shadow:0 0 0 4px rgba(14,165,233,.12);
-}
-
-.full{
-    grid-column:1 / -1;
-}
-
-.phone-control{
-    display:grid;
-    gap:10px;
-}
-
-.phone-entry{
-    display:grid;
-    grid-template-columns:minmax(112px, 130px) minmax(0, 1fr);
-    gap:10px;
-}
-
-.phone-entry select,
-.phone-entry input{
-    min-width:0;
-}
-
-.send-otp{
-    border:none;
-    width:100%;
-    min-height:44px;
-    padding:0 18px;
-    border-radius:12px;
-    background:#0ea5e9;
-    color:white;
-    font-weight:900;
-    cursor:pointer;
-    white-space:normal;
-    line-height:1.25;
-}
-
-.send-otp:disabled{
-    background:#94a3b8;
-    cursor:not-allowed;
-}
-
-.register-btn{
-    width:100%;
-    margin-top:12px;
-    border:none;
-    padding:15px;
-    border-radius:14px;
-    background:linear-gradient(135deg,#0ea5e9,#10b981);
-    color:white;
-    font-size:17px;
-    font-weight:950;
-    cursor:pointer;
-    box-shadow:0 15px 30px rgba(16,185,129,.25);
-}
-
-.staff-fields{
-    display:none;
-}
-
-.staff-fields.show{
-    display:contents;
-}
-
-.login-link{
-    text-align:center;
-    margin-top:18px;
-    color:#64748b;
-}
-
-.login-link a{
-    color:#0284c7;
-    font-weight:900;
-    text-decoration:none;
-}
-
-.public-chatbot-link{
-    position:fixed;
-    top:18px;
-    right:18px;
-    z-index:20;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-height:42px;
-    padding:10px 16px;
-    border:1px solid rgba(255,255,255,.34);
-    border-radius:999px;
-    color:white;
-    background:linear-gradient(135deg,#7f1d4e,#0f766e);
-    font-size:14px;
-    font-weight:900;
-    text-decoration:none;
-    box-shadow:0 14px 32px rgba(15,23,42,.22);
-}
-
-@media(max-width:850px){
-    .register-wrapper{
-        grid-template-columns:1fr;
-    }
-
-    .left-panel{
-        display:none;
-    }
-
-    .form-panel{
-        padding:30px 22px;
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-
-    .full{
-        grid-column:auto;
-    }
-
-    .phone-entry{
-        grid-template-columns:1fr;
-    }
-
-    .send-otp{
-        min-height:44px;
-    }
-}
-</style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}?v=register-20260822-1">
 </head>
 
 <body class="yvm-pro-page yvm-page-register">
-<a class="public-chatbot-link" href="{{ url_for('chatbot') }}">AI Chatbot</a>
+<main class="ym-login-stage ym-register-stage" data-has-server-state="{{ 'true' if message or success or error or otp_sent else 'false' }}">
+    <div class="ym-bg-shade" aria-hidden="true"></div>
+    <div class="ym-medical-grid" aria-hidden="true"></div>
+    <div class="ym-scan-ring ym-scan-ring-one" aria-hidden="true"></div>
+    <div class="ym-scan-ring ym-scan-ring-two" aria-hidden="true"></div>
+    <div class="ym-pulse-line" aria-hidden="true"></div>
 
-<div class="bg-particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-    
-<div class="register-wrapper">
-
-    <div class="left-panel">
-        <img src="/static/images/yuvraj_logo.png" alt="Yuvraj Medical Logo">
-
-        <h1>Join Yuvraj Medical</h1>
-
-        <p>
-            Create your account to order medicines, upload prescriptions,
-            track delivery and manage your healthcare safely.
-        </p>
-
-        <div class="feature">100% Genuine Medicines</div>
-        <div class="feature">Prescription Upload Support</div>
-        <div class="feature">OTP Verification</div>
-        <div class="feature">Fast Local Delivery</div>
+    <div class="ym-white-particles" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
 
-    <div class="form-panel">
-
-        <h2>Create Account</h2>
-        <p class="subtitle">Register with OTP verification</p>
-
-        {% if message %}
-        <div class="alert success">{{ message }}</div>
-        {% endif %}
-
-        {% if success %}
-        <div class="alert success">{{ success }}</div>
-        {% endif %}
-
-        {% if error %}
-        <div class="alert error">{{ error }}</div>
-        {% endif %}
-
-        <div class="step-box">
-            <div class="step active">1. Details</div>
-            <div class="step {% if otp_sent %}active{% endif %}">2. OTP Verify</div>
+    <section class="ym-login-showcase" aria-hidden="true">
+        <span class="ym-showcase-kicker">Yuvraj Medical & Chemist</span>
+        <h2>Start your care account.</h2>
+        <p>Create one secure profile for prescriptions, local delivery, rewards, and pharmacy support.</p>
+        <div class="ym-showcase-stats">
+            <span><strong>OTP</strong> Verified signup</span>
+            <span><strong>Rx</strong> Upload support</span>
+            <span><strong>Fast</strong> Local delivery</span>
         </div>
+    </section>
 
-        <form method="POST" action="/register">
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" name="name" placeholder="Enter full name" value="{{ form.name if form else '' }}" required>
+    <section class="ym-login-panel ym-register-panel" aria-label="Create Yuvraj Medical account">
+        <div class="ym-panel-inner">
+            <div class="ym-brand-lockup">
+                <div class="ym-logo-orbit">
+                    <img class="ym-login-logo" src="{{ url_for('static', filename='images/yuvraj_logo.png') }}" alt="Yuvraj Medical & Chemist">
                 </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" placeholder="Enter email" value="{{ form.email if form else '' }}" required>
+                <div>
+                    <span>Secure Portal</span>
+                    <strong>Yuvraj Medical</strong>
                 </div>
-
-                <div class="form-group">
-                    <label>Phone Number</label>
-                    <div class="phone-control">
-                        <div class="phone-entry">
-                            <select name="country_code" aria-label="Country code" required>
-                                <option value="+91" {% if not form or form.country_code == "+91" %}selected{% endif %}>India +91</option>
-                                <option value="+1" {% if form and form.country_code == "+1" %}selected{% endif %}>USA +1</option>
-                                <option value="+44" {% if form and form.country_code == "+44" %}selected{% endif %}>UK +44</option>
-                                <option value="+971" {% if form and form.country_code == "+971" %}selected{% endif %}>UAE +971</option>
-                                <option value="+61" {% if form and form.country_code == "+61" %}selected{% endif %}>Australia +61</option>
-                                <option value="+65" {% if form and form.country_code == "+65" %}selected{% endif %}>Singapore +65</option>
-                                <option value="+977" {% if form and form.country_code == "+977" %}selected{% endif %}>Nepal +977</option>
-                                <option value="+880" {% if form and form.country_code == "+880" %}selected{% endif %}>Bangladesh +880</option>
-                            </select>
-                            <input type="tel" name="phone_number" placeholder="Enter phone number" value="{{ form.phone_number if form else '' }}" required>
-                        </div>
-                        <button type="submit" name="action" value="send_otp" class="send-otp" id="sendOtpBtn" data-countdown="{{ resend_seconds or 0 }}">Send OTP</button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Enter OTP</label>
-                    <input type="text" name="otp" inputmode="numeric" maxlength="6" placeholder="6 digit OTP">
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Create password" value="{{ form.password if form else '' }}" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Role</label>
-                    <select name="role" id="roleSelect" required>
-                        <option value="customer" {% if not form or form.role == "customer" %}selected{% endif %}>Customer</option>
-                        <option value="staff" {% if form and form.role == "staff" %}selected{% endif %}>Staff</option>
-                    </select>
-                </div>
-
-                <div class="form-group full">
-                    <label>Referral Code</label>
-                    <input type="text" name="referral_code" placeholder="Enter referral code if someone invited you" value="{{ form.referral_code if form else '' }}">
-                </div>
-
-                <div class="form-group full">
-                    <label>Address</label>
-                    <textarea name="address" rows="3" placeholder="Enter delivery address" required>{{ form.address if form else '' }}</textarea>
-                </div>
-
-                <div id="staffFields" class="staff-fields {% if form and form.role == 'staff' %}show{% endif %}">
-                    <div class="form-group">
-                        <label>Age</label>
-                        <input type="number" name="age" placeholder="Enter age" value="{{ form.age if form else '' }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Gender</label>
-                        <input type="text" name="gender" placeholder="Enter gender" value="{{ form.gender if form else '' }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Education</label>
-                        <input type="text" name="education" placeholder="Enter education" value="{{ form.education if form else '' }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Aadhar ID</label>
-                        <input type="text" name="aadhar" placeholder="Enter Aadhar ID" value="{{ form.aadhar if form else '' }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>PAN ID</label>
-                        <input type="text" name="pan" placeholder="Enter PAN ID" value="{{ form.pan if form else '' }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Religion</label>
-                        <input type="text" name="religion" placeholder="Enter religion" value="{{ form.religion if form else '' }}">
-                    </div>
-                </div>
-
             </div>
 
-            <button class="register-btn" type="submit" name="action" value="create_account">
-                Create Account
-            </button>
+            <div class="ym-auth-card ym-register-card">
+                <span class="ym-access-chip">Create account</span>
+                <h1>Join Yuvraj Medical</h1>
+                <p class="ym-subtitle">Register with OTP verification to order medicines, upload prescriptions, and track delivery.</p>
 
-        </form>
+                {% if message %}
+                <div class="alert success">{{ message }}</div>
+                {% endif %}
 
-        <div class="login-link">
-            Already have an account?
-            <a href="/login">Login here</a>
+                {% if success %}
+                <div class="alert success">{{ success }}</div>
+                {% endif %}
+
+                {% if error %}
+                <div class="alert error">{{ error }}</div>
+                {% endif %}
+
+                <div class="ym-register-steps" aria-label="Signup progress">
+                    <span class="active">Details</span>
+                    <span class="{% if otp_sent %}active{% endif %}">OTP Verify</span>
+                </div>
+
+                {% if otp_sent and masked_phone %}
+                <div class="ym-otp-status" role="status">Verification code sent to {{ masked_phone }}</div>
+                {% endif %}
+
+                <form method="POST" action="/register" class="ym-auth-form ym-register-form">
+                    <div class="ym-register-grid">
+                        <div class="ym-field">
+                            <label for="name">Full Name</label>
+                            <div class="ym-input-shell">
+                                <span class="ym-field-icon" aria-hidden="true">+</span>
+                                <input id="name" type="text" name="name" placeholder="Enter full name" value="{{ form.name if form else '' }}" autocomplete="name" required>
+                            </div>
+                        </div>
+
+                        <div class="ym-field">
+                            <label for="email">Email</label>
+                            <div class="ym-input-shell">
+                                <span class="ym-field-icon" aria-hidden="true">@</span>
+                                <input id="email" type="email" name="email" placeholder="Enter email" value="{{ form.email if form else '' }}" autocomplete="email" required>
+                            </div>
+                        </div>
+
+                        <div class="ym-field ym-phone-field">
+                            <label for="phone_number">Phone Number</label>
+                            <div class="ym-phone-control">
+                                <div class="ym-phone-entry">
+                                    <select name="country_code" aria-label="Country code" required>
+                                        <option value="+91" {% if not form or form.country_code == "+91" %}selected{% endif %}>India +91</option>
+                                        <option value="+1" {% if form and form.country_code == "+1" %}selected{% endif %}>USA +1</option>
+                                        <option value="+44" {% if form and form.country_code == "+44" %}selected{% endif %}>UK +44</option>
+                                        <option value="+971" {% if form and form.country_code == "+971" %}selected{% endif %}>UAE +971</option>
+                                        <option value="+61" {% if form and form.country_code == "+61" %}selected{% endif %}>Australia +61</option>
+                                        <option value="+65" {% if form and form.country_code == "+65" %}selected{% endif %}>Singapore +65</option>
+                                        <option value="+977" {% if form and form.country_code == "+977" %}selected{% endif %}>Nepal +977</option>
+                                        <option value="+880" {% if form and form.country_code == "+880" %}selected{% endif %}>Bangladesh +880</option>
+                                    </select>
+                                    <input id="phone_number" type="tel" name="phone_number" placeholder="Enter phone number" value="{{ form.phone_number if form else '' }}" autocomplete="tel" required>
+                                </div>
+                                <button type="submit" name="action" value="send_otp" class="ym-send-otp" id="sendOtpBtn" data-countdown="{{ resend_seconds or 0 }}">Send OTP</button>
+                            </div>
+                        </div>
+
+                        <div class="ym-field">
+                            <label for="otp">Enter OTP</label>
+                            <div class="ym-input-shell">
+                                <span class="ym-field-icon" aria-hidden="true">••</span>
+                                <input id="otp" type="text" name="otp" inputmode="numeric" maxlength="6" placeholder="6 digit OTP" autocomplete="one-time-code">
+                            </div>
+                        </div>
+
+                        <div class="ym-field">
+                            <label for="password">Password</label>
+                            <div class="ym-input-shell">
+                                <span class="ym-field-icon" aria-hidden="true">+</span>
+                                <input id="password" type="password" name="password" placeholder="{% if otp_sent %}Already captured for verification{% else %}Create password{% endif %}" value="{{ form.password if form and form.password else '' }}" autocomplete="new-password" {% if not otp_sent %}required{% endif %}>
+                            </div>
+                        </div>
+
+                        <div class="ym-field">
+                            <label for="roleSelect">Role</label>
+                            <div class="ym-input-shell ym-select-shell">
+                                <span class="ym-field-icon" aria-hidden="true">+</span>
+                                <select id="roleSelect" name="role" required>
+                                    <option value="customer" {% if not form or form.role == "customer" %}selected{% endif %}>Customer</option>
+                                    <option value="staff" {% if form and form.role == "staff" %}selected{% endif %}>Staff</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="ym-field full">
+                            <label for="referral_code">Referral Code</label>
+                            <div class="ym-input-shell">
+                                <span class="ym-field-icon" aria-hidden="true">#</span>
+                                <input id="referral_code" type="text" name="referral_code" placeholder="Enter referral code if someone invited you" value="{{ form.referral_code if form else '' }}">
+                            </div>
+                        </div>
+
+                        <div class="ym-field full">
+                            <label for="address">Address</label>
+                            <div class="ym-input-shell ym-textarea-shell">
+                                <span class="ym-field-icon" aria-hidden="true">+</span>
+                                <textarea id="address" name="address" rows="3" placeholder="Enter delivery address" required>{{ form.address if form else '' }}</textarea>
+                            </div>
+                        </div>
+
+                        <div id="staffFields" class="ym-staff-fields {% if form and form.role == 'staff' %}show{% endif %}">
+                            <div class="ym-field">
+                                <label for="age">Age</label>
+                                <div class="ym-input-shell">
+                                    <span class="ym-field-icon" aria-hidden="true">+</span>
+                                    <input id="age" type="number" name="age" placeholder="Enter age" value="{{ form.age if form else '' }}">
+                                </div>
+                            </div>
+
+                            <div class="ym-field">
+                                <label for="gender">Gender</label>
+                                <div class="ym-input-shell">
+                                    <span class="ym-field-icon" aria-hidden="true">+</span>
+                                    <input id="gender" type="text" name="gender" placeholder="Enter gender" value="{{ form.gender if form else '' }}">
+                                </div>
+                            </div>
+
+                            <div class="ym-field">
+                                <label for="education">Education</label>
+                                <div class="ym-input-shell">
+                                    <span class="ym-field-icon" aria-hidden="true">+</span>
+                                    <input id="education" type="text" name="education" placeholder="Enter education" value="{{ form.education if form else '' }}">
+                                </div>
+                            </div>
+
+                            <div class="ym-field">
+                                <label for="aadhar">Aadhar ID</label>
+                                <div class="ym-input-shell">
+                                    <span class="ym-field-icon" aria-hidden="true">#</span>
+                                    <input id="aadhar" type="text" name="aadhar" placeholder="Enter Aadhar ID" value="{{ form.aadhar if form else '' }}">
+                                </div>
+                            </div>
+
+                            <div class="ym-field">
+                                <label for="pan">PAN ID</label>
+                                <div class="ym-input-shell">
+                                    <span class="ym-field-icon" aria-hidden="true">#</span>
+                                    <input id="pan" type="text" name="pan" placeholder="Enter PAN ID" value="{{ form.pan if form else '' }}">
+                                </div>
+                            </div>
+
+                            <div class="ym-field">
+                                <label for="religion">Religion</label>
+                                <div class="ym-input-shell">
+                                    <span class="ym-field-icon" aria-hidden="true">+</span>
+                                    <input id="religion" type="text" name="religion" placeholder="Enter religion" value="{{ form.religion if form else '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="ym-login-btn" type="submit" name="action" value="create_account">Create Account</button>
+                </form>
+
+                <p class="ym-links"><span>Already have an account?</span> <a href="/login">Login here</a></p>
+                <p class="ym-links"><span>Need help?</span> <a href="{{ url_for('chatbot') }}">Open AI Chatbot</a></p>
+            </div>
         </div>
-        <div class="login-link">
-            Need help?
-            <a href="{{ url_for('chatbot') }}">Open AI Chatbot</a>
-        </div>
-
-    </div>
-
-</div>
+    </section>
+</main>
 
 <script>
 const roleSelect = document.getElementById("roleSelect");
@@ -463,7 +230,9 @@ const sendOtpBtn = document.getElementById("sendOtpBtn");
 const otpCountdownKey = "registerOtpCountdownEndsAt";
 
 function toggleStaffFields(){
-    staffFields.classList.toggle("show", roleSelect.value === "staff");
+    if(staffFields && roleSelect){
+        staffFields.classList.toggle("show", roleSelect.value === "staff");
+    }
 }
 
 function startOtpCountdown(seconds){
@@ -473,6 +242,10 @@ function startOtpCountdown(seconds){
 }
 
 function renderOtpCountdown(){
+    if(!sendOtpBtn){
+        return;
+    }
+
     const endsAt = Number(sessionStorage.getItem(otpCountdownKey) || 0);
     const remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
 
@@ -488,24 +261,29 @@ function renderOtpCountdown(){
     sendOtpBtn.textContent = sendOtpBtn.dataset.wasSent === "true" ? "Resend OTP" : "Send OTP";
 }
 
-roleSelect.addEventListener("change", toggleStaffFields);
-sendOtpBtn.addEventListener("click", function(){
-    sendOtpBtn.dataset.wasSent = "true";
-    const endsAt = Date.now() + 10000;
-    sessionStorage.setItem(otpCountdownKey, String(endsAt));
-    sendOtpBtn.textContent = "Resend OTP in 10s";
-    setTimeout(renderOtpCountdown, 50);
-});
+if(roleSelect){
+    roleSelect.addEventListener("change", toggleStaffFields);
+}
+
+if(sendOtpBtn){
+    sendOtpBtn.addEventListener("click", function(){
+        sendOtpBtn.dataset.wasSent = "true";
+        const endsAt = Date.now() + 10000;
+        sessionStorage.setItem(otpCountdownKey, String(endsAt));
+        sendOtpBtn.textContent = "Resend OTP in 10s";
+        setTimeout(renderOtpCountdown, 50);
+    });
+}
+
 toggleStaffFields();
 
-if(Number(sendOtpBtn.dataset.countdown || 0) > 0){
+if(sendOtpBtn && Number(sendOtpBtn.dataset.countdown || 0) > 0){
     sendOtpBtn.dataset.wasSent = "true";
     startOtpCountdown(Number(sendOtpBtn.dataset.countdown));
 }else{
     renderOtpCountdown();
 }
 </script>
-
-<script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 </html>
