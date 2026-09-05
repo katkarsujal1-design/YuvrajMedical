@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="2220" viewBox="0 0 3500 2220">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1750.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="1750.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Registration &amp; OTP Verification</text>
+<rect x="65.0" y="220" width="1123.3333333333333" height="1895" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1123.3333333333333" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="626.6666666666666" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Customer</text>
+<rect x="1188.3333333333333" y="220" width="1123.3333333333333" height="1895" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="1188.3333333333333" y="220" width="1123.3333333333333" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="1750.0" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<rect x="2311.6666666666665" y="220" width="1123.3333333333335" height="1895" rx="0" fill="#faf5ed" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="2311.6666666666665" y="220" width="1123.3333333333335" height="62" rx="0" fill="#faf5ed" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2873.333333333333" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">OTP / SMS Service</text>
+<g class="flow" data-from="select" data-to="form__merge"><title>Control flow</title>
+<polyline points="626.0,642 626.0,683.5 251.0,683.5 251.0,725" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.0,642 626.0,683.5 251.0,683.5 251.0,725" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="251.0,725 245.0,711.0 257.0,711.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="form" data-to="validate"><title>Control flow</title>
+<polyline points="951.0,740.0 1425.0,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="951.0,740.0 1425.0,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425.0,740.0 1411.0,746.0 1411.0,734.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="validate" data-to="valid"><title>Control flow</title>
+<polyline points="1750.0,777.0 1749.5,815.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,777.0 1749.5,815.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1749.5,815.0 1743.6847139053339,800.9222712187945 1755.6836752590343,801.080152289238" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="valid" data-to="error"><title>No</title>
+<polyline points="1617,875.0 1355,875.0 1355,1010.0 1425,1010.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,875.0 1355,875.0 1355,1010.0 1425,1010.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425,1010.0 1411.0,1016.0 1411.0,1004.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="error" data-to="form__merge"><title>Control flow</title>
+<polyline points="1425,1020 260,1020 260,755" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1425,1020 260,1020 260,755" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="260,755 266.0,769.0 254.0,769.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="valid" data-to="request__merge"><title>Yes</title>
+<polyline points="1617,880 1560,880 1560,920 1380,920 1380,1130" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,880 1560,880 1560,920 1380,920 1380,1130" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1380,1130 1374.0,1116.0 1386.0,1116.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="request" data-to="send"><title>Control flow</title>
+<polyline points="2075.0,1145.0 2548.0,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2075.0,1145.0 2548.0,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2548.0,1145.0 2534.0,1151.0 2534.0,1139.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="send" data-to="enter__merge"><title>Control flow</title>
+<polyline points="2873.0,1182 2873.0,1223.5 251.0,1223.5 251.0,1265" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2873.0,1182 2873.0,1223.5 251.0,1223.5 251.0,1265" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="251.0,1265 245.0,1251.0 257.0,1251.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="enter" data-to="verify"><title>Control flow</title>
+<polyline points="951.0,1280.0 1425.0,1280.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="951.0,1280.0 1425.0,1280.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425.0,1280.0 1411.0,1286.0 1411.0,1274.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="verify" data-to="ok"><title>Control flow</title>
+<polyline points="1750.0,1317.0 1749.5,1355.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1317.0 1749.5,1355.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1749.5,1355.0 1743.6847139053339,1340.9222712187943 1755.6836752590343,1341.080152289238" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="ok" data-to="otperror"><title>No</title>
+<polyline points="1617,1415.0 1355,1415.0 1355,1550.0 1425,1550.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,1415.0 1355,1415.0 1355,1550.0 1425,1550.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425,1550.0 1411.0,1556.0 1411.0,1544.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="otperror" data-to="choice"><title>Control flow</title>
+<polyline points="1425.0,1550.0 759.0,1550.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1425.0,1550.0 759.0,1550.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="759.0,1550.0 773.0,1544.0 773.0,1556.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choice" data-to="enter__merge"><title>Retry</title>
+<polyline points="494,1560 440,1560 440,1340 260,1340 260,1295" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="494,1560 440,1560 440,1340 260,1340 260,1295" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="260,1295 266.0,1309.0 254.0,1309.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choice" data-to="request__merge"><title>Resend</title>
+<polyline points="759,1560 1320,1560 1320,1140 1360,1140" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="759,1560 1320,1560 1320,1140 1360,1140" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1360,1140 1346.0,1146.0 1346.0,1134.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="ok" data-to="create"><title>Yes</title>
+<polyline points="1882,1420 2120,1420 2120,1660 2075,1660" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1882,1420 2120,1420 2120,1660 2075,1660" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2075,1660 2089.0,1654.0 2089.0,1666.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="create" data-to="success"><title>Control flow</title>
+<polyline points="1750.0,1722.0 1750.0,1783.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1722.0 1750.0,1783.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,1783.0 1744.0,1769.0 1756.0,1769.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="success" data-to="login__merge"><title>Control flow</title>
+<polyline points="1425,1840 1380,1840 1380,1880 260,1880 260,1835" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1425,1840 1380,1840 1380,1880 260,1880 260,1835" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="260,1835 266.0,1849.0 254.0,1849.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="login" data-to="e"><title>Control flow</title>
+<polyline points="626.0,1857.0 626.0,1936.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.0,1857.0 626.0,1936.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="626.0,1936.0 620.0,1922.0 632.0,1922.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="s" data-to="registered"><title>Control flow</title>
+<polyline points="626.0,349.0 626.5,410.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.0,349.0 626.5,410.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="626.5,410.0 620.3854513049582,396.0496489558161 632.3850482078285,395.9512916041532" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="registered" data-to="select"><title>No</title>
+<polyline points="494,470.0 231,470.0 231,605.0 301,605.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="494,470.0 231,470.0 231,605.0 301,605.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="301,605.0 287.0,611.0 287.0,599.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="registered" data-to="login__merge"><title>Yes</title>
+<polyline points="494,480 440,480 440,520 180,520 180,1820 236,1820" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="494,480 440,480 440,520 180,520 180,1820 236,1820" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="236,1820 222.0,1826.0 222.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="form__merge" data-to="form"><title>Control flow</title>
+<polyline points="266.0,740.0 301.0,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="266.0,740.0 301.0,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="301.0,740.0 287.0,746.0 287.0,734.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="request__merge" data-to="request"><title>Control flow</title>
+<polyline points="1390.0,1145.0 1425.0,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1390.0,1145.0 1425.0,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425.0,1145.0 1411.0,1151.0 1411.0,1139.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="enter__merge" data-to="enter"><title>Control flow</title>
+<polyline points="266.0,1280.0 301.0,1280.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="266.0,1280.0 301.0,1280.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="301.0,1280.0 287.0,1286.0 287.0,1274.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="login__merge" data-to="login"><title>Control flow</title>
+<polyline points="266.0,1820.0 301.0,1820.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="266.0,1820.0 301.0,1820.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="301.0,1820.0 287.0,1826.0 287.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<rect x="1399.9921875" y="859.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1420.5" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="1320.640625" y="956.5" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1344.3203125" y="972.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="1399.9921875" y="1399.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1420.5" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="366.984375" y="1379.0" width="61.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="397.4921875" y="1395.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Retry</text>
+<rect x="859.21875" y="1544.0" width="80.0625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="899.25" y="1560.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Resend</text>
+<rect x="2060.640625" y="1464.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2084.3203125" y="1480.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="276.2421875" y="454.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="296.75" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="120.640625" y="829.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="144.3203125" y="845.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<g class="node" data-id="s" data-kind="start" data-lane="C"><title>start</title>
+<circle cx="626.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="select" data-kind="action" data-lane="C"><title>Select Register</title>
+<rect x="301" y="568" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Register</text>
+</g>
+<g class="node" data-id="form" data-kind="action" data-lane="C"><title>Enter name, email, phone, address and password</title>
+<rect x="301" y="697" width="650" height="86" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="724.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Enter name, email, phone, address and</text>
+<text x="626.0" y="756.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">password</text>
+</g>
+<g class="node" data-id="validate" data-kind="action" data-lane="S"><title>Validate registration details</title>
+<rect x="1425" y="703" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate registration details</text>
+</g>
+<g class="node" data-id="valid" data-kind="decision" data-lane="S"><title>Details valid?</title>
+<polygon points="1749.5,815 1882,875.0 1749.5,935 1617,875.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1749.5" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Details valid?</text>
+</g>
+<g class="node" data-id="error" data-kind="action" data-lane="S"><title>Show validation error</title>
+<rect x="1425" y="973" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1010.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Show validation error</text>
+</g>
+<g class="node" data-id="request" data-kind="action" data-lane="S"><title>Request OTP</title>
+<rect x="1425" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Request OTP</text>
+</g>
+<g class="node" data-id="send" data-kind="action" data-lane="O"><title>Send OTP</title>
+<rect x="2548" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2873.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Send OTP</text>
+</g>
+<g class="node" data-id="enter" data-kind="action" data-lane="C"><title>Enter OTP</title>
+<rect x="301" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Enter OTP</text>
+</g>
+<g class="node" data-id="verify" data-kind="action" data-lane="S"><title>Verify OTP</title>
+<rect x="1425" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Verify OTP</text>
+</g>
+<g class="node" data-id="ok" data-kind="decision" data-lane="S"><title>OTP valid?</title>
+<polygon points="1749.5,1355 1882,1415.0 1749.5,1475 1617,1415.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1749.5" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">OTP valid?</text>
+</g>
+<g class="node" data-id="otperror" data-kind="action" data-lane="S"><title>Show OTP error</title>
+<rect x="1425" y="1513" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1550.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Show OTP error</text>
+</g>
+<g class="node" data-id="choice" data-kind="decision" data-lane="C"><title>Retry or resend?</title>
+<polygon points="626.5,1490 759,1550.0 626.5,1610 494,1550.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="626.5" y="1550.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Retry or resend?</text>
+</g>
+<g class="node" data-id="create" data-kind="action" data-lane="S"><title>Create customer account</title>
+<rect x="1425" y="1648" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1685.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Create customer account</text>
+</g>
+<g class="node" data-id="success" data-kind="action" data-lane="S"><title>Display Registration Successful</title>
+<rect x="1425" y="1783" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display Registration Successful</text>
+</g>
+<g class="node" data-id="login" data-kind="action" data-lane="C"><title>Proceed to Login</title>
+<rect x="301" y="1783" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Proceed to Login</text>
+</g>
+<g class="node" data-id="e" data-kind="end" data-lane="C"><title>end</title>
+<circle cx="626.0" cy="1955.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="626.0" cy="1955.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="626.0" y="1994.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b"></text>
+</g>
+<g class="node" data-id="registered" data-kind="decision" data-lane="C"><title>Already registered?</title>
+<polygon points="626.5,410 759,470.0 626.5,530 494,470.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="626.5" y="456.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Already</text>
+<text x="626.5" y="483.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">registered?</text>
+</g>
+<g class="node" data-id="form__merge" data-kind="merge" data-lane="C"><title>merge</title>
+<polygon points="251.0,725 266,740.0 251.0,755 236,740.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="node" data-id="request__merge" data-kind="merge" data-lane="S"><title>merge</title>
+<polygon points="1375.0,1130 1390,1145.0 1375.0,1160 1360,1145.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="node" data-id="enter__merge" data-kind="merge" data-lane="C"><title>merge</title>
+<polygon points="251.0,1265 266,1280.0 251.0,1295 236,1280.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="node" data-id="login__merge" data-kind="merge" data-lane="C"><title>merge</title>
+<polygon points="251.0,1805 266,1820.0 251.0,1835 236,1820.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<text x="1750.0" y="2162.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+</svg>

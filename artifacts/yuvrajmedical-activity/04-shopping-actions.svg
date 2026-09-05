@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4000" height="2760" viewBox="0 0 4000 2760">
+<rect width="100%" height="100%" fill="white"/>
+<text x="2000.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="2000.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Shopping Actions</text>
+<rect x="65.0" y="220" width="1935.0" height="2435" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1935.0" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="1032.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Customer</text>
+<rect x="2000.0" y="220" width="1935.0" height="2435" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="2000.0" y="220" width="1935.0" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2967.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<g class="flow" data-from="s" data-to="choose"><title>Control flow</title>
+<polyline points="1032.0,349.0 1032.5,410.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1032.0,349.0 1032.5,410.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1032.5,410.0 1026.3854513049582,396.0496489558161 1038.3850482078283,395.9512916041532" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="add"><title>Add to Cart</title>
+<polyline points="1165,470.0 1427,470.0 1427,605.0 1357,605.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1165,470.0 1427,470.0 1427,605.0 1357,605.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1357,605.0 1371.0,599.0 1371.0,611.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="wish"><title>Wishlist</title>
+<polyline points="900,480 660,480 660,1120 707,1120" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="900,480 660,480 660,1120 707,1120" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="707,1120 693.0,1126.0 693.0,1114.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="save"><title>Save for Later</title>
+<polyline points="900,480 860,480 860,460 540,460 540,1260 707,1260" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="900,480 860,480 860,460 540,460 540,1260 707,1260" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="707,1260 693.0,1266.0 693.0,1254.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="subscribe"><title>Subscribe</title>
+<polyline points="900,480 860,480 860,440 360,440 360,1660 707,1660" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="900,480 860,480 860,440 360,440 360,1660 707,1660" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="707,1660 693.0,1666.0 693.0,1654.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="add" data-to="stock"><title>Control flow</title>
+<polyline points="1357.0,605.0 2642.0,605.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1357.0,605.0 2642.0,605.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2642.0,605.0 2628.0,611.0 2628.0,599.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="stock" data-to="instock"><title>Control flow</title>
+<polyline points="2967.0,642.0 2967.5,680.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2967.0,642.0 2967.5,680.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2967.5,680.0 2961.316324740966,666.080152289238 2973.315286094666,665.9222712187945" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="instock" data-to="out"><title>No</title>
+<polyline points="2835,740.0 2572,740.0 2572,875.0 2642,875.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2835,740.0 2572,740.0 2572,875.0 2642,875.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2642,875.0 2628.0,881.0 2628.0,869.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="out" data-to="medicine__merge"><title>Control flow</title>
+<polyline points="2642,900 560,900 560,2420 660,2420 660,2375" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2642,900 560,900 560,2420 660,2420 660,2375" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="660,2375 666.0,2389.0 654.0,2389.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="instock" data-to="addcart"><title>Yes</title>
+<polyline points="3100,740 3340,740 3340,1000 3292,1000" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3100,740 3340,740 3340,1000 3292,1000" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3292,1000 3306.0,994.0 3306.0,1006.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="addcart" data-to="medicine__merge"><title>Control flow</title>
+<polyline points="2642,1020 580,1020 580,2360 642,2360" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2642,1020 580,1020 580,2360 642,2360" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="642,2360 628.0,2366.0 628.0,2354.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="wish" data-to="wishlist"><title>Control flow</title>
+<polyline points="1357.0,1145.0 2642.0,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1357.0,1145.0 2642.0,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2642.0,1145.0 2628.0,1151.0 2628.0,1139.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="wishlist" data-to="medicine__merge"><title>Control flow</title>
+<polyline points="2642,1160 1380,1160 1380,2420 660,2420 660,2375" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2642,1160 1380,1160 1380,2420 660,2420 660,2375" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="660,2375 666.0,2389.0 654.0,2389.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="save" data-to="incart"><title>Control flow</title>
+<polyline points="1357.0,1280.0 2835.0,1280.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1357.0,1280.0 2835.0,1280.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2835.0,1280.0 2821.0,1286.0 2821.0,1274.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="incart" data-to="notcart"><title>No</title>
+<polyline points="2835,1280.0 2572,1280.0 2572,1415.0 2642,1415.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2835,1280.0 2572,1280.0 2572,1415.0 2642,1415.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2642,1415.0 2628.0,1421.0 2628.0,1409.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="notcart" data-to="medicine__merge"><title>Control flow</title>
+<polyline points="2642,1440 600,1440 600,2360 642,2360" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2642,1440 600,1440 600,2360 642,2360" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="642,2360 628.0,2366.0 628.0,2354.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="incart" data-to="saved"><title>Yes</title>
+<polyline points="3100,1280 3340,1280 3340,1540 3292,1540" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3100,1280 3340,1280 3340,1540 3292,1540" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3292,1540 3306.0,1534.0 3306.0,1546.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="saved" data-to="medicine__merge"><title>Control flow</title>
+<polyline points="2642,1560 2220,1560 2220,2280 660,2280 660,2345" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2642,1560 2220,1560 2220,2280 660,2280 660,2345" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="660,2345 654.0,2331.0 666.0,2331.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="subscribe" data-to="schedule__merge"><title>Control flow</title>
+<polyline points="1032.0,1722 1032.0,1763.5 657.0,1763.5 657.0,1805" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1032.0,1722 1032.0,1763.5 657.0,1763.5 657.0,1805" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="657.0,1805 651.0,1791.0 663.0,1791.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="schedule" data-to="validate"><title>Control flow</title>
+<polyline points="1357.0,1820.0 2642.0,1820.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1357.0,1820.0 2642.0,1820.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2642.0,1820.0 2628.0,1826.0 2628.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="validate" data-to="valid"><title>Control flow</title>
+<polyline points="2967.0,1857.0 2967.5,1895.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2967.0,1857.0 2967.5,1895.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2967.5,1895.0 2961.316324740966,1881.080152289238 2973.315286094666,1880.9222712187943" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="valid" data-to="suberror"><title>No</title>
+<polyline points="2835,1955.0 2572,1955.0 2572,2090.0 2642,2090.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2835,1955.0 2572,1955.0 2572,2090.0 2642,2090.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2642,2090.0 2628.0,2096.0 2628.0,2084.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="suberror" data-to="schedule__merge"><title>Control flow</title>
+<polyline points="2642,2080 660,2080 660,1835" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2642,2080 660,2080 660,1835" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="660,1835 666.0,1849.0 654.0,1849.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="valid" data-to="create"><title>Yes</title>
+<polyline points="3100,1960 3340,1960 3340,2200 3292,2200" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3100,1960 3340,1960 3340,2200 3292,2200" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3292,2200 3306.0,2194.0 3306.0,2206.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="create" data-to="medicine__merge"><title>Control flow</title>
+<polyline points="2967.0,2268 2967.0,2306.5 657.0,2306.5 657.0,2345" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2967.0,2268 2967.0,2306.5 657.0,2306.5 657.0,2345" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="657.0,2345 651.0,2331.0 663.0,2331.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="medicine" data-to="end"><title>Control flow</title>
+<polyline points="1032.0,2397.0 1032.0,2476.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1032.0,2397.0 1032.0,2476.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1032.0,2476.0 1026.0,2462.0 1038.0,2462.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="schedule__merge" data-to="schedule"><title>Control flow</title>
+<polyline points="672.0,1820.0 707.0,1820.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="672.0,1820.0 707.0,1820.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="707.0,1820.0 693.0,1826.0 693.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="medicine__merge" data-to="medicine"><title>Control flow</title>
+<polyline points="672.0,2360.0 707.0,2360.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="672.0,2360.0 707.0,2360.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="707.0,2360.0 693.0,2366.0 693.0,2354.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<rect x="1175.96875" y="454.0" width="109.0625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1230.5" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Add to Cart</text>
+<rect x="568.0" y="624.0" width="80.0" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="608.0" y="640.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Wishlist</text>
+<rect x="396.90625" y="644.0" width="131.09375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="462.453125" y="660.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Save for Later</text>
+<rect x="249.9375" y="729.0" width="98.0625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="298.96875" y="745.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Subscribe</text>
+<rect x="2617.2421875" y="724.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2637.75" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="3280.640625" y="789.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="3304.3203125" y="805.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="2617.2421875" y="1264.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2637.75" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="3280.640625" y="1329.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="3304.3203125" y="1345.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="2617.2421875" y="1939.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2637.75" y="1955.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="3136.3203125" y="1944.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="3160.0" y="1960.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<g class="node" data-id="s" data-kind="start" data-lane="C"><title>start</title>
+<circle cx="1032.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="choose" data-kind="decision" data-lane="C"><title>Choose action</title>
+<polygon points="1032.5,410 1165,470.0 1032.5,530 900,470.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1032.5" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Choose action</text>
+</g>
+<g class="node" data-id="add" data-kind="action" data-lane="C"><title>Select Add to Cart</title>
+<rect x="707" y="568" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1032.0" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Add to Cart</text>
+</g>
+<g class="node" data-id="stock" data-kind="action" data-lane="S"><title>Check stock availability</title>
+<rect x="2642" y="568" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Check stock availability</text>
+</g>
+<g class="node" data-id="instock" data-kind="decision" data-lane="S"><title>In stock?</title>
+<polygon points="2967.5,680 3100,740.0 2967.5,800 2835,740.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="2967.5" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">In stock?</text>
+</g>
+<g class="node" data-id="out" data-kind="action" data-lane="S"><title>Display Out of Stock</title>
+<rect x="2642" y="838" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display Out of Stock</text>
+</g>
+<g class="node" data-id="addcart" data-kind="action" data-lane="S"><title>Add medicine to cart; display Cart Updated</title>
+<rect x="2642" y="973" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="1010.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Add medicine to cart; display Cart Updated</text>
+</g>
+<g class="node" data-id="wish" data-kind="action" data-lane="C"><title>Select Add to Wishlist</title>
+<rect x="707" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1032.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Add to Wishlist</text>
+</g>
+<g class="node" data-id="wishlist" data-kind="action" data-lane="S"><title>Add medicine; display Wishlist Updated</title>
+<rect x="2642" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Add medicine; display Wishlist Updated</text>
+</g>
+<g class="node" data-id="save" data-kind="action" data-lane="C"><title>Select Save for Later</title>
+<rect x="707" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1032.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Save for Later</text>
+</g>
+<g class="node" data-id="incart" data-kind="decision" data-lane="S"><title>Item already in cart?</title>
+<polygon points="2967.5,1220 3100,1280.0 2967.5,1340 2835,1280.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="2967.5" y="1266.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Item already in</text>
+<text x="2967.5" y="1293.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">cart?</text>
+</g>
+<g class="node" data-id="notcart" data-kind="action" data-lane="S"><title>Explain item must be in cart</title>
+<rect x="2642" y="1378" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Explain item must be in cart</text>
+</g>
+<g class="node" data-id="saved" data-kind="action" data-lane="S"><title>Move cart item to Saved for Later; confirm</title>
+<rect x="2642" y="1513" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="1550.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Move cart item to Saved for Later; confirm</text>
+</g>
+<g class="node" data-id="subscribe" data-kind="action" data-lane="C"><title>Select Subscribe</title>
+<rect x="707" y="1648" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1032.0" y="1685.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Subscribe</text>
+</g>
+<g class="node" data-id="schedule" data-kind="action" data-lane="C"><title>Choose frequency, quantity and start date</title>
+<rect x="707" y="1783" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1032.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Choose frequency, quantity and start date</text>
+</g>
+<g class="node" data-id="validate" data-kind="action" data-lane="S"><title>Validate subscription</title>
+<rect x="2642" y="1783" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate subscription</text>
+</g>
+<g class="node" data-id="valid" data-kind="decision" data-lane="S"><title>Subscription valid?</title>
+<polygon points="2967.5,1895 3100,1955.0 2967.5,2015 2835,1955.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="2967.5" y="1941.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Subscription</text>
+<text x="2967.5" y="1968.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">valid?</text>
+</g>
+<g class="node" data-id="suberror" data-kind="action" data-lane="S"><title>Display validation error</title>
+<rect x="2642" y="2053" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="2090.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display validation error</text>
+</g>
+<g class="node" data-id="create" data-kind="action" data-lane="S"><title>Create subscription; display Subscription Created</title>
+<rect x="2642" y="2182" width="650" height="86" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2967.0" y="2209.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Create subscription; display Subscription</text>
+<text x="2967.0" y="2241.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Created</text>
+</g>
+<g class="node" data-id="medicine" data-kind="action" data-lane="C"><title>Return to medicine page</title>
+<rect x="707" y="2323" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1032.0" y="2360.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Return to medicine page</text>
+</g>
+<g class="node" data-id="end" data-kind="end" data-lane="C"><title>end</title>
+<circle cx="1032.0" cy="2495.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="1032.0" cy="2495.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="1032.0" y="2534.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b"></text>
+</g>
+<g class="node" data-id="schedule__merge" data-kind="merge" data-lane="C"><title>merge</title>
+<polygon points="657.0,1805 672,1820.0 657.0,1835 642,1820.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="node" data-id="medicine__merge" data-kind="merge" data-lane="C"><title>merge</title>
+<polygon points="657.0,2345 672,2360.0 657.0,2375 642,2360.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<text x="2000.0" y="2702.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+</svg>

@@ -27,6 +27,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 from urllib.parse import quote
+from google.genai import errors as genai_errors
 from services.sms_service import (
     SmsServiceError,
     mask_phone,
@@ -994,6 +995,14 @@ OTP_RESEND_SECONDS = 45
 SMS_OTP_EXPIRY_MINUTES = 5
 SMS_OTP_MAX_ATTEMPTS = 5
 SMS_OTP_MAX_RESENDS = 3
+
+
+def otp_delivery_message(masked_phone, resent=False):
+    action = "resent" if resent else "sent"
+    return (
+        f"CMS OTP verification has been {action} to {masked_phone}. "
+        "Please answer the verification call or check SMS, then enter the 6-digit code."
+    )
 
 
 def ensure_auth_security_schema():
@@ -2866,8 +2875,9 @@ Customer message:
 Respond as the Yuvraj Medical assistant.
 """
 
+        gemini_model = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip() or "gemini-3.6-flash"
         response = get_gemini_client().models.generate_content(
-            model="gemini-3.1-flash-lite",
+            model=gemini_model,
             contents=complete_prompt
         )
 
@@ -2882,6 +2892,25 @@ Respond as the Yuvraj Medical assistant.
             "success": True,
             "reply": reply
         })
+
+    except genai_errors.ClientError as error:
+        error_text = str(error)
+        app.logger.exception("Gemini chatbot client error: %s", error)
+        if getattr(error, "code", None) in {401, 403} or "UNAUTHENTICATED" in error_text:
+            return flask.jsonify({
+                "success": False,
+                "error": (
+                    "AI assistant is not connected because the Gemini API key is invalid "
+                    "or not authorized. Please update GEMINI_API_KEY and try again."
+                )
+            }), 503
+        return flask.jsonify({
+            "success": False,
+            "error": (
+                "The AI assistant could not reach Gemini right now. "
+                "Please try again later."
+            )
+        }), 503
 
     except Exception as error:
         app.logger.exception("Gemini chatbot error: %s", error)
@@ -3048,7 +3077,7 @@ def login():
                         return render_login(error=f"2FA OTP could not be sent. {sms_message}")
                     return render_login(
                         show_2fa=True,
-                        message=f"2FA code sent to {mask_phone(user.get('phone'))}."
+                        message=otp_delivery_message(mask_phone(user.get("phone")))
                     )
 
                 cursor.close()
@@ -3144,7 +3173,7 @@ def two_factor_setup():
     )
     if not sms_ok:
         return render_login(error=f"2FA setup OTP could not be sent. {sms_message}")
-    return render_login(message=f"Enter the setup code sent to {mask_phone(user.get('phone'))}.", show_2fa_setup=True)
+    return render_login(message=otp_delivery_message(mask_phone(user.get("phone"))), show_2fa_setup=True)
 
 
 @app.route("/two_factor/enable", methods=["POST"])
@@ -3254,7 +3283,7 @@ def forgot_password():
         return flask.render_template(
             "forgot_password.html",
             step="verify",
-            message=f"OTP sent to {mask_phone(normalized_phone)}.",
+            message=otp_delivery_message(mask_phone(normalized_phone)),
             masked_phone=mask_phone(normalized_phone),
             resend_seconds=resend_seconds,
             form=form,
@@ -3277,7 +3306,7 @@ def forgot_password():
         return flask.render_template(
             "forgot_password.html",
             step="verify",
-            message=f"OTP resent to {mask_phone(phone)}." if ok else None,
+            message=otp_delivery_message(mask_phone(phone), resent=True) if ok else None,
             error=None if ok else message,
             masked_phone=mask_phone(phone),
             resend_seconds=resend_seconds,
@@ -3441,7 +3470,7 @@ def register():
                 )
                 return flask.render_template(
                     "register.html",
-                    message=f"OTP sent to {mask_phone(form_data['phone'])}. Please enter it below." if sms_sent else None,
+                    message=otp_delivery_message(mask_phone(form_data["phone"])) if sms_sent else None,
                     error=None if sms_sent else f"OTP could not be sent. {sms_message}",
                     otp_sent=True,
                     resend_seconds=resend_seconds,
@@ -3894,7 +3923,7 @@ def profile_manage(section):
                         str(user_id),
                         payload={"user_id": user_id, "phone": user.get("phone")},
                     )
-                    message = f"OTP sent to {mask_phone(user.get('phone'))}."
+                    message = otp_delivery_message(mask_phone(user.get("phone")))
                     if not sms_sent:
                         error = sms_message or "Could not send OTP."
                         message = None

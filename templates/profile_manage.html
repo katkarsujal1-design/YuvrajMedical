@@ -112,6 +112,49 @@
             box-shadow:0 0 0 4px rgba(15,118,110,.12);
             background:white;
         }
+        label.has-password-toggle{
+            position:relative;
+        }
+        label.has-password-toggle input{
+            padding-right:48px;
+        }
+        .ym-password-toggle{
+            position:absolute;
+            right:7px;
+            bottom:7px;
+            width:36px;
+            height:36px;
+            display:grid;
+            place-items:center;
+            border:0;
+            border-radius:10px;
+            color:#075f72;
+            background:rgba(14,165,233,.10);
+            cursor:pointer;
+            box-shadow:none;
+        }
+        .ym-password-toggle:hover,
+        .ym-password-toggle:focus-visible{
+            color:#047857;
+            background:rgba(15,118,110,.14);
+            outline:none;
+        }
+        .ym-password-toggle svg{
+            width:18px;
+            height:18px;
+            fill:none;
+            stroke:currentColor;
+            stroke-width:2;
+            stroke-linecap:round;
+            stroke-linejoin:round;
+        }
+        .ym-password-toggle .eye-closed,
+        .ym-password-toggle.is-visible .eye-open{
+            display:none;
+        }
+        .ym-password-toggle.is-visible .eye-closed{
+            display:block;
+        }
         .checks{
             display:flex;
             align-items:center;
@@ -342,5 +385,6 @@
 </main>
 {% include "partials/site_header_script.html" %}
 <script src="{{ url_for('static', filename='js/page_animations.js') }}"></script>
+<script src="{{ url_for('static', filename='js/login.js') }}?v=password-toggle-20260824"></script>
 </body>
 </html>

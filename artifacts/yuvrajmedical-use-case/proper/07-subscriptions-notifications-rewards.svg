@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="65.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">Subscriptions, Notifications &amp; Rewards</text>
+<text x="1400.0" y="112.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">YuvrajMedical · UML Use Cases · Section 7 of 9</text>
+<rect x="400" y="185" width="2040" height="1565" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1420" y="230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Customer" data-b="Subscribe to Medicine" data-kind="association"><title>Customer — association — Subscribe to Medicine</title>
+<polyline points="160.0,920.0 200,800 200,440 580,440 644.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,800 200,440 580,440 644.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Medicine Subscription" data-kind="association"><title>Customer — association — Manage Medicine Subscription</title>
+<polyline points="160.0,920.0 260,880 1220,880 1220,440 1278.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,880 1220,880 1220,440 1278.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="View Notifications" data-kind="association"><title>Customer — association — View Notifications</title>
+<polyline points="160.0,920.0 1840,920 1840,760 1922.4882989896641,756.9525672368418" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 1840,920 1840,760 1922.4882989896641,756.9525672368418" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Notification Preferences" data-kind="association"><title>Customer — association — Manage Notification Preferences</title>
+<polyline points="160.0,920.0 200,1040 580,1040 631.9240285447667,1040.0205339676615" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,1040 580,1040 631.9240285447667,1040.0205339676615" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Submit Review &amp; Feedback" data-kind="association"><title>Customer — association — Submit Review &amp; Feedback</title>
+<polyline points="160.0,920.0 260,880 260,900 1380,900 1380,840 1391.1777202988878,781.4111398505561" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,880 260,900 1380,900 1380,840 1391.1777202988878,781.4111398505561" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Use Referral" data-kind="association"><title>Customer — association — Use Referral</title>
+<polyline points="160.0,920.0 260,880 260,500 1840,500 1840,440 1911.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,880 260,500 1840,500 1840,440 1911.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="View Referral Rewards" data-kind="association"><title>Customer — association — View Referral Rewards</title>
+<polyline points="160.0,920.0 200,800 580,800 580,760 655.4882989896641,756.9525672368418" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,800 580,800 580,760 655.4882989896641,756.9525672368418" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Referral Rewards" data-kind="association"><title>Owner / Admin — association — View Referral Rewards</title>
+<polyline points="2630.0,1490.0 2520,1460 2520,820 1140,820 1140,760 1056.5117010103359,756.9525672368418" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,1490.0 2520,1460 2520,820 1140,820 1140,760 1056.5117010103359,756.9525672368418" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Send Order Notification" data-kind="association"><title>OTP / SMS Service — association — Send Order Notification</title>
+<polyline points="2630.0,340.0 2600,460 2600,940 1760,940 1760,1020 1694.8324574290862,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2600,460 2600,940 1760,940 1760,1020 1694.8324574290862,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Send Payment Notification" data-kind="association"><title>OTP / SMS Service — association — Send Payment Notification</title>
+<polyline points="2630.0,340.0 2640,460 2640,1020 2400,1020 2327.832457429086,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2640,460 2640,1020 2400,1020 2327.832457429086,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Send Prescription Status Notification" data-kind="association"><title>OTP / SMS Service — association — Send Prescription Status Notification</title>
+<polyline points="2630.0,340.0 2660,460 2660,1260 1140,1260 1140,1320 1042.6874747950021,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2660,460 2660,1260 1140,1260 1140,1320 1042.6874747950021,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Send Subscription Reminder" data-kind="association"><title>OTP / SMS Service — association — Send Subscription Reminder</title>
+<polyline points="2630.0,340.0 2660,460 2680,460 2680,1320 1760,1320 1676.6874747950021,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2660,460 2680,460 2680,1320 1760,1320 1676.6874747950021,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="node" data-id="Subscribe to Medicine" data-kind="usecase"><title>Subscribe to Medicine</title>
+<ellipse cx="856.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Subscribe to Medicine</text>
+</g>
+<g class="node" data-id="Manage Medicine Subscription" data-kind="usecase"><title>Manage Medicine Subscription</title>
+<ellipse cx="1490.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Medicine Subscription</text>
+</g>
+<g class="node" data-id="Use Referral" data-kind="usecase"><title>Use Referral</title>
+<ellipse cx="2123.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Use Referral</text>
+</g>
+<g class="node" data-id="View Referral Rewards" data-kind="usecase"><title>View Referral Rewards</title>
+<ellipse cx="856.0" cy="732.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Referral Rewards</text>
+</g>
+<g class="node" data-id="Submit Review &amp; Feedback" data-kind="usecase"><title>Submit Review &amp; Feedback</title>
+<ellipse cx="1490.0" cy="732.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Submit Review &amp; Feedback</text>
+</g>
+<g class="node" data-id="View Notifications" data-kind="usecase"><title>View Notifications</title>
+<ellipse cx="2123.0" cy="732.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Notifications</text>
+</g>
+<g class="node" data-id="Manage Notification Preferences" data-kind="usecase"><title>Manage Notification Preferences</title>
+<ellipse cx="856.0" cy="1045.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="1029.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Notification</text>
+<text x="856.0" y="1060.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Preferences</text>
+</g>
+<g class="node" data-id="Send Order Notification" data-kind="usecase"><title>Send Order Notification</title>
+<ellipse cx="1490.0" cy="1045.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Send Order Notification</text>
+</g>
+<g class="node" data-id="Send Payment Notification" data-kind="usecase"><title>Send Payment Notification</title>
+<ellipse cx="2123.0" cy="1045.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Send Payment Notification</text>
+</g>
+<g class="node" data-id="Send Prescription Status Notification" data-kind="usecase"><title>Send Prescription Status Notification</title>
+<ellipse cx="856.0" cy="1357.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="1341.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Send Prescription Status</text>
+<text x="856.0" y="1372.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Notification</text>
+</g>
+<g class="node" data-id="Send Subscription Reminder" data-kind="usecase"><title>Send Subscription Reminder</title>
+<ellipse cx="1490.0" cy="1357.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="1357.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Send Subscription Reminder</text>
+</g>
+<g class="node" data-id="Customer" data-kind="actor"><title>Customer</title>
+<circle cx="160.0" cy="860.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="160.0,884.0 160.0,960.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="112.0,920.0 208.0,920.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="116.0,1020.0 160.0,960.0 204.0,1020.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="15.0" y="1036.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="160.0" y="1066.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Customer</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor"><title>Owner / Admin</title>
+<circle cx="2630.0" cy="1430.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,1454.0 2630.0,1530.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,1490.0 2678.0,1490.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1590.0 2630.0,1530.0 2674.0,1590.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1606.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1636.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<g class="node" data-id="OTP / SMS Service" data-kind="actor"><title>OTP / SMS Service</title>
+<circle cx="2630.0" cy="280.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,304.0 2630.0,380.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,340.0 2678.0,340.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,440.0 2630.0,380.0 2674.0,440.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="456.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">OTP / SMS</text>
+<text x="2630.0" y="502.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Service</text>
+</g>
+<text x="1400.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+<text x="1400.0" y="1837.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Customer required for protected shopping, account and order functions.</text>
+<text x="1400.0" y="1863.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Owner/Admin required for administrative operations.</text>
+</svg>

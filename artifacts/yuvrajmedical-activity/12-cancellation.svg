@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="2355" viewBox="0 0 3500 2355">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1750.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="1750.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Order Cancellation &amp; Refund Handling</text>
+<rect x="65.0" y="220" width="1123.3333333333333" height="2030" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1123.3333333333333" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="626.6666666666666" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Customer</text>
+<rect x="1188.3333333333333" y="220" width="1123.3333333333333" height="2030" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="1188.3333333333333" y="220" width="1123.3333333333333" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="1750.0" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<rect x="2311.6666666666665" y="220" width="1123.3333333333335" height="2030" rx="0" fill="#faf5ed" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="2311.6666666666665" y="220" width="1123.3333333333335" height="62" rx="0" fill="#faf5ed" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2873.333333333333" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">OTP / SMS Service</text>
+<g class="flow" data-from="s" data-to="details__merge"><title>Control flow</title>
+<polyline points="626.0,349 626.0,402.0 251.0,402.0 251.0,455" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.0,349 626.0,402.0 251.0,402.0 251.0,455" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="251.0,455 245.0,441.0 257.0,441.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="details" data-to="eligible"><title>Control flow</title>
+<polyline points="626.0,507 626.0,526.0 1749.5,526.0 1749.5,545" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.0,507 626.0,526.0 1749.5,526.0 1749.5,545" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1749.5,545 1743.5,531.0 1755.5,531.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="eligible" data-to="blocked"><title>No</title>
+<polyline points="1617,605.0 1355,605.0 1355,740.0 1425,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,605.0 1355,605.0 1355,740.0 1425,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425,740.0 1411.0,746.0 1411.0,734.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="blocked" data-to="viewend"><title>Control flow</title>
+<polyline points="1425.0,740.0 645.0,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1425.0,740.0 645.0,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="645.0,740.0 659.0,734.0 659.0,746.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="eligible" data-to="cancel"><title>Yes</title>
+<polyline points="1617,600 1560,600 1560,660 1000,660 1000,860 951,860" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,600 1560,600 1560,660 1000,660 1000,860 951,860" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="951,860 965.0,854.0 965.0,866.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="cancel" data-to="ask"><title>Control flow</title>
+<polyline points="951.0,875.0 1425.0,875.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="951.0,875.0 1425.0,875.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425.0,875.0 1411.0,881.0 1411.0,869.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="ask" data-to="confirm"><title>Control flow</title>
+<polyline points="1750.0,912 1750.0,931.0 626.5,931.0 626.5,950" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,912 1750.0,931.0 626.5,931.0 626.5,950" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="626.5,950 620.5,936.0 632.5,936.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="confirm" data-to="details__merge"><title>No</title>
+<polyline points="494,1000 260,1000 260,485" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="494,1000 260,1000 260,485" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="260,485 266.0,499.0 254.0,499.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="confirm" data-to="status"><title>Yes</title>
+<polyline points="626.5,1070 626.5,1089.0 1750.0,1089.0 1750.0,1108" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.5,1070 626.5,1089.0 1750.0,1089.0 1750.0,1108" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,1108 1744.0,1094.0 1756.0,1094.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="status" data-to="stock"><title>Control flow</title>
+<polyline points="1750.0,1182.0 1750.0,1243.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1182.0 1750.0,1243.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,1243.0 1744.0,1229.0 1756.0,1229.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="stock" data-to="movement"><title>Control flow</title>
+<polyline points="1750.0,1317.0 1750.0,1378.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1317.0 1750.0,1378.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,1378.0 1744.0,1364.0 1756.0,1364.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="movement" data-to="paid"><title>Control flow</title>
+<polyline points="1750.0,1452.0 1749.5,1490.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1452.0 1749.5,1490.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1749.5,1490.0 1743.6847139053339,1475.9222712187943 1755.6836752590343,1476.080152289238" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="paid" data-to="refund"><title>Yes</title>
+<polyline points="1882,1550.0 2145,1550.0 2145,1685.0 2075,1685.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1882,1550.0 2145,1550.0 2145,1685.0 2075,1685.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2075,1685.0 2089.0,1679.0 2089.0,1691.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="paid" data-to="send__merge"><title>No</title>
+<polyline points="1617,1560 1380,1560 1380,1820 2483,1820" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,1560 1380,1560 1380,1820 2483,1820" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2483,1820 2469.0,1826.0 2469.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="refund" data-to="send__merge"><title>Control flow</title>
+<polyline points="1750.0,1722 1750.0,1763.5 2498.0,1763.5 2498.0,1805" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1722 1750.0,1763.5 2498.0,1763.5 2498.0,1805" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2498.0,1805 2492.0,1791.0 2504.0,1791.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="send" data-to="message"><title>Control flow</title>
+<polyline points="2873.0,1857 2873.0,1887.5 1750.0,1887.5 1750.0,1918" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2873.0,1857 2873.0,1887.5 1750.0,1887.5 1750.0,1918" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,1918 1744.0,1904.0 1756.0,1904.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="message" data-to="e"><title>Control flow</title>
+<polyline points="1750.0,1992 1750.0,2031.5 626.0,2031.5 626.0,2071" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,1992 1750.0,2031.5 626.0,2031.5 626.0,2071" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="626.0,2071 620.0,2057.0 632.0,2057.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="details__merge" data-to="details"><title>Control flow</title>
+<polyline points="266.0,470.0 301.0,470.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="266.0,470.0 301.0,470.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="301.0,470.0 287.0,476.0 287.0,464.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="send__merge" data-to="send"><title>Control flow</title>
+<polyline points="2513.0,1820.0 2548.0,1820.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2513.0,1820.0 2548.0,1820.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2548.0,1820.0 2534.0,1826.0 2534.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<rect x="1399.9921875" y="589.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1420.5" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="1116.3203125" y="644.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1140.0" y="660.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="206.984375" y="597.75" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="227.4921875" y="613.75" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="883.6953125" y="1073.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="907.375" y="1089.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="1924.0703125" y="1534.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1947.75" y="1550.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="1635.2421875" y="1804.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1655.75" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<g class="node" data-id="s" data-kind="start" data-lane="C"><title>start</title>
+<circle cx="626.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="details" data-kind="action" data-lane="C"><title>Open order details</title>
+<rect x="301" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Open order details</text>
+</g>
+<g class="node" data-id="eligible" data-kind="decision" data-lane="S"><title>Order can be cancelled?</title>
+<polygon points="1749.5,545 1882,605.0 1749.5,665 1617,605.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1749.5" y="591.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Order can be</text>
+<text x="1749.5" y="618.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">cancelled?</text>
+</g>
+<g class="node" data-id="blocked" data-kind="action" data-lane="S"><title>Display Order cannot be cancelled</title>
+<rect x="1425" y="703" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display Order cannot be cancelled</text>
+</g>
+<g class="node" data-id="cancel" data-kind="action" data-lane="C"><title>Select Cancel Order</title>
+<rect x="301" y="838" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Cancel Order</text>
+</g>
+<g class="node" data-id="ask" data-kind="action" data-lane="S"><title>Ask for confirmation</title>
+<rect x="1425" y="838" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Ask for confirmation</text>
+</g>
+<g class="node" data-id="confirm" data-kind="decision" data-lane="C"><title>Confirm cancellation?</title>
+<polygon points="626.5,950 759,1010.0 626.5,1070 494,1010.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="626.5" y="996.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Confirm</text>
+<text x="626.5" y="1023.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">cancellation?</text>
+</g>
+<g class="node" data-id="status" data-kind="action" data-lane="S"><title>Update order to Cancelled</title>
+<rect x="1425" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Update order to Cancelled</text>
+</g>
+<g class="node" data-id="stock" data-kind="action" data-lane="S"><title>Restore medicine stock</title>
+<rect x="1425" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Restore medicine stock</text>
+</g>
+<g class="node" data-id="movement" data-kind="action" data-lane="S"><title>Record stock movement</title>
+<rect x="1425" y="1378" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Record stock movement</text>
+</g>
+<g class="node" data-id="paid" data-kind="decision" data-lane="S"><title>Payment already completed?</title>
+<polygon points="1749.5,1490 1882,1550.0 1749.5,1610 1617,1550.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1749.5" y="1536.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Payment already</text>
+<text x="1749.5" y="1563.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">completed?</text>
+</g>
+<g class="node" data-id="refund" data-kind="action" data-lane="S"><title>Initiate / mark refund under system rules</title>
+<rect x="1425" y="1648" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1685.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Initiate / mark refund under system rules</text>
+</g>
+<g class="node" data-id="send" data-kind="action" data-lane="O"><title>Send enabled cancellation notification</title>
+<rect x="2548" y="1783" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2873.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Send enabled cancellation notification</text>
+</g>
+<g class="node" data-id="message" data-kind="action" data-lane="S"><title>Display Order Cancelled</title>
+<rect x="1425" y="1918" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1955.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display Order Cancelled</text>
+</g>
+<g class="node" data-id="e" data-kind="end" data-lane="C"><title>Cancellation complete</title>
+<circle cx="626.0" cy="2090.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="626.0" cy="2090.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="626.0" y="2129.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b">Cancellation complete</text>
+</g>
+<g class="node" data-id="viewend" data-kind="end" data-lane="C"><title>Continue viewing order</title>
+<circle cx="626.0" cy="740.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="626.0" cy="740.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="626.0" y="779.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b">Continue viewing order</text>
+</g>
+<g class="node" data-id="details__merge" data-kind="merge" data-lane="C"><title>merge</title>
+<polygon points="251.0,455 266,470.0 251.0,485 236,470.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="node" data-id="send__merge" data-kind="merge" data-lane="O"><title>merge</title>
+<polygon points="2498.0,1805 2513,1820.0 2498.0,1835 2483,1820.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<text x="1750.0" y="2297.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+<text x="1750.0" y="2330.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b">Eligibility: not delivered, not already cancelled and within the permitted processing stage. Refund execution follows the system payment rules.</text>
+</svg>

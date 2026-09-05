@@ -1,0 +1,116 @@
+{
+  "scope": "Main functions only",
+  "actors": [
+    "Customer",
+    "Staff",
+    "Owner / Admin",
+    "Payment Gateway",
+    "OTP / SMS Service"
+  ],
+  "use_cases": [
+    "Login",
+    "Verify OTP",
+    "Send OTP",
+    "Browse Medicines",
+    "Manage Cart",
+    "Place Order",
+    "Make Payment",
+    "Submit Prescription Request",
+    "View Notifications",
+    "Process Payment",
+    "Review Prescription",
+    "Process Order",
+    "Manage Medicine Stock",
+    "Manage Medicines",
+    "Manage Staff",
+    "View Sales Summary"
+  ],
+  "associations": [
+    [
+      "Customer",
+      "Browse Medicines"
+    ],
+    [
+      "Customer",
+      "Manage Cart"
+    ],
+    [
+      "Customer",
+      "Place Order"
+    ],
+    [
+      "Customer",
+      "Make Payment"
+    ],
+    [
+      "Customer",
+      "Submit Prescription Request"
+    ],
+    [
+      "Customer",
+      "View Notifications"
+    ],
+    [
+      "Customer",
+      "Login"
+    ],
+    [
+      "Customer",
+      "Verify OTP"
+    ],
+    [
+      "Staff",
+      "Review Prescription"
+    ],
+    [
+      "Staff",
+      "Process Order"
+    ],
+    [
+      "Staff",
+      "Manage Medicine Stock"
+    ],
+    [
+      "Staff",
+      "Login"
+    ],
+    [
+      "Owner / Admin",
+      "Manage Medicines"
+    ],
+    [
+      "Owner / Admin",
+      "Manage Staff"
+    ],
+    [
+      "Owner / Admin",
+      "View Sales Summary"
+    ],
+    [
+      "Owner / Admin",
+      "Login"
+    ],
+    [
+      "Payment Gateway",
+      "Process Payment"
+    ],
+    [
+      "OTP / SMS Service",
+      "Send OTP"
+    ],
+    [
+      "OTP / SMS Service",
+      "Verify OTP"
+    ]
+  ],
+  "include": [
+    [
+      "Make Payment",
+      "Process Payment"
+    ],
+    [
+      "Verify OTP",
+      "Send OTP"
+    ]
+  ]
+}

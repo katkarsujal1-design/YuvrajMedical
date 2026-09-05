@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3900" height="2300" viewBox="0 0 3900 2300">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1950.0" y="75.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182738">YuvrajMedical — Simplified Level 1 DFD</text>
+<text x="1950.0" y="132.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#182738">Main user and staff interactions</text>
+<polyline points="1600.0,1095.0 1600.0,416.0" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1600.0,1095.0 1600.0,416.0" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1600.0,416.0 1606.0,431.0 1594.0,431.0" fill="#263545"/>
+<polygon points="1600.0,1095.0 1594.0,1080.0 1606.0,1080.0" fill="#263545"/>
+<rect x="1477.0" y="630.23" width="246" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1600.0" y="650.73" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Credentials /</text>
+<text x="1600.0" y="683.73" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">authentication result</text>
+<polyline points="1664.0701644920866,1095.0 2132.916746273565,546.1721030784315" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1664.0701644920866,1095.0 2132.916746273565,546.1721030784315" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2132.916746273565,546.1721030784315 2127.735796498161,561.4743172784989 2118.6117728499503,553.6799479988914" fill="#263545"/>
+<polygon points="1664.0701644920866,1095.0 1669.2511142674905,1079.6977857999327 1678.3751379157013,1087.4921550795402" fill="#263545"/>
+<rect x="1863.443511014418" y="712.2384249394119" width="192" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1959.443511014418" y="732.7384249394119" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Prescription /</text>
+<text x="1959.443511014418" y="765.7384249394119" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">approval status</text>
+<polyline points="1800.0,1101.287806920933 2399.393232422428,895.3596893384531" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1800.0,1101.287806920933 2399.393232422428,895.3596893384531" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2399.393232422428,895.3596893384531 2387.1566284995724,905.9079367964513 2383.257589955534,894.5590382405516" fill="#263545"/>
+<polygon points="1800.0,1101.287806920933 1812.2366039228552,1090.739559462935 1816.135642466894,1102.0884580188347" fill="#263545"/>
+<rect x="2082.6177364261293" y="934.5530928439707" width="190" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="2177.6177364261293" y="955.0530928439707" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Order request /</text>
+<text x="2177.6177364261293" y="988.0530928439707" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">order status</text>
+<polyline points="1800.0,1191.6326974451151 2468.9053716502167,1263.9838350667228" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1800.0,1191.6326974451151 2468.9053716502167,1263.9838350667228" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2468.9053716502167,1263.9838350667228 2453.3471366223375,1268.33599807117 2454.637571799375,1256.4055841196816" fill="#263545"/>
+<polygon points="1800.0,1191.6326974451151 1815.558235027879,1187.280534440668 1814.2677998508414,1199.2109483921563" fill="#263545"/>
+<rect x="2114.4103841396363" y="1200.213914146728" width="214" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="2221.4103841396363" y="1220.713914146728" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Payment details /</text>
+<text x="2221.4103841396363" y="1253.713914146728" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">payment result</text>
+<polyline points="1715.0543040287482,1245.0 2322.5192485008433,1640.9858018351338" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1715.0543040287482,1245.0 2322.5192485008433,1640.9858018351338" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2322.5192485008433,1640.9858018351338 2306.676798894912,1637.8208704798706 2313.229841100178,1627.768127677232" fill="#263545"/>
+<polygon points="1715.0543040287482,1245.0 1730.8967536346795,1248.1649313552632 1724.3437114294134,1258.2176741579017" fill="#263545"/>
+<rect x="1978.2572190461683" y="1457.4710551561343" width="239" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="2097.7572190461683" y="1477.9710551561343" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Address changes /</text>
+<text x="2097.7572190461683" y="1510.9710551561343" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">delivery information</text>
+<polyline points="1629.2731290215993,1245.0 1881.3281334181509,1890.7842383638879" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1629.2731290215993,1245.0 1881.3281334181509,1890.7842383638879" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1881.3281334181509,1890.7842383638879 1870.2848705208721,1878.9924469570833 1881.4635578075727,1874.6293115539406" fill="#263545"/>
+<polygon points="1629.2731290215993,1245.0 1640.316391918878,1256.7917914068046 1629.1377046321775,1261.1549268099473" fill="#263545"/>
+<rect x="1656.0677817914268" y="1614.8440701692493" width="264" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1788.0677817914268" y="1635.3440701692493" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Subscription request /</text>
+<text x="1788.0677817914268" y="1668.3440701692493" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">subscription status</text>
+<polyline points="1570.7268709784007,1245.0 1318.6718665818491,1890.7842383638879" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1570.7268709784007,1245.0 1318.6718665818491,1890.7842383638879" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1318.6718665818491,1890.7842383638879 1318.5364421924273,1874.6293115539406 1329.7151294791279,1878.9924469570833" fill="#263545"/>
+<polygon points="1570.7268709784007,1245.0 1570.8622953678225,1261.1549268099473 1559.683608081122,1256.7917914068046" fill="#263545"/>
+<rect x="1286.9322182085732" y="1614.8440701692493" width="250" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1411.9322182085732" y="1635.3440701692493" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Notification request /</text>
+<text x="1411.9322182085732" y="1668.3440701692493" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">notifications</text>
+<polyline points="1484.9456959712518,1245.0 877.480751499157,1640.9858018351338" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1484.9456959712518,1245.0 877.480751499157,1640.9858018351338" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="877.480751499157,1640.9858018351338 886.7701588998223,1627.768127677232 893.3232011050882,1637.8208704798706" fill="#263545"/>
+<polygon points="1484.9456959712518,1245.0 1475.6562885705866,1258.2176741579017 1469.1032463653205,1248.1649313552632" fill="#263545"/>
+<rect x="994.7427809538322" y="1457.4710551561343" width="215" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1102.2427809538322" y="1477.9710551561343" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Referral request /</text>
+<text x="1102.2427809538322" y="1510.9710551561343" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">reward result</text>
+<polyline points="1400.0,1191.6326974451151 731.0946283497833,1263.9838350667228" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1400.0,1191.6326974451151 731.0946283497833,1263.9838350667228" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="731.0946283497833,1263.9838350667228 745.3624282006248,1256.4055841196816 746.6528633776624,1268.33599807117" fill="#263545"/>
+<polygon points="1400.0,1191.6326974451151 1385.7322001491586,1199.2109483921563 1384.441764972121,1187.280534440668" fill="#263545"/>
+<rect x="853.5896158603634" y="1200.213914146728" width="250" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="978.5896158603634" y="1220.713914146728" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Review &amp; feedback /</text>
+<text x="978.5896158603634" y="1253.713914146728" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">confirmation</text>
+<polyline points="1400.0,1101.287806920933 800.6067675775721,895.3596893384533" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1400.0,1101.287806920933 800.6067675775721,895.3596893384533" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="800.6067675775721,895.3596893384533 816.7424100444659,894.5590382405518 812.8433715004273,905.9079367964515" fill="#263545"/>
+<polygon points="1400.0,1101.287806920933 1383.864357533106,1102.0884580188347 1387.7633960771448,1090.739559462935" fill="#263545"/>
+<rect x="884.3822635738704" y="934.5530928439708" width="276" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1022.3822635738704" y="955.0530928439708" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Cart changes /</text>
+<text x="1022.3822635738704" y="988.0530928439708" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">cart &amp; wishlist contents</text>
+<polyline points="1535.9298355079134,1095.0 1067.083253726435,546.1721030784314" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1535.9298355079134,1095.0 1067.083253726435,546.1721030784314" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1067.083253726435,546.1721030784314 1081.3882271500497,553.6799479988913 1072.264203501839,561.4743172784988" fill="#263545"/>
+<polygon points="1535.9298355079134,1095.0 1521.6248620842987,1087.4921550795402 1530.7488857325095,1079.6977857999327" fill="#263545"/>
+<rect x="1137.556488985582" y="712.2384249394117" width="206" height="74" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1240.556488985582" y="732.7384249394117" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Search request /</text>
+<text x="1240.556488985582" y="765.7384249394117" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">medicine results</text>
+<polyline points="3400,335 3170,335 3170,220 1600,220 1600,284.0" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="3400,335 3170,335 3170,220 1600,220 1600,284.0" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1600,284.0 1594.0,269.0 1606.0,269.0" fill="#263545"/>
+<polygon points="3400,335 3385.0,341.0 3385.0,329.0" fill="#263545"/>
+<rect x="2218.5" y="200.0" width="363" height="40" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="2400" y="220.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Staff login / authentication result</text>
+<polyline points="3400.0,371.2011606435588 2399.2984910266014,461.2707489942796" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="3400.0,371.2011606435588 2399.2984910266014,461.2707489942796" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2399.2984910266014,461.2707489942796 2413.70023458911,453.9502447521022 2414.7759634285408,465.9019311378813" fill="#263545"/>
+<polygon points="3400.0,371.2011606435588 3385.5982564374913,378.5216648857362 3384.5225275980606,366.5699784999571" fill="#263545"/>
+<rect x="2765.1492455133007" y="380.2359548189192" width="269" height="72" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="2899.6492455133007" y="400.2359548189192" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Prescription decisions /</text>
+<text x="2899.6492455133007" y="432.2359548189192" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">pending requests</text>
+<polyline points="3580,420 3580,780" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="3580,420 3580,780" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3580,780 3574.0,765.0 3586.0,765.0" fill="#263545"/>
+<polygon points="3580,420 3586.0,435.0 3574.0,435.0" fill="#263545"/>
+<rect x="3478.5" y="564.0" width="203" height="72" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="3580" y="584.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Stock updates /</text>
+<text x="3580" y="616.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">stock information</text>
+<polyline points="2888.9053716502167,1345.7301304829703 3330.982362294508,1470.0" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="2888.9053716502167,1345.7301304829703 3330.982362294508,1470.0" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3330.982362294508,1470.0 3314.918355951851,1471.716886782254 3318.1657461275813,1460.1646377784207" fill="#263545"/>
+<polygon points="2888.9053716502167,1345.7301304829703 2904.969377992874,1344.0132437007162 2901.7219878171436,1355.5654927045496" fill="#263545"/>
+<rect x="3001.4438669723622" y="1371.8650652414851" width="217" height="72" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="3109.9438669723622" y="1391.8650652414851" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Payment request /</text>
+<text x="3109.9438669723622" y="1423.8650652414851" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">transaction result</text>
+<rect x="1390.0" y="284.0" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="1600.0" y="331.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">1.0</text>
+<text x="1600.0" y="369.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">User Authentication</text>
+<rect x="1979.2984910266014" y="414.1721030784315" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="2189.2984910266014" y="461.1721030784315" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">4.0</text>
+<text x="2189.2984910266014" y="499.1721030784315" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Prescription Management</text>
+<rect x="2381.498874936425" y="763.3596893384531" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="2591.498874936425" y="810.3596893384531" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">5.0</text>
+<text x="2591.498874936425" y="848.3596893384531" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Order Management</text>
+<rect x="2468.9053716502167" y="1220.6981673840937" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="2678.9053716502167" y="1267.6981673840937" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">6.0</text>
+<text x="2678.9053716502167" y="1305.6981673840937" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Payment Processing</text>
+<rect x="2213.7670360461416" y="1640.9858018351338" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="2423.7670360461416" y="1687.9858018351338" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">7.0</text>
+<text x="2423.7670360461416" y="1725.9858018351338" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Delivery Management</text>
+<rect x="1697.0884869571582" y="1890.7842383638879" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="1907.0884869571582" y="1918.7842383638879" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">8.0</text>
+<text x="1907.0884869571582" y="1956.7842383638879" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Medicine Subscription</text>
+<text x="1907.0884869571582" y="1994.7842383638879" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Management</text>
+<rect x="1082.9115130428418" y="1890.7842383638879" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="1292.9115130428418" y="1937.7842383638879" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">9.0</text>
+<text x="1292.9115130428418" y="1975.7842383638879" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Notification Management</text>
+<rect x="566.2329639538586" y="1640.9858018351338" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="776.2329639538586" y="1668.9858018351338" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">12.0</text>
+<text x="776.2329639538586" y="1706.9858018351338" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Referral &amp; Rewards</text>
+<text x="776.2329639538586" y="1744.9858018351338" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Management</text>
+<rect x="311.0946283497833" y="1220.6981673840937" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="521.0946283497833" y="1248.6981673840937" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">10.0</text>
+<text x="521.0946283497833" y="1286.6981673840937" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Review &amp; Feedback</text>
+<text x="521.0946283497833" y="1324.6981673840937" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Management</text>
+<rect x="398.5011250635748" y="763.3596893384533" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="608.5011250635748" y="810.3596893384533" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">3.0</text>
+<text x="608.5011250635748" y="848.3596893384533" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Cart &amp; Wishlist Management</text>
+<rect x="800.7015089733987" y="414.1721030784314" width="420" height="132" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="1010.7015089733987" y="461.1721030784314" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">2.0</text>
+<text x="1010.7015089733987" y="499.1721030784314" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Medicine Browsing &amp; Search</text>
+<rect x="1400" y="1095" width="400" height="150" rx="0" fill="#eaf1fb" stroke="#263545" stroke-width="2"/>
+<text x="1600.0" y="1170.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Customer</text>
+<rect x="3400" y="290" width="360" height="130" rx="0" fill="#eaf1fb" stroke="#263545" stroke-width="2"/>
+<text x="3580.0" y="355.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Staff</text>
+<rect x="3330" y="780" width="500" height="150" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="3580.0" y="817.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">11.0</text>
+<text x="3580.0" y="855.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Inventory &amp; Stock</text>
+<text x="3580.0" y="893.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Management</text>
+<rect x="3330" y="1470" width="500" height="140" rx="0" fill="#eaf1fb" stroke="#263545" stroke-width="2"/>
+<text x="3580.0" y="1540.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Payment Gateway</text>
+<text x="1950.0" y="2180.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#182738">Two-way arrows show requests and returned information. Every interaction passes through a process.</text>
+<text x="1950.0" y="2230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Simplified view: database stores and internal process-to-process flows are omitted. The full DFD remains available separately.</text>
+</svg>

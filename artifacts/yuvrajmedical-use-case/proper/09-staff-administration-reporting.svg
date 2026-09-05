@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="65.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">Staff Administration &amp; Reporting</text>
+<text x="1400.0" y="112.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">YuvrajMedical · UML Use Cases · Section 9 of 9</text>
+<rect x="400" y="185" width="2040" height="1565" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1420" y="230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Owner / Admin" data-b="View Owner Dashboard" data-kind="association"><title>Owner / Admin — association — View Owner Dashboard</title>
+<polyline points="2630.0,950.0 2520,920 2520,760 2400,760 2323.511701010336,756.9525672368418" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,920 2520,760 2400,760 2323.511701010336,756.9525672368418" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Sales Summary" data-kind="association"><title>Owner / Admin — association — View Sales Summary</title>
+<polyline points="2630.0,950.0 2520,920 1140,920 1140,1020 1060.8324574290862,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,920 1140,920 1140,1020 1060.8324574290862,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Order Statistics" data-kind="association"><title>Owner / Admin — association — View Order Statistics</title>
+<polyline points="2630.0,950.0 2520,920 2520,940 1760,940 1760,1020 1694.8324574290862,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,920 2520,940 1760,940 1760,1020 1694.8324574290862,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Inventory Summary" data-kind="association"><title>Owner / Admin — association — View Inventory Summary</title>
+<polyline points="2630.0,950.0 2520,980 2400,980 2400,1020 2327.832457429086,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,980 2400,980 2400,1020 2327.832457429086,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Staff" data-kind="association"><title>Owner / Admin — association — Manage Staff</title>
+<polyline points="2630.0,950.0 2600,840 2600,560 960,560 960,520 950.4032008117168,469.92476966004256" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2600,840 2600,560 960,560 960,520 950.4032008117168,469.92476966004256" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Add Staff" data-kind="association"><title>Owner / Admin — association — Add Staff</title>
+<polyline points="2630.0,950.0 2640,840 2640,500 1760,500 1760,440 1701.4535202848983,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2640,840 2640,500 1760,500 1760,440 1701.4535202848983,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Update Staff" data-kind="association"><title>Owner / Admin — association — Update Staff</title>
+<polyline points="2630.0,950.0 2660,840 2660,440 2400,440 2334.4535202848983,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2660,840 2660,440 2400,440 2334.4535202848983,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Remove Staff" data-kind="association"><title>Owner / Admin — association — Remove Staff</title>
+<polyline points="2630.0,950.0 2600,840 1140,840 1140,760 1056.5117010103359,756.9525672368418" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2600,840 1140,840 1140,760 1056.5117010103359,756.9525672368418" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Staff Details" data-kind="association"><title>Owner / Admin — association — View Staff Details</title>
+<polyline points="2630.0,950.0 2600,840 2600,820 1760,820 1760,760 1690.5117010103359,756.9525672368418" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2600,840 2600,820 1760,820 1760,760 1690.5117010103359,756.9525672368418" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Customers" data-kind="association"><title>Owner / Admin — association — View Customers</title>
+<polyline points="2630.0,950.0 2520,980 2520,1260 1140,1260 1140,1320 1042.6874747950021,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,980 2520,1260 1140,1260 1140,1320 1042.6874747950021,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Stock Movements" data-kind="association"><title>Owner / Admin — association — View Stock Movements</title>
+<polyline points="2630.0,950.0 2520,960 2380,960 2380,1240 1760,1240 1760,1320 1676.6874747950021,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,960 2380,960 2380,1240 1760,1240 1760,1320 1676.6874747950021,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Reviews &amp; Feedback" data-kind="association"><title>Owner / Admin — association — View Reviews &amp; Feedback</title>
+<polyline points="2630.0,950.0 2600,1060 2600,1320 2400,1320 2309.6874747950023,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2600,1060 2600,1320 2400,1320 2309.6874747950023,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="View Staff Details" data-b="Manage Staff" data-kind="include"><title>View Staff Details — include — Manage Staff</title>
+<polyline points="1295.5216240153902,704.3408531933 1220,700 1220,440 1140,440 1067.4535202848983,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1295.5216240153902,704.3408531933 1220,700 1220,440 1140,440 1067.4535202848983,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1083.5674872599125,432.0623650482094 1067.4535202848983,438.7958684697687 1083.3351462857418,446.06043697514707" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Add Staff" data-b="Manage Staff" data-kind="extend"><title>Add Staff — extend — Manage Staff</title>
+<polyline points="1278.5464797151017,401.2041315302313 1220,400 1140,400 1067.4535202848983,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1278.5464797151017,401.2041315302313 1220,400 1140,400 1067.4535202848983,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1083.3351462857418,393.93956302485293 1067.4535202848983,401.2041315302313 1083.5674872599125,407.9376349517906" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Update Staff" data-b="Manage Staff" data-kind="extend"><title>Update Staff — extend — Manage Staff</title>
+<polyline points="1911.5464797151017,401.2041315302313 1840,400 1840,320 960,320 950.4032008117168,370.07523033995744" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1911.5464797151017,401.2041315302313 1840,400 1840,320 960,320 950.4032008117168,370.07523033995744" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="946.5398708847138,353.043651379828 950.4032008117168,370.07523033995744 960.289641441813,355.67876231243133" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Remove Staff" data-b="Manage Staff" data-kind="extend"><title>Remove Staff — extend — Manage Staff</title>
+<polyline points="752.8959162589517,683.1144430538134 740,620 740,520 752.8959162589517,468.8855569461867" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="752.8959162589517,683.1144430538134 740,620 740,520 752.8959162589517,468.8855569461867" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="755.769162556701,486.1118291985479 752.8959162589517,468.8855569461867 742.1945293707719,482.68701769023454" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="View Staff Details" data-b="Manage Staff" data-kind="include">
+<rect x="1090.875" y="489.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1149.4375" y="505.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Add Staff" data-b="Manage Staff" data-kind="extend">
+<rect x="1102.9375" y="384.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1160.0" y="400.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Update Staff" data-b="Manage Staff" data-kind="extend">
+<rect x="1122.9375" y="304.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1180.0" y="320.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Remove Staff" data-b="Manage Staff" data-kind="extend">
+<rect x="613.875" y="529.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="670.9375" y="545.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="node" data-id="Manage Staff" data-kind="usecase"><title>Manage Staff</title>
+<ellipse cx="856.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Staff</text>
+</g>
+<g class="node" data-id="Add Staff" data-kind="usecase"><title>Add Staff</title>
+<ellipse cx="1490.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Add Staff</text>
+</g>
+<g class="node" data-id="Update Staff" data-kind="usecase"><title>Update Staff</title>
+<ellipse cx="2123.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Update Staff</text>
+</g>
+<g class="node" data-id="Remove Staff" data-kind="usecase"><title>Remove Staff</title>
+<ellipse cx="856.0" cy="732.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Remove Staff</text>
+</g>
+<g class="node" data-id="View Staff Details" data-kind="usecase"><title>View Staff Details</title>
+<ellipse cx="1490.0" cy="732.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Staff Details</text>
+</g>
+<g class="node" data-id="View Owner Dashboard" data-kind="usecase"><title>View Owner Dashboard</title>
+<ellipse cx="2123.0" cy="732.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Owner Dashboard</text>
+</g>
+<g class="node" data-id="View Sales Summary" data-kind="usecase"><title>View Sales Summary</title>
+<ellipse cx="856.0" cy="1045.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Sales Summary</text>
+</g>
+<g class="node" data-id="View Order Statistics" data-kind="usecase"><title>View Order Statistics</title>
+<ellipse cx="1490.0" cy="1045.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Order Statistics</text>
+</g>
+<g class="node" data-id="View Inventory Summary" data-kind="usecase"><title>View Inventory Summary</title>
+<ellipse cx="2123.0" cy="1045.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Inventory Summary</text>
+</g>
+<g class="node" data-id="View Customers" data-kind="usecase"><title>View Customers</title>
+<ellipse cx="856.0" cy="1357.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="1357.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Customers</text>
+</g>
+<g class="node" data-id="View Stock Movements" data-kind="usecase"><title>View Stock Movements</title>
+<ellipse cx="1490.0" cy="1357.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="1357.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Stock Movements</text>
+</g>
+<g class="node" data-id="View Reviews &amp; Feedback" data-kind="usecase"><title>View Reviews &amp; Feedback</title>
+<ellipse cx="2123.0" cy="1357.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="1357.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Reviews &amp; Feedback</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor"><title>Owner / Admin</title>
+<circle cx="2630.0" cy="890.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,914.0 2630.0,990.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,950.0 2678.0,950.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1050.0 2630.0,990.0 2674.0,1050.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1066.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1096.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<text x="1400.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+<text x="1400.0" y="1850.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Owner/Admin required for administrative operations.</text>
+</svg>

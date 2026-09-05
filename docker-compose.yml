@@ -32,6 +32,7 @@ services:
       DB_PASSWORD: Root@123
       DB_NAME: medical_store
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.6-flash}
       SMS_ENABLED: ${SMS_ENABLED:-false}
       SMS_TEST_OTP: ${SMS_TEST_OTP:-123456}
       TWOFACTOR_API_KEY: ${TWOFACTOR_API_KEY:-}
@@ -42,7 +43,7 @@ services:
       TWOFACTOR_LEGACY_URL: ${TWOFACTOR_LEGACY_URL:-https://2factor.in/API/V1}
       TWOFACTOR_VERIFY_URL: ${TWOFACTOR_VERIFY_URL:-https://2factor.in/API/V1}
       TWOFACTOR_OTP_TEMPLATE: ${TWOFACTOR_OTP_TEMPLATE:-}
-      TWOFACTOR_OTP_MESSAGE: "${TWOFACTOR_OTP_MESSAGE:-YuvrajMedical: Your OTP is {otp}. Do not share it with anyone.}"
+      TWOFACTOR_OTP_MESSAGE: "${TWOFACTOR_OTP_MESSAGE:-Yuvraj Medical CMS OTP: {otp} is your secure verification code. Please do not share it.}"
       TWOFACTOR_TRANSACTIONAL_TEMPLATE: ${TWOFACTOR_TRANSACTIONAL_TEMPLATE:-}
       TWOFACTOR_SENDER_ID: ${TWOFACTOR_SENDER_ID:-}
       TWOFACTOR_ENTITY_ID: ${TWOFACTOR_ENTITY_ID:-}

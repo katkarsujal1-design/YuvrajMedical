@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="65.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">Account Access &amp; Profile</text>
+<text x="1400.0" y="112.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">YuvrajMedical · UML Use Cases · Section 1 of 9</text>
+<rect x="400" y="185" width="2040" height="1565" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1420" y="230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Customer" data-b="Register" data-kind="association"><title>Customer — association — Register</title>
+<polyline points="160.0,920.0 200,800 200,440 580,440 644.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,800 200,440 580,440 644.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Login" data-kind="association"><title>Customer — association — Login</title>
+<polyline points="160.0,920.0 200,800 580,800 667.7421586988041,805.8787453918087" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,800 580,800 667.7421586988041,805.8787453918087" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Logout" data-kind="association"><title>Customer — association — Logout</title>
+<polyline points="160.0,920.0 1840,920 1840,860 1916.7786398668325,857.9969450808712" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 1840,920 1840,860 1916.7786398668325,857.9969450808712" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Verify OTP" data-kind="association"><title>Customer — association — Verify OTP</title>
+<polyline points="160.0,920.0 260,880 260,500 1220,500 1220,440 1278.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,880 260,500 1220,500 1220,440 1278.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Profile" data-kind="association"><title>Customer — association — Manage Profile</title>
+<polyline points="160.0,920.0 200,1040 200,1220 580,1220 663.0640917146775,1224.702733451486" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,1040 200,1220 580,1220 663.0640917146775,1224.702733451486" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Family Members" data-kind="association"><title>Customer — association — Manage Family Members</title>
+<polyline points="160.0,920.0 200,1040 1220,1040 1220,1220 1297.0640917146775,1224.702733451486" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,1040 1220,1040 1220,1220 1297.0640917146775,1224.702733451486" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Delivery Addresses" data-kind="association"><title>Customer — association — Manage Delivery Addresses</title>
+<polyline points="160.0,920.0 260,960 1840,960 1840,1220 1930.0640917146775,1224.702733451486" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,960 1840,960 1840,1220 1930.0640917146775,1224.702733451486" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Login" data-kind="association"><title>Staff — association — Login</title>
+<polyline points="2630.0,915.0 2520,940 960,940 950.4032008117168,885.9247696600426" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,915.0 2520,940 960,940 950.4032008117168,885.9247696600426" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Logout" data-kind="association"><title>Staff — association — Logout</title>
+<polyline points="2630.0,915.0 2520,880 2520,860 2400,860 2329.2213601331673,857.9969450808712" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,915.0 2520,880 2520,860 2400,860 2329.2213601331673,857.9969450808712" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Login" data-kind="association"><title>Owner / Admin — association — Login</title>
+<polyline points="2630.0,1490.0 2600,1380 1800,1380 1800,980 860,980 860,940 859.999368051026,890.9913107016066" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,1490.0 2600,1380 1800,1380 1800,980 860,980 860,940 859.999368051026,890.9913107016066" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Logout" data-kind="association"><title>Owner / Admin — association — Logout</title>
+<polyline points="2630.0,1490.0 2600,1380 2600,1020 2240,1020 2240,940 2226.8043657444478,884.7969240679028" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,1490.0 2600,1380 2600,1020 2240,1020 2240,940 2226.8043657444478,884.7969240679028" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Send OTP" data-kind="association"><title>OTP / SMS Service — association — Send OTP</title>
+<polyline points="2630.0,340.0 2520,380 2400,380 2400,400 2334.4535202848983,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,380 2400,380 2400,400 2334.4535202848983,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Verify OTP" data-kind="association"><title>OTP / SMS Service — association — Verify OTP</title>
+<polyline points="2630.0,340.0 2520,300 1600,300 1600,320 1588.8222797011122,370.5888601494439" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,300 1600,300 1600,320 1588.8222797011122,370.5888601494439" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Register" data-b="Verify OTP" data-kind="include"><title>Register — include — Verify OTP</title>
+<polyline points="1067.4535202848983,401.2041315302313 1140,400 1220,400 1278.5464797151017,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1067.4535202848983,401.2041315302313 1140,400 1220,400 1278.5464797151017,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1262.4059234011538,407.87364739544086 1278.5464797151017,401.2041315302313 1262.6938019747931,393.8766074967037" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Login" data-b="Authenticate User" data-kind="include"><title>Login — include — Authenticate User</title>
+<polyline points="1044.2578413011959,805.8787453918087 1140,800 1220,800 1301.7421586988041,805.8787453918087" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1044.2578413011959,805.8787453918087 1140,800 1220,800 1301.7421586988041,805.8787453918087" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1285.2812464380102,811.7129863486467 1301.7421586988041,805.8787453918087 1286.285506855145,797.7490520529485" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Verify OTP" data-b="Send OTP" data-kind="include"><title>Verify OTP — include — Send OTP</title>
+<polyline points="1701.4535202848983,401.2041315302313 1760,400 1840,400 1911.5464797151017,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1701.4535202848983,401.2041315302313 1760,400 1840,400 1911.5464797151017,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1895.4309515041168,407.933897535149 1911.5464797151017,401.2041315302313 1895.6665389781328,393.9358798704192" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Register" data-b="Verify OTP" data-kind="include">
+<rect x="1101.4375" y="384.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1160.0" y="400.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Login" data-b="Authenticate User" data-kind="include">
+<rect x="1104.128920650598" y="786.9393726959044" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1162.691420650598" y="802.9393726959044" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Verify OTP" data-b="Send OTP" data-kind="include">
+<rect x="1741.4375" y="384.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1800.0" y="400.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="node" data-id="Register" data-kind="usecase"><title>Register</title>
+<ellipse cx="856.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Register</text>
+</g>
+<g class="node" data-id="Verify OTP" data-kind="usecase"><title>Verify OTP</title>
+<ellipse cx="1490.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Verify OTP</text>
+</g>
+<g class="node" data-id="Send OTP" data-kind="usecase"><title>Send OTP</title>
+<ellipse cx="2123.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Send OTP</text>
+</g>
+<g class="node" data-id="Login" data-kind="usecase"><title>Login</title>
+<ellipse cx="856.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Login</text>
+</g>
+<g class="node" data-id="Authenticate User" data-kind="usecase"><title>Authenticate User</title>
+<ellipse cx="1490.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Authenticate User</text>
+</g>
+<g class="node" data-id="Logout" data-kind="usecase"><title>Logout</title>
+<ellipse cx="2123.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Logout</text>
+</g>
+<g class="node" data-id="Manage Profile" data-kind="usecase"><title>Manage Profile</title>
+<ellipse cx="856.0" cy="1253.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="1253.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Profile</text>
+</g>
+<g class="node" data-id="Manage Family Members" data-kind="usecase"><title>Manage Family Members</title>
+<ellipse cx="1490.0" cy="1253.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="1253.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Family Members</text>
+</g>
+<g class="node" data-id="Manage Delivery Addresses" data-kind="usecase"><title>Manage Delivery Addresses</title>
+<ellipse cx="2123.0" cy="1253.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="1253.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Delivery Addresses</text>
+</g>
+<g class="node" data-id="Customer" data-kind="actor"><title>Customer</title>
+<circle cx="160.0" cy="860.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="160.0,884.0 160.0,960.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="112.0,920.0 208.0,920.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="116.0,1020.0 160.0,960.0 204.0,1020.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="15.0" y="1036.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="160.0" y="1066.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Customer</text>
+</g>
+<g class="node" data-id="Staff" data-kind="actor"><title>Staff</title>
+<circle cx="2630.0" cy="855.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,879.0 2630.0,955.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,915.0 2678.0,915.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1015.0 2630.0,955.0 2674.0,1015.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1031.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1061.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Staff</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor"><title>Owner / Admin</title>
+<circle cx="2630.0" cy="1430.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,1454.0 2630.0,1530.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,1490.0 2678.0,1490.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1590.0 2630.0,1530.0 2674.0,1590.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1606.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1636.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<g class="node" data-id="OTP / SMS Service" data-kind="actor"><title>OTP / SMS Service</title>
+<circle cx="2630.0" cy="280.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,304.0 2630.0,380.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,340.0 2678.0,340.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,440.0 2630.0,380.0 2674.0,440.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="456.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">OTP / SMS</text>
+<text x="2630.0" y="502.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Service</text>
+</g>
+<text x="1400.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+<text x="1400.0" y="1824.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Customer required for protected shopping, account and order functions.</text>
+<text x="1400.0" y="1850.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Staff required for staff operations.</text>
+<text x="1400.0" y="1876.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Owner/Admin required for administrative operations.</text>
+</svg>

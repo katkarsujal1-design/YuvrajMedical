@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="1700" viewBox="0 0 3500 1700">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1750.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="1750.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Customer Order Tracking</text>
+<rect x="65.0" y="220" width="1685.0" height="1375" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1685.0" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="907.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Customer</text>
+<rect x="1750.0" y="220" width="1685.0" height="1375" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="1750.0" y="220" width="1685.0" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2592.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<g class="flow" data-from="s" data-to="orders"><title>Control flow</title>
+<polyline points="907.0,349.0 907.0,433.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="907.0,349.0 907.0,433.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="907.0,433.0 901.0,419.0 913.0,419.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="orders" data-to="history"><title>Control flow</title>
+<polyline points="1232.0,470.0 2267.0,470.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1232.0,470.0 2267.0,470.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2267.0,470.0 2253.0,476.0 2253.0,464.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="history" data-to="select"><title>Control flow</title>
+<polyline points="2592.0,507 2592.0,537.5 907.0,537.5 907.0,568" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,507 2592.0,537.5 907.0,537.5 907.0,568" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="907.0,568 901.0,554.0 913.0,554.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="select" data-to="details"><title>Control flow</title>
+<polyline points="1232.0,605.0 2267.0,605.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1232.0,605.0 2267.0,605.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2267.0,605.0 2253.0,611.0 2253.0,599.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="details" data-to="track"><title>Control flow</title>
+<polyline points="2592.0,642 2592.0,672.5 907.0,672.5 907.0,703" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,642 2592.0,672.5 907.0,672.5 907.0,703" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="907.0,703 901.0,689.0 913.0,689.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="track" data-to="status"><title>Control flow</title>
+<polyline points="1232.0,740.0 2267.0,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1232.0,740.0 2267.0,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2267.0,740.0 2253.0,746.0 2253.0,734.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="status" data-to="e"><title>Control flow</title>
+<polyline points="2592.0,799 2592.0,827.5 907.0,827.5 907.0,856" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,799 2592.0,827.5 907.0,827.5 907.0,856" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="907.0,856 901.0,842.0 913.0,842.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="node" data-id="s" data-kind="start" data-lane="C"><title>start</title>
+<circle cx="907.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="orders" data-kind="action" data-lane="C"><title>Open My Orders</title>
+<rect x="582" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="907.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Open My Orders</text>
+</g>
+<g class="node" data-id="history" data-kind="action" data-lane="S"><title>Display order history</title>
+<rect x="2267" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display order history</text>
+</g>
+<g class="node" data-id="select" data-kind="action" data-lane="C"><title>Select order</title>
+<rect x="582" y="568" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="907.0" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select order</text>
+</g>
+<g class="node" data-id="details" data-kind="action" data-lane="S"><title>Display order details</title>
+<rect x="2267" y="568" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display order details</text>
+</g>
+<g class="node" data-id="track" data-kind="action" data-lane="C"><title>Select Track Order</title>
+<rect x="582" y="703" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="907.0" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Track Order</text>
+</g>
+<g class="node" data-id="status" data-kind="action" data-lane="S"><title>Display current status: Pending / Confirmed / Packed / Out for Delivery / Delivered / Cancelled</title>
+<rect x="2267" y="681" width="650" height="118" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="708.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display current status: Pending /</text>
+<text x="2592.0" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Confirmed / Packed / Out for Delivery /</text>
+<text x="2592.0" y="772.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Delivered / Cancelled</text>
+</g>
+<g class="node" data-id="e" data-kind="end" data-lane="C"><title>end</title>
+<circle cx="907.0" cy="875.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="907.0" cy="875.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="907.0" y="914.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b"></text>
+</g>
+<text x="1750.0" y="1642.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+</svg>

@@ -1,0 +1,387 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4400" height="2900" viewBox="0 0 4400 2900">
+<rect width="100%" height="100%" fill="white"/>
+<text x="2200.0" y="70.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="38" font-weight="700" fill="#172b3b">UML Use Case Diagram — Intermediate Detail</text>
+<rect x="450" y="180" width="3530" height="2410" fill="white" stroke="#334353" stroke-width="2"/>
+<text x="2215" y="240.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="38" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Customer" data-b="Register" data-kind="association">
+<polyline points="180.0,1380.0 280,1340 280,440 640,440 698.5989260166139,438.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1340 280,440 640,440 698.5989260166139,438.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Login" data-kind="association">
+<polyline points="180.0,1380.0 280,1340 640,1340 640,680 712.9767943850222,676.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1340 640,1340 640,680 712.9767943850222,676.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Profile &amp; Family" data-kind="association">
+<polyline points="180.0,1380.0 200,1260 200,920 640,920 729.5066720004714,913.2820117735138" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 200,1260 200,920 640,920 729.5066720004714,913.2820117735138" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Browse &amp; Search Medicines" data-kind="association">
+<polyline points="180.0,1380.0 200,1260 620,1260 620,1140 640,1140 712.9767943850222,1136.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 200,1260 620,1260 620,1140 640,1140 712.9767943850222,1136.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Cart &amp; Wishlist" data-kind="association">
+<polyline points="180.0,1380.0 280,1340 280,1360 640,1360 698.5989260166139,1358.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1340 280,1360 640,1360 698.5989260166139,1358.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Medicine Subscription" data-kind="association">
+<polyline points="180.0,1380.0 280,1420 280,1540 640,1540 712.9767943850222,1543.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1420 280,1540 640,1540 712.9767943850222,1543.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Submit Review &amp; Feedback" data-kind="association">
+<polyline points="180.0,1380.0 200,1500 200,1760 640,1760 729.5066720004714,1766.7179882264863" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 200,1500 200,1760 640,1760 729.5066720004714,1766.7179882264863" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Use Referral &amp; View Rewards" data-kind="association">
+<polyline points="180.0,1380.0 180,2000 640,2000 712.9767943850222,2003.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 180,2000 640,2000 712.9767943850222,2003.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Manage Delivery Addresses" data-kind="association">
+<polyline points="180.0,1380.0 180,520 1500,520 1500,440 1568.5989260166139,438.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 180,520 1500,520 1500,440 1568.5989260166139,438.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Place Order" data-kind="association">
+<polyline points="180.0,1380.0 280,1420 640,1420 640,1440 1340,1440 1340,680 1500,680 1582.9767943850222,676.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1420 640,1420 640,1440 1340,1440 1340,680 1500,680 1582.9767943850222,676.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Checkout" data-kind="association">
+<polyline points="180.0,1380.0 280,1340 300,1340 300,980 1500,980 1500,920 1599.5066720004713,913.2820117735138" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1340 300,1340 300,980 1500,980 1500,920 1599.5066720004713,913.2820117735138" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="View Order Details" data-kind="association">
+<polyline points="180.0,1380.0 280,1420 300,1420 300,1460 1320,1460 1320,1120 1500,1120 1558.605610184482,1119.8639392383213" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 280,1420 300,1420 300,1460 1320,1460 1320,1120 1500,1120 1558.605610184482,1119.8639392383213" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Track Order" data-kind="association">
+<polyline points="180.0,1380.0 200,1500 260,1500 260,1660 1480,1660 1480,1360 1500,1360 1568.5989260166139,1358.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 200,1500 260,1500 260,1660 1480,1660 1480,1360 1500,1360 1568.5989260166139,1358.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Cancel Order" data-kind="association">
+<polyline points="180.0,1380.0 200,1500 220,1500 220,1680 1500,1680 1500,1600 1582.9767943850222,1596.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 200,1500 220,1500 220,1680 1500,1680 1500,1600 1582.9767943850222,1596.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Upload Prescription" data-kind="association">
+<polyline points="180.0,1380.0 160,1500 160,1700 1500,1700 1500,1760 1599.5066720004713,1766.7179882264863" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 160,1500 160,1700 1500,1700 1500,1760 1599.5066720004713,1766.7179882264863" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="View Prescription Status" data-kind="association">
+<polyline points="180.0,1380.0 160,1500 140,1500 140,1920 1500,1920 1500,2000 1582.9767943850222,2003.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 160,1500 140,1500 140,1920 1500,1920 1500,2000 1582.9767943850222,2003.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="View Notifications" data-kind="association">
+<polyline points="180.0,1380.0 80,1420 80,2240 1500,2240 1568.5989260166139,2241.0263340389897" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 80,1420 80,2240 1500,2240 1568.5989260166139,2241.0263340389897" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Make Payment" data-kind="association">
+<polyline points="180.0,1380.0 200,1260 220,1260 220,1000 2380,1000 2380,1080 2452.9767943850225,1083.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="180.0,1380.0 200,1260 220,1260 220,1000 2380,1000 2380,1080 2452.9767943850225,1083.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Login" data-kind="association">
+<polyline points="4240.0,790.0 4140,760 2160,760 2160,540 1260,540 1260,620 1187.0232056149778,623.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,790.0 4140,760 2160,760 2160,540 1260,540 1260,620 1187.0232056149778,623.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Review Prescription" data-kind="association">
+<polyline points="4240.0,790.0 4200,680 4200,440 3880,440 3811.401073983386,438.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,790.0 4200,680 4200,440 3880,440 3811.401073983386,438.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Approve Prescription" data-kind="association">
+<polyline points="4240.0,790.0 4200,680 3880,680 3797.0232056149775,676.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,790.0 4200,680 3880,680 3797.0232056149775,676.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Reject Prescription" data-kind="association">
+<polyline points="4240.0,790.0 4140,820 3880,820 3880,840 3780.4933279995284,846.7179882264862" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,790.0 4140,820 3880,820 3880,840 3780.4933279995284,846.7179882264862" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Process Order" data-kind="association">
+<polyline points="4240.0,790.0 4200,900 3880,900 3880,1080 3797.0232056149775,1083.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,790.0 4200,900 3880,900 3880,1080 3797.0232056149775,1083.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Manage Medicine Stock" data-kind="association">
+<polyline points="4240.0,790.0 4200,900 4200,1320 3880,1320 3811.401073983386,1321.0263340389897" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,790.0 4200,900 4200,1320 3880,1320 3811.401073983386,1321.0263340389897" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Login" data-kind="association">
+<polyline points="4240.0,2300.0 4200,2180 3860,2180 3860,980 1480,980 1480,640 1260,640 1211.394389815518,640.1360607616786" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,2300.0 4200,2180 3860,2180 3860,980 1480,980 1480,640 1260,640 1211.394389815518,640.1360607616786" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Medicines" data-kind="association">
+<polyline points="4240.0,2300.0 4200,2180 4200,1840 3880,1840 3780.4933279995284,1833.2820117735137" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,2300.0 4200,2180 4200,1840 3880,1840 3780.4933279995284,1833.2820117735137" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Staff" data-kind="association">
+<polyline points="4240.0,2300.0 4140,2260 4140,2060 3880,2060 3797.0232056149775,2056.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,2300.0 4140,2260 4140,2060 3880,2060 3797.0232056149775,2056.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Delivery Areas" data-kind="association">
+<polyline points="4240.0,2300.0 4140,2260 3825.0,2260.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,2300.0 4140,2260 3825.0,2260.0" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Sales Summary" data-kind="association">
+<polyline points="4240.0,2300.0 4200,2420 3880,2420 3880,2460 3797.0232056149775,2463.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,2300.0 4200,2420 3880,2420 3880,2460 3797.0232056149775,2463.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Payment Gateway" data-b="Process Payment" data-kind="association">
+<polyline points="4240.0,1510.0 4140,1480 3160,1480 3160,1360 3000,1360 2941.401073983386,1358.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,1510.0 4140,1480 3160,1480 3160,1360 3000,1360 2941.401073983386,1358.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Payment Gateway" data-b="Verify Payment" data-kind="association">
+<polyline points="4240.0,1510.0 4140,1540 3000,1540 2927.0232056149775,1543.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,1510.0 4140,1540 3000,1540 2927.0232056149775,1543.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Verify OTP" data-kind="association">
+<polyline points="4240.0,350.0 4140,320 3000,320 3000,400 2941.401073983386,401.0263340389897" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,350.0 4140,320 3000,320 3000,400 2941.401073983386,401.0263340389897" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="OTP / SMS Service" data-b="Send OTP" data-kind="association">
+<polyline points="4240.0,350.0 4140,320 4140,300 2980,300 2980,620 3000,620 2927.0232056149775,623.1671842700025" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="4240.0,350.0 4140,320 4140,300 2980,300 2980,620 3000,620 2927.0232056149775,623.1671842700025" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Register" data-b="Verify OTP" data-kind="include">
+<polyline points="1201.4010739833861,401.0263340389897 1260,400 1260,320 2380,320 2380,400 2438.598926016614,401.0263340389897" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1201.4010739833861,401.0263340389897 1260,400 1260,320 2380,320 2380,400 2438.598926016614,401.0263340389897" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2420.4615912740705,408.7098936591741 2438.598926016614,401.0263340389897 2420.741781161783,392.71234717145217" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Verify OTP" data-b="Send OTP" data-kind="include">
+<polyline points="2573.287376681467,473.8673646085538 2560,520 2560,540 2573.287376681467,596.1326353914462" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2573.287376681467,473.8673646085538 2560,520 2560,540 2573.287376681467,596.1326353914462" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2561.35624165881,580.4594730726564 2573.287376681467,596.1326353914462 2576.925973696727,576.7739006249243" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Place Order" data-b="Checkout" data-kind="include">
+<polyline points="1696.2129262296787,703.0516030444235 1680,760 1680,780 1696.2129262296787,826.9483969555765" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1696.2129262296787,703.0516030444235 1680,760 1680,780 1696.2129262296787,826.9483969555765" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1682.7755777950497,812.5457004356059 1696.2129262296787,826.9483969555765 1697.8991788192352,807.3229911711293" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Place Order" data-b="Check Stock Availability" data-kind="include">
+<polyline points="2057.0232056149775,676.8328157299975 2140,680 2140,1760 2380,1760 2469.5066720004716,1766.7179882264863" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2057.0232056149775,676.8328157299975 2140,680 2140,1760 2380,1760 2469.5066720004716,1766.7179882264863" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2450.9583973952076,1773.3483358167507 2469.5066720004716,1766.7179882264863 2452.1559207031396,1757.393213193375" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Make Payment" data-b="Process Payment" data-kind="include">
+<polyline points="2573.287376681467,1163.8673646085538 2560,1220 2560,1240 2573.287376681467,1286.1326353914462" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2573.287376681467,1163.8673646085538 2560,1220 2560,1240 2573.287376681467,1286.1326353914462" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2560.6179669213616,1271.0499944976718 2573.287376681467,1286.1326353914462 2575.9929283303836,1266.6216131149217" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Process Payment" data-b="Verify Payment" data-kind="include">
+<polyline points="2573.287376681467,1393.8673646085538 2560,1440 2560,1460 2573.287376681467,1516.1326353914462" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2573.287376681467,1393.8673646085538 2560,1440 2560,1460 2573.287376681467,1516.1326353914462" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2561.35624165881,1500.4594730726562 2573.287376681467,1516.1326353914462 2576.925973696727,1496.7739006249244" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Process Order" data-b="Check Stock Availability" data-kind="include">
+<polyline points="3322.9767943850225,1136.8328157299975 3240,1140 3000,1140 3000,1760 2910.4933279995284,1766.7179882264863" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3322.9767943850225,1136.8328157299975 3240,1140 3000,1140 3000,1760 2910.4933279995284,1766.7179882264863" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2927.8440792968604,1757.393213193375 2910.4933279995284,1766.7179882264863 2929.0416026047924,1773.3483358167507" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Track Order" data-b="View Order Details" data-kind="extend">
+<polyline points="1696.2129262296787,1286.9483969555765 1680,1240 1680,1220 1696.2129262296787,1163.0516030444235" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1696.2129262296787,1286.9483969555765 1680,1240 1680,1220 1696.2129262296787,1163.0516030444235" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1698.9785213741097,1182.554205011779 1696.2129262296787,1163.0516030444235 1683.590001928013,1178.173169830786" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Cancel Order" data-b="View Order Details" data-kind="extend">
+<polyline points="1582.9767943850222,1543.1671842700025 1500,1540 1500,1140 1582.9767943850222,1136.8328157299975" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1582.9767943850222,1543.1671842700025 1500,1540 1500,1140 1582.9767943850222,1136.8328157299975" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1565.2950262344789,1145.513545830077 1582.9767943850222,1136.8328157299975 1564.684758333568,1129.5251884069671" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Approve Prescription" data-b="Review Prescription" data-kind="extend">
+<polyline points="3436.2129262296785,596.9483969555765 3420,540 3420,520 3436.2129262296785,473.0516030444234" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3436.2129262296785,596.9483969555765 3420,540 3420,520 3436.2129262296785,473.0516030444234" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="3437.899178819235,492.6770088288706 3436.2129262296785,473.0516030444234 3422.7755777950497,487.4542995643941" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Reject Prescription" data-b="Review Prescription" data-kind="extend">
+<polyline points="3339.5066720004716,846.7179882264862 3240,840 3240,440 3308.598926016614,438.9736659610103" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3339.5066720004716,846.7179882264862 3240,840 3240,440 3308.598926016614,438.9736659610103" fill="none" stroke="#334353" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="3290.7206178431697,447.2420452976984 3308.598926016614,438.9736659610103 3290.4812626814037,431.2438357382965" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<rect x="1481.4375" y="304.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1540.0" y="320.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="2434.1968441703666" y="538.0331588478616" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2492.7593441703666" y="554.0331588478616" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="1554.9282315574196" y="729.7629007611058" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1613.4907315574196" y="745.7629007611058" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="2010.875" y="1204.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2069.4375" y="1220.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="2434.1968441703666" y="1189.9668411521384" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2492.7593441703666" y="1205.9668411521384" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="2434.1968441703666" y="1458.0331588478616" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2492.7593441703666" y="1474.0331588478616" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="2870.875" y="1434.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2929.4375" y="1450.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<rect x="1557.9282315574196" y="1189.7629007611058" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1614.9907315574196" y="1205.7629007611058" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+<rect x="1373.875" y="1224.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1430.9375" y="1240.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+<rect x="3297.9282315574196" y="538.2370992388942" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="3354.9907315574196" y="554.2370992388942" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+<rect x="3113.875" y="524.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="3170.9375" y="540.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+<g class="node" data-id="Register" data-kind="usecase">
+<ellipse cx="950.0" cy="420.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Register</text>
+</g>
+<g class="node" data-id="Login" data-kind="usecase">
+<ellipse cx="950.0" cy="650.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="650.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Login</text>
+</g>
+<g class="node" data-id="Manage Profile &amp; Family" data-kind="usecase">
+<ellipse cx="950.0" cy="880.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="880.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Profile &amp; Family</text>
+</g>
+<g class="node" data-id="Browse &amp; Search Medicines" data-kind="usecase">
+<ellipse cx="950.0" cy="1110.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="1110.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Browse &amp; Search Medicines</text>
+</g>
+<g class="node" data-id="Manage Cart &amp; Wishlist" data-kind="usecase">
+<ellipse cx="950.0" cy="1340.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="1340.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Cart &amp; Wishlist</text>
+</g>
+<g class="node" data-id="Manage Medicine Subscription" data-kind="usecase">
+<ellipse cx="950.0" cy="1570.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="1570.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Medicine Subscription</text>
+</g>
+<g class="node" data-id="Submit Review &amp; Feedback" data-kind="usecase">
+<ellipse cx="950.0" cy="1800.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Submit Review &amp; Feedback</text>
+</g>
+<g class="node" data-id="Use Referral &amp; View Rewards" data-kind="usecase">
+<ellipse cx="950.0" cy="2030.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="950.0" y="2030.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Use Referral &amp; View Rewards</text>
+</g>
+<g class="node" data-id="Manage Delivery Addresses" data-kind="usecase">
+<ellipse cx="1820.0" cy="420.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Delivery Addresses</text>
+</g>
+<g class="node" data-id="Place Order" data-kind="usecase">
+<ellipse cx="1820.0" cy="650.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="650.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Place Order</text>
+</g>
+<g class="node" data-id="Checkout" data-kind="usecase">
+<ellipse cx="1820.0" cy="880.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="880.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Checkout</text>
+</g>
+<g class="node" data-id="View Order Details" data-kind="usecase">
+<ellipse cx="1820.0" cy="1110.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="1110.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">View Order Details</text>
+</g>
+<g class="node" data-id="Track Order" data-kind="usecase">
+<ellipse cx="1820.0" cy="1340.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="1340.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Track Order</text>
+</g>
+<g class="node" data-id="Cancel Order" data-kind="usecase">
+<ellipse cx="1820.0" cy="1570.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="1570.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Cancel Order</text>
+</g>
+<g class="node" data-id="Upload Prescription" data-kind="usecase">
+<ellipse cx="1820.0" cy="1800.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Upload Prescription</text>
+</g>
+<g class="node" data-id="View Prescription Status" data-kind="usecase">
+<ellipse cx="1820.0" cy="2030.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="2030.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">View Prescription Status</text>
+</g>
+<g class="node" data-id="View Notifications" data-kind="usecase">
+<ellipse cx="1820.0" cy="2260.0" rx="265.0" ry="60.0" fill="#eff5fa" stroke="#334353" stroke-width="2"/>
+<text x="1820.0" y="2260.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">View Notifications</text>
+</g>
+<g class="node" data-id="Verify OTP" data-kind="usecase">
+<ellipse cx="2690.0" cy="420.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="2690.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Verify OTP</text>
+</g>
+<g class="node" data-id="Send OTP" data-kind="usecase">
+<ellipse cx="2690.0" cy="650.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="2690.0" y="650.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Send OTP</text>
+</g>
+<g class="node" data-id="Make Payment" data-kind="usecase">
+<ellipse cx="2690.0" cy="1110.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="2690.0" y="1110.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Make Payment</text>
+</g>
+<g class="node" data-id="Process Payment" data-kind="usecase">
+<ellipse cx="2690.0" cy="1340.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="2690.0" y="1340.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Process Payment</text>
+</g>
+<g class="node" data-id="Verify Payment" data-kind="usecase">
+<ellipse cx="2690.0" cy="1570.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="2690.0" y="1570.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Verify Payment</text>
+</g>
+<g class="node" data-id="Check Stock Availability" data-kind="usecase">
+<ellipse cx="2690.0" cy="1800.0" rx="265.0" ry="60.0" fill="#faf4ea" stroke="#334353" stroke-width="2"/>
+<text x="2690.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Check Stock Availability</text>
+</g>
+<g class="node" data-id="Review Prescription" data-kind="usecase">
+<ellipse cx="3560.0" cy="420.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Review Prescription</text>
+</g>
+<g class="node" data-id="Approve Prescription" data-kind="usecase">
+<ellipse cx="3560.0" cy="650.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="650.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Approve Prescription</text>
+</g>
+<g class="node" data-id="Reject Prescription" data-kind="usecase">
+<ellipse cx="3560.0" cy="880.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="880.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Reject Prescription</text>
+</g>
+<g class="node" data-id="Process Order" data-kind="usecase">
+<ellipse cx="3560.0" cy="1110.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="1110.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Process Order</text>
+</g>
+<g class="node" data-id="Manage Medicine Stock" data-kind="usecase">
+<ellipse cx="3560.0" cy="1340.0" rx="265.0" ry="60.0" fill="#f0f6ef" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="1340.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Medicine Stock</text>
+</g>
+<g class="node" data-id="Manage Medicines" data-kind="usecase">
+<ellipse cx="3560.0" cy="1800.0" rx="265.0" ry="60.0" fill="#faf4ea" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Medicines</text>
+</g>
+<g class="node" data-id="Manage Staff" data-kind="usecase">
+<ellipse cx="3560.0" cy="2030.0" rx="265.0" ry="60.0" fill="#faf4ea" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="2030.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Staff</text>
+</g>
+<g class="node" data-id="Manage Delivery Areas" data-kind="usecase">
+<ellipse cx="3560.0" cy="2260.0" rx="265.0" ry="60.0" fill="#faf4ea" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="2260.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">Manage Delivery Areas</text>
+</g>
+<g class="node" data-id="View Sales Summary" data-kind="usecase">
+<ellipse cx="3560.0" cy="2490.0" rx="265.0" ry="60.0" fill="#faf4ea" stroke="#334353" stroke-width="2"/>
+<text x="3560.0" y="2490.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="400" fill="#172b3b">View Sales Summary</text>
+</g>
+<g class="node" data-id="Customer" data-kind="actor">
+<circle cx="180.0" cy="1315.0" r="26" fill="white" stroke="#334353" stroke-width="3"/>
+<polyline points="180.0,1341.0 180.0,1423.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="130.0,1380.0 230.0,1380.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="135.0,1488.0 180.0,1423.0 225.0,1488.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<rect x="30.0" y="1500.0" width="300.0" height="70.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="180.0" y="1533.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Customer</text>
+</g>
+<g class="node" data-id="Staff" data-kind="actor">
+<circle cx="4240.0" cy="725.0" r="26" fill="white" stroke="#334353" stroke-width="3"/>
+<polyline points="4240.0,751.0 4240.0,833.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4190.0,790.0 4290.0,790.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4195.0,898.0 4240.0,833.0 4285.0,898.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<rect x="4090.0" y="910.0" width="300.0" height="70.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="4240.0" y="943.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Staff</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor">
+<circle cx="4240.0" cy="2235.0" r="26" fill="white" stroke="#334353" stroke-width="3"/>
+<polyline points="4240.0,2261.0 4240.0,2343.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4190.0,2300.0 4290.0,2300.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4195.0,2408.0 4240.0,2343.0 4285.0,2408.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<rect x="4090.0" y="2420.0" width="300.0" height="70.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="4240.0" y="2453.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<g class="node" data-id="Payment Gateway" data-kind="actor">
+<circle cx="4240.0" cy="1445.0" r="26" fill="white" stroke="#334353" stroke-width="3"/>
+<polyline points="4240.0,1471.0 4240.0,1553.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4190.0,1510.0 4290.0,1510.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4195.0,1618.0 4240.0,1553.0 4285.0,1618.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<rect x="4090.0" y="1630.0" width="300.0" height="70.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="4240.0" y="1663.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Payment Gateway</text>
+</g>
+<g class="node" data-id="OTP / SMS Service" data-kind="actor">
+<circle cx="4240.0" cy="285.0" r="26" fill="white" stroke="#334353" stroke-width="3"/>
+<polyline points="4240.0,311.0 4240.0,393.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4190.0,350.0 4290.0,350.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="4195.0,458.0 4240.0,393.0 4285.0,458.0" fill="none" stroke="#334353" stroke-width="3" stroke-linejoin="round"/>
+<rect x="4090.0" y="470.0" width="300.0" height="70.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="4240.0" y="486.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">OTP / SMS</text>
+<text x="4240.0" y="520.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Service</text>
+</g>
+<text x="2200.0" y="2670.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Main functions are retained; routine add, edit, remove and view actions are grouped.</text>
+<text x="2200.0" y="2720.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">Protected customer functions require authentication. Staff and Owner/Admin operations require their respective authenticated roles.</text>
+<text x="2200.0" y="2780.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+</svg>

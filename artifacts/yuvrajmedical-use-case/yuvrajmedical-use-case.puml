@@ -1,0 +1,225 @@
+@startuml
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam packageStyle rectangle
+actor "Customer" as A0
+actor "Staff" as A1
+actor "Owner / Admin" as A2
+actor "Payment Gateway" as A3
+actor "OTP / SMS Service" as A4
+rectangle "YuvrajMedical Online Medical Store System" {
+  usecase "Add Medicine" as UC000
+  usecase "Add Medicine to Cart" as UC001
+  usecase "Add Medicine to Wishlist" as UC002
+  usecase "Add Staff" as UC003
+  usecase "Add Stock" as UC004
+  usecase "Apply Referral Reward" as UC005
+  usecase "Approve Prescription" as UC006
+  usecase "Authenticate User" as UC007
+  usecase "Browse Medicines" as UC008
+  usecase "Cancel Order" as UC009
+  usecase "Check Stock Availability" as UC010
+  usecase "Checkout" as UC011
+  usecase "Delete Medicine" as UC012
+  usecase "Filter Medicines" as UC013
+  usecase "Login" as UC014
+  usecase "Logout" as UC015
+  usecase "Make Payment" as UC016
+  usecase "Manage Cart" as UC017
+  usecase "Manage Delivery Addresses" as UC018
+  usecase "Manage Delivery Areas" as UC019
+  usecase "Manage Disease Categories" as UC020
+  usecase "Manage Family Members" as UC021
+  usecase "Manage Medicine Stock" as UC022
+  usecase "Manage Medicine Subscription" as UC023
+  usecase "Manage Medicines" as UC024
+  usecase "Manage Notification Preferences" as UC025
+  usecase "Manage Profile" as UC026
+  usecase "Manage Staff" as UC027
+  usecase "Move Saved Medicine to Cart" as UC028
+  usecase "Place Order" as UC029
+  usecase "Process Order" as UC030
+  usecase "Process Payment" as UC031
+  usecase "Record Stock Movement" as UC032
+  usecase "Reduce Stock" as UC033
+  usecase "Register" as UC034
+  usecase "Reject Prescription" as UC035
+  usecase "Remove Medicine from Cart" as UC036
+  usecase "Remove Medicine from Wishlist" as UC037
+  usecase "Remove Staff" as UC038
+  usecase "Return Payment Status" as UC039
+  usecase "Review Cart" as UC040
+  usecase "Review Prescription" as UC041
+  usecase "Save Medicine for Later" as UC042
+  usecase "Search Medicines" as UC043
+  usecase "Select Delivery Address" as UC044
+  usecase "Send OTP" as UC045
+  usecase "Send Order Notification" as UC046
+  usecase "Send Payment Notification" as UC047
+  usecase "Send Prescription Status Notification" as UC048
+  usecase "Send Subscription Reminder" as UC049
+  usecase "Submit Prescription Request" as UC050
+  usecase "Submit Review & Feedback" as UC051
+  usecase "Subscribe to Medicine" as UC052
+  usecase "Track Order" as UC053
+  usecase "Update Cart Quantity" as UC054
+  usecase "Update Medicine" as UC055
+  usecase "Update Order Status" as UC056
+  usecase "Update Staff" as UC057
+  usecase "Update Stock" as UC058
+  usecase "Upload Prescription" as UC059
+  usecase "Use Referral" as UC060
+  usecase "Verify OTP" as UC061
+  usecase "Verify Payment" as UC062
+  usecase "View Customer Order Information" as UC063
+  usecase "View Customers" as UC064
+  usecase "View Inventory Summary" as UC065
+  usecase "View Low Stock Medicines" as UC066
+  usecase "View Medicine Details" as UC067
+  usecase "View Medicines" as UC068
+  usecase "View Notifications" as UC069
+  usecase "View Order Details" as UC070
+  usecase "View Order History" as UC071
+  usecase "View Order Statistics" as UC072
+  usecase "View Orders" as UC073
+  usecase "View Owner Dashboard" as UC074
+  usecase "View Payments" as UC075
+  usecase "View Prescription Request" as UC076
+  usecase "View Prescription Requests" as UC077
+  usecase "View Prescription Status" as UC078
+  usecase "View Referral Rewards" as UC079
+  usecase "View Reviews & Feedback" as UC080
+  usecase "View Sales Summary" as UC081
+  usecase "View Staff Dashboard" as UC082
+  usecase "View Staff Details" as UC083
+  usecase "View Stock History" as UC084
+  usecase "View Stock Movements" as UC085
+}
+A0 -- UC034
+A0 -- UC014
+A0 -- UC015
+A0 -- UC061
+A0 -- UC026
+A0 -- UC021
+A0 -- UC018
+A0 -- UC008
+A0 -- UC043
+A0 -- UC013
+A0 -- UC067
+A0 -- UC001
+A0 -- UC054
+A0 -- UC036
+A0 -- UC042
+A0 -- UC028
+A0 -- UC002
+A0 -- UC037
+A0 -- UC052
+A0 -- UC023
+A0 -- UC059
+A0 -- UC050
+A0 -- UC078
+A0 -- UC029
+A0 -- UC011
+A0 -- UC044
+A0 -- UC016
+A0 -- UC071
+A0 -- UC070
+A0 -- UC053
+A0 -- UC009
+A0 -- UC069
+A0 -- UC025
+A0 -- UC051
+A0 -- UC060
+A0 -- UC079
+A0 -- UC017
+A1 -- UC014
+A1 -- UC015
+A1 -- UC082
+A1 -- UC073
+A1 -- UC030
+A1 -- UC056
+A1 -- UC077
+A1 -- UC041
+A1 -- UC006
+A1 -- UC035
+A1 -- UC068
+A1 -- UC022
+A1 -- UC004
+A1 -- UC033
+A1 -- UC032
+A1 -- UC084
+A1 -- UC066
+A1 -- UC063
+A2 -- UC014
+A2 -- UC015
+A2 -- UC074
+A2 -- UC081
+A2 -- UC072
+A2 -- UC065
+A2 -- UC024
+A2 -- UC000
+A2 -- UC055
+A2 -- UC012
+A2 -- UC020
+A2 -- UC027
+A2 -- UC003
+A2 -- UC057
+A2 -- UC038
+A2 -- UC083
+A2 -- UC019
+A2 -- UC073
+A2 -- UC075
+A2 -- UC064
+A2 -- UC077
+A2 -- UC085
+A2 -- UC080
+A2 -- UC079
+A3 -- UC031
+A3 -- UC062
+A3 -- UC039
+A4 -- UC045
+A4 -- UC061
+A4 -- UC046
+A4 -- UC047
+A4 -- UC048
+A4 -- UC049
+UC034 ..> UC061 : <<include>>
+UC014 ..> UC007 : <<include>>
+UC061 ..> UC045 : <<include>>
+UC001 ..> UC067 : <<include>>
+UC011 ..> UC040 : <<include>>
+UC011 ..> UC044 : <<include>>
+UC029 ..> UC011 : <<include>>
+UC029 ..> UC010 : <<include>>
+UC016 ..> UC031 : <<include>>
+UC031 ..> UC062 : <<include>>
+UC030 ..> UC010 : <<include>>
+UC030 ..> UC058 : <<include>>
+UC022 ..> UC032 : <<include>>
+UC059 ..> UC050 : <<include>>
+UC041 ..> UC076 : <<include>>
+UC083 ..> UC027 : <<include>>
+UC009 ..> UC070 : <<extend>>
+UC053 ..> UC070 : <<extend>>
+UC042 ..> UC017 : <<extend>>
+UC028 ..> UC042 : <<extend>>
+UC005 ..> UC011 : <<extend>>
+UC006 ..> UC041 : <<extend>>
+UC035 ..> UC041 : <<extend>>
+UC000 ..> UC024 : <<extend>>
+UC055 ..> UC024 : <<extend>>
+UC012 ..> UC024 : <<extend>>
+UC003 ..> UC027 : <<extend>>
+UC057 ..> UC027 : <<extend>>
+UC038 ..> UC027 : <<extend>>
+note bottom of A0
+Authenticated Customer required for cart, wishlist, checkout, orders, subscriptions, prescriptions, addresses, notifications, reviews and referrals.
+end note
+note bottom of A1
+Authenticated Staff required for staff operations.
+end note
+note bottom of A2
+Authenticated Owner/Admin required for administrative operations.
+end note
+@enduml

@@ -1,0 +1,185 @@
+{
+  "tables": [
+    "auth_otps",
+    "family_members",
+    "login_activity",
+    "notification_preferences",
+    "notifications",
+    "otp_verifications",
+    "referral_rewards",
+    "user_devices",
+    "users",
+    "cart",
+    "cart_saved_later",
+    "medicine_subscriptions",
+    "reviews_feedback",
+    "wishlist",
+    "medicines",
+    "disease_categories",
+    "stock_movements",
+    "order_items",
+    "orders",
+    "payments",
+    "delivery_addresses",
+    "delivery_areas",
+    "prescription_requests",
+    "staff"
+  ],
+  "relationships": [
+    {
+      "parent": "users",
+      "child": "auth_otps",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "family_members",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "login_activity",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "notification_preferences",
+      "cardinality": "1:1"
+    },
+    {
+      "parent": "users",
+      "child": "notifications",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "otp_verifications",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "referral_rewards",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "user_devices",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "cart",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "cart",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "cart_saved_later",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "cart_saved_later",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "medicine_subscriptions",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "medicine_subscriptions",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "reviews_feedback",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "reviews_feedback",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "wishlist",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "wishlist",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "disease_categories",
+      "child": "medicines",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "stock_movements",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "medicines",
+      "child": "order_items",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "orders",
+      "child": "order_items",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "orders",
+      "child": "payments",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "orders",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "delivery_addresses",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "delivery_areas",
+      "child": "delivery_addresses",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "delivery_addresses",
+      "child": "orders",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "users",
+      "child": "prescription_requests",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "staff",
+      "child": "prescription_requests",
+      "cardinality": "1:N"
+    },
+    {
+      "parent": "staff",
+      "child": "stock_movements",
+      "cardinality": "1:N"
+    }
+  ],
+  "validation": {
+    "tables": 24,
+    "unique_relationships": 30,
+    "status": "passed"
+  }
+}

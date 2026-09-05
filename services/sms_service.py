@@ -46,6 +46,9 @@ SMS_TEMPLATES = {
 }
 
 
+SUCCESS_STATUSES = {"success", "sent", "queued", "submitted"}
+
+
 def sms_enabled() -> bool:
     return os.getenv("SMS_ENABLED", "true").strip().lower() not in {"0", "false", "no", "off"}
 
@@ -252,7 +255,7 @@ def send_manual_otp(phone: str, otp: str, purpose: str = "verification") -> SmsR
             return SmsResult(False, "TWOFACTOR_OTP_TEMPLATE is required for transactional SMS OTP.", provider_status="missing_template")
         message_template = os.getenv(
             "TWOFACTOR_OTP_MESSAGE",
-            "YuvrajMedical: Your OTP is {otp}. Do not share it with anyone."
+            "Yuvraj Medical CMS OTP: {otp} is your secure verification code. Please do not share it."
         )
         message = message_template.format(otp=otp_value)
         base_url = os.getenv("TWOFACTOR_LEGACY_URL", "https://2factor.in/API/V1").strip().rstrip("/")
@@ -272,7 +275,7 @@ def send_manual_otp(phone: str, otp: str, purpose: str = "verification") -> SmsR
 
         status = str(result.get("Status") or result.get("status") or "").lower()
         details = str(result.get("Details") or result.get("message") or "")
-        if status in {"success", "sent", "queued", "submitted"}:
+        if status in SUCCESS_STATUSES:
             logger.info("2Factor transactional OTP sent to %s (%s)", masked, purpose)
             return SmsResult(True, "OTP sent successfully.", session_id=f"local-{purpose}-{normalized[-4:]}", provider_status=status)
 
@@ -291,7 +294,7 @@ def send_manual_otp(phone: str, otp: str, purpose: str = "verification") -> SmsR
 
     status = str(result.get("Status") or result.get("status") or "").lower()
     details = str(result.get("Details") or result.get("message") or "")
-    if status in {"success", "sent"}:
+    if status in SUCCESS_STATUSES:
         logger.info("2Factor manual OTP sent to %s (%s)", masked, purpose)
         return SmsResult(True, "OTP sent successfully.", session_id=f"local-{purpose}-{normalized[-4:]}", provider_status=status)
 

@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "required_store_directions": "all present",
+  "required_external_and_internal_flows": "all present",
+  "rendered_svg_directional_flows": 112,
+  "processes": 13,
+  "data_stores": 24,
+  "external_entities": 3,
+  "gateway": "only connects to 6.0",
+  "prohibited_connections": 0,
+  "duplicate_nodes": 0
+}

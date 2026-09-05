@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3600" height="2490" viewBox="0 0 3600 2490">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1800.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="1800.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Owner / Admin Management &amp; Logout</text>
+<rect x="65.0" y="220" width="1735.0" height="2165" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1735.0" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="932.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Owner / Admin</text>
+<rect x="1800.0" y="220" width="1735.0" height="2165" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="1800.0" y="220" width="1735.0" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2667.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<g class="flow" data-from="s" data-to="login__merge"><title>Control flow</title>
+<polyline points="932.0,349 932.0,402.0 557.0,402.0 557.0,455" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="932.0,349 932.0,402.0 557.0,402.0 557.0,455" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="557.0,455 551.0,441.0 563.0,441.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="login" data-to="validate"><title>Control flow</title>
+<polyline points="1257.0,470.0 2342.0,470.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1257.0,470.0 2342.0,470.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342.0,470.0 2328.0,476.0 2328.0,464.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="validate" data-to="valid"><title>Control flow</title>
+<polyline points="2667.0,507.0 2667.5,545.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2667.0,507.0 2667.5,545.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2667.5,545.0 2661.316324740966,531.080152289238 2673.315286094666,530.9222712187945" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="valid" data-to="error"><title>No</title>
+<polyline points="2535,605.0 2272,605.0 2272,740.0 2342,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2535,605.0 2272,605.0 2272,740.0 2342,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342,740.0 2328.0,746.0 2328.0,734.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="error" data-to="login__merge"><title>Control flow</title>
+<polyline points="2342,720 560,720 560,485" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2342,720 560,720 560,485" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="560,485 566.0,499.0 554.0,499.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="valid" data-to="dashboard"><title>Yes</title>
+<polyline points="2800,600 3040,600 3040,860 2992,860" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2800,600 3040,600 3040,860 2992,860" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2992,860 3006.0,854.0 3006.0,866.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="dashboard" data-to="choose"><title>Control flow</title>
+<polyline points="2667.0,912 2667.0,931.0 932.5,931.0 932.5,950" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2667.0,912 2667.0,931.0 932.5,931.0 932.5,950" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="932.5,950 926.5,936.0 938.5,936.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="medicine"><title>Medicines</title>
+<polyline points="1065,1010.0 1327,1010.0 1327,1145.0 1257,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1065,1010.0 1327,1010.0 1327,1145.0 1257,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1257,1145.0 1271.0,1139.0 1271.0,1151.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="medicine" data-to="medvalidate"><title>Control flow</title>
+<polyline points="1257.0,1145.0 2342.0,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1257.0,1145.0 2342.0,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342.0,1145.0 2328.0,1151.0 2328.0,1139.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="medvalidate" data-to="medupdate"><title>Control flow</title>
+<polyline points="2667.0,1182.0 2667.0,1243.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2667.0,1182.0 2667.0,1243.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2667.0,1243.0 2661.0,1229.0 2673.0,1229.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="medupdate" data-to="choose"><title>Control flow</title>
+<polyline points="2342,1260 2300,1260 2300,860 920,860 920,900 940,900 940,950" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2342,1260 2300,1260 2300,860 920,860 920,900 940,900 940,950" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="940,950 934.0,936.0 946.0,936.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="staff"><title>Staff</title>
+<polyline points="800,1000 560,1000 560,1400 607,1400" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="800,1000 560,1000 560,1400 607,1400" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="607,1400 593.0,1406.0 593.0,1394.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="staff" data-to="staffvalidate"><title>Control flow</title>
+<polyline points="1257.0,1415.0 2342.0,1415.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1257.0,1415.0 2342.0,1415.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342.0,1415.0 2328.0,1421.0 2328.0,1409.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="staffvalidate" data-to="staffupdate"><title>Control flow</title>
+<polyline points="2667.0,1452.0 2667.0,1513.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2667.0,1452.0 2667.0,1513.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2667.0,1513.0 2661.0,1499.0 2673.0,1499.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="staffupdate" data-to="choose"><title>Control flow</title>
+<polyline points="2342,1540 1900,1540 1900,840 940,840 940,950" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2342,1540 1900,1540 1900,840 940,840 940,950" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="940,950 934.0,936.0 946.0,936.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="areas"><title>Categories / Areas</title>
+<polyline points="940,950 940,900 1300,900 1300,1660 1257,1660" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="940,950 940,900 1300,900 1300,1660 1257,1660" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1257,1660 1271.0,1654.0 1271.0,1666.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="areas" data-to="areaupdate"><title>Control flow</title>
+<polyline points="1257.0,1685.0 2342.0,1685.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1257.0,1685.0 2342.0,1685.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342.0,1685.0 2328.0,1691.0 2328.0,1679.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="areaupdate" data-to="choose"><title>Control flow</title>
+<polyline points="2342,1660 2140,1660 2140,820 900,820 900,900 940,900 940,950" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2342,1660 2140,1660 2140,820 900,820 900,900 940,900 940,950" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="940,950 934.0,936.0 946.0,936.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="reports"><title>Views / Reports</title>
+<polyline points="800,1000 760,1000 760,980 460,980 460,1800 607,1800" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="800,1000 760,1000 760,980 460,980 460,1800 607,1800" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="607,1800 593.0,1806.0 593.0,1794.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="reports" data-to="show"><title>Control flow</title>
+<polyline points="1257.0,1820.0 2342.0,1820.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1257.0,1820.0 2342.0,1820.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342.0,1820.0 2328.0,1826.0 2328.0,1814.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="show" data-to="choose"><title>Control flow</title>
+<polyline points="2342,1800 1440,1800 1440,800 760,800 760,1000 800,1000" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2342,1800 1440,1800 1440,800 760,800 760,1000 800,1000" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="800,1000 786.0,1006.0 786.0,994.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="choose" data-to="logout"><title>Logout</title>
+<polyline points="940,950 940,880 1320,880 1320,1940 1257,1940" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="940,950 940,880 1320,880 1320,1940 1257,1940" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1257,1940 1271.0,1934.0 1271.0,1946.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="logout" data-to="destroy"><title>Control flow</title>
+<polyline points="1257.0,1955.0 2342.0,1955.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1257.0,1955.0 2342.0,1955.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2342.0,1955.0 2328.0,1961.0 2328.0,1949.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="destroy" data-to="redirect"><title>Control flow</title>
+<polyline points="2667.0,1998.0 2667.0,2053.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2667.0,1998.0 2667.0,2053.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2667.0,2053.0 2661.0,2039.0 2673.0,2039.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="redirect" data-to="e"><title>Control flow</title>
+<polyline points="2667.0,2127 2667.0,2166.5 932.0,2166.5 932.0,2206" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2667.0,2127 2667.0,2166.5 932.0,2166.5 932.0,2206" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="932.0,2206 926.0,2192.0 938.0,2192.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="login__merge" data-to="login"><title>Control flow</title>
+<polyline points="572.0,470.0 607.0,470.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="572.0,470.0 607.0,470.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="607.0,470.0 593.0,476.0 593.0,464.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<rect x="2317.2421875" y="589.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2337.75" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="2980.640625" y="649.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="3004.3203125" y="665.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="1080.96875" y="994.0" width="99.0625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1130.5" y="1010.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Medicines</text>
+<rect x="493.3125" y="1084.0" width="54.6875" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="520.65625" y="1100.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Staff</text>
+<rect x="1121.890625" y="1074.0" width="166.109375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1204.9453125" y="1090.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Categories / Areas</text>
+<rect x="304.265625" y="1169.0" width="143.734375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="376.1328125" y="1185.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Views / Reports</text>
+<rect x="1332.0" y="1129.0" width="73.078125" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1368.5390625" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Logout</text>
+<g class="node" data-id="s" data-kind="start" data-lane="A"><title>start</title>
+<circle cx="932.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="login" data-kind="action" data-lane="A"><title>Log in as Owner / Admin</title>
+<rect x="607" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="932.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Log in as Owner / Admin</text>
+</g>
+<g class="node" data-id="validate" data-kind="action" data-lane="S"><title>Validate admin credentials</title>
+<rect x="2342" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate admin credentials</text>
+</g>
+<g class="node" data-id="valid" data-kind="decision" data-lane="S"><title>Credentials valid?</title>
+<polygon points="2667.5,545 2800,605.0 2667.5,665 2535,605.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="2667.5" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Credentials valid?</text>
+</g>
+<g class="node" data-id="error" data-kind="action" data-lane="S"><title>Display login error</title>
+<rect x="2342" y="703" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display login error</text>
+</g>
+<g class="node" data-id="dashboard" data-kind="action" data-lane="S"><title>Display Owner Dashboard</title>
+<rect x="2342" y="838" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display Owner Dashboard</text>
+</g>
+<g class="node" data-id="choose" data-kind="decision" data-lane="A"><title>Choose management function</title>
+<polygon points="932.5,950 1065,1010.0 932.5,1070 800,1010.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="932.5" y="996.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Choose management</text>
+<text x="932.5" y="1023.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">function</text>
+</g>
+<g class="node" data-id="medicine" data-kind="action" data-lane="A"><title>Add / update / delete medicine</title>
+<rect x="607" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="932.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Add / update / delete medicine</text>
+</g>
+<g class="node" data-id="medvalidate" data-kind="action" data-lane="S"><title>Validate medicine data</title>
+<rect x="2342" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate medicine data</text>
+</g>
+<g class="node" data-id="medupdate" data-kind="action" data-lane="S"><title>Update medicine records; show success</title>
+<rect x="2342" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Update medicine records; show success</text>
+</g>
+<g class="node" data-id="staff" data-kind="action" data-lane="A"><title>Add / update / remove staff</title>
+<rect x="607" y="1378" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="932.0" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Add / update / remove staff</text>
+</g>
+<g class="node" data-id="staffvalidate" data-kind="action" data-lane="S"><title>Validate staff data</title>
+<rect x="2342" y="1378" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate staff data</text>
+</g>
+<g class="node" data-id="staffupdate" data-kind="action" data-lane="S"><title>Update staff information; show success</title>
+<rect x="2342" y="1513" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1550.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Update staff information; show success</text>
+</g>
+<g class="node" data-id="areas" data-kind="action" data-lane="A"><title>Manage disease categories / delivery areas</title>
+<rect x="607" y="1648" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="932.0" y="1685.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Manage disease categories / delivery areas</text>
+</g>
+<g class="node" data-id="areaupdate" data-kind="action" data-lane="S"><title>Validate and apply selected changes</title>
+<rect x="2342" y="1648" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1685.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate and apply selected changes</text>
+</g>
+<g class="node" data-id="reports" data-kind="action" data-lane="A"><title>Choose orders, payments, customers, prescriptions, stock movements, reviews, referral rewards or dashboard statistics</title>
+<rect x="607" y="1761" width="650" height="118" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="932.0" y="1788.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Choose orders, payments, customers,</text>
+<text x="932.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">prescriptions, stock movements, reviews,</text>
+<text x="932.0" y="1852.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">referral rewards or dashboard statistics</text>
+</g>
+<g class="node" data-id="show" data-kind="action" data-lane="S"><title>Display selected management view / report</title>
+<rect x="2342" y="1783" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display selected management view / report</text>
+</g>
+<g class="node" data-id="logout" data-kind="action" data-lane="A"><title>Select Logout</title>
+<rect x="607" y="1918" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="932.0" y="1955.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Logout</text>
+</g>
+<g class="node" data-id="destroy" data-kind="action" data-lane="S"><title>Destroy session; record activity if applicable</title>
+<rect x="2342" y="1912" width="650" height="86" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="1939.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Destroy session; record activity if</text>
+<text x="2667.0" y="1971.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">applicable</text>
+</g>
+<g class="node" data-id="redirect" data-kind="action" data-lane="S"><title>Redirect to Login / Home Page</title>
+<rect x="2342" y="2053" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2667.0" y="2090.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Redirect to Login / Home Page</text>
+</g>
+<g class="node" data-id="e" data-kind="end" data-lane="A"><title>end</title>
+<circle cx="932.0" cy="2225.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="932.0" cy="2225.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="932.0" y="2264.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b"></text>
+</g>
+<g class="node" data-id="login__merge" data-kind="merge" data-lane="A"><title>merge</title>
+<polygon points="557.0,455 572,470.0 557.0,485 542,470.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<text x="1800.0" y="2432.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+</svg>

@@ -1,0 +1,267 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4200" height="2300" viewBox="0 0 4200 2300">
+<rect width="100%" height="100%" fill="white"/>
+<text x="2100.0" y="55.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="2100.0" y="105.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#172b3b">Payment, Parallel Updates &amp; Confirmation</text>
+<rect x="50.0" y="155" width="820.0" height="1960" rx="0" fill="#f5f8fc" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="50.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="460.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Customer</text>
+<rect x="870.0" y="155" width="820.0" height="1960" rx="0" fill="#f5faf6" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="870.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="1280.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">YuvrajMedical System</text>
+<rect x="1690.0" y="155" width="820.0" height="1960" rx="0" fill="#fffaf0" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="1690.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="2100.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Staff</text>
+<rect x="2510.0" y="155" width="820.0" height="1960" rx="0" fill="#f8f5fb" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="2510.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="2920.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Payment Gateway</text>
+<rect x="3330.0" y="155" width="820.0" height="1960" rx="0" fill="#f4f9fa" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="3330.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="3740.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">OTP / SMS Service</text>
+<g class="edge" data-from="record" data-to="confirm"><title></title>
+<polyline points="1025,1260 980,1260 980,1320 1025,1320" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,1260 980,1260 980,1320 1025,1320" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,1320 1012.0,1325.0 1012.0,1315.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="stock" data-to="movement"><title></title>
+<polyline points="1845,1260 1800,1260 1800,1320 1845,1320" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1845,1260 1800,1260 1800,1320 1845,1320" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1845,1320 1832.0,1325.0 1832.0,1315.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="clear" data-to="generate"><title></title>
+<polyline points="1025,1660 980,1660 980,1720 1025,1720" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,1660 980,1660 980,1720 1025,1720" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,1720 1012.0,1725.0 1012.0,1715.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="process" data-to="success"><title></title>
+<polyline points="2665,400 2620,400 2620,460 2835.3968253968255,467.6825396825397" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2665,400 2620,400 2620,460 2835.3968253968255,467.6825396825397" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2835.3968253968255,467.6825396825397 2822.226865114638,472.2159871748561 2822.5833075894225,462.2223417557825" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="message" data-to="retry"><title></title>
+<polyline points="205,700 160,700 160,740 384.92957746478874,752.6760563380282" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="205,700 160,700 160,740 384.92957746478874,752.6760563380282" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="384.92957746478874,752.6760563380282 371.6688402306225,756.936672256695 372.2315041083628,746.9525143372365" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="movement" data-to="ok"><title></title>
+<polyline points="1845,1360 1800,1360 1800,1420 2015.3968253968253,1427.6825396825398" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1845,1360 1800,1360 1800,1420 2015.3968253968253,1427.6825396825398" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2015.3968253968253,1427.6825396825398 2002.2268651146371,1432.215987174856 2002.5833075894222,1422.2223417557827" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="success" data-to="failresult"><title>[No]</title>
+<polyline points="2829.6610169491523,494.50847457627117 2620,500 2620,560 2665,560" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2829.6610169491523,494.50847457627117 2620,500 2620,560 2665,560" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2665,560 2652.0,565.0 2652.0,555.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="fork" data-to="record"><title></title>
+<polyline points="1200,1160 1160,1160 1160,1215" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1200,1160 1160,1160 1160,1215" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1160,1215 1155.0,1202.0 1165.0,1202.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="join" data-to="clear"><title></title>
+<polyline points="1200,1540 1160,1540 1160,1599" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1200,1540 1160,1540 1160,1599" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1160,1599 1155.0,1586.0 1165.0,1586.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="flag" data-to="join"><title></title>
+<polyline points="1535,1460 1580,1460 1580,1480 1680,1480 1680,1533" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,1460 1580,1460 1580,1480 1680,1480 1680,1533" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1680,1533 1675.0,1520.0 1685.0,1520.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="s" data-to="method"><title></title>
+<polyline points="447.5192455849323,298.3205029433784 340,300 340,351" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="447.5192455849323,298.3205029433784 340,300 340,351" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="340,351 335.0,338.0 345.0,338.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="hold" data-to="attemptend"><title></title>
+<polyline points="1160,901 1160,960 1265.1315814897605,960.0175441986347" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1160,901 1160,960 1265.1315814897605,960.0175441986347" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1265.1315814897605,960.0175441986347 1252.1307472783812,965.0153747087896 1252.132416063169,955.0153748480317" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="receive" data-to="end"><title></title>
+<polyline points="340,1861 340,1920 445.1315814897605,1920.0175441986348" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="340,1861 340,1920 445.1315814897605,1920.0175441986348" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="445.1315814897605,1920.0175441986348 432.1307472783814,1925.0153747087895 432.13241606316916,1915.0153748480318" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="confirm" data-to="join"><title></title>
+<polyline points="1535,1360 1680,1360 1680,1533" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,1360 1680,1360 1680,1533" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1680,1533 1675.0,1520.0 1685.0,1520.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="retry" data-to="method"><title>[Yes]</title>
+<polyline points="535.0704225352113,752.6760563380282 760,740 760,400 715,400" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="535.0704225352113,752.6760563380282 760,740 760,400 715,400" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,400 728.0,395.0 728.0,405.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="success" data-to="result"><title>[Yes]</title>
+<polyline points="3010.3389830508477,494.50847457627117 3220,500 3220,1040 3175,1040" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3010.3389830508477,494.50847457627117 3220,500 3220,1040 3175,1040" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3175,1040 3188.0,1035.0 3188.0,1045.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="fork" data-to="stock"><title></title>
+<polyline points="2180,1160 2220,1160 2220,1215" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2180,1160 2220,1160 2220,1215" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2220,1215 2215.0,1202.0 2225.0,1202.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="retry" data-to="hold"><title>[No]</title>
+<polyline points="535.0704225352113,787.3239436619718 640,800 640,840 1025,840" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="535.0704225352113,787.3239436619718 640,800 640,840 1025,840" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,840 1012.0,845.0 1012.0,835.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="method" data-to="request"><title></title>
+<polyline points="715,360 1025,360" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="715,360 1025,360" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,360 1012.0,365.0 1012.0,355.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="ok" data-to="join"><title>[Yes]</title>
+<polyline points="2190.3389830508477,1454.5084745762713 2280,1460 2280,1540 2180,1540" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2190.3389830508477,1454.5084745762713 2280,1460 2280,1540 2180,1540" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2180,1540 2193.0,1535.0 2193.0,1545.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="failed" data-to="message"><title></title>
+<polyline points="1025,600 980,600 980,660 715,660" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,600 980,600 980,660 715,660" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,660 728.0,655.0 728.0,665.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="ok" data-to="flag"><title>[No]</title>
+<polyline points="1976.046511627907,1440.093023255814 1535,1440" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1976.046511627907,1440.093023255814 1535,1440" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1535,1440 1548.0010542850393,1435.0027420041124 1547.9989451366548,1445.0027417816868" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="result" data-to="fork"><title></title>
+<polyline points="2665,1080 1940,1080 1940,1149" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2665,1080 1940,1080 1940,1149" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1940,1149 1935.0,1136.0 1945.0,1136.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="request" data-to="process"><title></title>
+<polyline points="1535,360 2665,360" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,360 2665,360" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2665,360 2652.0,365.0 2652.0,355.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="failresult" data-to="failed"><title></title>
+<polyline points="2665,580 1535,580" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2665,580 1535,580" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1535,580 1548.0,575.0 1548.0,585.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="generate" data-to="notify"><title></title>
+<polyline points="1535,1720 3485,1720" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,1720 3485,1720" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3485,1720 3472.0,1725.0 3472.0,1715.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="notify" data-to="receive"><title></title>
+<polyline points="3485,1740 3440,1740 3440,1800 715,1800" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3485,1740 3440,1740 3440,1800 715,1800" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,1800 728.0,1795.0 728.0,1805.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<rect x="2609.399629237288" y="482.62711864406776" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="2634.907441737288" y="498.62711864406776" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="690.640625" y="469.0" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="719.3203125" y="485.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="3150.640625" y="754.0" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="3179.3203125" y="770.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="710.7421875" y="824.0" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="736.25" y="840.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="2201.3203125" y="1524.0" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="2230.0" y="1540.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="1582.2460029069766" y="1424.0232558139535" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="1607.7538154069766" y="1440.0232558139535" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<g class="node" data-id="s" data-kind="start" data-lane="Customer"><title></title>
+<circle cx="460.0" cy="290.0" r="13" fill="#17212c" stroke="#17212c" stroke-width="2"/>
+</g>
+<g class="node" data-id="method" data-kind="action" data-lane="Customer"><title>Select payment method</title>
+<rect x="205" y="351" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="386.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Select payment method</text>
+</g>
+<g class="node" data-id="request" data-kind="action" data-lane="YuvrajMedical System"><title>Send payment request and amount</title>
+<rect x="1025" y="351" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="386.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Send payment request and amount</text>
+</g>
+<g class="node" data-id="process" data-kind="action" data-lane="Payment Gateway"><title>Process transaction</title>
+<rect x="2665" y="351" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="2920.0" y="386.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Process transaction</text>
+</g>
+<g class="node" data-id="success" data-kind="decision" data-lane="Payment Gateway"><title>Payment successful?</title>
+<polygon points="2920.0,441 3050,482.0 2920.0,523 2790,482.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="2920.0" y="482.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Payment successful?</text>
+</g>
+<g class="node" data-id="failresult" data-kind="action" data-lane="Payment Gateway"><title>Return failure result</title>
+<rect x="2665" y="543" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="2920.0" y="578.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Return failure result</text>
+</g>
+<g class="node" data-id="failed" data-kind="action" data-lane="YuvrajMedical System"><title>Record failed payment</title>
+<rect x="1025" y="543" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="578.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Record failed payment</text>
+</g>
+<g class="node" data-id="message" data-kind="action" data-lane="Customer"><title>View Payment Failed</title>
+<rect x="205" y="639" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="674.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">View Payment Failed</text>
+</g>
+<g class="node" data-id="retry" data-kind="decision" data-lane="Customer"><title>Retry payment?</title>
+<polygon points="460.0,729 590,770.0 460.0,811 330,770.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="460.0" y="770.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Retry payment?</text>
+</g>
+<g class="node" data-id="hold" data-kind="action" data-lane="YuvrajMedical System"><title>Cancel / hold order according to rules</title>
+<rect x="1025" y="831" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="866.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Cancel / hold order according to rules</text>
+</g>
+<g class="node" data-id="attemptend" data-kind="end" data-lane="YuvrajMedical System"><title></title>
+<circle cx="1280.0" cy="962.0" r="15" fill="white" stroke="#17212c" stroke-width="2"/>
+<circle cx="1280.0" cy="962.0" r="9" fill="#17212c" stroke="#17212c" stroke-width="2"/>
+</g>
+<g class="node" data-id="result" data-kind="action" data-lane="Payment Gateway"><title>Return successful transaction result</title>
+<rect x="2665" y="1023" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="2920.0" y="1058.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Return successful transaction result</text>
+</g>
+<g class="node" data-id="fork" data-kind="fork" data-lane="YuvrajMedical System"><title></title>
+<rect x="1200" y="1149" width="980" height="10" rx="0" fill="#17212c" stroke="#17212c" stroke-width="1.5"/>
+</g>
+<g class="node" data-id="record" data-kind="action" data-lane="YuvrajMedical System"><title>Record successful payment</title>
+<rect x="1025" y="1215" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1250.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Record successful payment</text>
+</g>
+<g class="node" data-id="confirm" data-kind="action" data-lane="YuvrajMedical System"><title>Set order status Confirmed</title>
+<rect x="1025" y="1311" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1346.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Set order status Confirmed</text>
+</g>
+<g class="node" data-id="stock" data-kind="action" data-lane="Staff"><title>Update stock using sold quantities</title>
+<rect x="1845" y="1215" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="2100.0" y="1250.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Update stock using sold quantities</text>
+</g>
+<g class="node" data-id="movement" data-kind="action" data-lane="Staff"><title>Record stock movement</title>
+<rect x="1845" y="1311" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="2100.0" y="1346.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Record stock movement</text>
+</g>
+<g class="node" data-id="ok" data-kind="decision" data-lane="Staff"><title>Stock update successful?</title>
+<polygon points="2100.0,1401 2230,1442.0 2100.0,1483 1970,1442.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="2100.0" y="1430.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Stock update</text>
+<text x="2100.0" y="1453.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">successful?</text>
+</g>
+<g class="node" data-id="flag" data-kind="action" data-lane="YuvrajMedical System"><title>Flag inventory issue for staff</title>
+<rect x="1025" y="1407" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1442.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Flag inventory issue for staff</text>
+</g>
+<g class="node" data-id="join" data-kind="join" data-lane="YuvrajMedical System"><title></title>
+<rect x="1200" y="1533" width="980" height="10" rx="0" fill="#17212c" stroke="#17212c" stroke-width="1.5"/>
+</g>
+<g class="node" data-id="clear" data-kind="action" data-lane="YuvrajMedical System"><title>Clear purchased items from cart</title>
+<rect x="1025" y="1599" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1634.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Clear purchased items from cart</text>
+</g>
+<g class="node" data-id="generate" data-kind="action" data-lane="YuvrajMedical System"><title>Generate order confirmation</title>
+<rect x="1025" y="1695" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1730.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Generate order confirmation</text>
+</g>
+<g class="node" data-id="notify" data-kind="action" data-lane="OTP / SMS Service"><title>Send order and payment confirmation</title>
+<rect x="3485" y="1695" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="3740.0" y="1730.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Send order and payment confirmation</text>
+</g>
+<g class="node" data-id="receive" data-kind="action" data-lane="Customer"><title>Receive confirmation</title>
+<rect x="205" y="1791" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="1826.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Receive confirmation</text>
+</g>
+<g class="node" data-id="end" data-kind="end" data-lane="Customer"><title></title>
+<circle cx="460.0" cy="1922.0" r="15" fill="white" stroke="#17212c" stroke-width="2"/>
+<circle cx="460.0" cy="1922.0" r="9" fill="#17212c" stroke="#17212c" stroke-width="2"/>
+</g>
+<text x="2100.0" y="2190.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">Control-flow arrows • Guarded decision branches • Rounded actions • Fork/join bars for concurrent work</text>
+<text x="2100.0" y="2240.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="19" font-weight="400" fill="#172b3b">Confirmation messages are sent after the update branches join. Inventory exceptions are flagged for staff review before the join.</text>
+</svg>

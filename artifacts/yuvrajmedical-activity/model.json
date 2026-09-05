@@ -1,0 +1,4188 @@
+[
+  {
+    "slug": "00-main",
+    "title": "Main Customer Purchase Journey",
+    "lanes": [
+      "C",
+      "S",
+      "T",
+      "P",
+      "O"
+    ],
+    "nodes": {
+      "start": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "open": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Open YuvrajMedical",
+        "slot": 0
+      },
+      "home": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Display home page",
+        "slot": 0
+      },
+      "account": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Register or log in",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Validate account / credentials",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Authenticated?",
+        "slot": 0
+      },
+      "autherr": {
+        "lane": "C",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Read error; correct credentials",
+        "slot": 0
+      },
+      "browse": {
+        "lane": "C",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Browse / search; select medicine",
+        "slot": 0
+      },
+      "show": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Display medicine details",
+        "slot": 0
+      },
+      "rx": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 5.0,
+        "label": "Prescription required?",
+        "slot": 0
+      },
+      "upload": {
+        "lane": "C",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Upload prescription",
+        "slot": 0
+      },
+      "pending": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Validate file; create pending request",
+        "slot": 0
+      },
+      "review": {
+        "lane": "T",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Review prescription",
+        "slot": 0
+      },
+      "approved": {
+        "lane": "T",
+        "kind": "decision",
+        "row": 7.0,
+        "label": "Prescription approved?",
+        "slot": 0
+      },
+      "reject": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Record Rejected status",
+        "slot": 0
+      },
+      "rejectsms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Send rejection notification",
+        "slot": 0
+      },
+      "rejectview": {
+        "lane": "C",
+        "kind": "action",
+        "row": 8.0,
+        "label": "View rejection status",
+        "slot": 0
+      },
+      "approve": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Record Approved status",
+        "slot": 0
+      },
+      "approvesms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Send approval notification",
+        "slot": 0
+      },
+      "cart": {
+        "lane": "C",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Add medicine to cart; manage cart",
+        "slot": 0
+      },
+      "check": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Check session, cart, stock and prescription",
+        "slot": 0
+      },
+      "checkout": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 10.0,
+        "label": "Checkout valid?",
+        "slot": 0
+      },
+      "carterr": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Read checkout error; correct cart",
+        "slot": 0
+      },
+      "address": {
+        "lane": "C",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Select saved / add new delivery address",
+        "slot": 0
+      },
+      "area": {
+        "lane": "S",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Validate delivery area",
+        "slot": 0
+      },
+      "available": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 12.0,
+        "label": "Delivery available?",
+        "slot": 0
+      },
+      "addrerr": {
+        "lane": "C",
+        "kind": "action",
+        "row": 12.0,
+        "label": "Choose another address",
+        "slot": 0
+      },
+      "place": {
+        "lane": "C",
+        "kind": "action",
+        "row": 13.0,
+        "label": "Review summary / optional reward; place order",
+        "slot": 0
+      },
+      "create": {
+        "lane": "S",
+        "kind": "action",
+        "row": 13.0,
+        "label": "Create order, items and order ID",
+        "slot": 0
+      },
+      "method": {
+        "lane": "C",
+        "kind": "action",
+        "row": 14.0,
+        "label": "Select payment method",
+        "slot": 0
+      },
+      "request": {
+        "lane": "S",
+        "kind": "action",
+        "row": 14.0,
+        "label": "Send payment request",
+        "slot": 0
+      },
+      "payment": {
+        "lane": "P",
+        "kind": "action",
+        "row": 14.0,
+        "label": "Process transaction",
+        "slot": 0
+      },
+      "paid": {
+        "lane": "P",
+        "kind": "decision",
+        "row": 15.0,
+        "label": "Payment successful?",
+        "slot": 0
+      },
+      "failure": {
+        "lane": "S",
+        "kind": "action",
+        "row": 15.0,
+        "label": "Record failure; display Payment Failed",
+        "slot": 0
+      },
+      "retry": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 16.0,
+        "label": "Retry payment?",
+        "slot": 0
+      },
+      "hold": {
+        "lane": "S",
+        "kind": "action",
+        "row": 17.0,
+        "label": "Cancel / hold order under system rules",
+        "slot": -0.34
+      },
+      "attemptend": {
+        "lane": "C",
+        "kind": "end",
+        "row": 18.0,
+        "label": "Order attempt ended",
+        "slot": 0
+      },
+      "fork": {
+        "lane": "S",
+        "kind": "fork",
+        "row": 16.0,
+        "label": "Parallel completion",
+        "slot": 0
+      },
+      "confirm": {
+        "lane": "S",
+        "kind": "action",
+        "row": 18.0,
+        "label": "Confirm order status",
+        "slot": -0.3
+      },
+      "record": {
+        "lane": "S",
+        "kind": "action",
+        "row": 18.0,
+        "label": "Record successful payment",
+        "slot": 0.0
+      },
+      "clear": {
+        "lane": "S",
+        "kind": "action",
+        "row": 18.0,
+        "label": "Clear purchased cart items",
+        "slot": 0.3
+      },
+      "stock": {
+        "lane": "T",
+        "kind": "action",
+        "row": 17.0,
+        "label": "Update stock; record movement",
+        "slot": 0
+      },
+      "stockok": {
+        "lane": "T",
+        "kind": "decision",
+        "row": 18.0,
+        "label": "Stock update successful?",
+        "slot": 0
+      },
+      "flag": {
+        "lane": "S",
+        "kind": "action",
+        "row": 19.0,
+        "label": "Flag inventory issue for staff",
+        "slot": 0
+      },
+      "paysms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 17.0,
+        "label": "Send enabled payment confirmation",
+        "slot": 0
+      },
+      "join": {
+        "lane": "S",
+        "kind": "join",
+        "row": 20.0,
+        "label": "",
+        "slot": 0
+      },
+      "confirmation": {
+        "lane": "S",
+        "kind": "action",
+        "row": 21.0,
+        "label": "Generate order confirmation",
+        "slot": 0
+      },
+      "ordersms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 21.0,
+        "label": "Send enabled order confirmation",
+        "slot": 0
+      },
+      "receive": {
+        "lane": "C",
+        "kind": "action",
+        "row": 21.0,
+        "label": "Receive order confirmation",
+        "slot": 0
+      },
+      "stafflogin": {
+        "lane": "T",
+        "kind": "action",
+        "row": 22.0,
+        "label": "Log in; select pending order",
+        "slot": 0
+      },
+      "staffauth": {
+        "lane": "S",
+        "kind": "action",
+        "row": 22.0,
+        "label": "Validate staff session",
+        "slot": 0
+      },
+      "process": {
+        "lane": "T",
+        "kind": "action",
+        "row": 23.0,
+        "label": "Process next stage:\nConfirmed / Packed / Out for Delivery / Delivered",
+        "slot": 0
+      },
+      "status": {
+        "lane": "S",
+        "kind": "action",
+        "row": 23.0,
+        "label": "Update order status",
+        "slot": 0
+      },
+      "statussms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 23.0,
+        "label": "Send enabled order-status notification",
+        "slot": 0
+      },
+      "track": {
+        "lane": "C",
+        "kind": "action",
+        "row": 24.0,
+        "label": "Open My Orders; track order",
+        "slot": 0
+      },
+      "showstatus": {
+        "lane": "S",
+        "kind": "action",
+        "row": 24.0,
+        "label": "Display current order status",
+        "slot": 0
+      },
+      "delivered": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 25.0,
+        "label": "Order delivered?",
+        "slot": 0
+      },
+      "feedback": {
+        "lane": "C",
+        "kind": "action",
+        "row": 26.0,
+        "label": "Enter rating, review and feedback",
+        "slot": 0
+      },
+      "save": {
+        "lane": "S",
+        "kind": "action",
+        "row": 26.0,
+        "label": "Validate and save review",
+        "slot": 0
+      },
+      "logout": {
+        "lane": "C",
+        "kind": "action",
+        "row": 27.0,
+        "label": "Select Logout",
+        "slot": 0
+      },
+      "destroy": {
+        "lane": "S",
+        "kind": "action",
+        "row": 27.0,
+        "label": "Destroy session; redirect to home / login",
+        "slot": 0
+      },
+      "end": {
+        "lane": "S",
+        "kind": "end",
+        "row": 28.0,
+        "label": "Completed",
+        "slot": 0
+      },
+      "inventorymerge": {
+        "lane": "T",
+        "kind": "merge",
+        "row": 19.6,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "start",
+        "b": "open",
+        "guard": ""
+      },
+      {
+        "a": "open",
+        "b": "home",
+        "guard": ""
+      },
+      {
+        "a": "home",
+        "b": "account",
+        "guard": ""
+      },
+      {
+        "a": "account",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "autherr",
+        "guard": "No"
+      },
+      {
+        "a": "autherr",
+        "b": "account",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "browse",
+        "guard": "Yes"
+      },
+      {
+        "a": "browse",
+        "b": "show",
+        "guard": ""
+      },
+      {
+        "a": "show",
+        "b": "rx",
+        "guard": ""
+      },
+      {
+        "a": "rx",
+        "b": "cart",
+        "guard": "No"
+      },
+      {
+        "a": "rx",
+        "b": "upload",
+        "guard": "Yes"
+      },
+      {
+        "a": "upload",
+        "b": "pending",
+        "guard": ""
+      },
+      {
+        "a": "pending",
+        "b": "review",
+        "guard": ""
+      },
+      {
+        "a": "review",
+        "b": "approved",
+        "guard": ""
+      },
+      {
+        "a": "approved",
+        "b": "reject",
+        "guard": "No"
+      },
+      {
+        "a": "reject",
+        "b": "rejectsms",
+        "guard": ""
+      },
+      {
+        "a": "rejectsms",
+        "b": "rejectview",
+        "guard": ""
+      },
+      {
+        "a": "rejectview",
+        "b": "browse",
+        "guard": ""
+      },
+      {
+        "a": "approved",
+        "b": "approve",
+        "guard": "Yes"
+      },
+      {
+        "a": "approve",
+        "b": "approvesms",
+        "guard": ""
+      },
+      {
+        "a": "approvesms",
+        "b": "cart",
+        "guard": ""
+      },
+      {
+        "a": "cart",
+        "b": "check",
+        "guard": ""
+      },
+      {
+        "a": "check",
+        "b": "checkout",
+        "guard": ""
+      },
+      {
+        "a": "checkout",
+        "b": "carterr",
+        "guard": "No"
+      },
+      {
+        "a": "carterr",
+        "b": "cart",
+        "guard": ""
+      },
+      {
+        "a": "checkout",
+        "b": "address",
+        "guard": "Yes"
+      },
+      {
+        "a": "address",
+        "b": "area",
+        "guard": ""
+      },
+      {
+        "a": "area",
+        "b": "available",
+        "guard": ""
+      },
+      {
+        "a": "available",
+        "b": "addrerr",
+        "guard": "No"
+      },
+      {
+        "a": "addrerr",
+        "b": "address",
+        "guard": ""
+      },
+      {
+        "a": "available",
+        "b": "place",
+        "guard": "Yes"
+      },
+      {
+        "a": "place",
+        "b": "create",
+        "guard": ""
+      },
+      {
+        "a": "create",
+        "b": "method",
+        "guard": ""
+      },
+      {
+        "a": "method",
+        "b": "request",
+        "guard": ""
+      },
+      {
+        "a": "request",
+        "b": "payment",
+        "guard": ""
+      },
+      {
+        "a": "payment",
+        "b": "paid",
+        "guard": ""
+      },
+      {
+        "a": "paid",
+        "b": "failure",
+        "guard": "No"
+      },
+      {
+        "a": "failure",
+        "b": "retry",
+        "guard": ""
+      },
+      {
+        "a": "retry",
+        "b": "method",
+        "guard": "Yes"
+      },
+      {
+        "a": "retry",
+        "b": "hold",
+        "guard": "No"
+      },
+      {
+        "a": "hold",
+        "b": "attemptend",
+        "guard": ""
+      },
+      {
+        "a": "paid",
+        "b": "fork",
+        "guard": "Yes"
+      },
+      {
+        "a": "fork",
+        "b": "confirm",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "record",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "clear",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "stock",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "paysms",
+        "guard": ""
+      },
+      {
+        "a": "stock",
+        "b": "stockok",
+        "guard": ""
+      },
+      {
+        "a": "stockok",
+        "b": "flag",
+        "guard": "No"
+      },
+      {
+        "a": "stockok",
+        "b": "inventorymerge",
+        "guard": "Yes"
+      },
+      {
+        "a": "flag",
+        "b": "inventorymerge",
+        "guard": ""
+      },
+      {
+        "a": "confirm",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "record",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "clear",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "paysms",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "join",
+        "b": "confirmation",
+        "guard": ""
+      },
+      {
+        "a": "confirmation",
+        "b": "ordersms",
+        "guard": ""
+      },
+      {
+        "a": "ordersms",
+        "b": "receive",
+        "guard": ""
+      },
+      {
+        "a": "receive",
+        "b": "stafflogin",
+        "guard": ""
+      },
+      {
+        "a": "stafflogin",
+        "b": "staffauth",
+        "guard": ""
+      },
+      {
+        "a": "staffauth",
+        "b": "process",
+        "guard": ""
+      },
+      {
+        "a": "process",
+        "b": "status",
+        "guard": ""
+      },
+      {
+        "a": "status",
+        "b": "statussms",
+        "guard": ""
+      },
+      {
+        "a": "statussms",
+        "b": "track",
+        "guard": ""
+      },
+      {
+        "a": "track",
+        "b": "showstatus",
+        "guard": ""
+      },
+      {
+        "a": "showstatus",
+        "b": "delivered",
+        "guard": ""
+      },
+      {
+        "a": "delivered",
+        "b": "process",
+        "guard": "No"
+      },
+      {
+        "a": "delivered",
+        "b": "feedback",
+        "guard": "Yes"
+      },
+      {
+        "a": "feedback",
+        "b": "save",
+        "guard": ""
+      },
+      {
+        "a": "save",
+        "b": "logout",
+        "guard": ""
+      },
+      {
+        "a": "logout",
+        "b": "destroy",
+        "guard": ""
+      },
+      {
+        "a": "destroy",
+        "b": "end",
+        "guard": ""
+      },
+      {
+        "a": "inventorymerge",
+        "b": "join",
+        "guard": ""
+      }
+    ],
+    "note": "Expanded registration, shopping, checkout, cancellation, notification, subscription and admin flows follow in the supporting diagrams."
+  },
+  {
+    "slug": "01-registration",
+    "title": "Registration & OTP Verification",
+    "lanes": [
+      "C",
+      "S",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "select": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Select Register",
+        "slot": 0
+      },
+      "form": {
+        "lane": "C",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Enter name, email, phone, address and password",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Validate registration details",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 4.0,
+        "label": "Details valid?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Show validation error",
+        "slot": 0
+      },
+      "request": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Request OTP",
+        "slot": 0
+      },
+      "send": {
+        "lane": "O",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Send OTP",
+        "slot": 0
+      },
+      "enter": {
+        "lane": "C",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Enter OTP",
+        "slot": 0
+      },
+      "verify": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Verify OTP",
+        "slot": 0
+      },
+      "ok": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 8.0,
+        "label": "OTP valid?",
+        "slot": 0
+      },
+      "otperror": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Show OTP error",
+        "slot": 0
+      },
+      "choice": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 9.0,
+        "label": "Retry or resend?",
+        "slot": 0
+      },
+      "create": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Create customer account",
+        "slot": 0
+      },
+      "success": {
+        "lane": "S",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Display Registration Successful",
+        "slot": 0
+      },
+      "login": {
+        "lane": "C",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Proceed to Login",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 12.0,
+        "label": "",
+        "slot": 0
+      },
+      "registered": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 1,
+        "label": "Already registered?",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "select",
+        "b": "form",
+        "guard": ""
+      },
+      {
+        "a": "form",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "form",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "request",
+        "guard": "Yes"
+      },
+      {
+        "a": "request",
+        "b": "send",
+        "guard": ""
+      },
+      {
+        "a": "send",
+        "b": "enter",
+        "guard": ""
+      },
+      {
+        "a": "enter",
+        "b": "verify",
+        "guard": ""
+      },
+      {
+        "a": "verify",
+        "b": "ok",
+        "guard": ""
+      },
+      {
+        "a": "ok",
+        "b": "otperror",
+        "guard": "No"
+      },
+      {
+        "a": "otperror",
+        "b": "choice",
+        "guard": ""
+      },
+      {
+        "a": "choice",
+        "b": "enter",
+        "guard": "Retry"
+      },
+      {
+        "a": "choice",
+        "b": "request",
+        "guard": "Resend"
+      },
+      {
+        "a": "ok",
+        "b": "create",
+        "guard": "Yes"
+      },
+      {
+        "a": "create",
+        "b": "success",
+        "guard": ""
+      },
+      {
+        "a": "success",
+        "b": "login",
+        "guard": ""
+      },
+      {
+        "a": "login",
+        "b": "e",
+        "guard": ""
+      },
+      {
+        "a": "s",
+        "b": "registered",
+        "guard": ""
+      },
+      {
+        "a": "registered",
+        "b": "select",
+        "guard": "No"
+      },
+      {
+        "a": "registered",
+        "b": "login",
+        "guard": "Yes"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "02-login-logout",
+    "title": "Login, Session & Logout",
+    "lanes": [
+      "U",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "U",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "form": {
+        "lane": "U",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Enter email / phone and password",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Validate credentials",
+        "slot": 0
+      },
+      "correct": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 2.0,
+        "label": "Credentials correct?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Display Invalid Login Message",
+        "slot": 0
+      },
+      "record": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Record login activity",
+        "slot": 0
+      },
+      "session": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Create authenticated session",
+        "slot": 0
+      },
+      "dashboard": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Display appropriate dashboard / home page",
+        "slot": 0
+      },
+      "use": {
+        "lane": "U",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Use permitted system functions",
+        "slot": 0
+      },
+      "logout": {
+        "lane": "U",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Select Logout",
+        "slot": 0
+      },
+      "destroy": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Destroy session",
+        "slot": 0
+      },
+      "activity": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Record logout activity if applicable",
+        "slot": 0
+      },
+      "redirect": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Redirect to Login / Home Page",
+        "slot": 0
+      },
+      "e": {
+        "lane": "S",
+        "kind": "end",
+        "row": 11.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "form",
+        "guard": ""
+      },
+      {
+        "a": "form",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "correct",
+        "guard": ""
+      },
+      {
+        "a": "correct",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "form",
+        "guard": ""
+      },
+      {
+        "a": "correct",
+        "b": "record",
+        "guard": "Yes"
+      },
+      {
+        "a": "record",
+        "b": "session",
+        "guard": ""
+      },
+      {
+        "a": "session",
+        "b": "dashboard",
+        "guard": ""
+      },
+      {
+        "a": "dashboard",
+        "b": "use",
+        "guard": ""
+      },
+      {
+        "a": "use",
+        "b": "logout",
+        "guard": ""
+      },
+      {
+        "a": "logout",
+        "b": "destroy",
+        "guard": ""
+      },
+      {
+        "a": "destroy",
+        "b": "activity",
+        "guard": ""
+      },
+      {
+        "a": "activity",
+        "b": "redirect",
+        "guard": ""
+      },
+      {
+        "a": "redirect",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "03-medicine-browsing",
+    "title": "Medicine Browsing & Prescription Requirement",
+    "lanes": [
+      "C",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "browse": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Select Browse Medicines",
+        "slot": 0
+      },
+      "list": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Display medicine list",
+        "slot": 0
+      },
+      "search": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Search; filter category / price; select details",
+        "slot": 0
+      },
+      "results": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Retrieve and display matching medicines",
+        "slot": 0
+      },
+      "found": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Medicine found?",
+        "slot": 0
+      },
+      "none": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Display No medicines found",
+        "slot": 0
+      },
+      "details": {
+        "lane": "C",
+        "kind": "action",
+        "row": 5.0,
+        "label": "View medicine details",
+        "slot": 0
+      },
+      "rx": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 5.0,
+        "label": "Prescription required?",
+        "slot": 0
+      },
+      "message": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Display Prescription Required",
+        "slot": 0
+      },
+      "upload": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 6.0,
+        "label": "Upload prescription now?",
+        "slot": 0
+      },
+      "rxflow": {
+        "lane": "C",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Continue to prescription upload workflow",
+        "slot": 0
+      },
+      "shop": {
+        "lane": "C",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Choose shopping action",
+        "slot": 0
+      },
+      "endrx": {
+        "lane": "C",
+        "kind": "end",
+        "row": 9.0,
+        "label": "Prescription workflow",
+        "slot": 0
+      },
+      "endshop": {
+        "lane": "S",
+        "kind": "end",
+        "row": 9.0,
+        "label": "Shopping workflow",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "browse",
+        "guard": ""
+      },
+      {
+        "a": "browse",
+        "b": "list",
+        "guard": ""
+      },
+      {
+        "a": "list",
+        "b": "search",
+        "guard": ""
+      },
+      {
+        "a": "search",
+        "b": "results",
+        "guard": ""
+      },
+      {
+        "a": "results",
+        "b": "found",
+        "guard": ""
+      },
+      {
+        "a": "found",
+        "b": "none",
+        "guard": "No"
+      },
+      {
+        "a": "none",
+        "b": "search",
+        "guard": ""
+      },
+      {
+        "a": "found",
+        "b": "details",
+        "guard": "Yes"
+      },
+      {
+        "a": "details",
+        "b": "rx",
+        "guard": ""
+      },
+      {
+        "a": "rx",
+        "b": "shop",
+        "guard": "No"
+      },
+      {
+        "a": "rx",
+        "b": "message",
+        "guard": "Yes"
+      },
+      {
+        "a": "message",
+        "b": "upload",
+        "guard": ""
+      },
+      {
+        "a": "upload",
+        "b": "rxflow",
+        "guard": "Yes"
+      },
+      {
+        "a": "upload",
+        "b": "shop",
+        "guard": "Later"
+      },
+      {
+        "a": "rxflow",
+        "b": "endrx",
+        "guard": ""
+      },
+      {
+        "a": "shop",
+        "b": "endshop",
+        "guard": ""
+      }
+    ],
+    "note": "Checkout still requires prescription approval for medicines that require a prescription."
+  },
+  {
+    "slug": "04-shopping-actions",
+    "title": "Shopping Actions",
+    "lanes": [
+      "C",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "choose": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 1.0,
+        "label": "Choose action",
+        "slot": 0
+      },
+      "add": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Select Add to Cart",
+        "slot": 0
+      },
+      "stock": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Check stock availability",
+        "slot": 0
+      },
+      "instock": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "In stock?",
+        "slot": 0
+      },
+      "out": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Display Out of Stock",
+        "slot": 0
+      },
+      "addcart": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Add medicine to cart; display Cart Updated",
+        "slot": 0
+      },
+      "wish": {
+        "lane": "C",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Select Add to Wishlist",
+        "slot": 0
+      },
+      "wishlist": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Add medicine; display Wishlist Updated",
+        "slot": 0
+      },
+      "save": {
+        "lane": "C",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Select Save for Later",
+        "slot": 0
+      },
+      "incart": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 7.0,
+        "label": "Item already in cart?",
+        "slot": 0
+      },
+      "notcart": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Explain item must be in cart",
+        "slot": 0
+      },
+      "saved": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Move cart item to Saved for Later; confirm",
+        "slot": 0
+      },
+      "subscribe": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Select Subscribe",
+        "slot": 0
+      },
+      "schedule": {
+        "lane": "C",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Choose frequency, quantity and start date",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Validate subscription",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 12.0,
+        "label": "Subscription valid?",
+        "slot": 0
+      },
+      "suberror": {
+        "lane": "S",
+        "kind": "action",
+        "row": 13.0,
+        "label": "Display validation error",
+        "slot": 0
+      },
+      "create": {
+        "lane": "S",
+        "kind": "action",
+        "row": 14.0,
+        "label": "Create subscription; display Subscription Created",
+        "slot": 0
+      },
+      "medicine": {
+        "lane": "C",
+        "kind": "action",
+        "row": 15.0,
+        "label": "Return to medicine page",
+        "slot": 0
+      },
+      "end": {
+        "lane": "C",
+        "kind": "end",
+        "row": 16.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "choose",
+        "guard": ""
+      },
+      {
+        "a": "choose",
+        "b": "add",
+        "guard": "Add to Cart"
+      },
+      {
+        "a": "choose",
+        "b": "wish",
+        "guard": "Wishlist"
+      },
+      {
+        "a": "choose",
+        "b": "save",
+        "guard": "Save for Later"
+      },
+      {
+        "a": "choose",
+        "b": "subscribe",
+        "guard": "Subscribe"
+      },
+      {
+        "a": "add",
+        "b": "stock",
+        "guard": ""
+      },
+      {
+        "a": "stock",
+        "b": "instock",
+        "guard": ""
+      },
+      {
+        "a": "instock",
+        "b": "out",
+        "guard": "No"
+      },
+      {
+        "a": "out",
+        "b": "medicine",
+        "guard": ""
+      },
+      {
+        "a": "instock",
+        "b": "addcart",
+        "guard": "Yes"
+      },
+      {
+        "a": "addcart",
+        "b": "medicine",
+        "guard": ""
+      },
+      {
+        "a": "wish",
+        "b": "wishlist",
+        "guard": ""
+      },
+      {
+        "a": "wishlist",
+        "b": "medicine",
+        "guard": ""
+      },
+      {
+        "a": "save",
+        "b": "incart",
+        "guard": ""
+      },
+      {
+        "a": "incart",
+        "b": "notcart",
+        "guard": "No"
+      },
+      {
+        "a": "notcart",
+        "b": "medicine",
+        "guard": ""
+      },
+      {
+        "a": "incart",
+        "b": "saved",
+        "guard": "Yes"
+      },
+      {
+        "a": "saved",
+        "b": "medicine",
+        "guard": ""
+      },
+      {
+        "a": "subscribe",
+        "b": "schedule",
+        "guard": ""
+      },
+      {
+        "a": "schedule",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "suberror",
+        "guard": "No"
+      },
+      {
+        "a": "suberror",
+        "b": "schedule",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "create",
+        "guard": "Yes"
+      },
+      {
+        "a": "create",
+        "b": "medicine",
+        "guard": ""
+      },
+      {
+        "a": "medicine",
+        "b": "end",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "05-prescriptions",
+    "title": "Prescription Request & Staff Decision",
+    "lanes": [
+      "C",
+      "S",
+      "T",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "select": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Select Upload Prescription",
+        "slot": 0
+      },
+      "file": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Upload prescription file",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Validate file",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Valid prescription file?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Display invalid file error",
+        "slot": 0
+      },
+      "pending": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Create prescription request; set Pending",
+        "slot": 0
+      },
+      "notify": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Notify staff",
+        "slot": 0
+      },
+      "view": {
+        "lane": "T",
+        "kind": "action",
+        "row": 6.0,
+        "label": "View prescription request",
+        "slot": 0
+      },
+      "review": {
+        "lane": "T",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Review prescription",
+        "slot": 0
+      },
+      "approved": {
+        "lane": "T",
+        "kind": "decision",
+        "row": 8.0,
+        "label": "Prescription approved?",
+        "slot": 0
+      },
+      "reject": {
+        "lane": "T",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Reject prescription",
+        "slot": -0.28
+      },
+      "approve": {
+        "lane": "T",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Approve prescription",
+        "slot": 0.28
+      },
+      "rejected": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Update status to Rejected",
+        "slot": -0.28
+      },
+      "accepted": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Update status to Approved",
+        "slot": 0.28
+      },
+      "rejectsms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Send rejection notification",
+        "slot": -0.28
+      },
+      "acceptsms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Send approval notification",
+        "slot": 0.28
+      },
+      "rejection": {
+        "lane": "C",
+        "kind": "action",
+        "row": 12.0,
+        "label": "View rejection; return to browsing",
+        "slot": 0
+      },
+      "continue": {
+        "lane": "C",
+        "kind": "action",
+        "row": 13.0,
+        "label": "Continue shopping / order",
+        "slot": 0
+      },
+      "endno": {
+        "lane": "S",
+        "kind": "end",
+        "row": 12.0,
+        "label": "Return to browse",
+        "slot": 0
+      },
+      "endyes": {
+        "lane": "S",
+        "kind": "end",
+        "row": 13.0,
+        "label": "Continue order",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "select",
+        "guard": ""
+      },
+      {
+        "a": "select",
+        "b": "file",
+        "guard": ""
+      },
+      {
+        "a": "file",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "file",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "pending",
+        "guard": "Yes"
+      },
+      {
+        "a": "pending",
+        "b": "notify",
+        "guard": ""
+      },
+      {
+        "a": "notify",
+        "b": "view",
+        "guard": ""
+      },
+      {
+        "a": "view",
+        "b": "review",
+        "guard": ""
+      },
+      {
+        "a": "review",
+        "b": "approved",
+        "guard": ""
+      },
+      {
+        "a": "approved",
+        "b": "reject",
+        "guard": "No"
+      },
+      {
+        "a": "approved",
+        "b": "approve",
+        "guard": "Yes"
+      },
+      {
+        "a": "reject",
+        "b": "rejected",
+        "guard": ""
+      },
+      {
+        "a": "rejected",
+        "b": "rejectsms",
+        "guard": ""
+      },
+      {
+        "a": "rejectsms",
+        "b": "rejection",
+        "guard": ""
+      },
+      {
+        "a": "rejection",
+        "b": "endno",
+        "guard": ""
+      },
+      {
+        "a": "approve",
+        "b": "accepted",
+        "guard": ""
+      },
+      {
+        "a": "accepted",
+        "b": "acceptsms",
+        "guard": ""
+      },
+      {
+        "a": "acceptsms",
+        "b": "continue",
+        "guard": ""
+      },
+      {
+        "a": "continue",
+        "b": "endyes",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "06-cart-checkout",
+    "title": "Cart, Checkout & Delivery Address",
+    "lanes": [
+      "C",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "cart": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Open Cart",
+        "slot": 0
+      },
+      "items": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Display cart items",
+        "slot": 0
+      },
+      "edit": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Increase / decrease quantity; remove; save for later; move saved item to cart",
+        "slot": 0
+      },
+      "total": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Recalculate total",
+        "slot": 0
+      },
+      "proceed": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Proceed to checkout?",
+        "slot": 0
+      },
+      "return": {
+        "lane": "C",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Continue cart / browsing",
+        "slot": 0
+      },
+      "checks": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Check authentication, nonempty cart, stock and required prescription approval",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 6.0,
+        "label": "Checkout conditions valid?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Show error: empty cart, stock, pending / rejected prescription, or unavailable item",
+        "slot": 0
+      },
+      "address": {
+        "lane": "C",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Select delivery address",
+        "slot": 0
+      },
+      "existing": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 9.0,
+        "label": "Existing address?",
+        "slot": 0
+      },
+      "saved": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Select saved address",
+        "slot": -0.28
+      },
+      "new": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Add new delivery address",
+        "slot": 0.28
+      },
+      "area": {
+        "lane": "S",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Check delivery area",
+        "slot": 0
+      },
+      "available": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 12.0,
+        "label": "Delivery available?",
+        "slot": 0
+      },
+      "noarea": {
+        "lane": "S",
+        "kind": "action",
+        "row": 13.0,
+        "label": "Display Delivery not available in this area",
+        "slot": 0
+      },
+      "summary": {
+        "lane": "C",
+        "kind": "action",
+        "row": 14.0,
+        "label": "Continue to order summary",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 15.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "cart",
+        "guard": ""
+      },
+      {
+        "a": "cart",
+        "b": "items",
+        "guard": ""
+      },
+      {
+        "a": "items",
+        "b": "edit",
+        "guard": ""
+      },
+      {
+        "a": "edit",
+        "b": "total",
+        "guard": ""
+      },
+      {
+        "a": "total",
+        "b": "proceed",
+        "guard": ""
+      },
+      {
+        "a": "proceed",
+        "b": "return",
+        "guard": "No"
+      },
+      {
+        "a": "return",
+        "b": "cart",
+        "guard": ""
+      },
+      {
+        "a": "proceed",
+        "b": "checks",
+        "guard": "Yes"
+      },
+      {
+        "a": "checks",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "cart",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "address",
+        "guard": "Yes"
+      },
+      {
+        "a": "address",
+        "b": "existing",
+        "guard": ""
+      },
+      {
+        "a": "existing",
+        "b": "saved",
+        "guard": "Yes"
+      },
+      {
+        "a": "existing",
+        "b": "new",
+        "guard": "No"
+      },
+      {
+        "a": "saved",
+        "b": "area",
+        "guard": ""
+      },
+      {
+        "a": "new",
+        "b": "area",
+        "guard": ""
+      },
+      {
+        "a": "area",
+        "b": "available",
+        "guard": ""
+      },
+      {
+        "a": "available",
+        "b": "noarea",
+        "guard": "No"
+      },
+      {
+        "a": "noarea",
+        "b": "address",
+        "guard": ""
+      },
+      {
+        "a": "available",
+        "b": "summary",
+        "guard": "Yes"
+      },
+      {
+        "a": "summary",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "07-rewards-order",
+    "title": "Referral Reward & Order Creation",
+    "lanes": [
+      "C",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "apply": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 1.0,
+        "label": "Apply referral reward?",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Validate reward balance",
+        "slot": 0
+      },
+      "available": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Reward available?",
+        "slot": 0
+      },
+      "none": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Display Reward unavailable; continue without reward",
+        "slot": 0
+      },
+      "discount": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Apply discount; update order total",
+        "slot": 0
+      },
+      "summary": {
+        "lane": "C",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Review medicines, quantity, address, total and reward discount",
+        "slot": 0
+      },
+      "place": {
+        "lane": "C",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Select Place Order",
+        "slot": 0
+      },
+      "order": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Create order",
+        "slot": 0
+      },
+      "items": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Create order items",
+        "slot": 0
+      },
+      "id": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Generate order ID",
+        "slot": 0
+      },
+      "payment": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Proceed to payment",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 11.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "apply",
+        "guard": ""
+      },
+      {
+        "a": "apply",
+        "b": "summary",
+        "guard": "No"
+      },
+      {
+        "a": "apply",
+        "b": "validate",
+        "guard": "Yes"
+      },
+      {
+        "a": "validate",
+        "b": "available",
+        "guard": ""
+      },
+      {
+        "a": "available",
+        "b": "none",
+        "guard": "No"
+      },
+      {
+        "a": "none",
+        "b": "summary",
+        "guard": ""
+      },
+      {
+        "a": "available",
+        "b": "discount",
+        "guard": "Yes"
+      },
+      {
+        "a": "discount",
+        "b": "summary",
+        "guard": ""
+      },
+      {
+        "a": "summary",
+        "b": "place",
+        "guard": ""
+      },
+      {
+        "a": "place",
+        "b": "order",
+        "guard": ""
+      },
+      {
+        "a": "order",
+        "b": "items",
+        "guard": ""
+      },
+      {
+        "a": "items",
+        "b": "id",
+        "guard": ""
+      },
+      {
+        "a": "id",
+        "b": "payment",
+        "guard": ""
+      },
+      {
+        "a": "payment",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "08-payment",
+    "title": "Payment Attempt & Retry",
+    "lanes": [
+      "C",
+      "S",
+      "P"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "method": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Select payment method",
+        "slot": 0
+      },
+      "request": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Send payment request / transaction amount",
+        "slot": 0
+      },
+      "process": {
+        "lane": "P",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Process transaction",
+        "slot": 0
+      },
+      "success": {
+        "lane": "P",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Payment successful?",
+        "slot": 0
+      },
+      "failure": {
+        "lane": "P",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Return failure",
+        "slot": -0.28
+      },
+      "accepted": {
+        "lane": "P",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Return success",
+        "slot": 0.28
+      },
+      "failedrecord": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Record failed payment",
+        "slot": 0
+      },
+      "message": {
+        "lane": "C",
+        "kind": "action",
+        "row": 5.0,
+        "label": "View Payment Failed",
+        "slot": 0
+      },
+      "retry": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 6.0,
+        "label": "Retry payment?",
+        "slot": 0
+      },
+      "hold": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Cancel / hold order under system rules",
+        "slot": 0
+      },
+      "endattempt": {
+        "lane": "C",
+        "kind": "end",
+        "row": 8.0,
+        "label": "Order attempt ended",
+        "slot": 0
+      },
+      "completion": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Begin successful-payment completion: payment record, confirmation and inventory work",
+        "slot": 0
+      },
+      "e": {
+        "lane": "S",
+        "kind": "end",
+        "row": 10.0,
+        "label": "Continue completion",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "method",
+        "guard": ""
+      },
+      {
+        "a": "method",
+        "b": "request",
+        "guard": ""
+      },
+      {
+        "a": "request",
+        "b": "process",
+        "guard": ""
+      },
+      {
+        "a": "process",
+        "b": "success",
+        "guard": ""
+      },
+      {
+        "a": "success",
+        "b": "failure",
+        "guard": "No"
+      },
+      {
+        "a": "failure",
+        "b": "failedrecord",
+        "guard": ""
+      },
+      {
+        "a": "failedrecord",
+        "b": "message",
+        "guard": ""
+      },
+      {
+        "a": "message",
+        "b": "retry",
+        "guard": ""
+      },
+      {
+        "a": "retry",
+        "b": "method",
+        "guard": "Yes"
+      },
+      {
+        "a": "retry",
+        "b": "hold",
+        "guard": "No"
+      },
+      {
+        "a": "hold",
+        "b": "endattempt",
+        "guard": ""
+      },
+      {
+        "a": "success",
+        "b": "accepted",
+        "guard": "Yes"
+      },
+      {
+        "a": "accepted",
+        "b": "completion",
+        "guard": ""
+      },
+      {
+        "a": "completion",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "09-parallel-completion",
+    "title": "Parallel Post-Payment Completion",
+    "lanes": [
+      "C",
+      "S",
+      "T",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "S",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "success": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Accept successful payment result",
+        "slot": 0
+      },
+      "fork": {
+        "lane": "S",
+        "kind": "fork",
+        "row": 2.0,
+        "label": "",
+        "slot": 0
+      },
+      "confirm": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Set order Confirmed",
+        "slot": -0.3
+      },
+      "payment": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Record successful payment",
+        "slot": 0.0
+      },
+      "cart": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Clear purchased items from cart",
+        "slot": 0.3
+      },
+      "stock": {
+        "lane": "T",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Update medicine stock; record stock movement",
+        "slot": 0
+      },
+      "ok": {
+        "lane": "T",
+        "kind": "decision",
+        "row": 4.0,
+        "label": "Stock update successful?",
+        "slot": 0
+      },
+      "flag": {
+        "lane": "T",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Escalate inventory issue to system",
+        "slot": 0
+      },
+      "issue": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Flag inventory issue for staff",
+        "slot": 0
+      },
+      "notify": {
+        "lane": "O",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Send enabled payment confirmation",
+        "slot": 0
+      },
+      "join": {
+        "lane": "S",
+        "kind": "join",
+        "row": 7.0,
+        "label": "",
+        "slot": 0
+      },
+      "generate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Generate order confirmation",
+        "slot": 0
+      },
+      "send": {
+        "lane": "O",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Send enabled order confirmation",
+        "slot": 0
+      },
+      "receive": {
+        "lane": "C",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Receive confirmations",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 10.0,
+        "label": "",
+        "slot": 0
+      },
+      "inventorymerge": {
+        "lane": "T",
+        "kind": "merge",
+        "row": 6,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "success",
+        "guard": ""
+      },
+      {
+        "a": "success",
+        "b": "fork",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "confirm",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "payment",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "cart",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "stock",
+        "guard": ""
+      },
+      {
+        "a": "fork",
+        "b": "notify",
+        "guard": ""
+      },
+      {
+        "a": "stock",
+        "b": "ok",
+        "guard": ""
+      },
+      {
+        "a": "ok",
+        "b": "inventorymerge",
+        "guard": "Yes"
+      },
+      {
+        "a": "ok",
+        "b": "flag",
+        "guard": "No"
+      },
+      {
+        "a": "flag",
+        "b": "issue",
+        "guard": ""
+      },
+      {
+        "a": "issue",
+        "b": "inventorymerge",
+        "guard": ""
+      },
+      {
+        "a": "confirm",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "payment",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "cart",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "notify",
+        "b": "join",
+        "guard": ""
+      },
+      {
+        "a": "join",
+        "b": "generate",
+        "guard": ""
+      },
+      {
+        "a": "generate",
+        "b": "send",
+        "guard": ""
+      },
+      {
+        "a": "send",
+        "b": "receive",
+        "guard": ""
+      },
+      {
+        "a": "receive",
+        "b": "e",
+        "guard": ""
+      },
+      {
+        "a": "inventorymerge",
+        "b": "join",
+        "guard": ""
+      }
+    ],
+    "note": "All five fork branches must finish before the join continues. Notification preferences are resolved by the notification workflow."
+  },
+  {
+    "slug": "10-staff-processing",
+    "title": "Staff Order Processing & Status Updates",
+    "lanes": [
+      "C",
+      "S",
+      "T",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "T",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "login": {
+        "lane": "T",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Log in as staff",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Validate staff login",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 2.0,
+        "label": "Staff credentials valid?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Display login error",
+        "slot": 0
+      },
+      "dashboard": {
+        "lane": "T",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Open Staff Dashboard; view pending orders",
+        "slot": 0
+      },
+      "select": {
+        "lane": "T",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Select order; view details",
+        "slot": 0
+      },
+      "ready": {
+        "lane": "T",
+        "kind": "decision",
+        "row": 6.0,
+        "label": "Order ready for processing?",
+        "slot": 0
+      },
+      "hold": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Keep Pending / On Hold",
+        "slot": 0
+      },
+      "wait": {
+        "lane": "T",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Wait for readiness; recheck pending order",
+        "slot": 0
+      },
+      "process": {
+        "lane": "T",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Process next stage: Confirmed \u2192 Packed \u2192 Out for Delivery \u2192 Delivered",
+        "slot": 0
+      },
+      "update": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Update order for the new status",
+        "slot": 0
+      },
+      "sms": {
+        "lane": "O",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Send enabled order-status notification",
+        "slot": 0
+      },
+      "receive": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Receive updated status",
+        "slot": 0
+      },
+      "done": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 11.0,
+        "label": "Delivered?",
+        "slot": 0
+      },
+      "e": {
+        "lane": "T",
+        "kind": "end",
+        "row": 12.0,
+        "label": "Processing complete",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "login",
+        "guard": ""
+      },
+      {
+        "a": "login",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "login",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "dashboard",
+        "guard": "Yes"
+      },
+      {
+        "a": "dashboard",
+        "b": "select",
+        "guard": ""
+      },
+      {
+        "a": "select",
+        "b": "ready",
+        "guard": ""
+      },
+      {
+        "a": "ready",
+        "b": "hold",
+        "guard": "No"
+      },
+      {
+        "a": "hold",
+        "b": "wait",
+        "guard": ""
+      },
+      {
+        "a": "wait",
+        "b": "select",
+        "guard": ""
+      },
+      {
+        "a": "ready",
+        "b": "process",
+        "guard": "Yes"
+      },
+      {
+        "a": "process",
+        "b": "update",
+        "guard": ""
+      },
+      {
+        "a": "update",
+        "b": "sms",
+        "guard": ""
+      },
+      {
+        "a": "sms",
+        "b": "receive",
+        "guard": ""
+      },
+      {
+        "a": "receive",
+        "b": "done",
+        "guard": ""
+      },
+      {
+        "a": "done",
+        "b": "process",
+        "guard": "No"
+      },
+      {
+        "a": "done",
+        "b": "e",
+        "guard": "Yes"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "11-tracking",
+    "title": "Customer Order Tracking",
+    "lanes": [
+      "C",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "orders": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Open My Orders",
+        "slot": 0
+      },
+      "history": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Display order history",
+        "slot": 0
+      },
+      "select": {
+        "lane": "C",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Select order",
+        "slot": 0
+      },
+      "details": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Display order details",
+        "slot": 0
+      },
+      "track": {
+        "lane": "C",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Select Track Order",
+        "slot": 0
+      },
+      "status": {
+        "lane": "S",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Display current status: Pending / Confirmed / Packed / Out for Delivery / Delivered / Cancelled",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 4.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "orders",
+        "guard": ""
+      },
+      {
+        "a": "orders",
+        "b": "history",
+        "guard": ""
+      },
+      {
+        "a": "history",
+        "b": "select",
+        "guard": ""
+      },
+      {
+        "a": "select",
+        "b": "details",
+        "guard": ""
+      },
+      {
+        "a": "details",
+        "b": "track",
+        "guard": ""
+      },
+      {
+        "a": "track",
+        "b": "status",
+        "guard": ""
+      },
+      {
+        "a": "status",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "12-cancellation",
+    "title": "Order Cancellation & Refund Handling",
+    "lanes": [
+      "C",
+      "S",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "details": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Open order details",
+        "slot": 0
+      },
+      "eligible": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 2.0,
+        "label": "Order can be cancelled?",
+        "slot": 0
+      },
+      "blocked": {
+        "lane": "S",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Display Order cannot be cancelled",
+        "slot": 0
+      },
+      "cancel": {
+        "lane": "C",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Select Cancel Order",
+        "slot": 0
+      },
+      "ask": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Ask for confirmation",
+        "slot": 0
+      },
+      "confirm": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 5.0,
+        "label": "Confirm cancellation?",
+        "slot": 0
+      },
+      "status": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Update order to Cancelled",
+        "slot": 0
+      },
+      "stock": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Restore medicine stock",
+        "slot": 0
+      },
+      "movement": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Record stock movement",
+        "slot": 0
+      },
+      "paid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 9.0,
+        "label": "Payment already completed?",
+        "slot": 0
+      },
+      "refund": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Initiate / mark refund under system rules",
+        "slot": 0
+      },
+      "send": {
+        "lane": "O",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Send enabled cancellation notification",
+        "slot": 0
+      },
+      "message": {
+        "lane": "S",
+        "kind": "action",
+        "row": 12.0,
+        "label": "Display Order Cancelled",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 13.0,
+        "label": "Cancellation complete",
+        "slot": 0
+      },
+      "viewend": {
+        "lane": "C",
+        "kind": "end",
+        "row": 3.0,
+        "label": "Continue viewing order",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "details",
+        "guard": ""
+      },
+      {
+        "a": "details",
+        "b": "eligible",
+        "guard": ""
+      },
+      {
+        "a": "eligible",
+        "b": "blocked",
+        "guard": "No"
+      },
+      {
+        "a": "blocked",
+        "b": "viewend",
+        "guard": ""
+      },
+      {
+        "a": "eligible",
+        "b": "cancel",
+        "guard": "Yes"
+      },
+      {
+        "a": "cancel",
+        "b": "ask",
+        "guard": ""
+      },
+      {
+        "a": "ask",
+        "b": "confirm",
+        "guard": ""
+      },
+      {
+        "a": "confirm",
+        "b": "details",
+        "guard": "No"
+      },
+      {
+        "a": "confirm",
+        "b": "status",
+        "guard": "Yes"
+      },
+      {
+        "a": "status",
+        "b": "stock",
+        "guard": ""
+      },
+      {
+        "a": "stock",
+        "b": "movement",
+        "guard": ""
+      },
+      {
+        "a": "movement",
+        "b": "paid",
+        "guard": ""
+      },
+      {
+        "a": "paid",
+        "b": "refund",
+        "guard": "Yes"
+      },
+      {
+        "a": "paid",
+        "b": "send",
+        "guard": "No"
+      },
+      {
+        "a": "refund",
+        "b": "send",
+        "guard": ""
+      },
+      {
+        "a": "send",
+        "b": "message",
+        "guard": ""
+      },
+      {
+        "a": "message",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": "Eligibility: not delivered, not already cancelled and within the permitted processing stage. Refund execution follows the system payment rules."
+  },
+  {
+    "slug": "13-notifications",
+    "title": "Notification Preferences & Delivery",
+    "lanes": [
+      "C",
+      "S",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "S",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "event": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Receive event: OTP; prescription decision; payment success / failure; order status / cancellation; subscription reminder",
+        "slot": 0
+      },
+      "prefs": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Check notification preferences and event requirements",
+        "slot": 0
+      },
+      "enabled": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Notification enabled?",
+        "slot": 0
+      },
+      "required": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 4.0,
+        "label": "Required service message / OTP?",
+        "slot": 0
+      },
+      "skip": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Do not send optional notification",
+        "slot": 0
+      },
+      "prepare": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Prepare message for enabled / required channel",
+        "slot": 0
+      },
+      "send": {
+        "lane": "O",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Send OTP / notification through configured channel",
+        "slot": 0
+      },
+      "receive": {
+        "lane": "C",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Receive notification",
+        "slot": 0
+      },
+      "e": {
+        "lane": "S",
+        "kind": "end",
+        "row": 8.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "event",
+        "guard": ""
+      },
+      {
+        "a": "event",
+        "b": "prefs",
+        "guard": ""
+      },
+      {
+        "a": "prefs",
+        "b": "enabled",
+        "guard": ""
+      },
+      {
+        "a": "enabled",
+        "b": "prepare",
+        "guard": "Yes"
+      },
+      {
+        "a": "enabled",
+        "b": "required",
+        "guard": "No"
+      },
+      {
+        "a": "required",
+        "b": "prepare",
+        "guard": "Yes"
+      },
+      {
+        "a": "required",
+        "b": "skip",
+        "guard": "No"
+      },
+      {
+        "a": "skip",
+        "b": "e",
+        "guard": ""
+      },
+      {
+        "a": "prepare",
+        "b": "send",
+        "guard": ""
+      },
+      {
+        "a": "send",
+        "b": "receive",
+        "guard": ""
+      },
+      {
+        "a": "receive",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": "Optional-message preferences do not suppress OTP needed for authentication. Other configured channels follow the same system notification decision."
+  },
+  {
+    "slug": "14-reviews",
+    "title": "Delivered-Order Review & Feedback",
+    "lanes": [
+      "C",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "C",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "open": {
+        "lane": "C",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Open order for review",
+        "slot": 0
+      },
+      "delivered": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 2.0,
+        "label": "Order delivered?",
+        "slot": 0
+      },
+      "policy": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Delivered-order review required?",
+        "slot": 0
+      },
+      "blocked": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Do not allow review yet",
+        "slot": 0
+      },
+      "select": {
+        "lane": "C",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Select Review & Feedback",
+        "slot": 0
+      },
+      "enter": {
+        "lane": "C",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Enter rating, review and feedback",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Validate submission",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 7.0,
+        "label": "Submission valid?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Display validation error",
+        "slot": 0
+      },
+      "save": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Save review",
+        "slot": 0
+      },
+      "thanks": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Display Thank you for your feedback",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 11.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "open",
+        "guard": ""
+      },
+      {
+        "a": "open",
+        "b": "delivered",
+        "guard": ""
+      },
+      {
+        "a": "delivered",
+        "b": "select",
+        "guard": "Yes"
+      },
+      {
+        "a": "delivered",
+        "b": "policy",
+        "guard": "No"
+      },
+      {
+        "a": "policy",
+        "b": "blocked",
+        "guard": "Yes"
+      },
+      {
+        "a": "policy",
+        "b": "select",
+        "guard": "No"
+      },
+      {
+        "a": "blocked",
+        "b": "e",
+        "guard": ""
+      },
+      {
+        "a": "select",
+        "b": "enter",
+        "guard": ""
+      },
+      {
+        "a": "enter",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "enter",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "save",
+        "guard": "Yes"
+      },
+      {
+        "a": "save",
+        "b": "thanks",
+        "guard": ""
+      },
+      {
+        "a": "thanks",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "15-subscriptions",
+    "title": "Medicine Subscription Reminder & Renewal",
+    "lanes": [
+      "C",
+      "S",
+      "O"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "S",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "monitor": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Check active subscriptions",
+        "slot": 0
+      },
+      "wait": {
+        "lane": "S",
+        "kind": "action",
+        "row": 2.0,
+        "label": "Wait until next scheduled check",
+        "slot": 0
+      },
+      "due": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 3.0,
+        "label": "Subscription due?",
+        "slot": 0
+      },
+      "reminder": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Generate medicine reminder",
+        "slot": 0
+      },
+      "preferences": {
+        "lane": "S",
+        "kind": "action",
+        "row": 5.0,
+        "label": "Apply notification preference workflow",
+        "slot": 0
+      },
+      "send": {
+        "lane": "O",
+        "kind": "action",
+        "row": 6,
+        "label": "Send enabled reminder notification",
+        "slot": 0
+      },
+      "open": {
+        "lane": "C",
+        "kind": "action",
+        "row": 7,
+        "label": "Open subscription",
+        "slot": 0
+      },
+      "continue": {
+        "lane": "C",
+        "kind": "decision",
+        "row": 8,
+        "label": "Continue subscription?",
+        "slot": 0
+      },
+      "active": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9,
+        "label": "Keep active; proceed to next cycle",
+        "slot": 0
+      },
+      "cancel": {
+        "lane": "C",
+        "kind": "action",
+        "row": 10,
+        "label": "Cancel subscription",
+        "slot": 0
+      },
+      "update": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10,
+        "label": "Update subscription status",
+        "slot": 0
+      },
+      "e": {
+        "lane": "C",
+        "kind": "end",
+        "row": 11,
+        "label": "",
+        "slot": 0
+      },
+      "enabled": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 6,
+        "label": "Reminder enabled?",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "monitor",
+        "guard": ""
+      },
+      {
+        "a": "monitor",
+        "b": "due",
+        "guard": ""
+      },
+      {
+        "a": "due",
+        "b": "wait",
+        "guard": "No"
+      },
+      {
+        "a": "wait",
+        "b": "monitor",
+        "guard": ""
+      },
+      {
+        "a": "due",
+        "b": "reminder",
+        "guard": "Yes"
+      },
+      {
+        "a": "reminder",
+        "b": "preferences",
+        "guard": ""
+      },
+      {
+        "a": "send",
+        "b": "open",
+        "guard": ""
+      },
+      {
+        "a": "open",
+        "b": "continue",
+        "guard": ""
+      },
+      {
+        "a": "continue",
+        "b": "active",
+        "guard": "Yes"
+      },
+      {
+        "a": "active",
+        "b": "wait",
+        "guard": ""
+      },
+      {
+        "a": "continue",
+        "b": "cancel",
+        "guard": "No"
+      },
+      {
+        "a": "cancel",
+        "b": "update",
+        "guard": ""
+      },
+      {
+        "a": "update",
+        "b": "e",
+        "guard": ""
+      },
+      {
+        "a": "preferences",
+        "b": "enabled",
+        "guard": ""
+      },
+      {
+        "a": "enabled",
+        "b": "send",
+        "guard": "Yes"
+      },
+      {
+        "a": "enabled",
+        "b": "wait",
+        "guard": "No"
+      }
+    ],
+    "note": ""
+  },
+  {
+    "slug": "16-administration",
+    "title": "Owner / Admin Management & Logout",
+    "lanes": [
+      "A",
+      "S"
+    ],
+    "nodes": {
+      "s": {
+        "lane": "A",
+        "kind": "start",
+        "row": 0.0,
+        "label": "",
+        "slot": 0
+      },
+      "login": {
+        "lane": "A",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Log in as Owner / Admin",
+        "slot": 0
+      },
+      "validate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 1.0,
+        "label": "Validate admin credentials",
+        "slot": 0
+      },
+      "valid": {
+        "lane": "S",
+        "kind": "decision",
+        "row": 2.0,
+        "label": "Credentials valid?",
+        "slot": 0
+      },
+      "error": {
+        "lane": "S",
+        "kind": "action",
+        "row": 3.0,
+        "label": "Display login error",
+        "slot": 0
+      },
+      "dashboard": {
+        "lane": "S",
+        "kind": "action",
+        "row": 4.0,
+        "label": "Display Owner Dashboard",
+        "slot": 0
+      },
+      "choose": {
+        "lane": "A",
+        "kind": "decision",
+        "row": 5.0,
+        "label": "Choose management function",
+        "slot": 0
+      },
+      "medicine": {
+        "lane": "A",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Add / update / delete medicine",
+        "slot": 0
+      },
+      "medvalidate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 6.0,
+        "label": "Validate medicine data",
+        "slot": 0
+      },
+      "medupdate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 7.0,
+        "label": "Update medicine records; show success",
+        "slot": 0
+      },
+      "staff": {
+        "lane": "A",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Add / update / remove staff",
+        "slot": 0
+      },
+      "staffvalidate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 8.0,
+        "label": "Validate staff data",
+        "slot": 0
+      },
+      "staffupdate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 9.0,
+        "label": "Update staff information; show success",
+        "slot": 0
+      },
+      "areas": {
+        "lane": "A",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Manage disease categories / delivery areas",
+        "slot": 0
+      },
+      "areaupdate": {
+        "lane": "S",
+        "kind": "action",
+        "row": 10.0,
+        "label": "Validate and apply selected changes",
+        "slot": 0
+      },
+      "reports": {
+        "lane": "A",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Choose orders, payments, customers, prescriptions, stock movements, reviews, referral rewards or dashboard statistics",
+        "slot": 0
+      },
+      "show": {
+        "lane": "S",
+        "kind": "action",
+        "row": 11.0,
+        "label": "Display selected management view / report",
+        "slot": 0
+      },
+      "logout": {
+        "lane": "A",
+        "kind": "action",
+        "row": 12.0,
+        "label": "Select Logout",
+        "slot": 0
+      },
+      "destroy": {
+        "lane": "S",
+        "kind": "action",
+        "row": 12.0,
+        "label": "Destroy session; record activity if applicable",
+        "slot": 0
+      },
+      "redirect": {
+        "lane": "S",
+        "kind": "action",
+        "row": 13.0,
+        "label": "Redirect to Login / Home Page",
+        "slot": 0
+      },
+      "e": {
+        "lane": "A",
+        "kind": "end",
+        "row": 14.0,
+        "label": "",
+        "slot": 0
+      }
+    },
+    "edges": [
+      {
+        "a": "s",
+        "b": "login",
+        "guard": ""
+      },
+      {
+        "a": "login",
+        "b": "validate",
+        "guard": ""
+      },
+      {
+        "a": "validate",
+        "b": "valid",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "error",
+        "guard": "No"
+      },
+      {
+        "a": "error",
+        "b": "login",
+        "guard": ""
+      },
+      {
+        "a": "valid",
+        "b": "dashboard",
+        "guard": "Yes"
+      },
+      {
+        "a": "dashboard",
+        "b": "choose",
+        "guard": ""
+      },
+      {
+        "a": "choose",
+        "b": "medicine",
+        "guard": "Medicines"
+      },
+      {
+        "a": "medicine",
+        "b": "medvalidate",
+        "guard": ""
+      },
+      {
+        "a": "medvalidate",
+        "b": "medupdate",
+        "guard": ""
+      },
+      {
+        "a": "medupdate",
+        "b": "choose",
+        "guard": ""
+      },
+      {
+        "a": "choose",
+        "b": "staff",
+        "guard": "Staff"
+      },
+      {
+        "a": "staff",
+        "b": "staffvalidate",
+        "guard": ""
+      },
+      {
+        "a": "staffvalidate",
+        "b": "staffupdate",
+        "guard": ""
+      },
+      {
+        "a": "staffupdate",
+        "b": "choose",
+        "guard": ""
+      },
+      {
+        "a": "choose",
+        "b": "areas",
+        "guard": "Categories / Areas"
+      },
+      {
+        "a": "areas",
+        "b": "areaupdate",
+        "guard": ""
+      },
+      {
+        "a": "areaupdate",
+        "b": "choose",
+        "guard": ""
+      },
+      {
+        "a": "choose",
+        "b": "reports",
+        "guard": "Views / Reports"
+      },
+      {
+        "a": "reports",
+        "b": "show",
+        "guard": ""
+      },
+      {
+        "a": "show",
+        "b": "choose",
+        "guard": ""
+      },
+      {
+        "a": "choose",
+        "b": "logout",
+        "guard": "Logout"
+      },
+      {
+        "a": "logout",
+        "b": "destroy",
+        "guard": ""
+      },
+      {
+        "a": "destroy",
+        "b": "redirect",
+        "guard": ""
+      },
+      {
+        "a": "redirect",
+        "b": "e",
+        "guard": ""
+      }
+    ],
+    "note": ""
+  }
+]

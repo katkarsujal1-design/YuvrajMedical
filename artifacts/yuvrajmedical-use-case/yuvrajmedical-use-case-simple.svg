@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3200" height="2100" viewBox="0 0 3200 2100">
+<rect width="100%" height="100%" fill="white"/>
+<rect x="410" y="150" width="2370" height="1780" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1595" y="210.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="35" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<polyline points="180,1000 745.4737904411952,646.578880974253" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 685.6913090987491,857.7743193159769" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 621.4162530225202,1027.5885158139074" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 714.4798814490061,1217.1324518386587" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 756.601517641936,1432.451138231452" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 440,1710 616.1829126131395,1705.3636075628121" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 330,1000 330,380 1245.0,380.0" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="180,1000 300,1000 300,290 2050,290 1977.1987070183638,333.68077578898175" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,730 2460.2679869364088,700.6809593032751" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,730 2418.5198970517617,848.2960205896477" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,730 2357.128675873961,1025.9683336038042" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,730 2840,730 2840,520 1450,520 1450.0,430.0" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,1710 2398.356392316516,1546.895037951071" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,1710 2462.2975531895718,1688.091902127583" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,1710 2422.7940545573338,1819.611776482631" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,1710 2890,1710 2890,560 1510,560 1510,470 1482.9012282995684,429.35184244935266" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,1260 2705.0,1260.0" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,365 2753.1920621829827,373.37417188533755" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="3010,365 2850,365 2850,300 2180,300 2033.0987878853339,341.9717748899046" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="1025.0,1260.0 2295.0,1260.0" fill="none" stroke="#344252" stroke-width="2" stroke-dasharray="10 7"/>
+<polyline points="2279.0,1267.0 2295.0,1260.0 2279.0,1253.0" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="1587.671875" y="1218.5" width="144.65625" height="39" fill="white" stroke="white" stroke-width="2"/>
+<text x="1660.0" y="1238.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<polyline points="2105.0,380.0 2345.0,380.0" fill="none" stroke="#344252" stroke-width="2" stroke-dasharray="10 7"/>
+<polyline points="2329.0,387.0 2345.0,380.0 2329.0,373.0" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="2152.671875" y="338.5" width="144.65625" height="39" fill="white" stroke="white" stroke-width="2"/>
+<text x="2225.0" y="358.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+<ellipse cx="1450" cy="380" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="1450" y="380.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Login</text>
+<ellipse cx="1900" cy="380" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="1900" y="380.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Verify OTP</text>
+<ellipse cx="2550" cy="380" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2550" y="380.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Send OTP</text>
+<ellipse cx="820" cy="600" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="820" y="600.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Browse Medicines</text>
+<ellipse cx="820" cy="820" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="820" y="820.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Manage Cart</text>
+<ellipse cx="820" cy="1040" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="820" y="1040.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Place Order</text>
+<ellipse cx="820" cy="1260" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="820" y="1260.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Make Payment</text>
+<ellipse cx="820" cy="1480" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="820" y="1464.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Submit Prescription</text>
+<text x="820" y="1496.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Request</text>
+<ellipse cx="820" cy="1700" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="820" y="1700.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">View Notifications</text>
+<ellipse cx="2500" cy="1260" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2500" y="1260.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Process Payment</text>
+<ellipse cx="2260" cy="690" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2260" y="690.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Review Prescription</text>
+<ellipse cx="2260" cy="880" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2260" y="880.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Process Order</text>
+<ellipse cx="2260" cy="1070" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2260" y="1070.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Manage Medicine Stock</text>
+<ellipse cx="2260" cy="1510" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2260" y="1510.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Manage Medicines</text>
+<ellipse cx="2260" cy="1680" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2260" y="1680.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">Manage Staff</text>
+<ellipse cx="2260" cy="1850" rx="205.0" ry="50.0" fill="#edf4f8" stroke="#344252" stroke-width="2"/>
+<text x="2260" y="1850.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="400" fill="#172b3b">View Sales Summary</text>
+<circle cx="180" cy="940" r="25" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="180,965 180,1045" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="130,1000 230,1000" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="135,1105 180,1045 225,1105" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="107.9921875" y="1123.5" width="144.015625" height="43" fill="white" stroke="white" stroke-width="2"/>
+<text x="180" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3b">Customer</text>
+<circle cx="3010" cy="670" r="25" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="3010,695 3010,775" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2960,730 3060,730" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2965,835 3010,775 3055,835" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="2971.0078125" y="853.5" width="77.984375" height="43" fill="white" stroke="white" stroke-width="2"/>
+<text x="3010" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3b">Staff</text>
+<circle cx="3010" cy="1650" r="25" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="3010,1675 3010,1755" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2960,1710 3060,1710" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2965,1815 3010,1755 3055,1815" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="2906.2421875" y="1833.5" width="207.515625" height="43" fill="white" stroke="white" stroke-width="2"/>
+<text x="3010" y="1855.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3b">Owner / Admin</text>
+<circle cx="3010" cy="1200" r="25" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="3010,1225 3010,1305" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2960,1260 3060,1260" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2965,1365 3010,1305 3055,1365" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="2885.453125" y="1383.5" width="249.09375" height="43" fill="white" stroke="white" stroke-width="2"/>
+<text x="3010" y="1405.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3b">Payment Gateway</text>
+<circle cx="3010" cy="305" r="25" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="3010,330 3010,410" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2960,365 3060,365" fill="none" stroke="#344252" stroke-width="2"/>
+<polyline points="2965,470 3010,410 3055,470" fill="none" stroke="#344252" stroke-width="2"/>
+<rect x="2881.1875" y="488.5" width="257.625" height="43" fill="white" stroke="white" stroke-width="2"/>
+<text x="3010" y="510.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="700" fill="#172b3b">OTP / SMS Service</text>
+<text x="1600.0" y="1990.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Simplified view — main functions only; detailed actions remain in the full diagram.</text>
+<text x="1600.0" y="2045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">Solid lines: actor associations     •     Dashed arrows: required included behavior</text>
+</svg>

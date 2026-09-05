@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1700" viewBox="0 0 2800 1700">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400" y="85.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="44" font-weight="700" fill="#182738">YuvrajMedical — DFD Level 0</text>
+<text x="1400" y="142.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182738">Context Diagram</text>
+<rect x="80" y="430" width="340" height="680" rx="0" fill="#eaf1fb" stroke="#263545" stroke-width="2"/>
+<text x="250.0" y="770.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Customer</text>
+<rect x="1060" y="480" width="650" height="600" rx="24" fill="#e9f5ef" stroke="#263545" stroke-width="2"/>
+<text x="1385.0" y="761.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">0.0 YuvrajMedical</text>
+<text x="1385.0" y="799.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Online Medical Store System</text>
+<rect x="2220" y="160" width="430" height="360" rx="0" fill="#eaf1fb" stroke="#263545" stroke-width="2"/>
+<text x="2435.0" y="340.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Staff</text>
+<rect x="2220" y="1120" width="430" height="330" rx="0" fill="#eaf1fb" stroke="#263545" stroke-width="2"/>
+<text x="2435.0" y="1285.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#182738">Payment Gateway</text>
+<polyline points="420,610 1060,610" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="420,610 1060,610" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1060,610 1045.0,616.0 1045.0,604.0" fill="#263545"/>
+<rect x="499.0" y="424.0" width="482" height="132" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="740" y="443.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Registration Details · Login Credentials</text>
+<text x="740" y="474.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Search Request · Cart Request · Prescription</text>
+<text x="740" y="505.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Order Request · Payment Details</text>
+<text x="740" y="536.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Delivery Address · Review &amp; Feedback</text>
+<polyline points="1060,970 420,970" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1060,970 420,970" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="420,970 435.0,964.0 435.0,976.0" fill="#263545"/>
+<rect x="504.0" y="1029.0" width="472" height="132" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="740" y="1048.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Authentication Result · Medicine Information</text>
+<text x="740" y="1079.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Cart Details · Prescription Status</text>
+<text x="740" y="1110.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Order Confirmation · Payment Status</text>
+<text x="740" y="1141.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Delivery/Order Status · Notifications</text>
+<polyline points="2220,260 1870,260 1870,590 1710,590" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="2220,260 1870,260 1870,590 1710,590" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1710,590 1725.0,584.0 1725.0,596.0" fill="#263545"/>
+<rect x="1732.5" y="135.0" width="435" height="70" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1950" y="154.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Login Information · Prescription Decision</text>
+<text x="1950" y="185.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Order Updates · Stock Updates</text>
+<polyline points="1710,730 2040,730 2040,440 2220,440" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1710,730 2040,730 2040,440 2220,440" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2220,440 2205.0,446.0 2205.0,434.0" fill="#263545"/>
+<rect x="1747.5" y="790.0" width="445" height="70" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1970" y="809.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Order Information</text>
+<text x="1970" y="840.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#182738">Prescription Requests · Stock Information</text>
+<polyline points="1710,920 1880,920 1880,1200 2220,1200" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="1710,920 1880,920 1880,1200 2220,1200" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2220,1200 2205.0,1206.0 2205.0,1194.0" fill="#263545"/>
+<rect x="1883.5" y="1140.0" width="213" height="40" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1990" y="1160.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Payment Request</text>
+<polyline points="2220,1370 1790,1370 1790,1020 1710,1020" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+<polyline points="2220,1370 1790,1370 1790,1020 1710,1020" fill="none" stroke="#263545" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1710,1020 1725.0,1014.0 1725.0,1026.0" fill="#263545"/>
+<rect x="1894.0" y="1395.0" width="192" height="40" rx="3" fill="white" stroke="white" stroke-width="2"/>
+<text x="1990" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="24" font-weight="400" fill="#182738">Payment Result</text>
+</svg>

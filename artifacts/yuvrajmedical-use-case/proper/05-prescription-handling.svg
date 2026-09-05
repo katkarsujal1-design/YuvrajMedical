@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="65.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">Prescription Handling</text>
+<text x="1400.0" y="112.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">YuvrajMedical · UML Use Cases · Section 5 of 9</text>
+<rect x="400" y="185" width="2040" height="1565" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1420" y="230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Customer" data-b="Upload Prescription" data-kind="association"><title>Customer — association — Upload Prescription</title>
+<polyline points="160.0,920.0 200,800 200,440 580,440 644.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 200,800 200,440 580,440 644.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="Submit Prescription Request" data-kind="association"><title>Customer — association — Submit Prescription Request</title>
+<polyline points="160.0,920.0 260,880 260,500 1220,500 1220,440 1278.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,880 260,500 1220,500 1220,440 1278.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Customer" data-b="View Prescription Status" data-kind="association"><title>Customer — association — View Prescription Status</title>
+<polyline points="160.0,920.0 260,880 580,880 580,520 1840,520 1840,440 1911.5464797151017,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="160.0,920.0 260,880 580,880 580,520 1840,520 1840,440 1911.5464797151017,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="View Prescription Requests" data-kind="association"><title>Staff — association — View Prescription Requests</title>
+<polyline points="2630.0,340.0 2520,380 2520,740 1140,740 1140,800 1044.2578413011959,805.8787453918087" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,380 2520,740 1140,740 1140,800 1044.2578413011959,805.8787453918087" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Review Prescription" data-kind="association"><title>Staff — association — Review Prescription</title>
+<polyline points="2630.0,340.0 2600,460 2600,800 2400,800 2311.257841301196,805.8787453918087" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2600,460 2600,800 2400,800 2311.257841301196,805.8787453918087" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Approve Prescription" data-kind="association"><title>Staff — association — Approve Prescription</title>
+<polyline points="2630.0,340.0 2520,380 2380,380 2380,720 1120,720 1120,1260 1140,1260 1079.1995301378142,1259.9439853820654" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,380 2380,380 2380,720 1120,720 1120,1260 1140,1260 1079.1995301378142,1259.9439853820654" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Reject Prescription" data-kind="association"><title>Staff — association — Reject Prescription</title>
+<polyline points="2630.0,340.0 2640,460 2640,1260 1760,1260 1713.1995301378142,1259.9439853820654" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2640,460 2640,1260 1760,1260 1713.1995301378142,1259.9439853820654" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Prescription Requests" data-kind="association"><title>Owner / Admin — association — View Prescription Requests</title>
+<polyline points="2630.0,1490.0 2600,1380 1160,1380 1160,860 1140,860 1062.2213601331675,857.9969450808712" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,1490.0 2600,1380 1160,1380 1160,860 1140,860 1062.2213601331675,857.9969450808712" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Upload Prescription" data-b="Submit Prescription Request" data-kind="include"><title>Upload Prescription — include — Submit Prescription Request</title>
+<polyline points="1067.4535202848983,401.2041315302313 1140,400 1220,400 1278.5464797151017,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1067.4535202848983,401.2041315302313 1140,400 1220,400 1278.5464797151017,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1262.4059234011538,407.87364739544086 1278.5464797151017,401.2041315302313 1262.6938019747931,393.8766074967037" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Review Prescription" data-b="View Prescription Request" data-kind="include"><title>Review Prescription — include — View Prescription Request</title>
+<polyline points="1934.7421586988041,805.8787453918087 1840,800 1760,800 1678.2578413011959,805.8787453918087" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1934.7421586988041,805.8787453918087 1840,800 1760,800 1678.2578413011959,805.8787453918087" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1693.714493144855,797.7490520529485 1678.2578413011959,805.8787453918087 1694.7187535619898,811.7129863486467" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Approve Prescription" data-b="Review Prescription" data-kind="extend"><title>Approve Prescription — extend — Review Prescription</title>
+<polyline points="1048.9359082853225,1224.702733451486 1140,1220 1140,920 1840,920 1840,860 1916.7786398668325,857.9969450808712" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1048.9359082853225,1224.702733451486 1140,1220 1140,920 1840,920 1840,860 1916.7786398668325,857.9969450808712" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1900.9666408367125,865.4118413492951 1916.7786398668325,857.9969450808712 1900.6015232656464,851.4166032605987" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Reject Prescription" data-b="Review Prescription" data-kind="extend"><title>Reject Prescription — extend — Review Prescription</title>
+<polyline points="1682.9359082853225,1224.702733451486 1760,1220 1760,940 2020,940 2029.3466260436485,886.0090831805761" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1682.9359082853225,1224.702733451486 1760,1220 1760,940 2020,940 2029.3466260436485,886.0090831805761" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2033.5147931802162,902.9686345520493 2029.3466260436485,886.0090831805761 2019.719973879909,900.5805473526616" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Upload Prescription" data-b="Submit Prescription Request" data-kind="include">
+<rect x="1101.4375" y="384.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1160.0" y="400.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Review Prescription" data-b="View Prescription Request" data-kind="include">
+<rect x="1734.560539674701" y="785.4696863479521" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1793.123039674701" y="801.4696863479521" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Approve Prescription" data-b="Review Prescription" data-kind="extend">
+<rect x="1257.9375" y="904.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1315.0" y="920.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Reject Prescription" data-b="Review Prescription" data-kind="extend">
+<rect x="1633.875" y="994.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1690.9375" y="1010.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="node" data-id="Upload Prescription" data-kind="usecase"><title>Upload Prescription</title>
+<ellipse cx="856.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Upload Prescription</text>
+</g>
+<g class="node" data-id="Submit Prescription Request" data-kind="usecase"><title>Submit Prescription Request</title>
+<ellipse cx="1490.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Submit Prescription Request</text>
+</g>
+<g class="node" data-id="View Prescription Status" data-kind="usecase"><title>View Prescription Status</title>
+<ellipse cx="2123.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Prescription Status</text>
+</g>
+<g class="node" data-id="View Prescription Requests" data-kind="usecase"><title>View Prescription Requests</title>
+<ellipse cx="856.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Prescription Requests</text>
+</g>
+<g class="node" data-id="View Prescription Request" data-kind="usecase"><title>View Prescription Request</title>
+<ellipse cx="1490.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Prescription Request</text>
+</g>
+<g class="node" data-id="Review Prescription" data-kind="usecase"><title>Review Prescription</title>
+<ellipse cx="2123.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Review Prescription</text>
+</g>
+<g class="node" data-id="Approve Prescription" data-kind="usecase"><title>Approve Prescription</title>
+<ellipse cx="856.0" cy="1253.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="1253.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Approve Prescription</text>
+</g>
+<g class="node" data-id="Reject Prescription" data-kind="usecase"><title>Reject Prescription</title>
+<ellipse cx="1490.0" cy="1253.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="1253.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Reject Prescription</text>
+</g>
+<g class="node" data-id="Customer" data-kind="actor"><title>Customer</title>
+<circle cx="160.0" cy="860.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="160.0,884.0 160.0,960.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="112.0,920.0 208.0,920.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="116.0,1020.0 160.0,960.0 204.0,1020.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="15.0" y="1036.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="160.0" y="1066.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Customer</text>
+</g>
+<g class="node" data-id="Staff" data-kind="actor"><title>Staff</title>
+<circle cx="2630.0" cy="280.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,304.0 2630.0,380.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,340.0 2678.0,340.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,440.0 2630.0,380.0 2674.0,440.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="456.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="486.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Staff</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor"><title>Owner / Admin</title>
+<circle cx="2630.0" cy="1430.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,1454.0 2630.0,1530.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,1490.0 2678.0,1490.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1590.0 2630.0,1530.0 2674.0,1590.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1606.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1636.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<text x="1400.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+<text x="1400.0" y="1824.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Customer required for protected shopping, account and order functions.</text>
+<text x="1400.0" y="1850.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Staff required for staff operations.</text>
+<text x="1400.0" y="1876.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Owner/Admin required for administrative operations.</text>
+</svg>

@@ -1,0 +1,316 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4200" height="2476" viewBox="0 0 4200 2476">
+<rect width="100%" height="100%" fill="white"/>
+<text x="2100.0" y="55.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="2100.0" y="105.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#172b3b">Notifications, Subscription Cycles &amp; Feedback</text>
+<rect x="50.0" y="155" width="820.0" height="2136" rx="0" fill="#f5f8fc" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="50.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="460.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Customer</text>
+<rect x="870.0" y="155" width="820.0" height="2136" rx="0" fill="#f5faf6" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="870.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="1280.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">YuvrajMedical System</text>
+<rect x="1690.0" y="155" width="820.0" height="2136" rx="0" fill="#fffaf0" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="1690.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="2100.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Staff</text>
+<rect x="2510.0" y="155" width="820.0" height="2136" rx="0" fill="#f8f5fb" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="2510.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="2920.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">Payment Gateway</text>
+<rect x="3330.0" y="155" width="820.0" height="2136" rx="0" fill="#f4f9fa" stroke="#c3ccd5" stroke-width="1.5"/>
+<rect x="3330.0" y="155" width="820.0" height="65" rx="0" fill="#e9eef3" stroke="#b9c4cf" stroke-width="1.5"/>
+<text x="3740.0" y="188.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="28" font-weight="700" fill="#172b3b">OTP / SMS Service</text>
+<g class="edge" data-from="reminder" data-to="preferences"><title></title>
+<polyline points="1025,780 980,780 980,840 1025,840" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,780 980,780 980,840 1025,840" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,840 1012.0,845.0 1012.0,835.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="error" data-to="review"><title></title>
+<polyline points="205,2000 160,2000 160,1940 205,1940" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="205,2000 160,2000 160,1940 205,1940" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="205,1940 192.0,1945.0 192.0,1935.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="s" data-to="event"><title></title>
+<polyline points="1267.5192455849324,298.3205029433784 1220,300 1238.9473684210527,357.94736842105266" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1267.5192455849324,298.3205029433784 1220,300 1238.9473684210527,357.94736842105266" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1238.9473684210527,357.94736842105266 1230.1547752762804,347.1450397003323 1239.6595814151065,344.03720118082504" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="monitor" data-to="active"><title></title>
+<polyline points="1025,660 980,660 980,500 1025,500" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,660 980,660 980,500 1025,500" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,500 1012.0,505.0 1012.0,495.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="active" data-to="due"><title></title>
+<polyline points="1535,500 1580,500 1580,560 1370.3389830508474,565.4915254237288" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,500 1580,500 1580,560 1370.3389830508474,565.4915254237288" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1370.3389830508474,565.4915254237288 1383.2036089665842,560.1528551727997 1383.4654431770684,570.1494267273988" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="preferences" data-to="enabled"><title></title>
+<polyline points="1025,880 980,880 980,940 1195.3968253968253,947.6825396825396" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,880 980,880 980,940 1195.3968253968253,947.6825396825396" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1195.3968253968253,947.6825396825396 1182.2268651146371,952.215987174856 1182.5833075894222,942.2223417557824" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="open" data-to="continue"><title></title>
+<polyline points="205,1360 160,1360 160,1420 375.3968253968254,1427.6825396825398" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="205,1360 160,1360 160,1420 375.3968253968254,1427.6825396825398" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="375.3968253968254,1427.6825396825398 362.2268651146374,1432.215987174856 362.5833075894223,1422.2223417557827" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="validate" data-to="valid"><title></title>
+<polyline points="1025,1940 980,1940 980,2000 1189.6610169491526,2005.4915254237287" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,1940 980,1940 980,2000 1189.6610169491526,2005.4915254237287" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1189.6610169491526,2005.4915254237287 1176.5345568229316,2010.1494267273988 1176.7963910334158,2000.1528551727997" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="event" data-to="active"><title>[Subscription cycle]</title>
+<polyline points="1183.090909090909,396.43636363636364 980,400 980,460 1025,460" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1183.090909090909,396.43636363636364 980,400 980,460 1025,460" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,460 1012.0,465.0 1012.0,455.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="due" data-to="monitor"><title>[No]</title>
+<polyline points="1403.953488372093,579.9069767441861 1580,580 1580,660 1535,660" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1403.953488372093,579.9069767441861 1580,580 1580,660 1535,660" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1535,660 1548.0,655.0 1548.0,665.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="enabled" data-to="skip"><title>[No]</title>
+<polyline points="1189.6610169491526,974.5084745762712 980,980 980,1040 1025,1040" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1189.6610169491526,974.5084745762712 980,980 980,1040 1025,1040" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,1040 1012.0,1045.0 1012.0,1035.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="valid" data-to="save"><title>[Yes]</title>
+<polyline points="1156.046511627907,2019.906976744186 980,2020 980,2100 1025,2100" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1156.046511627907,2019.906976744186 980,2020 980,2100 1025,2100" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,2100 1012.0,2105.0 1012.0,2095.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="due" data-to="reminder"><title>[Yes]</title>
+<polyline points="1156.046511627907,579.9069767441861 960,580 960,760 1025,760" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1156.046511627907,579.9069767441861 960,580 960,760 1025,760" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,760 1012.0,765.0 1012.0,755.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="event" data-to="preferences"><title>[Notification event]</title>
+<polyline points="1376.909090909091,396.43636363636364 1600,400 1600,840 1535,840" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1376.909090909091,396.43636363636364 1600,400 1600,840 1535,840" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1535,840 1548.0,835.0 1548.0,845.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="continue" data-to="keep"><title>[Yes]</title>
+<polyline points="550.3389830508474,1454.5084745762713 640,1460 640,1520 1025,1520" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="550.3389830508474,1454.5084745762713 640,1460 640,1520 1025,1520" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,1520 1012.0,1525.0 1012.0,1515.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="review" data-to="validate"><title></title>
+<polyline points="715,1900 1025,1900" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="715,1900 1025,1900" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,1900 1012.0,1905.0 1012.0,1895.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="save" data-to="thanks"><title></title>
+<polyline points="1025,2120 715,2120" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1025,2120 715,2120" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,2120 728.0,2115.0 728.0,2125.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="continue" data-to="cancel"><title>[No]</title>
+<polyline points="501.05263157894734,1470.0526315789473 520,1620 1025,1620" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="501.05263157894734,1470.0526315789473 520,1620 1025,1620" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1025,1620 1012.0,1625.0 1012.0,1615.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="cancel" data-to="end"><title></title>
+<polyline points="1535,1660 1580,1660 1580,2240 1280,2240 1280.0,2291.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,1660 1580,1660 1580,2240 1280,2240 1280.0,2291.0" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1280.0,2291.0 1275.0,2278.0 1285.0,2278.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="delivered" data-to="deny"><title>[No]</title>
+<polyline points="1200.44776119403,1810.089552238806 715,1800" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1200.44776119403,1810.089552238806 715,1800" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,1800 728.1010906940907,1795.2712134087897 727.8932954474557,1805.2690542324613" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="valid" data-to="error"><title>[No]</title>
+<polyline points="1195.3968253968253,2032.3174603174602 1100,2040 1100,1980 760,1980 760,2000 715,2000" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1195.3968253968253,2032.3174603174602 1100,2040 1100,1980 760,1980 760,2000 715,2000" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,2000 728.0,1995.0 728.0,2005.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="keep" data-to="end"><title></title>
+<polyline points="1535,1560 1560,1560 1560,2220 1280,2220 1280.0,2291.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,1560 1560,1560 1560,2220 1280,2220 1280.0,2291.0" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1280.0,2291.0 1275.0,2278.0 1285.0,2278.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="received" data-to="submsg"><title></title>
+<polyline points="715,1180 760,1180 760,1220 1204.9295774647887,1232.6760563380283" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="715,1180 760,1180 760,1220 1204.9295774647887,1232.6760563380283" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1204.9295774647887,1232.6760563380283 1191.7924578208472,1237.3038082178039 1192.0772425519103,1227.3078641574887" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="submsg" data-to="open"><title>[Yes]</title>
+<polyline points="1204.9295774647887,1267.3239436619717 760,1280 760,1320 715,1320" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1204.9295774647887,1267.3239436619717 760,1280 760,1320 715,1320" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,1320 728.0,1315.0 728.0,1325.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="delivered" data-to="review"><title>[Yes]</title>
+<polyline points="1183.090909090909,1836.4363636363637 740,1840 740,1920 715,1920" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1183.090909090909,1836.4363636363637 740,1840 740,1920 715,1920" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,1920 728.0,1915.0 728.0,1925.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="submsg" data-to="end"><title>[No]</title>
+<polyline points="1355.0704225352113,1267.3239436619717 1600,1280 1600,2200 1260,2200 1260,2240 1280,2240 1280.0,2291.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1355.0704225352113,1267.3239436619717 1600,1280 1600,2200 1260,2200 1260,2240 1280,2240 1280.0,2291.0" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1280.0,2291.0 1275.0,2278.0 1285.0,2278.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="thanks" data-to="end"><title></title>
+<polyline points="715,2140 760,2140 760,2240 1280,2240 1280.0,2291.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="715,2140 760,2140 760,2240 1280,2240 1280.0,2291.0" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1280.0,2291.0 1275.0,2278.0 1285.0,2278.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="event" data-to="delivered"><title>[Review request]</title>
+<polyline points="1393.404255319149,380.7659574468085 1800,380 1800,1800 1359.55223880597,1810.089552238806" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1393.404255319149,380.7659574468085 1800,380 1800,1800 1359.55223880597,1810.089552238806" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1359.55223880597,1810.089552238806 1372.4343218481363,1804.79314435282 1372.6633366577748,1814.7905216197319" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="skip" data-to="end"><title></title>
+<polyline points="1535,1080 1620,1080 1620,2260 1320,2260 1320,2240 1280,2240 1280.0,2291.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1535,1080 1620,1080 1620,2260 1320,2260 1320,2240 1280,2240 1280.0,2291.0" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1280.0,2291.0 1275.0,2278.0 1285.0,2278.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="deny" data-to="end"><title></title>
+<polyline points="715,1840 760,1840 760,1880 920,1880 920,2220 1280,2220 1280.0,2291.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="715,1840 760,1840 760,1880 920,1880 920,2220 1280,2220 1280.0,2291.0" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1280.0,2291.0 1275.0,2278.0 1285.0,2278.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="enabled" data-to="send"><title>[Yes]</title>
+<polyline points="1370.3389830508474,974.5084745762712 3440,980 3440,1140 3485,1140" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1370.3389830508474,974.5084745762712 3440,980 3440,1140 3485,1140" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="3485,1140 3472.0,1145.0 3472.0,1135.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<g class="edge" data-from="send" data-to="received"><title></title>
+<polyline points="3485,1160 715,1160" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="3485,1160 715,1160" fill="none" stroke="#2a3745" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="715,1160 728.0,1155.0 728.0,1165.0" fill="#2a3745" stroke="#2a3745" stroke-width="2"/>
+</g>
+<rect x="845.6789772727273" y="383.1090909090909" width="173.09375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="932.2258522727273" y="399.1090909090909" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Subscription cycle]</text>
+<rect x="1428.9611191860465" y="563.953488372093" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="1454.4689316860465" y="579.953488372093" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="969.3996292372881" y="962.6271186440678" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="994.9074417372881" y="978.6271186440678" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="954.6522529069766" y="2003.9767441860465" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="983.3319404069766" y="2019.9767441860465" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="939.6522529069767" y="563.9767441860465" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="968.3319404069767" y="579.9767441860465" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="1612.0" y="494.0" width="166.109375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="1695.0546875" y="510.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Notification event]</text>
+<rect x="707.5703125" y="1504.0" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="736.25" y="1520.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="620.7421875" y="1604.0" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="646.25" y="1620.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="773.3463152985075" y="1786.5223880597014" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="798.8541277985075" y="1802.5223880597014" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="819.4921875" y="1964.0" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="845.0" y="1980.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="801.8730193661972" y="1260.8309859154929" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="830.5527068661972" y="1276.8309859154929" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="862.7727272727273" y="1823.1090909090908" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="891.4524147727273" y="1839.1090909090908" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<rect x="1536.984375" y="1724.0" width="51.015625" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="1562.4921875" y="1740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[No]</text>
+<rect x="1635.90625" y="719.0" width="152.09375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="1711.953125" y="735.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Review request]</text>
+<rect x="1818.3948622881355" y="959.8813559322034" width="57.359375" height="32.0" rx="3" fill="white" stroke="white" stroke-width="1.5"/>
+<text x="1847.0745497881355" y="975.8813559322034" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">[Yes]</text>
+<g class="node" data-id="s" data-kind="start" data-lane="YuvrajMedical System"><title></title>
+<circle cx="1280.0" cy="290.0" r="13" fill="#17212c" stroke="#17212c" stroke-width="2"/>
+</g>
+<g class="node" data-id="event" data-kind="decision" data-lane="YuvrajMedical System"><title>Activity type?</title>
+<polygon points="1280.0,345 1410,386.0 1280.0,427 1150,386.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="1280.0" y="386.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Activity type?</text>
+</g>
+<g class="node" data-id="active" data-kind="action" data-lane="YuvrajMedical System"><title>Check active medicine subscriptions</title>
+<rect x="1025" y="447" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="482.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Check active medicine subscriptions</text>
+</g>
+<g class="node" data-id="due" data-kind="decision" data-lane="YuvrajMedical System"><title>Subscription due?</title>
+<polygon points="1280.0,537 1410,578.0 1280.0,619 1150,578.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="1280.0" y="578.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Subscription due?</text>
+</g>
+<g class="node" data-id="monitor" data-kind="action" data-lane="YuvrajMedical System"><title>Continue monitoring</title>
+<rect x="1025" y="639" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="674.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Continue monitoring</text>
+</g>
+<g class="node" data-id="reminder" data-kind="action" data-lane="YuvrajMedical System"><title>Generate medicine reminder</title>
+<rect x="1025" y="735" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="770.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Generate medicine reminder</text>
+</g>
+<g class="node" data-id="preferences" data-kind="action" data-lane="YuvrajMedical System"><title>Check notification preferences</title>
+<rect x="1025" y="831" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="866.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Check notification preferences</text>
+</g>
+<g class="node" data-id="enabled" data-kind="decision" data-lane="YuvrajMedical System"><title>Notification enabled?</title>
+<polygon points="1280.0,921 1410,962.0 1280.0,1003 1150,962.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="1280.0" y="962.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Notification enabled?</text>
+</g>
+<g class="node" data-id="skip" data-kind="action" data-lane="YuvrajMedical System"><title>Do not send optional notification</title>
+<rect x="1025" y="1023" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1058.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Do not send optional notification</text>
+</g>
+<g class="node" data-id="send" data-kind="action" data-lane="OTP / SMS Service"><title>Send message through enabled channel</title>
+<rect x="3485" y="1119" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="3740.0" y="1154.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Send message through enabled channel</text>
+</g>
+<g class="node" data-id="received" data-kind="action" data-lane="Customer"><title>Receive notification</title>
+<rect x="205" y="1119" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="1154.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Receive notification</text>
+</g>
+<g class="node" data-id="submsg" data-kind="decision" data-lane="YuvrajMedical System"><title>Subscription reminder?</title>
+<polygon points="1280.0,1209 1410,1250.0 1280.0,1291 1150,1250.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="1280.0" y="1238.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Subscription</text>
+<text x="1280.0" y="1261.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">reminder?</text>
+</g>
+<g class="node" data-id="open" data-kind="action" data-lane="Customer"><title>Open medicine subscription</title>
+<rect x="205" y="1311" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="1346.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Open medicine subscription</text>
+</g>
+<g class="node" data-id="continue" data-kind="decision" data-lane="Customer"><title>Continue subscription?</title>
+<polygon points="460.0,1401 590,1442.0 460.0,1483 330,1442.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="460.0" y="1430.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Continue</text>
+<text x="460.0" y="1453.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">subscription?</text>
+</g>
+<g class="node" data-id="keep" data-kind="action" data-lane="YuvrajMedical System"><title>Keep active; proceed to next cycle</title>
+<rect x="1025" y="1503" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1538.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Keep active; proceed to next cycle</text>
+</g>
+<g class="node" data-id="cancel" data-kind="action" data-lane="YuvrajMedical System"><title>Cancel subscription; update status</title>
+<rect x="1025" y="1599" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1634.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Cancel subscription; update status</text>
+</g>
+<g class="node" data-id="delivered" data-kind="decision" data-lane="YuvrajMedical System"><title>Order delivered?</title>
+<polygon points="1280.0,1785 1410,1826.0 1280.0,1867 1150,1826.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="1280.0" y="1826.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Order delivered?</text>
+</g>
+<g class="node" data-id="deny" data-kind="action" data-lane="Customer"><title>Review unavailable when delivered-order policy applies</title>
+<rect x="205" y="1791" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="1813.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Review unavailable when delivered-order</text>
+<text x="460.0" y="1839.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">policy applies</text>
+</g>
+<g class="node" data-id="review" data-kind="action" data-lane="Customer"><title>Select Review &amp; Feedback; enter rating, review and feedback</title>
+<rect x="205" y="1887" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="1909.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Select Review &amp; Feedback; enter rating,</text>
+<text x="460.0" y="1935.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">review and feedback</text>
+</g>
+<g class="node" data-id="validate" data-kind="action" data-lane="YuvrajMedical System"><title>Validate submission</title>
+<rect x="1025" y="1887" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="1922.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Validate submission</text>
+</g>
+<g class="node" data-id="valid" data-kind="decision" data-lane="YuvrajMedical System"><title>Submission valid?</title>
+<polygon points="1280.0,1977 1410,2018.0 1280.0,2059 1150,2018.0" fill="#fffdf2" stroke="#2a3745" stroke-width="2"/>
+<text x="1280.0" y="2018.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#172b3b">Submission valid?</text>
+</g>
+<g class="node" data-id="error" data-kind="action" data-lane="Customer"><title>View validation error</title>
+<rect x="205" y="1983" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="2018.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">View validation error</text>
+</g>
+<g class="node" data-id="save" data-kind="action" data-lane="YuvrajMedical System"><title>Save review</title>
+<rect x="1025" y="2079" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="1280.0" y="2114.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">Save review</text>
+</g>
+<g class="node" data-id="thanks" data-kind="action" data-lane="Customer"><title>View “Thank you for your feedback”</title>
+<rect x="205" y="2079" width="510" height="70" rx="14" fill="white" stroke="#354455" stroke-width="1.5"/>
+<text x="460.0" y="2114.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">View “Thank you for your feedback”</text>
+</g>
+<g class="node" data-id="end" data-kind="end" data-lane="YuvrajMedical System"><title></title>
+<circle cx="1280.0" cy="2306.0" r="15" fill="white" stroke="#17212c" stroke-width="2"/>
+<circle cx="1280.0" cy="2306.0" r="9" fill="#17212c" stroke="#17212c" stroke-width="2"/>
+</g>
+<text x="2100.0" y="2366.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">Control-flow arrows • Guarded decision branches • Rounded actions • Fork/join bars for concurrent work</text>
+<text x="2100.0" y="2404.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="19" font-weight="400" fill="#172b3b">Notification events: OTP, prescription approval/rejection, payment success/failure, order confirmation/packing/dispatch/delivery/cancellation and subscription reminders.</text>
+<text x="2100.0" y="2428.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="19" font-weight="400" fill="#172b3b">Disabled optional notifications are not sent.</text>
+</svg>

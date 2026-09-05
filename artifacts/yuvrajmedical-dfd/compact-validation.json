@@ -1,0 +1,11 @@
+{
+  "processes": 13,
+  "stores": 24,
+  "external_entities": 3,
+  "directional_flows_preserved": 112,
+  "connectors": 69,
+  "image_size": [
+    3800,
+    2660
+  ]
+}

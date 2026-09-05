@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="2085" viewBox="0 0 3500 2085">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1750.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="1750.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Login, Session &amp; Logout</text>
+<rect x="65.0" y="220" width="1685.0" height="1760" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1685.0" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="907.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Customer / Staff / Owner</text>
+<rect x="1750.0" y="220" width="1685.0" height="1760" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="1750.0" y="220" width="1685.0" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2592.5" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<g class="flow" data-from="s" data-to="form__merge"><title>Control flow</title>
+<polyline points="907.0,349 907.0,402.0 532.0,402.0 532.0,455" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="907.0,349 907.0,402.0 532.0,402.0 532.0,455" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="532.0,455 526.0,441.0 538.0,441.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="form" data-to="validate"><title>Control flow</title>
+<polyline points="1232.0,470.0 2267.0,470.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1232.0,470.0 2267.0,470.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2267.0,470.0 2253.0,476.0 2253.0,464.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="validate" data-to="correct"><title>Control flow</title>
+<polyline points="2592.0,507.0 2592.5,545.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,507.0 2592.5,545.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2592.5,545.0 2586.316324740966,531.080152289238 2598.315286094666,530.9222712187945" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="correct" data-to="error"><title>No</title>
+<polyline points="2460,605.0 2197,605.0 2197,740.0 2267,740.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2460,605.0 2197,605.0 2197,740.0 2267,740.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2267,740.0 2253.0,746.0 2253.0,734.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="error" data-to="form__merge"><title>Control flow</title>
+<polyline points="2267,720 2220,720 2220,540 540,540 540,485" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2267,720 2220,720 2220,540 540,540 540,485" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="540,485 546.0,499.0 534.0,499.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="correct" data-to="record"><title>Yes</title>
+<polyline points="2725,600 2960,600 2960,860 2917,860" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2725,600 2960,600 2960,860 2917,860" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2917,860 2931.0,854.0 2931.0,866.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="record" data-to="session"><title>Control flow</title>
+<polyline points="2592.0,912.0 2592.0,973.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,912.0 2592.0,973.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2592.0,973.0 2586.0,959.0 2598.0,959.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="session" data-to="dashboard"><title>Control flow</title>
+<polyline points="2592.0,1047.0 2592.0,1108.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,1047.0 2592.0,1108.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2592.0,1108.0 2586.0,1094.0 2598.0,1094.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="dashboard" data-to="use"><title>Control flow</title>
+<polyline points="2592.0,1182 2592.0,1212.5 907.0,1212.5 907.0,1243" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,1182 2592.0,1212.5 907.0,1212.5 907.0,1243" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="907.0,1243 901.0,1229.0 913.0,1229.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="use" data-to="logout"><title>Control flow</title>
+<polyline points="907.0,1317.0 907.0,1378.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="907.0,1317.0 907.0,1378.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="907.0,1378.0 901.0,1364.0 913.0,1364.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="logout" data-to="destroy"><title>Control flow</title>
+<polyline points="1232.0,1415.0 2267.0,1415.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1232.0,1415.0 2267.0,1415.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2267.0,1415.0 2253.0,1421.0 2253.0,1409.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="destroy" data-to="activity"><title>Control flow</title>
+<polyline points="2592.0,1452.0 2592.0,1513.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,1452.0 2592.0,1513.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2592.0,1513.0 2586.0,1499.0 2598.0,1499.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="activity" data-to="redirect"><title>Control flow</title>
+<polyline points="2592.0,1587.0 2592.0,1648.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,1587.0 2592.0,1648.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2592.0,1648.0 2586.0,1634.0 2598.0,1634.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="redirect" data-to="e"><title>Control flow</title>
+<polyline points="2592.0,1722.0 2592.0,1801.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2592.0,1722.0 2592.0,1801.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2592.0,1801.0 2586.0,1787.0 2598.0,1787.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="form__merge" data-to="form"><title>Control flow</title>
+<polyline points="547.0,470.0 582.0,470.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="547.0,470.0 582.0,470.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="582.0,470.0 568.0,476.0 568.0,464.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<rect x="2242.2421875" y="589.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2262.75" y="605.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="2900.640625" y="649.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="2924.3203125" y="665.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<g class="node" data-id="s" data-kind="start" data-lane="U"><title>start</title>
+<circle cx="907.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="form" data-kind="action" data-lane="U"><title>Enter email / phone and password</title>
+<rect x="582" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="907.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Enter email / phone and password</text>
+</g>
+<g class="node" data-id="validate" data-kind="action" data-lane="S"><title>Validate credentials</title>
+<rect x="2267" y="433" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Validate credentials</text>
+</g>
+<g class="node" data-id="correct" data-kind="decision" data-lane="S"><title>Credentials correct?</title>
+<polygon points="2592.5,545 2725,605.0 2592.5,665 2460,605.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="2592.5" y="591.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Credentials</text>
+<text x="2592.5" y="618.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">correct?</text>
+</g>
+<g class="node" data-id="error" data-kind="action" data-lane="S"><title>Display Invalid Login Message</title>
+<rect x="2267" y="703" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="740.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display Invalid Login Message</text>
+</g>
+<g class="node" data-id="record" data-kind="action" data-lane="S"><title>Record login activity</title>
+<rect x="2267" y="838" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Record login activity</text>
+</g>
+<g class="node" data-id="session" data-kind="action" data-lane="S"><title>Create authenticated session</title>
+<rect x="2267" y="973" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="1010.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Create authenticated session</text>
+</g>
+<g class="node" data-id="dashboard" data-kind="action" data-lane="S"><title>Display appropriate dashboard / home page</title>
+<rect x="2267" y="1108" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="1145.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Display appropriate dashboard / home page</text>
+</g>
+<g class="node" data-id="use" data-kind="action" data-lane="U"><title>Use permitted system functions</title>
+<rect x="582" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="907.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Use permitted system functions</text>
+</g>
+<g class="node" data-id="logout" data-kind="action" data-lane="U"><title>Select Logout</title>
+<rect x="582" y="1378" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="907.0" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Select Logout</text>
+</g>
+<g class="node" data-id="destroy" data-kind="action" data-lane="S"><title>Destroy session</title>
+<rect x="2267" y="1378" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="1415.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Destroy session</text>
+</g>
+<g class="node" data-id="activity" data-kind="action" data-lane="S"><title>Record logout activity if applicable</title>
+<rect x="2267" y="1513" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="1550.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Record logout activity if applicable</text>
+</g>
+<g class="node" data-id="redirect" data-kind="action" data-lane="S"><title>Redirect to Login / Home Page</title>
+<rect x="2267" y="1648" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2592.0" y="1685.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Redirect to Login / Home Page</text>
+</g>
+<g class="node" data-id="e" data-kind="end" data-lane="S"><title>end</title>
+<circle cx="2592.0" cy="1820.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="2592.0" cy="1820.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="2592.0" y="1859.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b"></text>
+</g>
+<g class="node" data-id="form__merge" data-kind="merge" data-lane="U"><title>merge</title>
+<polygon points="532.0,455 547,470.0 532.0,485 517,470.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<text x="1750.0" y="2027.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+</svg>

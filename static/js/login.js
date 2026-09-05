@@ -1,5 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const setupPasswordToggles = () => {
+        document.querySelectorAll('input[type="password"]').forEach((input) => {
+            if (input.dataset.passwordToggleReady === "true") return;
+
+            const parent = input.parentElement;
+            if (!parent) return;
+
+            input.dataset.passwordToggleReady = "true";
+            parent.classList.add("has-password-toggle");
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "ym-password-toggle";
+            button.setAttribute("aria-label", "Show password");
+            button.setAttribute("title", "Show password");
+            button.innerHTML = `
+                <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m3 3 18 18"></path>
+                    <path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-.6"></path>
+                    <path d="M9.9 5.2A9.7 9.7 0 0 1 12 5c6 0 9.5 7 9.5 7a16.4 16.4 0 0 1-2.1 2.8"></path>
+                    <path d="M6.6 6.6C3.9 8.4 2.5 12 2.5 12s3.5 7 9.5 7a9.8 9.8 0 0 0 4.4-1"></path>
+                </svg>
+            `;
+
+            button.addEventListener("click", () => {
+                const isHidden = input.type === "password";
+                input.type = isHidden ? "text" : "password";
+                button.classList.toggle("is-visible", isHidden);
+                button.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+                button.setAttribute("title", isHidden ? "Hide password" : "Show password");
+                input.focus();
+            });
+
+            parent.appendChild(button);
+        });
+    };
+
     const setupScrollRail = () => {
+        if (!document.querySelector(".ym-login-stage")) return;
         if (document.getElementById("yvm-scroll-rail")) return;
         const rail = document.createElement("div");
         rail.id = "yvm-scroll-rail";
@@ -23,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.setTimeout(update, 300);
     };
 
+    setupPasswordToggles();
     setupScrollRail();
 
     const field = document.querySelector(".particle-field");

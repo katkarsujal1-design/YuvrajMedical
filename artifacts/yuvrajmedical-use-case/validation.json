@@ -1,0 +1,9 @@
+{
+  "actors": 5,
+  "unique_use_cases": 86,
+  "actor_associations": 88,
+  "include_dependencies": 16,
+  "extend_dependencies": 13,
+  "duplicate_nodes": 0,
+  "status": "passed"
+}

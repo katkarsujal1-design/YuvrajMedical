@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "unique_master_actors": 5,
+  "unique_master_use_cases": 86,
+  "actor_associations": 88,
+  "include_dependencies": 16,
+  "extend_dependencies": 13,
+  "readable_sections": 9,
+  "missing_use_cases": [],
+  "missing_associations": [],
+  "missing_dependencies": [],
+  "note": "Section views share contextual nodes where needed. The full master diagram contains each actor and use case exactly once."
+}

@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="65.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">Staff Order Processing &amp; Inventory</text>
+<text x="1400.0" y="112.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">YuvrajMedical · UML Use Cases · Section 6 of 9</text>
+<rect x="400" y="185" width="2040" height="1565" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1420" y="230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Staff" data-b="View Staff Dashboard" data-kind="association"><title>Staff — association — View Staff Dashboard</title>
+<polyline points="2630.0,340.0 2520,300 2520,260 1000,260 1000,400 936.7648819930344,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,300 2520,260 1000,260 1000,400 936.7648819930344,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="View Orders" data-kind="association"><title>Staff — association — View Orders</title>
+<polyline points="2630.0,340.0 2520,380 2520,500 1480,500 1480,440 1411.7648819930344,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,380 2520,500 1480,500 1480,440 1411.7648819930344,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Process Order" data-kind="association"><title>Staff — association — Process Order</title>
+<polyline points="2630.0,340.0 2520,300 1940,300 1940,400 1886.7648819930344,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,300 1940,300 1940,400 1886.7648819930344,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Update Order Status" data-kind="association"><title>Staff — association — Update Order Status</title>
+<polyline points="2630.0,340.0 2600,460 2600,620 1500,620 1500,700 1480,700 1398.939217410594,704.3408531933" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2600,460 2600,620 1500,620 1500,700 1480,700 1398.939217410594,704.3408531933" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="View Medicines" data-kind="association"><title>Staff — association — View Medicines</title>
+<polyline points="2630.0,340.0 2600,460 2540,460 2540,600 1940,600 1940,700 1873.939217410594,704.3408531933" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2600,460 2540,460 2540,600 1940,600 1940,700 1873.939217410594,704.3408531933" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Manage Medicine Stock" data-kind="association"><title>Staff — association — Manage Medicine Stock</title>
+<polyline points="2630.0,340.0 2640,460 2640,700 2420,700 2348.939217410594,704.3408531933" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2640,460 2640,700 2420,700 2348.939217410594,704.3408531933" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Add Stock" data-kind="association"><title>Staff — association — Add Stock</title>
+<polyline points="2630.0,340.0 2660,460 2660,1140 1480,1140 1480,1080 1395.4224529144583,1074.5281520706237" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2660,460 2660,1140 1480,1140 1480,1080 1395.4224529144583,1074.5281520706237" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Reduce Stock" data-kind="association"><title>Staff — association — Reduce Stock</title>
+<polyline points="2630.0,340.0 2600,460 2620,460 2620,680 2400,680 2400,940 1980,940 1980,1020 1940,1020 1881.7623011686428,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2600,460 2620,460 2620,680 2400,680 2400,940 1980,940 1980,1020 1940,1020 1881.7623011686428,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="Record Stock Movement" data-kind="association"><title>Staff — association — Record Stock Movement</title>
+<polyline points="2630.0,340.0 2520,380 2400,380 2400,580 980,580 980,940 860,940 851.5851267154651,995.5761208511979" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2520,380 2400,380 2400,580 980,580 980,940 860,940 851.5851267154651,995.5761208511979" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="View Stock History" data-kind="association"><title>Staff — association — View Stock History</title>
+<polyline points="2630.0,340.0 2660,460 2680,460 2680,1020 2420,1020 2356.762301168643,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2660,460 2680,460 2680,1020 2420,1020 2356.762301168643,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="View Low Stock Medicines" data-kind="association"><title>Staff — association — View Low Stock Medicines</title>
+<polyline points="2630.0,340.0 2740,380 2740,1260 1000,1260 1000,1320 918.0527587340016,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2740,380 2740,1260 1000,1260 1000,1320 918.0527587340016,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Staff" data-b="View Customer Order Information" data-kind="association"><title>Staff — association — View Customer Order Information</title>
+<polyline points="2630.0,340.0 2740,380 2720,380 2720,1320 1480,1320 1393.0527587340016,1326.3002819225997" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,340.0 2740,380 2720,380 2720,1320 1480,1320 1393.0527587340016,1326.3002819225997" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="View Orders" data-kind="association"><title>Owner / Admin — association — View Orders</title>
+<polyline points="2630.0,1490.0 2600,1380 1460,1380 1460,520 1340,520 1330.1502112470373,468.8438820293983" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,1490.0 2600,1380 1460,1380 1460,520 1340,520 1330.1502112470373,468.8438820293983" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Process Order" data-b="Check Stock Availability" data-kind="include"><title>Process Order — include — Check Stock Availability</title>
+<polyline points="1727.0,365 1727.0,315 2202.0,315 2202.0,365" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1727.0,365 1727.0,315 2202.0,315 2202.0,365" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="2195.0,349.0 2202.0,365 2209.0,349.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Process Order" data-b="Update Stock" data-kind="include"><title>Process Order — include — Update Stock</title>
+<polyline points="1567.2351180069656,438.7958684697687 1500,440 1500,620 1000,620 1000,700 923.9392174105941,704.3408531933" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1567.2351180069656,438.7958684697687 1500,440 1500,620 1000,620 1000,700 923.9392174105941,704.3408531933" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="939.5143773282017,696.4405751259819 923.9392174105941,704.3408531933 940.3120711483779,710.4178311002156" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Manage Medicine Stock" data-b="Record Stock Movement" data-kind="include"><title>Manage Medicine Stock — include — Record Stock Movement</title>
+<polyline points="2050.502270347746,756.9525672368418 1980,760 1980,940 1000,940 1000,1020 931.7623011686428,1022.2408380634349" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2050.502270347746,756.9525672368418 1980,760 1980,940 1000,940 1000,1020 931.7623011686428,1022.2408380634349" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="947.5239339602339,1014.7194730448335 931.7623011686428,1022.2408380634349 947.9834282244659,1028.7119304780772" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Process Order" data-b="Check Stock Availability" data-kind="include">
+<rect x="1787.1875" y="299.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1845.75" y="315.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Process Order" data-b="Update Stock" data-kind="include">
+<rect x="1066.4375" y="604.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1125.0" y="620.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Manage Medicine Stock" data-b="Record Stock Movement" data-kind="include">
+<rect x="1186.4375" y="924.0" width="117.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1245.0" y="940.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;include&gt;&gt;</text>
+</g>
+<g class="node" data-id="View Staff Dashboard" data-kind="usecase"><title>View Staff Dashboard</title>
+<ellipse cx="777.0" cy="420.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="777.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Staff Dashboard</text>
+</g>
+<g class="node" data-id="View Orders" data-kind="usecase"><title>View Orders</title>
+<ellipse cx="1252.0" cy="420.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1252.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Orders</text>
+</g>
+<g class="node" data-id="Process Order" data-kind="usecase"><title>Process Order</title>
+<ellipse cx="1727.0" cy="420.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1727.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Process Order</text>
+</g>
+<g class="node" data-id="Check Stock Availability" data-kind="usecase"><title>Check Stock Availability</title>
+<ellipse cx="2202.0" cy="420.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2202.0" y="404.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Check Stock</text>
+<text x="2202.0" y="435.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Availability</text>
+</g>
+<g class="node" data-id="Update Stock" data-kind="usecase"><title>Update Stock</title>
+<ellipse cx="777.0" cy="732.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="777.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Update Stock</text>
+</g>
+<g class="node" data-id="Update Order Status" data-kind="usecase"><title>Update Order Status</title>
+<ellipse cx="1252.0" cy="732.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1252.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Update Order Status</text>
+</g>
+<g class="node" data-id="View Medicines" data-kind="usecase"><title>View Medicines</title>
+<ellipse cx="1727.0" cy="732.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1727.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Medicines</text>
+</g>
+<g class="node" data-id="Manage Medicine Stock" data-kind="usecase"><title>Manage Medicine Stock</title>
+<ellipse cx="2202.0" cy="732.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2202.0" y="732.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Medicine Stock</text>
+</g>
+<g class="node" data-id="Record Stock Movement" data-kind="usecase"><title>Record Stock Movement</title>
+<ellipse cx="777.0" cy="1045.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="777.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Record Stock Movement</text>
+</g>
+<g class="node" data-id="Add Stock" data-kind="usecase"><title>Add Stock</title>
+<ellipse cx="1252.0" cy="1045.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1252.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Add Stock</text>
+</g>
+<g class="node" data-id="Reduce Stock" data-kind="usecase"><title>Reduce Stock</title>
+<ellipse cx="1727.0" cy="1045.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1727.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Reduce Stock</text>
+</g>
+<g class="node" data-id="View Stock History" data-kind="usecase"><title>View Stock History</title>
+<ellipse cx="2202.0" cy="1045.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2202.0" y="1045.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Stock History</text>
+</g>
+<g class="node" data-id="View Low Stock Medicines" data-kind="usecase"><title>View Low Stock Medicines</title>
+<ellipse cx="777.0" cy="1357.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="777.0" y="1341.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Low Stock</text>
+<text x="777.0" y="1372.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Medicines</text>
+</g>
+<g class="node" data-id="View Customer Order Information" data-kind="usecase"><title>View Customer Order Information</title>
+<ellipse cx="1252.0" cy="1357.0" rx="170.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1252.0" y="1341.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">View Customer Order</text>
+<text x="1252.0" y="1372.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Information</text>
+</g>
+<g class="node" data-id="Staff" data-kind="actor"><title>Staff</title>
+<circle cx="2630.0" cy="280.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,304.0 2630.0,380.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,340.0 2678.0,340.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,440.0 2630.0,380.0 2674.0,440.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="456.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="486.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Staff</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor"><title>Owner / Admin</title>
+<circle cx="2630.0" cy="1430.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,1454.0 2630.0,1530.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,1490.0 2678.0,1490.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1590.0 2630.0,1530.0 2674.0,1590.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1606.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1636.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<text x="1400.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+<text x="1400.0" y="1837.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Staff required for staff operations.</text>
+<text x="1400.0" y="1863.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Owner/Admin required for administrative operations.</text>
+</svg>

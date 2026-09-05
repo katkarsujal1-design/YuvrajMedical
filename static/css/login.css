@@ -490,6 +490,10 @@ textarea{
     transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
 }
 
+.ym-input-shell.has-password-toggle{
+    grid-template-columns:42px minmax(0,1fr) 42px;
+}
+
 .ym-input-shell:focus-within{
     border-color:var(--ym-teal);
     background:#fff;
@@ -511,6 +515,7 @@ textarea{
 .ym-auth-form input[type="email"],
 .ym-auth-form input[type="text"],
 .ym-auth-form input[type="password"],
+.ym-auth-form input[data-password-toggle-ready="true"],
 .ym-auth-form input[inputmode="numeric"]{
     width:100%;
     min-height:50px;
@@ -521,6 +526,46 @@ textarea{
     color:#12243a;
     background:transparent;
     box-shadow:none;
+}
+
+.ym-password-toggle{
+    width:42px;
+    height:100%;
+    display:grid;
+    place-items:center;
+    border:0;
+    border-left:1px solid rgba(7,95,114,.12);
+    border-radius:0;
+    color:#075f72;
+    background:rgba(255,255,255,.36);
+    cursor:pointer;
+    box-shadow:none;
+}
+
+.ym-password-toggle:hover,
+.ym-password-toggle:focus-visible{
+    color:#047857;
+    background:rgba(7,152,137,.10);
+    outline:none;
+}
+
+.ym-password-toggle svg{
+    width:18px;
+    height:18px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.ym-password-toggle .eye-closed,
+.ym-password-toggle.is-visible .eye-open{
+    display:none;
+}
+
+.ym-password-toggle.is-visible .eye-closed{
+    display:block;
 }
 
 .ym-auth-form input:focus{

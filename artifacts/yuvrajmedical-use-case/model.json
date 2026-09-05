@@ -1,0 +1,310 @@
+{
+  "actors": {
+    "Customer": [
+      "Register",
+      "Login",
+      "Logout",
+      "Verify OTP",
+      "Manage Profile",
+      "Manage Family Members",
+      "Manage Delivery Addresses",
+      "Browse Medicines",
+      "Search Medicines",
+      "Filter Medicines",
+      "View Medicine Details",
+      "Add Medicine to Cart",
+      "Update Cart Quantity",
+      "Remove Medicine from Cart",
+      "Save Medicine for Later",
+      "Move Saved Medicine to Cart",
+      "Add Medicine to Wishlist",
+      "Remove Medicine from Wishlist",
+      "Subscribe to Medicine",
+      "Manage Medicine Subscription",
+      "Upload Prescription",
+      "Submit Prescription Request",
+      "View Prescription Status",
+      "Place Order",
+      "Checkout",
+      "Select Delivery Address",
+      "Make Payment",
+      "View Order History",
+      "View Order Details",
+      "Track Order",
+      "Cancel Order",
+      "View Notifications",
+      "Manage Notification Preferences",
+      "Submit Review & Feedback",
+      "Use Referral",
+      "View Referral Rewards",
+      "Manage Cart"
+    ],
+    "Staff": [
+      "Login",
+      "Logout",
+      "View Staff Dashboard",
+      "View Orders",
+      "Process Order",
+      "Update Order Status",
+      "View Prescription Requests",
+      "Review Prescription",
+      "Approve Prescription",
+      "Reject Prescription",
+      "View Medicines",
+      "Manage Medicine Stock",
+      "Add Stock",
+      "Reduce Stock",
+      "Record Stock Movement",
+      "View Stock History",
+      "View Low Stock Medicines",
+      "View Customer Order Information"
+    ],
+    "Owner / Admin": [
+      "Login",
+      "Logout",
+      "View Owner Dashboard",
+      "View Sales Summary",
+      "View Order Statistics",
+      "View Inventory Summary",
+      "Manage Medicines",
+      "Add Medicine",
+      "Update Medicine",
+      "Delete Medicine",
+      "Manage Disease Categories",
+      "Manage Staff",
+      "Add Staff",
+      "Update Staff",
+      "Remove Staff",
+      "View Staff Details",
+      "Manage Delivery Areas",
+      "View Orders",
+      "View Payments",
+      "View Customers",
+      "View Prescription Requests",
+      "View Stock Movements",
+      "View Reviews & Feedback",
+      "View Referral Rewards"
+    ],
+    "Payment Gateway": [
+      "Process Payment",
+      "Verify Payment",
+      "Return Payment Status"
+    ],
+    "OTP / SMS Service": [
+      "Send OTP",
+      "Verify OTP",
+      "Send Order Notification",
+      "Send Payment Notification",
+      "Send Prescription Status Notification",
+      "Send Subscription Reminder"
+    ]
+  },
+  "include": [
+    [
+      "Register",
+      "Verify OTP"
+    ],
+    [
+      "Login",
+      "Authenticate User"
+    ],
+    [
+      "Verify OTP",
+      "Send OTP"
+    ],
+    [
+      "Add Medicine to Cart",
+      "View Medicine Details"
+    ],
+    [
+      "Checkout",
+      "Review Cart"
+    ],
+    [
+      "Checkout",
+      "Select Delivery Address"
+    ],
+    [
+      "Place Order",
+      "Checkout"
+    ],
+    [
+      "Place Order",
+      "Check Stock Availability"
+    ],
+    [
+      "Make Payment",
+      "Process Payment"
+    ],
+    [
+      "Process Payment",
+      "Verify Payment"
+    ],
+    [
+      "Process Order",
+      "Check Stock Availability"
+    ],
+    [
+      "Process Order",
+      "Update Stock"
+    ],
+    [
+      "Manage Medicine Stock",
+      "Record Stock Movement"
+    ],
+    [
+      "Upload Prescription",
+      "Submit Prescription Request"
+    ],
+    [
+      "Review Prescription",
+      "View Prescription Request"
+    ],
+    [
+      "View Staff Details",
+      "Manage Staff"
+    ]
+  ],
+  "extend": [
+    [
+      "Cancel Order",
+      "View Order Details"
+    ],
+    [
+      "Track Order",
+      "View Order Details"
+    ],
+    [
+      "Save Medicine for Later",
+      "Manage Cart"
+    ],
+    [
+      "Move Saved Medicine to Cart",
+      "Save Medicine for Later"
+    ],
+    [
+      "Apply Referral Reward",
+      "Checkout"
+    ],
+    [
+      "Approve Prescription",
+      "Review Prescription"
+    ],
+    [
+      "Reject Prescription",
+      "Review Prescription"
+    ],
+    [
+      "Add Medicine",
+      "Manage Medicines"
+    ],
+    [
+      "Update Medicine",
+      "Manage Medicines"
+    ],
+    [
+      "Delete Medicine",
+      "Manage Medicines"
+    ],
+    [
+      "Add Staff",
+      "Manage Staff"
+    ],
+    [
+      "Update Staff",
+      "Manage Staff"
+    ],
+    [
+      "Remove Staff",
+      "Manage Staff"
+    ]
+  ],
+  "use_cases": [
+    "Add Medicine",
+    "Add Medicine to Cart",
+    "Add Medicine to Wishlist",
+    "Add Staff",
+    "Add Stock",
+    "Apply Referral Reward",
+    "Approve Prescription",
+    "Authenticate User",
+    "Browse Medicines",
+    "Cancel Order",
+    "Check Stock Availability",
+    "Checkout",
+    "Delete Medicine",
+    "Filter Medicines",
+    "Login",
+    "Logout",
+    "Make Payment",
+    "Manage Cart",
+    "Manage Delivery Addresses",
+    "Manage Delivery Areas",
+    "Manage Disease Categories",
+    "Manage Family Members",
+    "Manage Medicine Stock",
+    "Manage Medicine Subscription",
+    "Manage Medicines",
+    "Manage Notification Preferences",
+    "Manage Profile",
+    "Manage Staff",
+    "Move Saved Medicine to Cart",
+    "Place Order",
+    "Process Order",
+    "Process Payment",
+    "Record Stock Movement",
+    "Reduce Stock",
+    "Register",
+    "Reject Prescription",
+    "Remove Medicine from Cart",
+    "Remove Medicine from Wishlist",
+    "Remove Staff",
+    "Return Payment Status",
+    "Review Cart",
+    "Review Prescription",
+    "Save Medicine for Later",
+    "Search Medicines",
+    "Select Delivery Address",
+    "Send OTP",
+    "Send Order Notification",
+    "Send Payment Notification",
+    "Send Prescription Status Notification",
+    "Send Subscription Reminder",
+    "Submit Prescription Request",
+    "Submit Review & Feedback",
+    "Subscribe to Medicine",
+    "Track Order",
+    "Update Cart Quantity",
+    "Update Medicine",
+    "Update Order Status",
+    "Update Staff",
+    "Update Stock",
+    "Upload Prescription",
+    "Use Referral",
+    "Verify OTP",
+    "Verify Payment",
+    "View Customer Order Information",
+    "View Customers",
+    "View Inventory Summary",
+    "View Low Stock Medicines",
+    "View Medicine Details",
+    "View Medicines",
+    "View Notifications",
+    "View Order Details",
+    "View Order History",
+    "View Order Statistics",
+    "View Orders",
+    "View Owner Dashboard",
+    "View Payments",
+    "View Prescription Request",
+    "View Prescription Requests",
+    "View Prescription Status",
+    "View Referral Rewards",
+    "View Reviews & Feedback",
+    "View Sales Summary",
+    "View Staff Dashboard",
+    "View Staff Details",
+    "View Stock History",
+    "View Stock Movements"
+  ]
+}

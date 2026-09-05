@@ -1,0 +1,650 @@
+{
+  "level_0": {
+    "processes": 1,
+    "entities": 3,
+    "data_stores": 0,
+    "flows": [
+      [
+        "Customer",
+        "System",
+        "Registration Details \u00b7 Login Credentials\nSearch Request \u00b7 Cart Request \u00b7 Prescription\nOrder Request \u00b7 Payment Details\nDelivery Address \u00b7 Review & Feedback"
+      ],
+      [
+        "System",
+        "Customer",
+        "Authentication Result \u00b7 Medicine Information\nCart Details \u00b7 Prescription Status\nOrder Confirmation \u00b7 Payment Status\nDelivery/Order Status \u00b7 Notifications"
+      ],
+      [
+        "Staff",
+        "System",
+        "Login Information \u00b7 Prescription Decision\nOrder Updates \u00b7 Stock Updates"
+      ],
+      [
+        "System",
+        "Staff",
+        "Order Information\nPrescription Requests \u00b7 Stock Information"
+      ],
+      [
+        "System",
+        "Payment Gateway",
+        "Payment Request"
+      ],
+      [
+        "Payment Gateway",
+        "System",
+        "Payment Result"
+      ]
+    ]
+  },
+  "level_1": {
+    "processes": {
+      "1.0": "User Authentication",
+      "1.1": "User Profile Management",
+      "2.0": "Medicine Browsing & Search",
+      "3.0": "Cart & Wishlist Management",
+      "4.0": "Prescription Management",
+      "5.0": "Order Management",
+      "6.0": "Payment Processing",
+      "7.0": "Delivery Management",
+      "8.0": "Medicine Subscription Management",
+      "9.0": "Notification Management",
+      "10.0": "Review & Feedback Management",
+      "11.0": "Inventory & Stock Management",
+      "12.0": "Referral & Rewards Management"
+    },
+    "external_entities": [
+      "Customer",
+      "Payment Gateway",
+      "Staff"
+    ],
+    "data_stores": [
+      "auth_otps",
+      "cart",
+      "cart_saved_later",
+      "delivery_addresses",
+      "delivery_areas",
+      "disease_categories",
+      "family_members",
+      "login_activity",
+      "medicine_subscriptions",
+      "medicines",
+      "notification_preferences",
+      "notifications",
+      "order_items",
+      "orders",
+      "otp_verifications",
+      "payments",
+      "prescription_requests",
+      "referral_rewards",
+      "reviews_feedback",
+      "staff",
+      "stock_movements",
+      "user_devices",
+      "users",
+      "wishlist"
+    ],
+    "directed_flows": [
+      {
+        "from": "users",
+        "to": "1.0",
+        "label": "Account Records"
+      },
+      {
+        "from": "1.0",
+        "to": "users",
+        "label": "Account Records"
+      },
+      {
+        "from": "auth_otps",
+        "to": "1.0",
+        "label": "Authentication OTP Records"
+      },
+      {
+        "from": "1.0",
+        "to": "auth_otps",
+        "label": "Authentication OTP Records"
+      },
+      {
+        "from": "otp_verifications",
+        "to": "1.0",
+        "label": "OTP Verification Records"
+      },
+      {
+        "from": "1.0",
+        "to": "otp_verifications",
+        "label": "OTP Verification Records"
+      },
+      {
+        "from": "1.0",
+        "to": "login_activity",
+        "label": "Login Activity Record"
+      },
+      {
+        "from": "user_devices",
+        "to": "1.0",
+        "label": "Device Records"
+      },
+      {
+        "from": "1.0",
+        "to": "user_devices",
+        "label": "Device Records"
+      },
+      {
+        "from": "staff",
+        "to": "1.0",
+        "label": "Staff Login Records"
+      },
+      {
+        "from": "users",
+        "to": "1.1",
+        "label": "Profile Details"
+      },
+      {
+        "from": "1.1",
+        "to": "users",
+        "label": "Profile Details"
+      },
+      {
+        "from": "family_members",
+        "to": "1.1",
+        "label": "Family Member Details"
+      },
+      {
+        "from": "1.1",
+        "to": "family_members",
+        "label": "Family Member Details"
+      },
+      {
+        "from": "user_devices",
+        "to": "1.1",
+        "label": "Device Details"
+      },
+      {
+        "from": "1.1",
+        "to": "user_devices",
+        "label": "Device Details"
+      },
+      {
+        "from": "notification_preferences",
+        "to": "1.1",
+        "label": "Notification Preferences"
+      },
+      {
+        "from": "1.1",
+        "to": "notification_preferences",
+        "label": "Notification Preferences"
+      },
+      {
+        "from": "medicines",
+        "to": "2.0",
+        "label": "Medicine Information"
+      },
+      {
+        "from": "disease_categories",
+        "to": "2.0",
+        "label": "Disease Categories"
+      },
+      {
+        "from": "cart",
+        "to": "3.0",
+        "label": "Cart Items"
+      },
+      {
+        "from": "3.0",
+        "to": "cart",
+        "label": "Cart Items"
+      },
+      {
+        "from": "cart_saved_later",
+        "to": "3.0",
+        "label": "Saved Items"
+      },
+      {
+        "from": "3.0",
+        "to": "cart_saved_later",
+        "label": "Saved Items"
+      },
+      {
+        "from": "wishlist",
+        "to": "3.0",
+        "label": "Wishlist Items"
+      },
+      {
+        "from": "3.0",
+        "to": "wishlist",
+        "label": "Wishlist Items"
+      },
+      {
+        "from": "medicines",
+        "to": "3.0",
+        "label": "Medicine Details"
+      },
+      {
+        "from": "users",
+        "to": "3.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "prescription_requests",
+        "to": "4.0",
+        "label": "Prescription Requests & Decisions"
+      },
+      {
+        "from": "4.0",
+        "to": "prescription_requests",
+        "label": "Prescription Requests & Decisions"
+      },
+      {
+        "from": "users",
+        "to": "4.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "staff",
+        "to": "4.0",
+        "label": "Staff Details"
+      },
+      {
+        "from": "orders",
+        "to": "5.0",
+        "label": "Order Records"
+      },
+      {
+        "from": "5.0",
+        "to": "orders",
+        "label": "Order Records"
+      },
+      {
+        "from": "order_items",
+        "to": "5.0",
+        "label": "Order Item Records"
+      },
+      {
+        "from": "5.0",
+        "to": "order_items",
+        "label": "Order Item Records"
+      },
+      {
+        "from": "cart",
+        "to": "5.0",
+        "label": "Selected Cart Items"
+      },
+      {
+        "from": "medicines",
+        "to": "5.0",
+        "label": "Medicine Details"
+      },
+      {
+        "from": "users",
+        "to": "5.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "delivery_addresses",
+        "to": "5.0",
+        "label": "Delivery Address Details"
+      },
+      {
+        "from": "payments",
+        "to": "6.0",
+        "label": "Payment & Transaction Records"
+      },
+      {
+        "from": "6.0",
+        "to": "payments",
+        "label": "Payment & Transaction Records"
+      },
+      {
+        "from": "orders",
+        "to": "6.0",
+        "label": "Order Payment Details & Status"
+      },
+      {
+        "from": "6.0",
+        "to": "orders",
+        "label": "Order Payment Details & Status"
+      },
+      {
+        "from": "delivery_addresses",
+        "to": "7.0",
+        "label": "Delivery Address Records"
+      },
+      {
+        "from": "7.0",
+        "to": "delivery_addresses",
+        "label": "Delivery Address Records"
+      },
+      {
+        "from": "delivery_areas",
+        "to": "7.0",
+        "label": "Serviceable Delivery Areas"
+      },
+      {
+        "from": "users",
+        "to": "7.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "medicine_subscriptions",
+        "to": "8.0",
+        "label": "Subscription Records"
+      },
+      {
+        "from": "8.0",
+        "to": "medicine_subscriptions",
+        "label": "Subscription Records"
+      },
+      {
+        "from": "medicines",
+        "to": "8.0",
+        "label": "Medicine Details"
+      },
+      {
+        "from": "users",
+        "to": "8.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "notifications",
+        "to": "9.0",
+        "label": "Notification Records"
+      },
+      {
+        "from": "9.0",
+        "to": "notifications",
+        "label": "Notification Records"
+      },
+      {
+        "from": "notification_preferences",
+        "to": "9.0",
+        "label": "Notification Preferences"
+      },
+      {
+        "from": "users",
+        "to": "9.0",
+        "label": "Customer Contact Details"
+      },
+      {
+        "from": "reviews_feedback",
+        "to": "10.0",
+        "label": "Review & Feedback Records"
+      },
+      {
+        "from": "10.0",
+        "to": "reviews_feedback",
+        "label": "Review & Feedback Records"
+      },
+      {
+        "from": "medicines",
+        "to": "10.0",
+        "label": "Medicine Details"
+      },
+      {
+        "from": "users",
+        "to": "10.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "medicines",
+        "to": "11.0",
+        "label": "Medicine Inventory & Stock"
+      },
+      {
+        "from": "11.0",
+        "to": "medicines",
+        "label": "Medicine Inventory & Stock"
+      },
+      {
+        "from": "stock_movements",
+        "to": "11.0",
+        "label": "Stock Movement Records"
+      },
+      {
+        "from": "11.0",
+        "to": "stock_movements",
+        "label": "Stock Movement Records"
+      },
+      {
+        "from": "staff",
+        "to": "11.0",
+        "label": "Staff Details"
+      },
+      {
+        "from": "referral_rewards",
+        "to": "12.0",
+        "label": "Referral & Reward Records"
+      },
+      {
+        "from": "12.0",
+        "to": "referral_rewards",
+        "label": "Referral & Reward Records"
+      },
+      {
+        "from": "users",
+        "to": "12.0",
+        "label": "Customer Details"
+      },
+      {
+        "from": "Customer",
+        "to": "1.0",
+        "label": "Registration Details \u00b7 Login Credentials OTP Request \u00b7 OTP Verification Data"
+      },
+      {
+        "from": "1.0",
+        "to": "Customer",
+        "label": "Registration Result \u00b7 Login Result OTP Result \u00b7 Authentication Status"
+      },
+      {
+        "from": "Customer",
+        "to": "1.1",
+        "label": "Profile Details \u00b7 Family Member Details Device Details \u00b7 Notification Preferences"
+      },
+      {
+        "from": "1.1",
+        "to": "Customer",
+        "label": "Profile Details \u00b7 Family Member Details Device Details \u00b7 Preference Update Result"
+      },
+      {
+        "from": "Customer",
+        "to": "2.0",
+        "label": "Search Query \u00b7 Category Selection \u00b7 Medicine Filter"
+      },
+      {
+        "from": "2.0",
+        "to": "Customer",
+        "label": "Medicine List \u00b7 Medicine Details Search Results \u00b7 Category Results"
+      },
+      {
+        "from": "Customer",
+        "to": "3.0",
+        "label": "Add to Cart \u00b7 Update Quantity \u00b7 Remove from Cart Save for Later \u00b7 Move to Cart Add to Wishlist \u00b7 Remove from Wishlist"
+      },
+      {
+        "from": "3.0",
+        "to": "Customer",
+        "label": "Cart Contents \u00b7 Updated Cart Saved Items \u00b7 Wishlist Contents"
+      },
+      {
+        "from": "Customer",
+        "to": "4.0",
+        "label": "Prescription Upload \u00b7 Prescription Request"
+      },
+      {
+        "from": "4.0",
+        "to": "Customer",
+        "label": "Prescription Status \u00b7 Approval Result \u00b7 Rejection Result"
+      },
+      {
+        "from": "Customer",
+        "to": "5.0",
+        "label": "Place Order Request \u00b7 Selected Cart Items Order Cancellation Request \u00b7 Order Tracking Request"
+      },
+      {
+        "from": "5.0",
+        "to": "Customer",
+        "label": "Order Confirmation \u00b7 Order Details Order Status \u00b7 Cancellation Result"
+      },
+      {
+        "from": "Customer",
+        "to": "6.0",
+        "label": "Payment Method \u00b7 Payment Details"
+      },
+      {
+        "from": "6.0",
+        "to": "Customer",
+        "label": "Payment Confirmation \u00b7 Payment Failure Message"
+      },
+      {
+        "from": "Customer",
+        "to": "7.0",
+        "label": "Add Address \u00b7 Update Address Delete Address \u00b7 Select Delivery Address"
+      },
+      {
+        "from": "7.0",
+        "to": "Customer",
+        "label": "Saved Addresses \u00b7 Delivery Availability Delivery Information"
+      },
+      {
+        "from": "Customer",
+        "to": "8.0",
+        "label": "Subscribe Medicine \u00b7 Change Subscription Cancel Subscription"
+      },
+      {
+        "from": "8.0",
+        "to": "Customer",
+        "label": "Subscription Status \u00b7 Subscription Details Reminder Information"
+      },
+      {
+        "from": "Customer",
+        "to": "9.0",
+        "label": "Notification View Request"
+      },
+      {
+        "from": "9.0",
+        "to": "Customer",
+        "label": "Order Notification \u00b7 Payment Notification Prescription Notification \u00b7 Subscription Reminder"
+      },
+      {
+        "from": "Customer",
+        "to": "10.0",
+        "label": "Rating \u00b7 Review \u00b7 Feedback"
+      },
+      {
+        "from": "10.0",
+        "to": "Customer",
+        "label": "Review Confirmation \u00b7 Feedback Confirmation"
+      },
+      {
+        "from": "Customer",
+        "to": "12.0",
+        "label": "Referral Information \u00b7 Reward Request"
+      },
+      {
+        "from": "12.0",
+        "to": "Customer",
+        "label": "Referral Status \u00b7 Reward Balance \u00b7 Reward Result"
+      },
+      {
+        "from": "5.0",
+        "to": "6.0",
+        "label": "Payment Details"
+      },
+      {
+        "from": "6.0",
+        "to": "5.0",
+        "label": "Payment Status"
+      },
+      {
+        "from": "5.0",
+        "to": "7.0",
+        "label": "Delivery Request \u00b7 Order Delivery Details"
+      },
+      {
+        "from": "7.0",
+        "to": "5.0",
+        "label": "Validated Address \u00b7 Delivery Availability"
+      },
+      {
+        "from": "5.0",
+        "to": "9.0",
+        "label": "Order Status Event"
+      },
+      {
+        "from": "6.0",
+        "to": "9.0",
+        "label": "Payment Event"
+      },
+      {
+        "from": "4.0",
+        "to": "9.0",
+        "label": "Prescription Status Event"
+      },
+      {
+        "from": "8.0",
+        "to": "9.0",
+        "label": "Subscription Reminder Event"
+      },
+      {
+        "from": "5.0",
+        "to": "11.0",
+        "label": "Sold Medicine Quantity"
+      },
+      {
+        "from": "11.0",
+        "to": "5.0",
+        "label": "Stock Availability \u00b7 Stock Update Result"
+      },
+      {
+        "from": "Staff",
+        "to": "1.0",
+        "label": "Login Information"
+      },
+      {
+        "from": "1.0",
+        "to": "Staff",
+        "label": "Authentication Result"
+      },
+      {
+        "from": "Staff",
+        "to": "4.0",
+        "label": "Prescription Review \u00b7 Approval \u00b7 Rejection"
+      },
+      {
+        "from": "4.0",
+        "to": "Staff",
+        "label": "Pending Prescription Requests \u00b7 Prescription Details"
+      },
+      {
+        "from": "Staff",
+        "to": "5.0",
+        "label": "Order Status Update \u00b7 Order Processing Information"
+      },
+      {
+        "from": "5.0",
+        "to": "Staff",
+        "label": "New Order \u00b7 Pending Order \u00b7 Order Details"
+      },
+      {
+        "from": "Staff",
+        "to": "11.0",
+        "label": "Add Stock \u00b7 Remove Stock \u00b7 Stock Adjustment Medicine Stock Update"
+      },
+      {
+        "from": "11.0",
+        "to": "Staff",
+        "label": "Current Stock \u00b7 Stock Update Result \u00b7 Low Stock Information"
+      },
+      {
+        "from": "6.0",
+        "to": "Payment Gateway",
+        "label": "Payment Request \u00b7 Transaction Amount"
+      },
+      {
+        "from": "Payment Gateway",
+        "to": "6.0",
+        "label": "Transaction Result \u00b7 Payment Success \u00b7 Payment Failure"
+      }
+    ]
+  },
+  "validation": "Passed: unique nodes, allowed stores, labeled flows, process-mediated connections, gateway restricted to Payment Processing."
+}

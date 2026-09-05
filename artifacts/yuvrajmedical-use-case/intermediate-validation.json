@@ -1,0 +1,54 @@
+{
+  "actors": 5,
+  "use_cases": 32,
+  "associations": 33,
+  "include": [
+    [
+      "Register",
+      "Verify OTP"
+    ],
+    [
+      "Verify OTP",
+      "Send OTP"
+    ],
+    [
+      "Place Order",
+      "Checkout"
+    ],
+    [
+      "Place Order",
+      "Check Stock Availability"
+    ],
+    [
+      "Make Payment",
+      "Process Payment"
+    ],
+    [
+      "Process Payment",
+      "Verify Payment"
+    ],
+    [
+      "Process Order",
+      "Check Stock Availability"
+    ]
+  ],
+  "extend": [
+    [
+      "Track Order",
+      "View Order Details"
+    ],
+    [
+      "Cancel Order",
+      "View Order Details"
+    ],
+    [
+      "Approve Prescription",
+      "Review Prescription"
+    ],
+    [
+      "Reject Prescription",
+      "Review Prescription"
+    ]
+  ],
+  "scope": "Intermediate view: routine CRUD operations and secondary supporting functions are grouped or omitted."
+}

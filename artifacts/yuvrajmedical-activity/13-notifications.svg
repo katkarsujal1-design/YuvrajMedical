@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3500" height="1700" viewBox="0 0 3500 1700">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1750.0" y="66.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="42" font-weight="700" fill="#182b3b">YuvrajMedical — UML Activity Diagram</text>
+<text x="1750.0" y="122.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="31" font-weight="700" fill="#182b3b">Notification Preferences &amp; Delivery</text>
+<rect x="65.0" y="220" width="1123.3333333333333" height="1375" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="65.0" y="220" width="1123.3333333333333" height="62" rx="0" fill="#f2f6fc" stroke="#a8b4bf" stroke-width="1"/>
+<text x="626.6666666666666" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">Customer</text>
+<rect x="1188.3333333333333" y="220" width="1123.3333333333333" height="1375" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="1188.3333333333333" y="220" width="1123.3333333333333" height="62" rx="0" fill="#f1f7f3" stroke="#a8b4bf" stroke-width="1"/>
+<text x="1750.0" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">YuvrajMedical System</text>
+<rect x="2311.6666666666665" y="220" width="1123.3333333333335" height="1375" rx="0" fill="#faf5ed" stroke="#a8b4bf" stroke-width="1"/>
+<rect x="2311.6666666666665" y="220" width="1123.3333333333335" height="62" rx="0" fill="#faf5ed" stroke="#a8b4bf" stroke-width="1"/>
+<text x="2873.333333333333" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="29" font-weight="700" fill="#182b3b">OTP / SMS Service</text>
+<g class="flow" data-from="s" data-to="event"><title>Control flow</title>
+<polyline points="1750.0,349.0 1750.0,411.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,349.0 1750.0,411.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,411.0 1744.0,397.0 1756.0,397.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="event" data-to="prefs"><title>Control flow</title>
+<polyline points="1750.0,529.0 1750.0,562.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,529.0 1750.0,562.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,562.0 1744.0,548.0 1756.0,548.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="prefs" data-to="enabled"><title>Control flow</title>
+<polyline points="1750.0,648.0 1749.5,680.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1750.0,648.0 1749.5,680.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1749.5,680.0 1743.7194555897995,665.907970113511 1755.7179910142158,666.0954472295175" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="enabled" data-to="prepare__merge"><title>Yes</title>
+<polyline points="1617,740 1560,740 1560,820 1300,820 1300,1140 1360,1140" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,740 1560,740 1560,820 1300,820 1300,1140 1360,1140" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1360,1140 1346.0,1146.0 1346.0,1134.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="enabled" data-to="required"><title>No</title>
+<polyline points="1617,740.0 1547,740.0 1547,875.0 1617,875.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,740.0 1547,740.0 1547,875.0 1617,875.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1617,875.0 1603.0,881.0 1603.0,869.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="required" data-to="prepare__merge"><title>Yes</title>
+<polyline points="1617,880 1560,880 1560,920 1380,920 1380,1130" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,880 1560,880 1560,920 1380,920 1380,1130" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1380,1130 1374.0,1116.0 1386.0,1116.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="required" data-to="skip"><title>No</title>
+<polyline points="1617,875.0 1355,875.0 1355,1010.0 1425,1010.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1617,875.0 1355,875.0 1355,1010.0 1425,1010.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425,1010.0 1411.0,1016.0 1411.0,1004.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="skip" data-to="e"><title>Control flow</title>
+<polyline points="2075,1020 2120,1020 2120,1340 1760,1340 1760,1396" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2075,1020 2120,1020 2120,1340 1760,1340 1760,1396" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1760,1396 1754.0,1382.0 1766.0,1382.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="prepare" data-to="send"><title>Control flow</title>
+<polyline points="2075.0,1145.0 2548.0,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2075.0,1145.0 2548.0,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="2548.0,1145.0 2534.0,1151.0 2534.0,1139.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="send" data-to="receive"><title>Control flow</title>
+<polyline points="2873.0,1188 2873.0,1215.5 626.0,1215.5 626.0,1243" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2873.0,1188 2873.0,1215.5 626.0,1215.5 626.0,1243" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="626.0,1243 620.0,1229.0 632.0,1229.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="receive" data-to="e"><title>Control flow</title>
+<polyline points="626.0,1317 626.0,1356.5 1750.0,1356.5 1750.0,1396" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="626.0,1317 626.0,1356.5 1750.0,1356.5 1750.0,1396" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1750.0,1396 1744.0,1382.0 1756.0,1382.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<g class="flow" data-from="prepare__merge" data-to="prepare"><title>Control flow</title>
+<polyline points="1390.0,1145.0 1425.0,1145.0" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1390.0,1145.0 1425.0,1145.0" fill="none" stroke="#374553" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1425.0,1145.0 1411.0,1151.0 1411.0,1139.0" fill="#374553" stroke="#374553" stroke-width="2"/>
+</g>
+<rect x="1240.640625" y="884.0" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1264.3203125" y="900.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="1493.984375" y="757.75" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1514.4921875" y="773.75" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<rect x="1320.640625" y="956.5" width="47.359375" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1344.3203125" y="972.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">Yes</text>
+<rect x="1399.9921875" y="859.0" width="41.015625" height="32.0" rx="4" fill="white" stroke="white" stroke-width="2"/>
+<text x="1420.5" y="875.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#182b3b">No</text>
+<g class="node" data-id="s" data-kind="start" data-lane="S"><title>start</title>
+<circle cx="1750.0" cy="335.0" r="14" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+</g>
+<g class="node" data-id="event" data-kind="action" data-lane="S"><title>Receive event: OTP; prescription decision; payment success / failure; order status / cancellation; subscription reminder</title>
+<rect x="1425" y="411" width="650" height="118" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="438.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Receive event: OTP; prescription decision;</text>
+<text x="1750.0" y="470.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">payment success / failure; order status /</text>
+<text x="1750.0" y="502.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">cancellation; subscription reminder</text>
+</g>
+<g class="node" data-id="prefs" data-kind="action" data-lane="S"><title>Check notification preferences and event requirements</title>
+<rect x="1425" y="562" width="650" height="86" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="589.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Check notification preferences and event</text>
+<text x="1750.0" y="621.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">requirements</text>
+</g>
+<g class="node" data-id="enabled" data-kind="decision" data-lane="S"><title>Notification enabled?</title>
+<polygon points="1749.5,680 1882,740.0 1749.5,800 1617,740.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1749.5" y="726.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Notification</text>
+<text x="1749.5" y="753.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">enabled?</text>
+</g>
+<g class="node" data-id="required" data-kind="decision" data-lane="S"><title>Required service message / OTP?</title>
+<polygon points="1749.5,815 1882,875.0 1749.5,935 1617,875.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+<text x="1749.5" y="861.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Required service</text>
+<text x="1749.5" y="888.5" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">message / OTP?</text>
+</g>
+<g class="node" data-id="skip" data-kind="action" data-lane="S"><title>Do not send optional notification</title>
+<rect x="1425" y="973" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1010.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Do not send optional notification</text>
+</g>
+<g class="node" data-id="prepare" data-kind="action" data-lane="S"><title>Prepare message for enabled / required channel</title>
+<rect x="1425" y="1102" width="650" height="86" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="1750.0" y="1129.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Prepare message for enabled / required</text>
+<text x="1750.0" y="1161.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">channel</text>
+</g>
+<g class="node" data-id="send" data-kind="action" data-lane="O"><title>Send OTP / notification through configured channel</title>
+<rect x="2548" y="1102" width="650" height="86" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="2873.0" y="1129.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Send OTP / notification through configured</text>
+<text x="2873.0" y="1161.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">channel</text>
+</g>
+<g class="node" data-id="receive" data-kind="action" data-lane="C"><title>Receive notification</title>
+<rect x="301" y="1243" width="650" height="74" rx="18" fill="white" stroke="#374553" stroke-width="2"/>
+<text x="626.0" y="1280.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="27" font-weight="400" fill="#182b3b">Receive notification</text>
+</g>
+<g class="node" data-id="e" data-kind="end" data-lane="S"><title>end</title>
+<circle cx="1750.0" cy="1415.0" r="18" fill="white" stroke="#17232d" stroke-width="3"/>
+<circle cx="1750.0" cy="1415.0" r="10" fill="#17232d" stroke="#17232d" stroke-width="2"/>
+<text x="1750.0" y="1454.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b"></text>
+</g>
+<g class="node" data-id="prepare__merge" data-kind="merge" data-lane="S"><title>merge</title>
+<polygon points="1375.0,1130 1390,1145.0 1375.0,1160 1360,1145.0" fill="#fffdf4" stroke="#374553" stroke-width="2"/>
+</g>
+<text x="1750.0" y="1642.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#182b3b">Filled circle: start • Bullseye: end • Diamond: decision / merge • Black bar: fork / join • Arrows: control flow</text>
+<text x="1750.0" y="1675.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="400" fill="#182b3b">Optional-message preferences do not suppress OTP needed for authentication. Other configured channels follow the same system notification decision.</text>
+</svg>

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+<rect width="100%" height="100%" fill="white"/>
+<text x="1400.0" y="65.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="37" font-weight="700" fill="#172b3b">Medicine &amp; Service Administration</text>
+<text x="1400.0" y="112.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="23" font-weight="400" fill="#172b3b">YuvrajMedical · UML Use Cases · Section 8 of 9</text>
+<rect x="400" y="185" width="2040" height="1565" fill="white" stroke="#344252" stroke-width="2"/>
+<text x="1420" y="230.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="30" font-weight="700" fill="#172b3b">YuvrajMedical Online Medical Store System</text>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Medicines" data-kind="association"><title>Owner / Admin — association — Manage Medicines</title>
+<polyline points="2630.0,950.0 2520,920 1120,920 1120,520 960,520 950.4032008117168,469.92476966004256" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,920 1120,920 1120,520 960,520 950.4032008117168,469.92476966004256" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Add Medicine" data-kind="association"><title>Owner / Admin — association — Add Medicine</title>
+<polyline points="2630.0,950.0 2520,920 2520,520 1600,520 1588.8222797011122,469.4111398505561" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,920 2520,520 1600,520 1588.8222797011122,469.4111398505561" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Update Medicine" data-kind="association"><title>Owner / Admin — association — Update Medicine</title>
+<polyline points="2630.0,950.0 2600,840 2600,440 2400,440 2334.4535202848983,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2600,840 2600,440 2400,440 2334.4535202848983,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Delete Medicine" data-kind="association"><title>Owner / Admin — association — Delete Medicine</title>
+<polyline points="2630.0,950.0 2520,920 2520,940 960,940 950.4032008117168,885.9247696600426" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,920 2520,940 960,940 950.4032008117168,885.9247696600426" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Disease Categories" data-kind="association"><title>Owner / Admin — association — Manage Disease Categories</title>
+<polyline points="2630.0,950.0 2520,960 1600,960 1600,940 1588.8222797011122,885.4111398505561" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2520,960 1600,960 1600,940 1588.8222797011122,885.4111398505561" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Owner / Admin" data-b="Manage Delivery Areas" data-kind="association"><title>Owner / Admin — association — Manage Delivery Areas</title>
+<polyline points="2630.0,950.0 2600,840 2400,840 2347.407308815729,839.9894632678352" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="2630.0,950.0 2600,840 2400,840 2347.407308815729,839.9894632678352" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Add Medicine" data-b="Manage Medicines" data-kind="extend"><title>Add Medicine — extend — Manage Medicines</title>
+<polyline points="1278.5464797151017,401.2041315302313 1220,400 1140,400 1067.4535202848983,401.2041315302313" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1278.5464797151017,401.2041315302313 1220,400 1140,400 1067.4535202848983,401.2041315302313" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1083.3351462857418,393.93956302485293 1067.4535202848983,401.2041315302313 1083.5674872599125,407.9376349517906" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Update Medicine" data-b="Manage Medicines" data-kind="extend"><title>Update Medicine — extend — Manage Medicines</title>
+<polyline points="1911.5464797151017,438.7958684697687 1840,440 1840,500 1140,500 1140,440 1067.4535202848983,438.7958684697687" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="1911.5464797151017,438.7958684697687 1840,440 1840,500 1140,500 1140,440 1067.4535202848983,438.7958684697687" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="1083.5674872599125,432.0623650482094 1067.4535202848983,438.7958684697687 1083.3351462857418,446.06043697514707" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Delete Medicine" data-b="Manage Medicines" data-kind="extend"><title>Delete Medicine — extend — Manage Medicines</title>
+<polyline points="752.8959162589517,787.1144430538134 740,740 740,520 752.8959162589517,468.8855569461867" fill="none" stroke="white" stroke-width="7" stroke-linejoin="round"/>
+<polyline points="752.8959162589517,787.1144430538134 740,740 740,520 752.8959162589517,468.8855569461867" fill="none" stroke="#344252" stroke-width="2" stroke-linejoin="round" stroke-dasharray="10 7"/>
+<polyline points="755.769162556701,486.1118291985479 752.8959162589517,468.8855569461867 742.1945293707719,482.68701769023454" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+</g>
+<g class="edge" data-a="Add Medicine" data-b="Manage Medicines" data-kind="extend">
+<rect x="1102.9375" y="384.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1160.0" y="400.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Update Medicine" data-b="Manage Medicines" data-kind="extend">
+<rect x="1257.9375" y="484.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="1315.0" y="500.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="edge" data-a="Delete Medicine" data-b="Manage Medicines" data-kind="extend">
+<rect x="613.875" y="559.0" width="114.125" height="32.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="670.9375" y="575.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="21" font-weight="400" fill="#172b3b">&lt;&lt;extend&gt;&gt;</text>
+</g>
+<g class="node" data-id="Manage Medicines" data-kind="usecase"><title>Manage Medicines</title>
+<ellipse cx="856.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Medicines</text>
+</g>
+<g class="node" data-id="Add Medicine" data-kind="usecase"><title>Add Medicine</title>
+<ellipse cx="1490.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Add Medicine</text>
+</g>
+<g class="node" data-id="Update Medicine" data-kind="usecase"><title>Update Medicine</title>
+<ellipse cx="2123.0" cy="420.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="420.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Update Medicine</text>
+</g>
+<g class="node" data-id="Delete Medicine" data-kind="usecase"><title>Delete Medicine</title>
+<ellipse cx="856.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="856.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Delete Medicine</text>
+</g>
+<g class="node" data-id="Manage Disease Categories" data-kind="usecase"><title>Manage Disease Categories</title>
+<ellipse cx="1490.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="1490.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Disease Categories</text>
+</g>
+<g class="node" data-id="Manage Delivery Areas" data-kind="usecase"><title>Manage Delivery Areas</title>
+<ellipse cx="2123.0" cy="836.0" rx="225.0" ry="55.0" fill="#eff5f8" stroke="#344252" stroke-width="2"/>
+<text x="2123.0" y="836.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="25" font-weight="400" fill="#172b3b">Manage Delivery Areas</text>
+</g>
+<g class="node" data-id="Owner / Admin" data-kind="actor"><title>Owner / Admin</title>
+<circle cx="2630.0" cy="890.0" r="24" fill="white" stroke="#344252" stroke-width="3"/>
+<polyline points="2630.0,914.0 2630.0,990.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2582.0,950.0 2678.0,950.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2586.0,1050.0 2630.0,990.0 2674.0,1050.0" fill="none" stroke="#344252" stroke-width="3" stroke-linejoin="round"/>
+<rect x="2485.0" y="1066.0" width="290.0" height="72.0" fill="white" stroke="white" stroke-width="2"/>
+<text x="2630.0" y="1096.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="26" font-weight="700" fill="#172b3b">Owner / Admin</text>
+</g>
+<text x="1400.0" y="1800.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="400" fill="#172b3b">Solid line: actor association     •     Dashed open arrow: &lt;&lt;include&gt;&gt; / &lt;&lt;extend&gt;&gt;</text>
+<text x="1400.0" y="1850.0" text-anchor="middle" dominant-baseline="central" font-family="Liberation Sans,Arial,sans-serif" font-size="20" font-weight="400" fill="#172b3b">Authenticated Owner/Admin required for administrative operations.</text>
+</svg>
