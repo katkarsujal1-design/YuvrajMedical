@@ -156,7 +156,7 @@
                                 <label for="age">Age</label>
                                 <div class="ym-input-shell">
                                     <span class="ym-field-icon" aria-hidden="true">+</span>
-                                    <input id="age" type="number" name="age" placeholder="Enter age" value="{{ form.age if form else '' }}">
+                                    <input id="age" type="number" min="1" max="120" step="1" name="age" placeholder="Enter age" value="{{ form.age if form else '' }}">
                                 </div>
                             </div>
 
@@ -164,7 +164,12 @@
                                 <label for="gender">Gender</label>
                                 <div class="ym-input-shell">
                                     <span class="ym-field-icon" aria-hidden="true">+</span>
-                                    <input id="gender" type="text" name="gender" placeholder="Enter gender" value="{{ form.gender if form else '' }}">
+                                    <select id="gender" name="gender">
+                                        <option value="">Select gender</option>
+                                        {% for gender in ['Male', 'Female', 'Other', 'Prefer not to say'] %}
+                                        <option value="{{ gender }}" {% if form and form.gender == gender %}selected{% endif %}>{{ gender }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
 
@@ -172,7 +177,7 @@
                                 <label for="education">Education</label>
                                 <div class="ym-input-shell">
                                     <span class="ym-field-icon" aria-hidden="true">+</span>
-                                    <input id="education" type="text" name="education" placeholder="Enter education" value="{{ form.education if form else '' }}">
+                                    <input id="education" type="text" maxlength="150" pattern="[\p{L}\p{M}0-9 .,\x27\-/\(\)&+]*\p{L}[\p{L}\p{M}0-9 .,\x27\-/\(\)&+]*" title="Enter an education qualification containing letters" name="education" placeholder="Enter education" value="{{ form.education if form else '' }}">
                                 </div>
                             </div>
 
@@ -180,7 +185,7 @@
                                 <label for="aadhar">Aadhar ID</label>
                                 <div class="ym-input-shell">
                                     <span class="ym-field-icon" aria-hidden="true">#</span>
-                                    <input id="aadhar" type="text" name="aadhar" placeholder="Enter Aadhar ID" value="{{ form.aadhar if form else '' }}">
+                                    <input id="aadhar" type="text" inputmode="numeric" minlength="12" maxlength="12" pattern="[2-9][0-9]{11}" title="Enter 12 digits starting with 2–9" name="aadhar" placeholder="Enter Aadhar ID" value="{{ form.aadhar if form else '' }}">
                                 </div>
                             </div>
 
@@ -188,16 +193,10 @@
                                 <label for="pan">PAN ID</label>
                                 <div class="ym-input-shell">
                                     <span class="ym-field-icon" aria-hidden="true">#</span>
-                                    <input id="pan" type="text" name="pan" placeholder="Enter PAN ID" value="{{ form.pan if form else '' }}">
+                                    <input id="pan" type="text" minlength="10" maxlength="10" pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]" title="Enter five letters, four digits, and one letter" name="pan" placeholder="Enter PAN ID" value="{{ form.pan if form else '' }}">
                                 </div>
                             </div>
 
-                            <div class="ym-field">
-                                <label for="religion">Religion</label>
-                                <div class="ym-input-shell">
-                                    <span class="ym-field-icon" aria-hidden="true">+</span>
-                                    <input id="religion" type="text" name="religion" placeholder="Enter religion" value="{{ form.religion if form else '' }}">
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -221,6 +220,9 @@ const otpCountdownKey = "registerOtpCountdownEndsAt";
 function toggleStaffFields(){
     if(staffFields && roleSelect){
         staffFields.classList.toggle("show", roleSelect.value === "staff");
+        staffFields.querySelectorAll("input, select").forEach(field => {
+            field.disabled = roleSelect.value !== "staff";
+        });
     }
 }
 
@@ -256,6 +258,7 @@ if(roleSelect){
 
 if(sendOtpBtn){
     sendOtpBtn.addEventListener("click", function(){
+        if (!sendOtpBtn.form.checkValidity()) return;
         sendOtpBtn.dataset.wasSent = "true";
         const endsAt = Date.now() + 10000;
         sessionStorage.setItem(otpCountdownKey, String(endsAt));

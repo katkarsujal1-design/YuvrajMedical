@@ -38,6 +38,7 @@ from services.sms_service import (
     send_transactional_sms,
     verify_otp as verify_2factor_otp,
 )
+from services.registration_validation import validate_registration
 from family_health import (
     COMMON_FAMILY_RELATIONS,
     build_family_member_options,
@@ -3389,13 +3390,15 @@ def register():
             "address": flask.request.form.get("address", "").strip(),
             "age": flask.request.form.get("age", "").strip(),
             "gender": flask.request.form.get("gender", "").strip(),
-            "religion": flask.request.form.get("religion", "").strip(),
             "education": flask.request.form.get("education", "").strip(),
             "aadhar": flask.request.form.get("aadhar", "").strip(),
             "pan": flask.request.form.get("pan", "").strip(),
             "referral_code": referral_code,
         }
         action = flask.request.form.get("action", "create_account")
+        validation_error = validate_registration(form_data)
+        if validation_error:
+            return flask.render_template("register.html", error=validation_error, form=form_data)
         db = get_db()
 
         try:
@@ -3502,6 +3505,9 @@ def register():
                 )
 
             form_data = pending_registration or form_data
+            validation_error = validate_registration(form_data)
+            if validation_error:
+                return flask.render_template("register.html", error=validation_error, form=form_data)
             hashed_password = form_data["hashed_password"]
             role = "staff" if form_data.get("role") == "staff" else "customer"
 
@@ -3559,16 +3565,15 @@ def register():
                 cursor.execute("""
                     INSERT INTO staff (
                         name, email, contact, age, gender,
-                        religion, address, education, aadhar, pan
+                        address, education, aadhar, pan
                     )
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, (
                     form_data["name"],
                     form_data["email"],
                     form_data["phone"],
                     form_data["age"] or None,
                     form_data["gender"],
-                    form_data["religion"],
                     form_data["address"],
                     form_data["education"],
                     form_data["aadhar"],

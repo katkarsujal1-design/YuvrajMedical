@@ -137,7 +137,6 @@ c.execute("""
     email TEXT UNIQUE,
     age INTEGER,
     gender TEXT,
-    religion TEXT,
     aadhar TEXT,
     pan TEXT
 )

@@ -180,7 +180,6 @@ CREATE TABLE `staff` (
   `contact` varchar(50) DEFAULT NULL,
   `age` int DEFAULT NULL,
   `gender` varchar(50) DEFAULT NULL,
-  `religion` varchar(100) DEFAULT NULL,
   `address` text,
   `education` varchar(255) DEFAULT NULL,
   `aadhar` varchar(50) DEFAULT NULL,
@@ -195,7 +194,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,'Sujal ','katkarsujal3@gmail.com','7498513789',21,'Male','Hindu','virar west , yashwant nagar, sky City housing society, H-1205','TYBSCIT ','68678889','Panid');
+INSERT INTO `staff` VALUES (1,'Sujal ','katkarsujal3@gmail.com','7498513789',21,'Male','virar west , yashwant nagar, sky City housing society, H-1205','TYBSCIT ','68678889','Panid');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
