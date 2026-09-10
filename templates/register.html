@@ -102,7 +102,7 @@
                                     <select name="country_code" aria-label="Country code" required>
                                         <option value="+91" {% if not form or form.country_code == "+91" %}selected{% endif %}>India +91</option>
                                     </select>
-                                    <input id="phone_number" type="tel" name="phone_number" placeholder="Enter phone number" value="{{ form.phone_number if form else '' }}" autocomplete="tel" required>
+                                    <input id="phone_number" type="tel" name="phone_number" inputmode="numeric" minlength="10" maxlength="10" pattern="[0-9]{10}" title="Enter exactly 10 digits" placeholder="Enter 10-digit phone number" value="{{ form.phone_number if form else '' }}" autocomplete="tel-national" required>
                                 </div>
                                 <button type="submit" name="action" value="send_otp" class="ym-send-otp" id="sendOtpBtn" data-countdown="{{ resend_seconds or 0 }}">Send OTP</button>
                             </div>
@@ -216,6 +216,16 @@ const roleSelect = document.getElementById("roleSelect");
 const staffFields = document.getElementById("staffFields");
 const sendOtpBtn = document.getElementById("sendOtpBtn");
 const otpCountdownKey = "registerOtpCountdownEndsAt";
+const phoneInput = document.getElementById("phone_number");
+
+function sanitizePhoneNumber(){
+    phoneInput.value = phoneInput.value.replace(/[^0-9]/g, "").slice(0, 10);
+}
+
+if(phoneInput){
+    phoneInput.addEventListener("input", sanitizePhoneNumber);
+    sanitizePhoneNumber();
+}
 
 function toggleStaffFields(){
     if(staffFields && roleSelect){

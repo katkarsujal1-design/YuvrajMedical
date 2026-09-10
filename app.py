@@ -39,6 +39,8 @@ from services.sms_service import (
     verify_otp as verify_2factor_otp,
 )
 from services.registration_validation import validate_registration
+from services.owner_dashboard import load_dashboard, revenue_data, now_ist, money, display_date
+from services.owner_reports import build_report, csv_bytes, excel_bytes, pdf_bytes, REPORTS
 from family_health import (
     COMMON_FAMILY_RELATIONS,
     build_family_member_options,
@@ -57,7 +59,7 @@ print("Does .env.txt exist?", os.path.exists(".env.txt"))
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get("SECRET_KEY","my-super-secret")
+app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(48)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -98,9 +100,6 @@ db_pool = None
 def get_db_pool():
     global db_pool
 
-    print("DB_HOST =", os.environ.get("DB_HOST"))
-    print("DB_USER =", os.environ.get("DB_USER"))
-    print("DB_NAME =", os.environ.get("DB_NAME"))
 
     if db_pool is None:
         db_pool = pooling.MySQLConnectionPool(
@@ -1077,6 +1076,9 @@ def ensure_auth_security_schema():
 
 @app.before_request
 def prepare_auth_security():
+    # Owner reads must reach their own authorization/error handling even during an outage.
+    if flask.request.endpoint in {"static", "owner_dashboard", "owner_report", "owner_revenue_api"}:
+        return
     ensure_auth_security_schema()
 
 
@@ -5148,6 +5150,7 @@ def place_order():
             JOIN medicines
             ON medicines.id = cart.medicine_id
             WHERE cart.user_id=%s
+            FOR UPDATE
         """, (user_id,))
         cart_items = cursor.fetchall()
 
@@ -5162,7 +5165,7 @@ def place_order():
         # ================= CHECK STOCK FIRST =================
         for item in cart_items:
 
-            if item["quantity"] > item["stock"]:
+            if not item["quantity"] or item["quantity"] < 0 or item["stock"] is None or item["quantity"] > item["stock"]:
 
                 db.rollback()
 
@@ -6613,7 +6616,7 @@ def cancel_order(order_id):
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
         SELECT status FROM orders
-        WHERE id=%s AND user_id=%s
+        WHERE id=%s AND user_id=%s FOR UPDATE
     """, (order_id, user_id))
     order = cursor.fetchone()
     cursor.close()
@@ -6627,20 +6630,12 @@ def cancel_order(order_id):
 
     cursor = db.cursor(dictionary=True)
     cursor.execute("""
-        SELECT medicine_id, quantity
-        FROM order_items
-        WHERE order_id=%s
+        UPDATE medicines m JOIN (
+            SELECT medicine_id, SUM(quantity) AS quantity FROM order_items
+            WHERE order_id=%s GROUP BY medicine_id
+        ) items ON items.medicine_id=m.id
+        SET m.stock=COALESCE(m.stock,0)+items.quantity
     """, (order_id,))
-    items = cursor.fetchall()
-
-    for item in items:
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-            UPDATE medicines
-            SET stock = stock + %s
-            WHERE id=%s
-        """, (item["quantity"], item["medicine_id"]))
-    cursor = db.cursor(dictionary=True)
     cursor.execute("""
         UPDATE orders
         SET status='Cancelled',
@@ -6710,20 +6705,38 @@ def update_order_status(order_id):
     delivery_area = (flask.request.form.get("delivery_area") or "").strip()
     submitted_delivery_otp = (flask.request.form.get("delivery_otp") or "").strip()
     try:
-        delivery_charge = max(0, float(flask.request.form.get("delivery_charge") or 0))
+        delivery_charge = max(0, float(flask.request.form["delivery_charge"])) if flask.request.form.get("delivery_charge") else None
     except (TypeError, ValueError):
-        delivery_charge = 0
+        delivery_charge = None
 
     db = get_db()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT status, delivery_otp FROM orders WHERE id=%s", (order_id,))
-    existing_order = cursor.fetchone() or {}
+    cursor.execute("SELECT status, delivery_otp FROM orders WHERE id=%s FOR UPDATE", (order_id,))
+    existing_order = cursor.fetchone()
+    if not existing_order:
+        cursor.close()
+        db.rollback()
+        abort(404)
+    if existing_order["status"] in ("Cancelled", "Refunded") and status != existing_order["status"]:
+        cursor.close()
+        db.rollback()
+        flash("Closed orders cannot be reopened. Create a new order instead.")
+        return flask.redirect("/owner_dashboard#orders" if flask.session["user"]["role"] == "owner" else "/staff#orders")
     if status == "Delivered" and existing_order.get("delivery_otp") and submitted_delivery_otp != existing_order["delivery_otp"]:
         cursor.close()
         flash("Delivery OTP is required to mark this order as Delivered.")
         destination = "/owner_dashboard#orders" if flask.session["user"]["role"] == "owner" else "/staff#orders"
         return flask.redirect(destination)
+
+    if status == "Cancelled" and existing_order["status"] != "Cancelled":
+        cursor.execute("""
+            UPDATE medicines m JOIN (
+                SELECT medicine_id, SUM(quantity) AS quantity FROM order_items
+                WHERE order_id=%s GROUP BY medicine_id
+            ) items ON items.medicine_id=m.id
+            SET m.stock=COALESCE(m.stock,0)+items.quantity
+        """, (order_id,))
 
     cursor.execute("""
         UPDATE orders
@@ -6740,7 +6753,7 @@ def update_order_status(order_id):
             delivery_notes=COALESCE(NULLIF(%s, ''), delivery_notes),
             delivery_partner=COALESCE(NULLIF(%s, ''), delivery_partner),
             delivery_area=COALESCE(NULLIF(%s, ''), delivery_area),
-            delivery_charge=%s,
+            delivery_charge=COALESCE(%s, delivery_charge),
             delivery_updated_at=%s
         WHERE id=%s
     """, (
@@ -6770,160 +6783,8 @@ def update_order_status(order_id):
     return flask.redirect(destination)
 # ================= REVENUE ANALYTICS =================
 
-def calculate_revenue_growth(current, previous):
-    """Return a JSON/template-safe comparison with zero-safe growth."""
-    current = float(current or 0)
-    previous = float(previous or 0)
-    difference = current - previous
-    if previous:
-        growth_percentage = (difference / previous) * 100
-    else:
-        growth_percentage = 0 if current == 0 else 100
-    trend = "increase" if difference > 0 else "decrease" if difference < 0 else "neutral"
-    return {
-        "current": round(current, 2),
-        "previous": round(previous, 2),
-        "difference": round(difference, 2),
-        "growth_percentage": round(growth_percentage, 2),
-        "trend": trend,
-    }
-
-
-def _revenue_total(db, start_date, end_date):
-    cursor = db.cursor()
-    cursor.execute("""
-        SELECT COALESCE(SUM(total), 0)
-        FROM orders
-        WHERE DATE(`date`) BETWEEN %s AND %s
-          AND status != 'Cancelled'
-    """, (start_date.isoformat(), end_date.isoformat()))
-    total = cursor.fetchone()[0]
-    cursor.close()
-    return float(total or 0)
-
-
-def _month_shift(value, months):
-    """Shift the first day of a month without an external date dependency."""
-    month_index = value.year * 12 + value.month - 1 + months
-    return datetime(month_index // 12, month_index % 12 + 1, 1).date()
-
-
-def build_revenue_dashboard(db, anchor_date=None, chart_start=None, chart_end=None):
-    """Build all revenue cards, charts, and insights from completed order data."""
-    anchor = anchor_date or datetime.now().date()
-    week_start = anchor - timedelta(days=anchor.weekday())
-    last_week_start = week_start - timedelta(days=7)
-    month_start = anchor.replace(day=1)
-    next_month_start = _month_shift(month_start, 1)
-    last_month_start = _month_shift(month_start, -1)
-    year_start = anchor.replace(month=1, day=1)
-    next_year_start = anchor.replace(year=anchor.year + 1, month=1, day=1)
-    last_year_start = anchor.replace(year=anchor.year - 1, month=1, day=1)
-
-    cards = {
-        "today": calculate_revenue_growth(
-            _revenue_total(db, anchor, anchor),
-            _revenue_total(db, anchor - timedelta(days=1), anchor - timedelta(days=1)),
-        ),
-        "week": calculate_revenue_growth(
-            _revenue_total(db, week_start, anchor),
-            _revenue_total(db, last_week_start, last_week_start + (anchor - week_start)),
-        ),
-        "month": calculate_revenue_growth(
-            _revenue_total(db, month_start, anchor),
-            _revenue_total(db, last_month_start, min(month_start - timedelta(days=1), last_month_start + (anchor - month_start))),
-        ),
-        "year": calculate_revenue_growth(
-            _revenue_total(db, year_start, anchor),
-            _revenue_total(db, last_year_start, last_year_start + (anchor - year_start)),
-        ),
-    }
-
-    chart_start = chart_start or anchor
-    chart_end = chart_end or anchor
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT DATE(`date`) AS revenue_date, COALESCE(SUM(total), 0) AS revenue
-        FROM orders
-        WHERE DATE(`date`) BETWEEN %s AND %s
-          AND status != 'Cancelled'
-        GROUP BY DATE(`date`)
-        ORDER BY revenue_date
-    """, (chart_start.isoformat(), chart_end.isoformat()))
-    daily_rows = cursor.fetchall()
-    cursor.close()
-    daily_map = {str(row["revenue_date"]): float(row["revenue"] or 0) for row in daily_rows}
-    day_count = (chart_end - chart_start).days + 1
-    daily_labels = [(chart_start + timedelta(days=i)).strftime("%d %b") for i in range(day_count)]
-    daily_values = [daily_map.get((chart_start + timedelta(days=i)).isoformat(), 0) for i in range(day_count)]
-
-    # Match the selected range against the immediately preceding range.
-    previous_start = chart_start - timedelta(days=day_count)
-    previous_end = chart_start - timedelta(days=1)
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT DATE(`date`) AS revenue_date, COALESCE(SUM(total), 0) AS revenue
-        FROM orders
-        WHERE DATE(`date`) BETWEEN %s AND %s
-          AND status != 'Cancelled'
-        GROUP BY DATE(`date`)
-        ORDER BY revenue_date
-    """, (previous_start.isoformat(), previous_end.isoformat()))
-    previous_rows = cursor.fetchall()
-    cursor.close()
-    previous_map = {str(row["revenue_date"]): float(row["revenue"] or 0) for row in previous_rows}
-    previous_values = [previous_map.get((previous_start + timedelta(days=i)).isoformat(), 0) for i in range(day_count)]
-
-    month_chart_start = anchor.replace(month=1, day=1)
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT MONTH(`date`) AS month_number, COALESCE(SUM(total), 0) AS revenue
-        FROM orders
-        WHERE DATE(`date`) >= %s AND DATE(`date`) < %s
-          AND status != 'Cancelled'
-        GROUP BY MONTH(`date`)
-        ORDER BY month_number
-    """, (month_chart_start.isoformat(), next_year_start.isoformat()))
-    monthly_rows = cursor.fetchall()
-    cursor.close()
-    monthly_map = {int(row["month_number"]): float(row["revenue"] or 0) for row in monthly_rows}
-    monthly_labels = [datetime(2000, month, 1).strftime("%b") for month in range(1, 13)]
-    monthly_values = [monthly_map.get(month, 0) for month in range(1, 13)]
-
-    total_in_range = sum(daily_values)
-    non_empty_days = [(label, value) for label, value in zip(daily_labels, daily_values) if value > 0]
-    highest = max(non_empty_days, key=lambda item: item[1]) if non_empty_days else ("No sales", 0)
-    lowest = min(non_empty_days, key=lambda item: item[1]) if non_empty_days else ("No sales", 0)
-    best_month_index = max(range(12), key=lambda index: monthly_values[index]) if any(monthly_values) else None
-    primary = calculate_revenue_growth(
-        total_in_range,
-        sum(previous_values),
-    )
-
-    return {
-        "cards": cards,
-        "charts": {
-            "daily": {
-                "labels": daily_labels,
-                "values": daily_values,
-                "previous_values": previous_values,
-            },
-            "monthly": {"labels": monthly_labels, "values": monthly_values},
-        },
-        "selected_period": primary,
-        "insights": {
-            "highest_day": {"label": highest[0], "value": round(highest[1], 2)},
-            "lowest_day": {"label": lowest[0], "value": round(lowest[1], 2)},
-            "average_daily": round(total_in_range / day_count, 2) if day_count else 0,
-            "best_month": monthly_labels[best_month_index] if best_month_index is not None else "No sales yet",
-        },
-        "range": {"start": chart_start.isoformat(), "end": chart_end.isoformat()},
-        "previous_range": {"start": previous_start.isoformat(), "end": previous_end.isoformat()},
-    }
-
-
 def _parse_revenue_filter(filter_name, start_value=None, end_value=None):
-    today = datetime.now().date()
+    today = now_ist().date()
     if filter_name == "yesterday":
         start = end = today - timedelta(days=1)
     elif filter_name == "last_7_days":
@@ -6939,8 +6800,10 @@ def _parse_revenue_filter(filter_name, start_value=None, end_value=None):
         end = datetime.strptime(end_value or "", "%Y-%m-%d").date()
         if start > end or (end - start).days > 730:
             raise ValueError("Choose a valid range of up to two years.")
-    else:
+    elif filter_name == "today":
         start = end = today
+    else:
+        raise ValueError("Invalid revenue period.")
     return start, end
 
 
@@ -6956,7 +6819,13 @@ def owner_revenue_api():
         )
     except ValueError as error:
         return flask.jsonify({"error": str(error)}), 400
-    return flask.jsonify(build_revenue_dashboard(get_db(), end, start, end))
+    try:
+        response = flask.jsonify(revenue_data(get_db(), start, end))
+        response.headers["Cache-Control"] = "no-store"
+        return response
+    except mysql.connector.Error:
+        logger.exception("Owner revenue query failed")
+        return flask.jsonify({"error": "Revenue is temporarily unavailable. Please retry."}), 503
 
 
 @app.route("/owner/customers/<int:user_id>/block", methods=["POST"])
@@ -7078,500 +6947,89 @@ def owner_customer_details(user_id):
     )
 
 
+@app.context_processor
+def inject_owner_csrf():
+    if flask.session.get("user", {}).get("role") != "owner":
+        return {}
+    if "owner_csrf" not in flask.session:
+        flask.session["owner_csrf"] = secrets.token_urlsafe(32)
+    return {"owner_csrf": flask.session["owner_csrf"]}
+
+
+@app.before_request
+def protect_owner_forms():
+    if flask.request.method == "POST" and flask.request.endpoint in {
+        "owner_inventory_update", "owner_inventory_adjust", "owner_inventory_delete", "remove_staff"
+    } and flask.session.get("user", {}).get("role") == "owner":
+        expected = flask.session.get("owner_csrf", "")
+        submitted = flask.request.form.get("owner_csrf", "")
+        if not expected or not secrets.compare_digest(expected, submitted):
+            return flask.render_template("owner_error.html", message="This form expired. Refresh the dashboard and try again."), 400
+
+
 # ================= OWNER DASHBOARD =================
+@app.template_filter("inr")
+def format_owner_currency(value):
+    return money(value)
+
+
+@app.template_filter("owner_date")
+def format_owner_date(value):
+    return display_date(value)
+
+
 @app.route("/owner_dashboard")
 def owner_dashboard():
-
-    if "user" not in flask.session or flask.session["user"]["role"] != "owner":
+    if flask.session.get("user", {}).get("role") != "owner":
         return flask.redirect("/login")
-
-    ensure_inventory_management_schema()
-    ensure_customer_management_schema()
-    ensure_family_health_schema()
-    ensure_reviews_feedback_schema()
-
-    db = get_db()
-
-    # ================= DATES =================
-
-    today = datetime.now().strftime("%Y-%m-%d")
-
-    week_ago = (
-        datetime.now() - timedelta(days=7)
-    ).strftime("%Y-%m-%d")
-
-    month_ago = (
-        datetime.now() - timedelta(days=30)
-    ).strftime("%Y-%m-%d")
-
-    year_start = datetime.now().strftime("%Y-01-01")
-
-    # ================= USER SEARCH =================
-
-    user_search = flask.request.args.get("user_search", "")
-
-    customer_search_sql = ""
-    customer_params = []
-    if user_search:
-        customer_search_sql = """
-            AND (
-                users.name LIKE %s
-                OR users.email LIKE %s
-                OR users.phone LIKE %s
-                OR users.address LIKE %s
-            )
-        """
-        customer_params = [f"%{user_search}%"] * 4
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute(f"""
-        SELECT users.*,
-               COALESCE(order_stats.total_orders, 0) AS total_orders,
-               COALESCE(order_stats.delivered_orders, 0) AS delivered_orders,
-               COALESCE(order_stats.total_spent, 0) AS total_spent,
-               order_stats.last_order_date,
-               COALESCE(prescription_stats.prescription_count, 0) AS prescription_count,
-               COALESCE(prescription_stats.pending_prescriptions, 0) AS pending_prescriptions,
-               (
-                   SELECT status
-                   FROM prescription_requests
-                   WHERE prescription_requests.user_id = users.id
-                   ORDER BY created_at DESC
-                   LIMIT 1
-               ) AS latest_prescription_status,
-               COALESCE(address_stats.address_count, 0) AS address_count,
-               address_stats.default_address,
-               COALESCE(feedback_stats.feedback_count, 0) AS feedback_count,
-               feedback_stats.latest_feedback_status,
-               feedback_stats.latest_feedback_type,
-               feedback_stats.latest_feedback_message
-        FROM users
-        LEFT JOIN (
-            SELECT user_id,
-                   COUNT(*) AS total_orders,
-                   SUM(CASE WHEN status='Delivered' THEN 1 ELSE 0 END) AS delivered_orders,
-                   COALESCE(SUM(CASE WHEN status != 'Cancelled' THEN total ELSE 0 END), 0) AS total_spent,
-                   MAX(date) AS last_order_date
-            FROM orders
-            GROUP BY user_id
-        ) order_stats ON order_stats.user_id = users.id
-        LEFT JOIN (
-            SELECT user_id,
-                   COUNT(*) AS prescription_count,
-                   SUM(CASE WHEN status='Pending Review' THEN 1 ELSE 0 END) AS pending_prescriptions
-            FROM prescription_requests
-            GROUP BY user_id
-        ) prescription_stats ON prescription_stats.user_id = users.id
-        LEFT JOIN (
-            SELECT user_id,
-                   COUNT(*) AS address_count,
-                   MAX(CASE WHEN is_default=1 THEN address ELSE NULL END) AS default_address
-            FROM delivery_addresses
-            GROUP BY user_id
-        ) address_stats ON address_stats.user_id = users.id
-        LEFT JOIN (
-            SELECT user_id,
-                   COUNT(*) AS feedback_count,
-                   SUBSTRING_INDEX(GROUP_CONCAT(status ORDER BY created_at DESC SEPARATOR '||'), '||', 1) AS latest_feedback_status,
-                   SUBSTRING_INDEX(GROUP_CONCAT(review_type ORDER BY created_at DESC SEPARATOR '||'), '||', 1) AS latest_feedback_type,
-                   SUBSTRING_INDEX(GROUP_CONCAT(message ORDER BY created_at DESC SEPARATOR '||'), '||', 1) AS latest_feedback_message
-            FROM reviews_feedback
-            GROUP BY user_id
-        ) feedback_stats ON feedback_stats.user_id = users.id
-        WHERE users.role='customer'
-        {customer_search_sql}
-        ORDER BY users.id DESC
-    """, tuple(customer_params))
-    users_list = cursor.fetchall()
-    cursor.close()
-
-    for customer in users_list:
-        delivered_spent = rupees_value(customer.get("total_spent"))
-        delivered_orders = int(customer.get("delivered_orders") or 0)
-        customer["loyalty_points"] = int(delivered_spent // LOYALTY_RUPEES_PER_POINT) + delivered_orders * DELIVERED_ORDER_POINT_BONUS
-        customer["contact"] = customer.get("phone") or ""
-
-    # ================= SALES =================
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COALESCE(SUM(total),0)
-
-        FROM orders
-
-        WHERE DATE(`date`) = %s
-        AND status != 'Cancelled'
-
-    """, (today,))
-    today_sales = cursor.fetchone()[0]
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COALESCE(SUM(total),0)
-
-        FROM orders
-
-        WHERE date(date)>=date(%s)
-        AND status != 'Cancelled'
-
-    """, (week_ago,))
-    weekly_sales = cursor.fetchone()[0]
-    cursor.close()
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COALESCE(SUM(total),0)
-
-        FROM orders
-
-        WHERE date(date)>=date(%s)
-        AND status != 'Cancelled'
-
-    """, (month_ago,))
-    monthly_sales = cursor.fetchone()[0]
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COALESCE(SUM(total),0)
-
-        FROM orders
-
-        WHERE date(date)>=date(%s)
-        AND status != 'Cancelled'
-
-    """, (year_start,))
-    yearly_sales =cursor.fetchone()[0]
-    cursor.close()
-
-    # ================= ORDERS =================
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM orders
-
-        WHERE status='Pending'
-
-    """)
-    pending_orders = cursor.fetchone()[0]
-    cursor.close()
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM orders
-
-        WHERE status='Delivered'
-
-    """)
-    success_orders = cursor.fetchone()[0]
-    cursor.close()
-
-
-    cursor =db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM orders
-
-    """)
-    total_orders =cursor.fetchone()[0]
-    cursor.close()
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM orders
-
-        WHERE status='Cancelled'
-
-    """)
-    cancelled_orders = cursor.fetchone()[0]
-    cursor.close()
-    # ================= USERS =================
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM users
-
-        WHERE role='customer'
-
-    """)
-    total_users = cursor.fetchone()[0]
-    cursor.close()
-
-    # ================= MEDICINES =================
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM medicines
-
-    """)
-    total_medicines = cursor.fetchone()[0]
-    cursor.close()
-
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-
-        SELECT *
-        FROM medicines
-        ORDER BY id DESC
-
-    """)
-    medicines = cursor.fetchall()
-    cursor.close()
-    for medicine in medicines:
-        medicine["image_url"] = medicine_image_url(medicine)
-
-
-    cursor =db.cursor(dictionary=True)
-    cursor.execute("""
-
-        SELECT *
-
-        FROM medicines
-
-        WHERE stock > 0
-          AND stock <= COALESCE(low_stock_threshold, 10)
-
-    """)
-    low_stock = cursor.fetchall()
-    cursor.close()
-
-
-    cursor = db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM medicines
-
-        WHERE stock=0
-
-    """)
-    out_of_stock = cursor.fetchone()[0]
-    cursor.close()
-
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-
-        SELECT *
-
-        FROM medicines
-
-        WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
-
-    """)
-    expiring =cursor.fetchall()
-    cursor.close()
-
-    cursor = db.cursor()
-    cursor.execute("SELECT COUNT(*) FROM medicines WHERE expiry_date < CURDATE()")
-    expired_medicines = cursor.fetchone()[0]
-    cursor.close()
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-        SELECT stock_movements.*, medicines.name AS medicine_name
-        FROM stock_movements
-        JOIN medicines ON medicines.id = stock_movements.medicine_id
-        ORDER BY stock_movements.id DESC LIMIT 12
-    """)
-    stock_movements = cursor.fetchall()
-    cursor.close()
-
-    # ================= STAFF =================
-
-
-    cursor = db.cursor(dictionary=True)
-    cursor.execute("""
-
-        SELECT *
-
-        FROM staff
-
-    """)
-    staff_list = cursor.fetchall()
-    cursor.close()
-
-
-    cursor =db.cursor()
-    cursor.execute("""
-
-        SELECT COUNT(*)
-
-        FROM staff
-
-    """)
-    total_staff = cursor.fetchone()[0]
-    cursor.close()
-
-    # ================= RECENT ORDERS =================
-
-
-    cursor =db.cursor(dictionary=True)
-    cursor.execute("""
-
-        SELECT orders.*,
-               users.name AS customer_name,
-               COALESCE((
-                   SELECT GROUP_CONCAT(CONCAT(medicines.name, ' x', order_items.quantity) SEPARATOR ', ')
-                   FROM order_items
-                   JOIN medicines ON medicines.id = order_items.medicine_id
-                   WHERE order_items.order_id = orders.id
-               ), 'No items') AS item_summary
-
-        FROM orders
-
-        JOIN users
-        ON users.id = orders.user_id
-
-        ORDER BY orders.id DESC
-
-        LIMIT 10
-
-    """)
-    recent_orders = cursor.fetchall()
-    cursor.close()
-
-    # ================= PRESCRIPTIONS =================
-
-    prescription_summary = {
-        "total": 0,
-        "pending": 0,
-        "approved": 0,
-        "rejected": 0
-    }
-    recent_prescriptions = []
-
     try:
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
+        data = load_dashboard(get_db(), flask.request.args)
+    except ValueError as error:
+        return flask.render_template("owner_error.html", message=str(error)), 400
+    except mysql.connector.Error:
+        logger.exception("Owner dashboard query failed")
+        return flask.render_template("owner_error.html", message="Dashboard data is temporarily unavailable. Please retry."), 503
 
-            SELECT pr.*,
-                   users.name AS customer_name
+    def page_url(key, page, section):
+        params = flask.request.args.to_dict()
+        params[key] = page
+        return flask.url_for("owner_dashboard", **params) + "#" + section
 
-            FROM prescription_requests pr
-
-            LEFT JOIN users
-            ON users.id = pr.user_id
-
-            ORDER BY pr.created_at DESC
-
-            LIMIT 8
-
-        """)
-        recent_prescriptions = cursor.fetchall()
-        cursor.close()
-
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("""
-
-            SELECT
-                COUNT(*) AS total,
-                SUM(CASE WHEN status = 'Pending Review' THEN 1 ELSE 0 END) AS pending,
-                SUM(CASE WHEN status = 'Approved' THEN 1 ELSE 0 END) AS approved,
-                SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) AS rejected
-
-            FROM prescription_requests
-
-        """)
-        prescription_counts = cursor.fetchone() or {}
-        cursor.close()
-
-        prescription_summary = {
-            "total": prescription_counts.get("total") or 0,
-            "pending": prescription_counts.get("pending") or 0,
-            "approved": prescription_counts.get("approved") or 0,
-            "rejected": prescription_counts.get("rejected") or 0
-        }
-    except Exception:
-        recent_prescriptions = []
-
-    # ================= REVENUE COMPARISONS =================
-
-    revenue_dashboard = build_revenue_dashboard(db)
-    revenue_cards = revenue_dashboard["cards"]
-
-    # ================= RENDER =================
-
-    response = flask.make_response(flask.render_template(
-
-        "owner_dashboard.html",
-
-        today_sales=today_sales,
-        weekly_sales=weekly_sales,
-        monthly_sales=monthly_sales,
-        yearly_sales=yearly_sales,
-
-        today_revenue=revenue_cards["today"]["current"],
-        yesterday_revenue=revenue_cards["today"]["previous"],
-        weekly_revenue=revenue_cards["week"]["current"],
-        last_week_revenue=revenue_cards["week"]["previous"],
-        monthly_revenue=revenue_cards["month"]["current"],
-        last_month_revenue=revenue_cards["month"]["previous"],
-        yearly_revenue=revenue_cards["year"]["current"],
-        last_year_revenue=revenue_cards["year"]["previous"],
-        growth_percentage=revenue_cards["today"]["growth_percentage"],
-        difference=revenue_cards["today"]["difference"],
-        trend=revenue_cards["today"]["trend"],
-        revenue_dashboard=revenue_dashboard,
-
-        pending_orders=pending_orders,
-        success_orders=success_orders,
-        total_orders=total_orders,
-        cancelled_orders=cancelled_orders,
-
-        total_users=total_users,
-        users_list=users_list,
-
-        total_medicines=total_medicines,
-        medicines=medicines,
-        low_stock=low_stock,
-        out_of_stock=out_of_stock,
-        expiring=expiring,
-        expired_medicines=expired_medicines,
-        stock_movements=stock_movements,
-
-        staff_list=staff_list,
-        total_staff=total_staff,
-
-        recent_orders=recent_orders,
-        recent_prescriptions=recent_prescriptions,
-        prescription_summary=prescription_summary
-    ))
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    response = flask.make_response(flask.render_template("owner_dashboard.html", **data,
+        order_statuses=ORDER_STATUSES, report_types=REPORTS, page_url=page_url))
+    response.headers["Cache-Control"] = "no-store"
     return response
+
+
+@app.route("/owner/reports/<kind>")
+def owner_report(kind):
+    if flask.session.get("user", {}).get("role") != "owner":
+        return flask.redirect("/login")
+    output_format = flask.request.args.get("format", "html")
+    if kind not in REPORTS:
+        flask.abort(404)
+    if output_format not in {"html", "csv", "xlsx", "pdf"}:
+        return flask.render_template("owner_error.html", message="Unsupported report format."), 400
+    try:
+        report = build_report(get_db(), kind, flask.request.args)
+        if output_format == "html":
+            response = flask.make_response(flask.render_template("owner_report.html", report=report))
+        else:
+            exporters = {"csv": (csv_bytes, "text/csv; charset=utf-8"),
+                         "xlsx": (excel_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+                         "pdf": (pdf_bytes, "application/pdf")}
+            exporter, mimetype = exporters[output_format]
+            response = flask.make_response(exporter(report))
+            response.headers["Content-Type"] = mimetype
+            response.headers["Content-Disposition"] = f'attachment; filename="yuvrajmedical-{kind}-{now_ist():%Y%m%d}.{output_format}"'
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        return response
+    except ValueError as error:
+        return flask.render_template("owner_error.html", message=str(error)), 400
+    except mysql.connector.Error:
+        logger.exception("Owner report query failed")
+        return flask.render_template("owner_error.html", message="Report data is temporarily unavailable. Please retry."), 503
 
 
 @app.route("/owner/inventory/<int:medicine_id>/update", methods=["POST"])
@@ -8541,7 +7999,7 @@ def delete_medicine(id):
     return flask.redirect("/staff")
 
 # ================= REMOVE STAFF =================
-@app.route("/remove_staff/<int:id>")
+@app.route("/remove_staff/<int:id>", methods=["POST"])
 def remove_staff(id):
 
     if "user" not in flask.session or flask.session["user"]["role"] != "owner":
@@ -8569,7 +8027,7 @@ def remove_staff(id):
         # remove from users table
         cursor =db.cursor()
         cursor.execute(
-            "DELETE FROM users WHERE email=%s",
+            "DELETE FROM users WHERE email=%s AND role='staff'",
             (staff["email"],)
         )
 

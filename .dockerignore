@@ -4,3 +4,12 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+.env*
+*.sql
+database.db
+*history*
+*.log
+errorapp.txt
+.agents/
+.codex/

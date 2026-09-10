@@ -4549,6 +4549,7 @@ body.yvm-page-home .side-close:hover{
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/premium_theme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/customer-mobile.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact_card.css') }}">
 </head>
 
 <body class="yvm-pro-page yvm-page-home">
@@ -5317,10 +5318,10 @@ body.yvm-page-home .side-close:hover{
        href="{{ url_for('chatbot') }}"
        aria-label="Open AI Chatbot">🤖</a>
     <a class="whatsapp-float"
-       href="https://wa.me/919999999999"
+       href="https://wa.me/917498513789"
        aria-label="Chat on WhatsApp">☎</a>
     <a class="call-float"
-       href="tel:+919999999999"
+       href="tel:+917498513789"
        aria-label="Call Yuvraj Medical">📞</a>
 </div>
 
@@ -5609,13 +5610,7 @@ if (newsCarousel) {
             <a href="/upload_prescription">Upload Prescription</a>
         </div>
 
-        <div class="footer-section">
-            <h3>Contact Us</h3>
-
-            <p>📞 +91 XXXXX XXXXX</p>
-            <p>📧 support@yuvrajmedical.co.in</p>
-            <p>📍 Virar, Maharashtra</p>
-        </div>
+        {% include "partials/contact_card.html" %}
 
     </div>
 

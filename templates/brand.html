@@ -75,6 +75,7 @@
         @media(max-width:980px){.brand-hero,.about-grid{grid-template-columns:1fr}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.similar-grid,.faq-grid,.footer-container{grid-template-columns:1fr}}
         @media(max-width:620px){.brand-shell{width:min(100% - 22px,1180px);padding-top:18px}.brand-hero,.brand-section,.brand-cta{padding:16px}.product-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.brand-cta{display:grid}.action-row{grid-template-columns:1fr}}
     </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact_card.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-brand">
 {% include "partials/site_header.html" %}
@@ -216,12 +217,7 @@
             <a href="/cart">Cart</a>
             <a href="/upload_prescription">Upload Prescription</a>
         </div>
-        <div>
-            <h3>Contact Us</h3>
-            <p>Phone: +91 XXXXX XXXXX</p>
-            <p>Email: support@yuvrajmedical.co.in</p>
-            <p>Virar, Maharashtra</p>
-        </div>
+        {% include "partials/contact_card.html" %}
     </div>
     <div class="footer-bottom">© 2026 Yuvraj Medical. All Rights Reserved.</div>
 </footer>

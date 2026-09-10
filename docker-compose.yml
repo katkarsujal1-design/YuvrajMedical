@@ -4,7 +4,7 @@ services:
     container_name: mysql_container
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: Root@123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
       MYSQL_DATABASE: medical_store
     ports:
       - "3307:3306"
@@ -13,7 +13,7 @@ services:
     networks:
       - medical-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pRoot@123"]
+      test: ["CMD-SHELL", 'MYSQL_PWD="$$MYSQL_ROOT_PASSWORD" mysqladmin ping -h localhost -uroot --silent']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -27,9 +27,11 @@ services:
       mysql:
         condition: service_healthy
     environment:
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+      TZ: UTC
       DB_HOST: mysql
       DB_USER: root
-      DB_PASSWORD: Root@123
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
       DB_NAME: medical_store
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.6-flash}
@@ -83,7 +85,9 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     restart: always
-    command: tunnel --no-autoupdate run --token eyJhIjoiMWZmNDFmYzFhNDhhNGUxYTY4MjI0MDBhM2M2M2JjYTMiLCJ0IjoiZjRlNDc5N2MtMzIzNi00OGY1LWI1OWItYTM4YjY3ZjE5ZGI4IiwicyI6Ik1EQm1NREE0TW1JdFpUaGlZUzAwTmpVM0xXRXlOVFl0Wm1JME5EQmhObUpoWTJZME5qRmtOakEzWWpZdFpEUmtNUzAwWXpOakxUZzVZVGN0WWpZNE9XTXdNR1U1T0RKaCJ9
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARED_TOKEN:-}
     depends_on:
       - nginx
     networks:

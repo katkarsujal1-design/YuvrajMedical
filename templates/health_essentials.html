@@ -171,6 +171,7 @@ body{
     .offer-banner,.bottom-cta{grid-template-columns:1fr}
 }
     </style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact_card.css') }}">
 </head>
 <body class="yvm-pro-page yvm-page-health-essentials">
 
@@ -400,12 +401,7 @@ body{
             <a href="/cart">Cart</a>
             <a href="/upload_prescription">Upload Prescription</a>
         </div>
-        <div class="footer-section">
-            <h3>Contact Us</h3>
-            <p>📞 +91 XXXXX XXXXX</p>
-            <p>📧 support@yuvrajmedical.co.in</p>
-            <p>📍 Virar, Maharashtra</p>
-        </div>
+        {% include "partials/contact_card.html" %}
     </div>
     <div class="footer-bottom">© 2026 Yuvraj Medical. All Rights Reserved.</div>
 </footer>
